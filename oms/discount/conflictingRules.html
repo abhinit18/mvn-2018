@@ -1,0 +1,122 @@
+<div class="modal fade" id="conflictingRule" role="dialog" aria-labelledby="conflictingRule" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg">
+            <form name="uploadratesForm" accessible-form  novalidate>
+                <div class="modal-content">
+                    <div style="background-color: #F2F7F8;">
+                        <div class="md-toolbar-tools">
+                            <p class="dialog-heading-p">Conflicting Rules</p>
+                            <span flex></span>
+                            <md-button class="md-icon-button" >
+                                <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog" ng-click="cancelConflictingRulesDialog()"></md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+
+                    <div class="md-dialog-content conf-rule-content">
+                        <div class="row">
+                            <div class="col-md-12 margin-top-5 text-left">
+                                <span class="semi-bold-text">List of conflicting rules</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 margin-top-5 text-left">
+                                <div class="row main-list">
+                                    <table class="table table-striped-custom table-condensed table-responsive table-hover" ng-if="genericData.conflictingRules.length">
+                                        <thead class="main-list-header-inv">
+                                        <!-- table header -->
+                                        <tr>
+                                            <th id="discountRuleNameH" class="text-left">
+                                                <a href="">
+                                                    Discount Rule Name &nbsp;
+                                                </a>
+                                            </th>
+                                            <th id="discountCDateH" class="text-left">
+
+                                                <a href="">
+                                                    Creation Date &nbsp;
+                                                </a>
+                                            </th>
+                                            <th id="discountSDateH" class="text-left">
+
+                                                <a href="">
+                                                    Start Date &nbsp;
+                                                </a>
+                                            </th>
+                                            <th id="discountEDateH" class="text-left">
+
+                                                <a href="">
+                                                    End Date &nbsp;
+                                                </a>
+                                            </th>
+                                            <th id="discountPercentH" class="text-left">
+
+                                                <a href="">
+                                                    Discount % &nbsp;
+                                                </a>
+                                            </th>
+                                            <th id="discountStatusH" class="text-left">
+                                                <a href="">
+                                                    Status &nbsp;
+                                                </a>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <!--data-ng-repeat="Data in inventoryLists"-->
+                                        <tbody ng-if="showLoader">
+                                        <tr>
+                                            <td colspan="8" class="text-center">
+                                                <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <tbody data-ng-repeat="discountRule in genericData.conflictingRules" data-ng-switch on="dayDataCollapse[$index]">
+                                            <tr class="clickable-row-inv">
+                                                <td id="discountRuleName{{$index}}" align="left">
+                                                    {{discountRule.tableDiscountRuleName}}
+                                                </td>
+                                                <td id="discountCDate{{$index}}" align="left">
+                                                    {{discountRule.tableDiscountRuleCreatedOn | utcToLocalOrHyphen}}
+                                                </td>
+                                                <td id="discountSDate{{$index}}" align="left">
+                                                    {{discountRule.tableDiscountRuleStartDate | utcToLocalOrHyphen}}
+                                                </td>
+                                                <td id="discountEDate{{$index}}" align="left">
+                                                    {{discountRule.tableDiscountRuleEndDate | utcToLocalOrHyphen}}
+                                                </td>
+                                                <td id="discountPercent{{$index}}" align="left">
+                                                    {{discountRule.tableDiscountRuleDiscount}}
+                                                </td>
+                                                <td id="discountStatus{{$index}}" align="left">
+                                                    <div class="tool-tip">
+                                                        <a title = "Click to deactivate" class="active-status" ng-if="discountRule.tableDiscountRuleIsActivated == true" href=""
+                                                           data-ng-click="access.editAccess && deactivateRule(discountRule,$index)">Active&nbsp;<img
+                                                                src="images/svg/rule_deactivate.svg" title="Click to deactivate Rule" class="status-img"
+                                                                alt="" width="25px"></a>
+                                                        <a title = "Click to activate" class="deactive-status" ng-if="discountRule.tableDiscountRuleIsActivated == false" href=""
+                                                           data-ng-click="access.editAccess && activateRule(discountRule)">Inactive&nbsp;<img
+                                                                src="images/svg/rule_activate.svg" title="Click to activate Rule" class="status-img"
+                                                                alt="" width="25px"></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <h4 ng-if="!genericData.conflictingRules.length">No more conflicts.</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                        <button type="button" class="action-btn"
+                                ng-click="cancelConflictingRulesDialog()">
+                            Ok
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

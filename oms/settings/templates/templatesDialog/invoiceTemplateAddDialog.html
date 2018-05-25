@@ -1,0 +1,320 @@
+<script type="text/ng-template" id="invoice.tmpl.html">
+    <md-dialog aria-label="Create New Invoice Template" style="width:1000px;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p class="dialog-heading-p" ng-show="invoicemode=='add' || invoicemode=='copy'">Create New Invoice Template</p>
+                    <p class="dialog-heading-p" ng-show="invoicemode=='edit'">Update Invoice Template</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="closeAllAccordions()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="container-fluid">
+                        <div class="row padding-top-21">
+                            <div class="col-md-2 font margin-top-5">
+                                Template Name
+                            </div>
+                            <div class="col-md-4">
+                                <input ng-class="{submitted: isTemplateNameEntered}" ng-change="templateNameChanged(invoicetemplatesData.templateName)" type="text" class="form-control darkgrey-bottom-border font input-template" placeholder="Type Here" ng-model="invoicetemplatesData.templateName">
+                            </div>
+                        </div>
+
+                        <div class="row padding-top-40 font">
+                            <div class="col-md-8">Components</div>
+                            <div class="col-md-4">Additional Components</div>
+                        </div>
+
+                        <div class="row padding-top-15">
+                            <div class="col-md-8">
+                                <!-- Component -->
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="headerClicked==false" ng-click="toggleHeaderAccordion()">
+                                        <span class="font">Invoice Header</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="headerClicked==true">
+                                        <div class="component-header">
+                                            <span>Invoice Header</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" ng-click="toggleHeaderAccordion()" />
+                                        </div>
+                                        <div class="component-editor light-border">
+                                            <!-- tiny mce editor -->
+                                            <div ui-tinymce="tinymceOptions" ng-model="invoicetemplatesData.tinymceModel" class="tinyMce"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="itemsHeaderClicked==false" ng-click="toggleItemsHeaderAccordion()">
+                                        <span class="font">Invoice Items Header</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="itemsHeaderClicked==true">
+                                        <div class="component-header">
+                                            <span>Invoice Items Header</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" ng-click="toggleItemsHeaderAccordion()" />
+                                        </div>
+                                        <div class="component-editor light-border">
+                                            <!-- tiny mce editor -->
+                                            <div ui-tinymce="tinymceOptions" ng-model="invoicetemplatesData.tinymceModel1" class="tinyMce"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="itemsClicked==false" ng-click="toggleItemsAccordion()">
+                                        <span class="font">Invoice Items</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="itemsClicked==true">
+                                        <div class="component-header">
+                                            <span>Invoice Items</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" ng-click="toggleItemsAccordion()" />
+                                        </div>
+                                        <div class="component-editor light-border">
+                                            <!-- tiny mce editor -->
+                                            <div ui-tinymce="tinymceOptions" ng-model="invoicetemplatesData.tinymceModel2" class="tinyMce"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="footerClicked==false" ng-click="toggleFooterAccordion()">
+                                        <span class="font">Invoice Footer</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="footerClicked==true">
+                                        <div class="component-header">
+                                            <span>Invoice Footer</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" ng-click="toggleFooterAccordion()" />
+                                        </div>
+                                        <div class="component-editor light-border">
+                                            <!-- tiny mce editor -->
+                                            <div ui-tinymce="tinymceOptions" ng-model="invoicetemplatesData.tinymceModel3" class="tinyMce"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-4">
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="barCodeClicked==false" ng-click="toggleBarCodeRow()">
+                                        <span class="font">Bar Code</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="barCodeClicked==true">
+                                        <div class="component-accordion" ng-click="toggleBarCodeRow()">
+                                            <span class="font">Bar Code</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" />
+                                        </div>
+                                        <div ng-repeat="barCode in barCodeTemplateFields">
+                                            <li ng-click="fetchBarCode(barCode.idtableBarcodeEntityId)">{{barCode.tableBarcodeEntityType}}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="companyClicked==false" ng-click="toggleCompanyRow()">
+                                        <span class="font">Company</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="companyClicked==true">
+                                        <div class="component-accordion" ng-click="toggleCompanyRow()">
+                                            <span class="font">Company</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" />
+                                        </div>
+                                        <div ng-repeat="compTempField in companyTemplateFields">
+                                            <li ng-click="setContent(compTempField)">{{compTempField}}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="salechannelClicked==false" ng-click="toggleSaleChannelRow()">
+                                        <span class="font">Sale Channel</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="salechannelClicked==true">
+                                        <div class="component-accordion" ng-click="toggleSaleChannelRow()">
+                                            <span class="font">Sale Channel</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" />
+                                        </div>
+                                        <div ng-repeat="salechannelField in salechannelTemplateFields">
+                                            <li ng-click="setContent(salechannelField)">{{salechannelField}}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="customerClicked==false" ng-click="toggleCustomerRow()">
+                                        <span class="font">Customer</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="customerClicked==true">
+                                        <div class="component-accordion" ng-click="toggleCustomerRow()">
+                                            <span class="font">Customer</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" />
+                                        </div>
+                                        <div ng-repeat="customerField in customerTemplateFields">
+                                            <li ng-click="setContent(customerField)">{{customerField}}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="orderClicked==false" ng-click="toggleOrderRow()">
+                                        <span class="font">Order/Shipments</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="orderClicked==true">
+                                        <div class="component-accordion" ng-click="toggleOrderRow()">
+                                            <span class="font">Order/Shipments</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" />
+                                        </div>
+                                        <div ng-repeat="orderField in orderTemplateFields">
+                                            <li ng-click="setContent(orderField)">{{orderField}}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="shippingClicked==false" ng-click="toggleShippingRow()">
+                                        <span class="font">Shipping</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="shippingClicked==true">
+                                        <div class="component-accordion" ng-click="toggleShippingRow()">
+                                            <span class="font">Shipping</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" />
+                                        </div>
+                                        <div ng-repeat="shippingField in shippingTemplateFields">
+                                            <li ng-click="setContent(shippingField)">{{shippingField}}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="orderitemsClicked==false" ng-click="toggleOrderItemsRow()">
+                                        <span class="font">Order Items</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="orderitemsClicked==true">
+                                        <div class="component-accordion" ng-click="toggleOrderItemsRow()">
+                                            <span class="font">Order Items</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" />
+                                        </div>
+                                        <div ng-repeat="orderitemField in orderitemsTemplateFields">
+                                            <li ng-click="setContent(orderitemField)">{{orderitemField}}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="vendorClicked==false" ng-click="toggleVendorRow()">
+                                        <span class="font">Vendor</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="vendorClicked==true">
+                                        <div class="component-accordion" ng-click="toggleVendorRow()">
+                                            <span class="font">Vendor</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" />
+                                        </div>
+                                        <div ng-repeat="vendorField in vendorTemplateFields">
+                                            <li ng-click="setContent(vendorField)">{{vendorField}}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="warehouseClicked==false" ng-click="toggleWarehouseRow()">
+                                        <span class="font">Warehouse</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="warehouseClicked==true">
+                                        <div class="component-accordion" ng-click="toggleWarehouseRow()">
+                                            <span class="font">Warehouse</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" />
+                                        </div>
+                                        <div ng-repeat="warehouseField in warehouseTemplateFields">
+                                            <li ng-click="setContent(warehouseField)">{{warehouseField}}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="poClicked==false" ng-click="togglePoRow()">
+                                        <span class="font">PO</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="poClicked==true">
+                                        <div class="component-accordion" ng-click="togglePoRow()">
+                                            <span class="font">PO</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" />
+                                        </div>
+                                        <div ng-repeat="poField in poTemplateFields">
+                                            <li ng-click="setContent(poField)">{{poField}}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="component">
+                                    <div class="component-accordion" ng-show="stClicked==false" ng-click="toggleSTRow()">
+                                        <span class="font">ST</span>
+                                        <img width="22px" height="22px" class="pull-right" src="images/svg/expand_icon.svg" />
+                                    </div>
+                                    <div class="component-accordion-open" ng-show="stClicked==true">
+                                        <div class="component-accordion" ng-click="toggleSTRow()">
+                                            <span class="font">ST</span>
+                                            <img width="22px" height="22px" class="pull-right" src="images/svg/collaps_icon.svg" />
+                                        </div>
+                                        <div ng-repeat="stField in stTemplateFields">
+                                            <li ng-click="setContent(stField)">{{stField}}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <md-button class="cancel-btn" ng-click="closeAllAccordions();">
+                    Cancel
+                </md-button>
+                <span flex></span>
+                <md-button class="cancel-btn" ng-click="previewInvoice(invoicetemplatesData);">
+                    Preview
+                </md-button>
+                <md-button class="action-btn" ng-disabled="isEditable" ng-show="invoicemode=='add' || invoicemode=='copy'" ng-click="saveInvoiceTemplate(invoicetemplatesData);">
+                    Save
+                </md-button>
+
+                <md-button class="action-btn" ng-disabled="isEditable" ng-show="invoicemode=='edit'" ng-click="editInvoiceTemplate(invoicetemplatesData);">
+                    Update
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+
+
+
+
+<div class="modal fade" id="PreviewInvoice" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                Preview Template
+                <button type="button" class="close" ng-click="cancelSingleOrder()" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;overflow-y:hidden;height:90vh;">
+                <!--<object data="{{content}}" type="application/pdf" target="_blank" style="width:100%;height:100vh;">view</object>-->
+                <iframe ng-src="{{content}}" style="width:100%;height:100vh;"></iframe>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+            </div>
+        </div>
+    </div>
+</div>

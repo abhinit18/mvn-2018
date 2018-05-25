@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="MavenApp" data-ng-controller="MavenAppCtrl">
+<head>
+
+    <title>Maven by Glaucus</title>
+
+    <link rel="icon" type="image/png" sizes="any" href="oms/images/glaucus_symbol_small.png">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <!--Angular Material CSS -->
+    <link rel="stylesheet" href="oms/libs/angular-material/angular-material.min.css">
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="assets/js/angular.min.js"></script>
+
+    <link rel="stylesheet" href="assets/css/animate.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="oms/libs/font-awesome/css/font-awesome.min.css">
+
+    <!-- CSS Loaders -->
+    <link rel="stylesheet" href="oms/libs/loaders.css/loaders.min.css">
+
+    <!--<link href="https://fonts.googleapis.com/css?family=Poppins:500" rel="stylesheet">-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <link rel='stylesheet' href='oms/css/loading-bar.min.css' type='text/css' media='all' />
+
+    <!-- Custom CSS -->
+
+    <!--Dashboard-->
+
+    <script type="text/javascript" src="assets/js/angular-cookies.min.js" ></script>
+    <script type="text/javascript" src="assets/js/angular-ui-router.js" ></script>
+
+    <script type="text/javascript" src="assets/js/jquery-1.11.2.min.js" ></script>
+    <script type="text/javascript" src="assets/js/jquery.main.js" ></script>
+    <script  type="text/javascript" src="assets/js/bootstrap.min.js" ></script>
+    <!--notification-->
+    <script src="assets/js/bootstrap-notify.min.js"></script>
+
+    <script src="assets/js/jquery.sharrre.js"></script>
+<!--    <script  type="text/javascript" src="assets/js/notify.js" ></script>-->
+    <script  type="text/javascript" src="assets/js/ngStorage.js" ></script>
+
+    <!-- angular material assets -->
+    <script src="oms/libs/angular-animate/angular-animate.min.js"></script>
+    <script src="oms/libs/angular-aria/angular-aria.min.js"></script>
+    <script src="oms/libs/angular-material/angular-material.min.js"></script>
+    <script src="oms/libs/angular-material-1.0/modules/js/dialog/dialog.js"></script>
+    <link rel="stylesheet" href="oms/libs/angular-material-1.0/modules/js/dialog/dialog.css">
+    <link rel="stylesheet" href="oms/libs/angular-material-1.0/modules/js/dialog/dialog-default-theme.css">
+
+    <!--Application js -->
+    <script type="text/javascript" src="app.js" ></script>
+
+    <script src="oms/js/ui-bootstrap.js"></script>
+
+    <script type="text/javascript" src="config/config.js" ></script>
+    <script type="text/javascript" src="shared/validation-service.js" ></script>
+    <script type="text/javascript" src="shared/custom-http-service.js" ></script>
+    <script type="text/javascript" src="authentication/app.js" ></script>
+    <script type="text/javascript" src="authentication/service.js" ></script>
+    <script type="text/javascript" src="authentication/service.js" ></script>
+    <script type="text/javascript" src="directives/custom.directive.js" ></script>
+
+
+
+
+    <script type="text/javascript" src="authentication/forgotPassword/forgotPassword.controller.js" ></script>
+    <script type="text/javascript" src="authentication/forgotPassword/forgotPasswordSuccess/forgotPasswordSuccess.controller.js" ></script>
+    <script type="text/javascript" src="authentication/signUp/signUp.controller.js" ></script>
+    <script type="text/javascript" src="authentication/signUp/signUpSuccess/signUpSuccess.controller.js" ></script>
+    <script type="text/javascript"  src="authentication/resetPassword/resetPassword.controller.js"></script>
+
+
+
+
+
+
+
+    <!--<link rel="import" href="oms/index.html">-->
+    <script type="text/javascript" src="shared/controllers/apps.controller.js" ></script>
+    <script type="text/javascript" src="shared/services/apps.service.js" ></script>
+    <script type="text/javascript"  src="shared/controllers/header.controller.js"></script>
+    <script type="text/javascript"  src="shared/services/header.service.js"></script>
+
+
+    <script type="text/javascript"  src="authentication/verify/verifyUser.Controller.js"></script>
+
+
+
+</head>
+
+<body>
+<div data-ui-view="header"></div>
+<div  data-ui-view="main">
+</div>
+
+<style>
+    #loading-bar .bar {
+        -webkit-transition: width 350ms;
+        -moz-transition: width 350ms;
+        -o-transition: width 350ms;
+        transition: width 350ms;
+        background: #F0592B !important;
+        position: fixed;
+        z-index: 10002;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        border-bottom-right-radius: 1px;
+        border-top-right-radius: 1px
+    }
+
+    #loading-bar-spinner .spinner-icon{
+        border-top-color: #F0592B !important;
+        border-left-color: #F0592B !important;
+    }
+
+
+</style>
+
+</body>
+</html>

@@ -1,0 +1,457 @@
+<script type="text/javascript">
+    $(function () {
+        // Setting focus
+        $('input[name="email"]').focus();
+
+        // Setting width of the alert box
+        var alert = $('.alert');
+        var formWidth = $('.bootstrap-admin-login-form').innerWidth();
+        console.log(formWidth);
+        var alertPadding = parseInt($('.alert').css('padding'));
+        if (isNaN(alertPadding)) {
+            alertPadding = parseInt($(alert).css('padding-left'));
+        }
+        $('.alert').width(formWidth - 2 * alertPadding);
+    });
+</script>
+
+<section class="login-signup" ng-init="onLoad()">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="logo">
+                    <!-- LOGO -->
+                    <img src="images/logo-big.png" alt="">
+                    <span style="position: relative;">
+                            <span style="position: absolute;top:-17px;">Beta</span>
+                        </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="signup-form">
+                    <!-- Heading -->
+                    <h1>Register</h1>
+
+                    <!-- Company Area -->
+                    <form ng-submit="RegistrationForm.$valid && registerCompanyDetails()" class="signupForm" novalidate
+                          name="RegistrationForm" accessible-form>
+                        <div class="row">
+                            <!-- Company Icon -->
+                            <div class="company-icon col-lg-1 col-md-1 col-sm-1 col-xs-1 centered">
+                                <img src="images/svg/company.svg"/>
+                            </div>
+
+                            <!-- Input for Company -->
+                            <div class="company-name col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                <input type="text" tabindex="1" capitalize-first ng-model="companyName" ng-blur="checkCompanyName()"
+                                       maxlength="45"
+                                       id="signupCompany"
+                                       ng-focus="clearCompanyCheck()" name="FirmName" placeholder="Company*" required>
+                            </div>
+                            <!-- Check/Cross Icon -->
+                            <div class="validate-icon col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                            <span class="tick-icon" ng-style="companyValidateCorrectStyle">
+                                <img src="images/svg/validation_correct.svg"/>
+                                </span>
+                            <span class="cross-icon" ng-style="companyValidateWrongStyle">
+                                <img src="images/svg/validation_wrong.svg"/>
+                            </span>
+                            </div>
+
+                        </div>
+                        <!-- Horizontal Line -->
+                        <div class="row">
+                            <div class="generic-hr col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <hr>
+                                <div class="error label signup-errorMsg"
+                                     ng-show="RegistrationForm.$submitted || !RegistrationForm.FirmName.$pristine">
+                                    <small class="error-msg"
+                                           ng-show="RegistrationForm.FirmName.$error.required || RegistrationForm.FirmName.$pristine">
+                                        Company name is required
+                                    </small>
+                                    <small class="error-msg"
+                                           ng-show="!RegistrationForm.FirmName.$error.required">
+                                        <span class="error-msg">{{displayCompanyMessage}}</span>
+                                    </small>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <!-- Email/Phone Area -->
+
+                        <div class="row">
+                            <!-- Email Area -->
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 signup-panel">
+                                <div class="row">
+                                    <!-- User Icon -->
+
+                                    <div class="user-icon col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                        <img src="images/svg/email_id.svg"/>
+                                    </div>
+                                    <!-- Input for Email -->
+                                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                        <input type="email" class="text-lowercase emailInput" tabindex="2" ng-model="email" ng-blur="checkEmail()"
+                                               ng-focus="clearEmailCheck()" name="emailID" placeholder="Email ID*"
+                                               maxlength="45"
+                                               id="signupEmail"
+                                               required>
+                                    </div>
+                                    <!-- Check/Cross Icon -->
+                                    <div class="validate-icon col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                    <span class="tick-icon" ng-style="emailValidateCorrectStyle">
+                                        <img src="images/svg/validation_correct.svg"/>
+                                    </span>
+                                    <span class="cross-icon" ng-style="emailValidateWrongStyle">
+                                        <img src="images/svg/validation_wrong.svg"/>
+                                    </span>
+                                    </div>
+                                </div>
+                                <!-- Horizontal Line -->
+                                <div class="row">
+                                    <div class="generic-hr col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <hr>
+                                        <div class="error label signup-errorMsg"
+                                             ng-show="RegistrationForm.$submitted || !RegistrationForm.emailID.$pristine">
+                                            <small class="error-msg"
+                                                   ng-show="RegistrationForm.emailID.$error.required || RegistrationForm.emailID.$pristine">
+                                                Email ID is required
+                                            </small>
+                                            <small class="error-msg"
+                                                   ng-show="RegistrationForm.emailID.$invalid && !RegistrationForm.emailID.$error.required">
+                                                Email ID is invalid
+                                            </small>
+                                            <small class="error-msg"
+                                                   ng-show="!RegistrationForm.emailID.$error.required && !RegistrationForm.emailID.$invalid">
+                                                <span class="error-msg">{{displayEmailMessage}}</span>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- Phone Area -->
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 signup-panel pull-right">
+                                <div class="row">
+                                    <!-- Phone Icon -->
+                                    <div class="mobile-icon col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                        <img src="images/svg/phone_no.svg"/>
+                                    </div>
+                                    <!-- Input for Phone -->
+                                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                        <input type="text" pattern='\d{10}' title='Phone Number (Format: 9812345678)' tabindex="3" ng-model="phone" name="phone"
+                                               maxlength="10"
+                                               id="signupMobile"
+                                               ng-blur="checkPhone()" ng-focus="clearPhoneCheck()" placeholder="Mobile Number*" required>
+                                    </div>
+                                    <!-- Check/Cross Icon -->
+                                    <div class="validate-icon col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                    <span class="tick-icon" ng-style="phoneValidateCorrectStyle">
+                                        <img src="images/svg/validation_correct.svg"/>
+                                    </span>
+                                    <span class="cross-icon" ng-style="phoneValidateWrongStyle">
+                                        <img src="images/svg/validation_wrong.svg"/>
+                                    </span>
+                                    </div>
+                                </div>
+                                <!-- Horizontal Line -->
+                                <div class="row">
+                                    <div class="generic-hr col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <hr>
+                                        <div class="error label signup-errorMsg"
+                                             ng-show="RegistrationForm.$submitted || !RegistrationForm.phone.$pristine">
+                                            <small class="error-msg"
+                                                   ng-show="RegistrationForm.phone.$error.required || RegistrationForm.phone.$pristine">
+                                                Mobile number is required
+                                            </small>
+                                            <small class="error-msg"
+                                                   ng-show="RegistrationForm.phone.$invalid && !RegistrationForm.phone.$error.required">
+                                                Mobile number is invalid
+                                            </small>
+                                            <small class="error-msg"
+                                                   ng-show="!RegistrationForm.phone.$error.required && !RegistrationForm.phone.$invalid">
+                                                <span class="error-msg">{{displayPhoneMessage}}</span>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Name Area -->
+
+                        <div class="row">
+                            <!-- First Name Area -->
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 signup-panel">
+                                <div class="row">
+                                    <!-- Input for First Name -->
+                                    <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11" style="padding-left:0px;">
+                                        <input type="text" tabindex="4" capitalize-first ng-model="fName" name="fName"
+                                               maxlength="45"
+                                               id="signupFirstName"
+                                               title="Primary contact person. This person will be the admin user."
+                                               ng-focus="clearFNameCheck()" placeholder="First Name*" required>
+                                    </div>
+                                    <!-- Check/Cross Icon -->
+                                    <div class="validate-icon col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                    <span class="cross-icon" ng-style="fNameValidateStyle">
+                                        <img src="images/svg/validation_wrong.svg"/>
+                                    </span>
+                                    </div>
+                                </div>
+                                <!-- Horizontal Line -->
+                                <div class="row">
+                                    <div class="generic-hr col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <hr>
+                                        <div class="error label signup-errorMsg"
+                                             ng-show="RegistrationForm.$submitted">
+                                            <small class="error-msg"
+                                                   ng-show="RegistrationForm.fName.$error.required || RegistrationForm.fName.$pristine">
+                                                First Name is required
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Last Name Area -->
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 signup-panel pull-right">
+                                <div class="row">
+                                    <!-- Input for Last Name -->
+                                    <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11" style="padding-left:0px;">
+                                        <input type="text" tabindex="5" capitalize-first ng-model="lName" name="lName"
+                                               maxlength="45"
+                                               id="signupLastName"
+                                               ng-focus="clearLNameCheck()" placeholder="Last Name*" required>
+                                    </div>
+                                    <!-- Cross/Help Icon -->
+                                    <div class="validate-icon col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                    <span class="cross-icon" ng-style="lNameValidateStyle">
+                                        <img src="images/svg/validation_wrong.svg"/>
+                                    </span>
+                                    </div>
+                                </div>
+                                <!-- Horizontal Line -->
+                                <div class="row">
+                                    <div class="generic-hr col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <hr>
+                                        <div class="error label signup-errorMsg"
+                                             ng-show="RegistrationForm.$submitted">
+                                            <small class="error-msg"
+                                                   ng-show="RegistrationForm.lName.$error.required || RegistrationForm.lName.$pristine">
+                                                Last Name is required
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Area -->
+
+                        <div class="row" >
+                            <!-- First Password Area -->
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 signup-panel">
+                                <div class="row">
+                                    <!-- Input for First Password -->
+                                    <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11" style="padding-left:0px;">
+                                        <input type="password" tabindex="6" ng-model="pwd" ng-blur="checkFPwd()"
+                                               ng-focus="clearFPwdCheck()" placeholder="Password*" name="password"
+                                               minlength="8" maxlength="14" id="signupPassword"
+                                               title="Password must be at least 8 characters long and should contain one number,one letter and one special character"
+                                               required>
+                                    </div>
+                                    <!-- Check/Cross Icon -->
+                                    <div class="validate-icon col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                    <span class="cross-icon" ng-style="FPwdValidateStyle">
+                                        <img src="images/svg/validation_wrong.svg"/>
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <!-- Horizontal Line -->
+                                <div class="row">
+                                    <div class="generic-hr col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <hr>
+                                        <div class="error label signup-errorMsg"
+                                             ng-show="RegistrationForm.$submitted  || !RegistrationForm.password.$pristine">
+                                            <small class="error-msg"
+                                                   ng-show="RegistrationForm.password.$error.required || RegistrationForm.password.$pristine">
+                                                Password is required
+                                            </small>
+                                                <small class="error-msg text-danger" ng-show="RegistrationForm.password.$error.minlength && !RegistrationForm.password.$pristine">
+                                                    Minimum length should be of 8 characters
+                                                </small>
+                                            <small class="error-msg"
+                                                   ng-show="!RegistrationForm.password.$error.required && !RegistrationForm.password.$invalid">
+                                                <!--<span richtext="displayFPwdMessage" class="error-msg"></span>-->
+                                                <richerrortext class="error-msg" body-text="displayFPwdMessage">
+                                                </richerrortext>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Confirm Password Area -->
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 signup-panel pull-right">
+                                <div class="row">
+                                    <!-- Input for Confirm Password -->
+                                    <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11" style="padding-left:0px;">
+                                        <input type="password" tabindex="7" ng-model="cPwd" ng-blur="checkCPwd()"
+                                               ng-focus="clearCPwdCheck()" placeholder="Confirm Password*" name="cpassword"
+                                               minlength="8" maxlength="14" id="signupConfirmPassword"
+                                               title="Must be same as password"
+                                               required>
+                                    </div>
+                                    <!-- Check/Cross Icon -->
+                                    <div class="validate-icon col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                    <span class="cross-icon" ng-style="cPwdValidateStyle">
+                                        <img src="images/svg/validation_wrong.svg"/>
+                                    </span>
+                                    </div>
+                                </div>
+                                <!-- Horizontal Line -->
+                                <div class="row">
+                                    <div class="generic-hr col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <hr>
+                                        <div class="error label signup-errorMsg"
+                                             ng-show="RegistrationForm.$submitted  || !RegistrationForm.cpassword.$pristine">
+                                            <small class="error-msg"
+                                                   ng-show="RegistrationForm.cpassword.$error.required || RegistrationForm.cpassword.$pristine">
+                                                Confirm Password is required
+                                            </small>
+                                            <small class="error-msg"
+                                                   ng-show="!RegistrationForm.cpassword.$error.required && !RegistrationForm.cpassword.$invalid">
+                                                <span class="error-msg">{{displayCPwdMessage}}</span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Signup Button -->
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <div class="checkbox-area col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                                        <div  class="checkbox" style="margin-top:0px;">
+
+                                            <md-checkbox id="signupTermsCheckbox" name="terms" ng-model="termsCheck" required tabindex="8">
+                                            </md-checkbox>
+                                            <label style="font-size: 1.1em;padding-left:0px;">
+                                                    I acknowledge that I have read
+                                                    and agree to the <a id="signupTerms" tabindex="9" class="terms-link" ng-click="OpenTnC()">Terms of Service</a> and
+                                                    <a id="signupPrivacy" tabindex="10" ng-click="PrivacyModal()" class="terms-link">Privacy Policy</a>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+
+                                            <div class="error label col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                                                 ng-show="RegistrationForm.$submitted">
+                                                <small class="error-msg"
+                                                       ng-show="RegistrationForm.terms.$error.required || RegistrationForm.terms.$pristine">
+                                                    Please accept Terms of Service
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 signup-panel signup-btn pull-right">
+                                <button id="signupSubmit" type="submit" tabindex="11" ng-class="{'button-disabled':isRegistered}"  ng-disabled="isRegistered" >Register</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Signup -->
+    <div class="login-area">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                If you're already a registered user, please <a id="signupLogin" href="#/login">Login</a> here
+            </div>
+        </div>
+    </div>
+
+    <div class="info-area">
+        <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                Copyright<i class="fa fa-copyright fa-fw" aria-hidden="true"></i>2017 Glaucus Logistics Private Limited
+
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+.signup-errorMsg{
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    float: left;
+    left: 0px;
+    text-align: right;
+}
+    .signupForm .row{
+        margin-bottom: 5px;
+    }
+</style>
+
+<div class="modal fade" data-backdrop="static" id="TnC" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                Terms and Conditions
+                <button type="button" class="close" ng-click="cancelSingleOrder()" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;overflow-y:hidden;height:90vh;">
+                <!--<object data="{{content}}" type="application/pdf" target="_blank" style="width:100%;height:100vh;">view</object>-->
+                <iframe ng-src="{{TnC}}" style="width:100%;height:100vh;"></iframe>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" data-backdrop="static" id="privacy" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                Privacy Policy
+                <button type="button" class="close" ng-click="cancelSingleOrder()" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;overflow-y:hidden;height:90vh;">
+                <iframe ng-src="{{privacyPolicy}}" style="width:100%;height:100vh;"></iframe>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+            </div>
+        </div>
+    </div>
+</div>

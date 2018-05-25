@@ -1,0 +1,1070 @@
+<link href="inventory/inventory.css" rel="stylesheet">
+    <div class="container-fluid" ng-init="onLoad()">
+        <div class="row">
+            <div class="col-lg-10 col-md-10 col-xs-12">
+                <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;">
+                    <h4 class="screen-heading">Inventory Operations</h4></div>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-default addsharpbutton row-margin-top-medium pull-right "
+                        ng-click="newTab()">
+                    <span class="fa fa-external-link-square"></span>
+                    <span style="color: #fff !important; font-weight: 400 !important;">&nbsp;New Tab</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row orderscreen-channel row-margin-top-x-medium" style="padding-top: 20px !important;">
+            <div class="col-md-2 col-md-offset-1">
+                <span class="font">Select Warehouse</span>
+            </div>
+            <div class="col-md-2 select-style-small">
+                <select id="wopsinventoryWh" ng-model="filterObjectData.tableWarehouseDetails" ng-change="callDisabled();" ng-options="option.tableWarehouseDetailsShortname for option in wareHousesData track by option.idtableWarehouseDetailsId">
+                    <option value="">
+                        Select
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <span class="font">Search SKU</span>
+				
+            </div>
+            <div class="col-md-2">
+                <angucomplete-alt id="productsfilter" placeholder="Search product" pause="400"
+                                  selected-object="searchedProductForFilter" remote-url="{{baseSkuUrl}}"
+                                  title-field="tableSkuClientSkuCode"
+                                  description-field="tableSkuName"
+                                  image-field="tableSkuImageUrl"
+                                  initial-value="filterObjectData.sku" input-class="main-bottom-border font input-less-padding inv-search-input"></angucomplete-alt>
+           
+           		<button type="button" style="position: absolute;top: 0px; right: -20px;" class="btn btn-sm truncate-text" ng-click="masterSkuDialog($event, false);">. . .</button>
+            </div>
+            <div class="col-md-2">
+                <button id="wopsinventorySearch" type="button" class="btn btn-default mybut"
+                        ng-click="submitInventoryAction()"
+                        style="margin-top: -5px; margin-right: 5px; margin-left: 10px !important;"
+                        >Search
+                </button>
+                <button id="wopsinventoryClear" title="Clear Applied Filters" class="btn clearFilter pull-right"
+                        ng-click="clearActionInv()"
+                        style="margin-left: 0px !important;" ></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row main-list">
+            <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                <thead class="main-list-header-inv">
+                <!-- table header -->
+                <tr>
+                    <th id="wopsinventorySKUIdH" class="text-left">
+                        <a href="" ng-click="tableSorting('skuId',sortReverse)">
+                            Seller SKU ID &nbsp;
+                            <span ng-if="sortType == 'skuId' && !sortReverse"
+                                  class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'skuId' && sortReverse"
+                                  class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th id="wopsinventorySKUNameH" class="text-left">
+
+                        <a href="" ng-click="tableSorting('skuName',sortReverse)">
+                            SKU Name &nbsp;
+                            <span ng-if="sortType == 'skuName' && !sortReverse"
+                                  class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'skuName' && sortReverse"
+                                  class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th id="wopsinventoryAvailH" class="text-left">
+
+                        <a href=""
+                           ng-click="tableSorting('available',sortReverse)">
+                            Available &nbsp;
+                            <span ng-if="sortType == 'available' && !sortReverse"
+                                  class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'available' && sortReverse"
+                                  class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th id="wopsinventoryAllocH" class="text-left">
+
+                        <a href="" ng-click="tableSorting('allocated',sortReverse)">
+                            Allocated &nbsp;
+                            <span ng-if="sortType == 'allocated' && !sortReverse"
+                                  class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'allocated' && sortReverse"
+                                  class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th id="wopsinventoryBadH" class="text-left">
+
+                        <a href="" ng-click="tableSorting('bad',sortReverse)">
+                            Bad &nbsp;
+                            <span ng-if="sortType == 'bad' && !sortReverse"
+                                  class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'bad' && sortReverse"
+                                  class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th id="wopsinventoryBlockH" class="text-left">
+                        <a href="" ng-click="tableSorting('blocked',sortReverse)">
+                            Blocked &nbsp;
+                            <span ng-if="sortType == 'blocked' && !sortReverse"
+                                  class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'blocked' && sortReverse"
+                                  class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th id="wopsinventoryInTransH" class="text-left">
+                        <a href="" ng-click="tableSorting('intransit',sortReverse)">
+                            In Transit
+                            <span ng-if="sortType == 'intransit' && !sortReverse"
+                                  class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'intransit' && sortReverse"
+                                  class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th id="wopsinventoryExInwardH" class="text-left">
+
+                        <a href="" ng-click="tableSorting('expected',sortReverse)">
+                            Expected Inward
+                            <span ng-if="sortType == 'expected' && !sortReverse"
+                                  class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'expected' && sortReverse"
+                                  class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th id="wopsinventoryTotalH" class="text-left">
+
+                        <a href="" ng-click="tableSorting('total',sortReverse)">
+                            Total
+                            <span ng-if="sortType == 'total' && !sortReverse"
+                                  class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'total' && sortReverse"
+                                  class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <!--<td>-->
+                    <!--&nbsp;-->
+                    <!--</td>-->
+                    <th id="wopsinventoryDropH" class="text-left">
+                        &nbsp;
+                    </th>
+                </tr>
+                </thead>
+                <tbody data-ng-repeat="Data in inventoryLists" data-ng-switch on="dayDataCollapse[$index]">
+                <tr class="clickable-row-inv">
+                    <td id="wopsinventorySKUId{{$index}}" align="left" >
+                        <span ng-if="Data.skuCode == null">-</span>
+                        <span ng-if="Data.skuCode != null">{{Data.skuCode}}</span>
+
+                    </td>
+                    <td id="wopsinventorySKUName{{$index}}" align="left" class="short-sku-name">
+                        <span ng-if="Data.skuName == null">-</span>
+                        <span ng-if="Data.skuName != null" data-toggle="tooltip" title="{{Data.skuName}}">
+                        {{Data.skuName}}
+                    </span>
+                    </td>
+                    <td id="wopsinventoryAvail{{$index}}" align="left">
+                        <span ng-if="Data.available == null">-</span>
+                        <span ng-if="Data.available != null">{{Data.available}}</span>
+
+                    </td>
+                    <td id="wopsinventoryAlloc{{$index}}" align="left">
+                        <span ng-if="Data.allocated == null">-</span>
+                        <span ng-if="Data.allocated != null">{{Data.allocated}}</span>
+
+                    </td>
+                    <td id="wopsinventoryBad{{$index}}" align="left">
+                        <span ng-if="Data.bad == null">-</span>
+                        <span ng-if="Data.bad != null">{{Data.bad}}</span>
+                    </td>
+                    <td id="wopsinventoryBlock{{$index}}" align="left">
+                        <span ng-if="Data.blocked == null">-</span>
+                        <span ng-if="Data.blocked != null">{{Data.blocked}}</span>
+                    </td>
+                    <td id="wopsinventoryInTrans{{$index}}" align="left">
+                        <span ng-if="Data.intransit == null">-</span>
+                        <span ng-if="Data.intransit != null">{{Data.intransit}}</span>
+
+                    </td>
+                    <td id="wopsinventoryExInward{{$index}}" align="left">
+                        <span ng-if="Data.expected == null">-</span>
+                        <span ng-if="Data.expected != null">{{Data.expected}}</span>
+
+                    </td>
+                    <td id="wopsinventoryTotal{{$index}}" align="left">
+                        <span ng-if="Data.total == null">-</span>
+                        <span ng-if="Data.total != null">{{Data.total}}</span>
+
+                    </td>
+                    <td id="wopsinventoryDrop1{{$index}}" align="left" ng-show="dayDataCollapse == null || dayDataCollapse == undefined || dayDataCollapse == []">
+                        <img src="images/svg/expand_icon.svg" height="20"
+                             data-ng-click="selectTableRow($index, Data.tableSkuClientSkuCode);LoadSkuData(Data);"/>
+                    </td>
+                    <td id="wopsinventoryDrop2{{$index}}" align="left" data-ng-switch-when="false"
+                         data-ng-click="selectTableRow($index, Data.tableSkuClientSkuCode);LoadSkuData(Data);">
+                        <img src="images/svg/expand_icon.svg" height="20"/></td>
+                    <td  align="left" data-ng-switch-when="true"
+                         data-ng-click="selectTableRow($index, Data.tableSkuClientSkuCode)">
+                        <img src="images/svg/collaps_icon.svg" height="20"/></td>
+                </tr>
+                <tr data-ng-switch-when="true"
+                    style="border: 1px solid #C0C0C0; background-color: #FEFFFF !important;min-height: 100px;"
+                >
+
+                    <td colspan="11">
+                        <div class="full-width">
+                            <table id="productTable"
+                                   class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="data-grid-header">
+                                <tr>
+                                    <th id="wopsinventoryDropWhH" class="text-left">&nbsp;&nbsp;Warehouse
+                                    </th>
+                                    <th id="wopsinventoryDropAvailH" class="text-left">Available</th>
+                                    <th id="wopsinventoryDropAllocH" class="text-left">Allocated</th>
+                                    <th id="wopsinventoryDropBadH" class="text-left">Bad</th>
+                                    <th id="wopsinventoryDropBlockH" class="text-left">Blocked</th>
+                                    <th id="wopsinventoryDropInTrH" class="text-left">In Transit</th>
+                                    <th id="wopsinventoryDropExInH" class="text-left">Expected Inward</th>
+                                    <th id="wopsinventoryDropTotalH" class="text-left">Total</th>
+                                    <th id="wopsinventoryDropActionH" class="text-left">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody class="data-grid-data"
+                                       ng-repeat="SkuInventory in warehouseInventoryData">
+                                <tr>
+                                    <td id="wopsinventoryDropWh{{$index}}" align="left" >
+                                        <span style="color:orangered">{{SkuInventory.warehouseShortName}}</span>
+                                    </td>
+
+                                    <td id="wopsinventoryDropAvail{{$index}}" align="left">
+                                        <span ng-if="SkuInventory.available != null">
+                                            {{SkuInventory.available}}
+                                        </span>
+                                        <span ng-if="SkuInventory.available == null">
+                                            N/A
+                                        </span>
+
+                                    </td>
+                                    <td id="wopsinventoryDropAlloc{{$index}}" align="left">
+                                        <span ng-if="SkuInventory.allocated != null">
+                                            {{SkuInventory.allocated}}
+                                        </span>
+                                        <span ng-if="SkuInventory.allocated == null">
+                                            N/A
+                                        </span>
+
+                                    </td>
+
+                                    <td id="wopsinventoryDropBad{{$index}}" align="left">
+                                        <span ng-if="SkuInventory.bad != null">
+                                            {{SkuInventory.bad}}
+                                        </span>
+                                        <span ng-if="SkuInventory.bad == null">
+                                            N/A
+                                        </span>
+
+                                    </td>
+                                    <td id="wopsinventoryDropBlock{{$index}}" align="left">
+                                        <span ng-if="SkuInventory.blocked != null">
+                                            {{SkuInventory.blocked}}
+                                        </span>
+                                        <span ng-if="SkuInventory.blocked == null">
+                                            N/A
+                                        </span>
+                                    </td>
+
+                                    <td id="wopsinventoryDropInTr{{$index}}" align="left">
+                                        <span ng-if="SkuInventory.intransit != null">
+                                            {{SkuInventory.intransit}}
+                                        </span>
+                                            <span ng-if="SkuInventory.intransit == null">
+                                            N/A
+                                        </span>
+                                    </td>
+                                    <td id="wopsinventoryDropExIn{{$index}}" align="left">
+                                        <span ng-if="SkuInventory.expected != null">
+                                            {{SkuInventory.expected}}
+                                        </span>
+                                            <span ng-if="SkuInventory.expected == null">
+                                            N/A
+                                        </span>
+                                    </td>
+                                    <td id="wopsinventoryDropTotal{{$index}}" align="left">
+                                        <span ng-if="SkuInventory.total != null">
+                                            {{SkuInventory.total}}
+                                        </span>
+                                            <span ng-if="SkuInventory.total == null">
+                                            N/A
+                                        </span>
+                                    </td>
+                                    <td id="wopsinventoryDropAction{{$index}}" align="left">
+                                        <span>
+                                           <div title = "Adjust inventory" class="tool-tip" ng-init="imgsrc='images/svg/SKU_Deactivate-70.svg'"
+                                             ng-mouseover="imgsrc='images/svg/SKU_Deactivate-70.svg'"
+                                             ng-mouseout="imgsrc='images/svg/SKU_Deactivate-70.svg'">
+                                            <img ng-src="{{imgsrc}}" ng-click="BlockInventoryDataTable(SkuInventory,Data)"
+                                                 style="height:20px; width: 20px;"/>
+
+                                            </div>
+                                        </span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="row" style="margin-top: 0px;">
+                <div class="col-md-6">
+                    <p class="showingOrderLabel" ng-show="inventorySize<invCount">Showing Inventories {{start + 1}} to
+                        {{end}} of {{invCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="inventorySize>=invCount && invCount!=0">Showing Inventories
+                        {{start + 1}} to {{invCount}} of {{invCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="invCount==0">No Inventories Available
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPager.pages.length" class="pagination">
+                            <li>
+                                <a><span style="padding-right: 5px;">Showing</span>
+                                    <select ng-change="onRecordsPerPageChange(inventorySize)"  ng-model="inventorySize" name="recordsPerPage"
+                                            ng-options="option for option in recordsPerPage"
+                                            required>
+                                    </select>
+                                    <span style="padding-left: 5px;">records per page</span>
+                                </a>
+                            </li>
+                            <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a ng-click="listOfInventoriesCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li id="previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="listOfInventoriesCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="listOfInventoriesCount(page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="listOfInventoriesCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="listOfInventoriesCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+            <div class="modal fade" data-backdrop="static" id="EditSku" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <form ng-submit="SkuInventory.$valid && EditSkuInventory(singleorderData)" name="SkuInventory"
+                          novalidate accessible-form>
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                                 height="100px">
+                                <button id="skuinventoryCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelSingleOrder()">
+                                    <span aria-hidden="true">&times;</span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                                <p class="dialog-heading-p" id="myModalLabel">Edit SKU Inventory</p>
+
+                            </div>
+                            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;">
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5">
+                                        <span class="semi-bold-text">Warehouse</span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h4 style="color:orangered;">{{singleorderData.FromwareHousesData}}</h4>
+
+                                        <div class="error ng-hide" ng-show="SkuInventory.$submitted" aria-hidden="true">
+                                            <small class="error-msg text-danger"
+                                                   ng-show="SkuInventory.From.$error.required && SkuInventory.From.$pristine">
+                                                Warehouse is required.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5">
+                                        <span class="semi-bold-text">Vendor</span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select id="skuinventoryToWh" ng-change="WareHouseCheck()"
+                                                class="form-control add-single-order-select"
+                                                ng-model="singleorderData.tableVendor" disabled="disabled" name="To">
+                                            <option value="">Please Choose WareHouse
+                                            </option>
+                                            <option ng-repeat="option in vendorsData"
+                                                    ng-selected="singleorderData.tableVendor.tableVendorName == option.tableVendorName"
+                                                    value="{{option}}">
+                                                {{option.tableVendorName}}
+                                            </option>
+                                        </select>
+
+                                        <div class="error ng-hide" ng-show="SkuInventory.$submitted" aria-hidden="true">
+                                            <small class="error-msg text-danger"
+                                                   ng-show="SkuInventory.To.$error.required && SkuInventory.To.$pristine">
+                                                Vendor is required.
+                                            </small>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-5 margin-top-5">
+                                            <span class="semi-bold-text">MRP</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="skuinventoryMRP" type="text" class="darkgrey-bottom-border" price name="MRP"
+                                                   disabled="disabled"
+                                                   ng-model="singleorderData.MRP" maxlength="45"
+                                                   placeholder="Enter MRP">
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-5 margin-top-5">
+                                            <span class="semi-bold-text">Allocated No.</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="skuinventoryAllocNo" type="text" class="darkgrey-bottom-border" name="allocated" required
+                                                   ng-model="singleorderData.allocated" maxlength="45"
+                                                   placeholder="Enter Allocated Count">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-5 margin-top-5">
+                                            <span class="semi-bold-text">Batch No.</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="skuinventoryBatchNo" type="text" class="darkgrey-bottom-border" name="Batch"
+                                                   disabled="disabled"
+                                                   ng-model="singleorderData.batch" maxlength="45"
+                                                   placeholder="Enter Batch No.">
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-5 margin-top-5">
+                                            <span class="semi-bold-text">Available No.</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="skuinventoryAvailNo" type="text" class="darkgrey-bottom-border" name="available" required
+                                                   ng-model="singleorderData.available" maxlength="45"
+                                                   placeholder="Enter Available Count">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-5 margin-top-5">
+                                            <span class="semi-bold-text">Out QC Failed</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="skuinventoryOutQCF" type="text" class="darkgrey-bottom-border" name="outward" required
+                                                   ng-model="singleorderData.outward" maxlength="45"
+                                                   placeholder="Outward QC Failed">
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-5 margin-top-5">
+                                            <span class="semi-bold-text">WH Count</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="skuinventoryWhCount" type="text" class="darkgrey-bottom-border" name="WH" required
+                                                   ng-model="singleorderData.wh" maxlength="45"
+                                                   placeholder="WH Count">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-5 margin-top-5">
+                                            <span class="semi-bold-text">In QC Failed</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="skuinventoryInQCF" type="text" class="darkgrey-bottom-border" name="inward" required
+                                                   ng-model="singleorderData.inward" maxlength="45"
+                                                   placeholder="Inward QC failed">
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-5 margin-top-5">
+                                            <span class="semi-bold-text">Blocked Count</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="skuinventoryBlockCount" type="text" class="darkgrey-bottom-border" name="Blocked" required
+                                                   ng-model="singleorderData.blockedCount" maxlength="45"
+                                                   placeholder="Blocked Count">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-5 margin-top-5">
+                                            <span class="semi-bold-text">Creation Date</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="skuinventoryCDate" type="text" class="darkgrey-bottom-border" name="Blocked"
+                                                   disabled="disabled"
+                                                   ng-model="singleorderData.tableSkuCreationDatetime" maxlength="45"
+                                                   placeholder="Creation Date">
+
+                                            <div class="error ng-hide" ng-show="SkuInventory.$submitted" aria-hidden="true">
+                                                <small class="error-msg text-danger"
+                                                       ng-show="SkuInventory.startDate.$error.required && SkuInventory.startDate.$pristine">
+                                                    Creation Date is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-5 margin-top-5">
+                                            <span class="semi-bold-text">Remaining Shelf Life</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text"
+                                                   only-integer
+                                                   id="skuinventoryRSL"
+                                                   prevent-typing-greater
+                                                   max = "999999999"
+                                                   class="darkgrey-bottom-border-number" name="shelf" required
+                                                   ng-model="singleorderData.shelf"
+                                                   placeholder="Enter Shelf Time">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                                <button id="skuinventoryCancel2" type="button" class="cancel-btn" data-dismiss="modal"
+                                        ng-click="cancelSingleOrder()">Cancel
+                                </button>
+                                <button id="skuinventorySubmit" type="submit" class="action-btn">Update
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal fade" data-backdrop="static" id="BlockQuantityDataTableList" role="dialog"
+                 aria-labelledby="myModalLabelleded" aria-hidden="true">
+                <div class="modal-dialog modal-lg" style="width: 100%" >
+                    <form
+                            name="QuickGRN">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+
+                            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                                 height="100px">
+                                <button id="blockedQuantityCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelBlockQuantityDataTableListDialog()">
+                                    <span aria-hidden="true">&times;</span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                                <p class="dialog-heading-p" id="myModalLabelleded">Adjust Sku Inventory</p>
+
+                            </div>
+                            <div class="modal-body" style="padding-top: 0px">
+                                <div class="md-dialog-content">
+                                    <div class="full-width" style = "padding-top: 20px">
+                                        <div class="full-width">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <h4>{{selectedWarehouse.warehouseShortName}}</h4>
+                                            </div>
+                                        </div>
+                                        <table id="SkuInventoryTableList"
+                                               class="table boldtable table-responsive table-bordered table-hover">
+                                            <thead class="data-grid-header">
+                                            <tr>
+
+                                                <th id="blockedQuantityIDateH" style="width:7%;">Inward Date</th>
+                                                <th id="blockedQuantityMRPH" style="width:7%;">MRP</th>
+                                                <th id="blockedQuantityVendorH" style="width:7%;">Vendor</th>
+                                                <th id="blockedQuantityBatchNoH" style="width:7%;">Batch No.</th>
+                                                <th id="blockedQuantityRLH" style="width:7%;">Remaining Life</th>
+                                                <th id="blockedQuantityAvailH" style="width:7%;">Available</th>
+                                                <th id="blockedQuantityAllocH" style="width:7%;">Allocated</th>
+                                                <th id="blockedQuantityBadH" style="width:7%;">Bad</th>
+                                                <th id="blockedQuantityBlockedH" style="width:7%;">Blocked</th>
+                                                <th id="blockedQuantityIntrH" style="width:7%;">In Transit</th>
+                                                <th id="blockedQuantityExInH" style="width:7%;">Expected Inward</th>
+                                                <th id="blockedQuantityTotalH" style="width:7% !important;">Total</th>
+                                                <th id="blockedQuantityActionH" style="width:7%;">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="data-grid-data"
+                                                   ng-repeat="SkuData in blockedDataTableList track by $index">
+                                            <tr>
+                                                <td id="blockedQuantityIDate{{$index}}" style="width:7%;text-align: center;">
+                                                <span ng-if="SkuData.tableSkuInventoryInwardDateTime != null">
+                                                     {{SkuData.tableSkuInventoryInwardDateTime | utcToLocalOrHyphen}}
+                                                </span>
+                                                    <span ng-if="SkuData.tableSkuInventoryInwardDateTime == null">
+                                                    N/A
+                                                </span>
+                                                </td>
+                                                <td id="blockedQuantityMRP{{$index}}" style="width:7%;text-align: center;">
+                                                    <span>{{SkuData.tableSkuInventoryMaxRetailPrice | priceOrHyphen}}</span>
+                                                </td>
+                                                <td id="blockedQuantityVendor{{$index}}" style="width:7%;text-align: center;">
+                                                    <span ng-if="SkuData.tableVendor != null">{{SkuData.tableVendor.tableVendorName}}</span>
+                                                    <span ng-if="SkuData.tableVendor == null">
+                                                    N/A
+                                                </span>
+                                                </td>
+                                                <td id="blockedQuantityBatchNo{{$index}}" style="width:7%;text-align: center;">
+                                                    <span ng-if="SkuData.tableSkuInventoryBatchNo != null">{{SkuData.tableSkuInventoryBatchNo}}</span>
+                                                    <span ng-if="SkuData.tableSkuInventoryBatchNo == null">
+                                                    N/A
+                                                </span>
+                                                </td>
+                                                <td id="blockedQuantityRL{{$index}}" style="width:7%;text-align: center;">
+                                                    <span ng-if="SkuData.tableSkuInventoryShelfLifeInDays != null">{{SkuData.tableSkuInventoryShelfLifeInDays}}</span>
+                                                    <span ng-if="SkuData.tableSkuInventoryShelfLifeInDays == null">
+                                                    N/A
+                                                </span>
+                                                </td>
+
+                                                <td id="blockedQuantityAvail{{$index}}" style="width:7%;text-align: center;">
+                                    <span ng-if="SkuData.tableSkuInventoryAvailableCount != null">
+                                        {{SkuData.tableSkuInventoryAvailableCount}}
+                                    </span>
+                                                    <span ng-if="SkuData.tableSkuInventoryAvailableCount == null">
+                                        N/A
+                                    </span>
+
+                                                </td>
+                                                <td id="blockedQuantityAlloc{{$index}}" style="width:7%; text-align: center;">
+                                    <span ng-if="SkuData.tableSkuInventoryAllocatedCount != null">
+                                        {{SkuData.tableSkuInventoryAllocatedCount}}
+                                    </span>
+                                                    <span ng-if="SkuData.tableSkuInventoryAllocatedCount == null">
+                                        N/A
+                                    </span>
+
+                                                </td>
+
+                                                <td id="blockedQuantityBad{{$index}}" style="width:7%; text-align: center;">
+                                    <span>
+                                        {{SkuData.tableSkuInventoryInwardQcFailedCount + SkuData.tableSkuInventoryOutwardQcFailedCount}}
+                                    </span>
+
+
+                                                </td>
+                                                <td id="blockedQuantityBlocked{{$index}}" style="width:7%; text-align: center;">
+                                    <span ng-if="SkuData.tableSkuInventoryBlockedCount != null">
+                                        {{SkuData.tableSkuInventoryBlockedCount}}
+                                    </span>
+                                                    <span ng-if="SkuData.tableSkuInventoryBlockedCount == null">
+                                        N/A
+                                    </span>
+                                                </td>
+                                                <td id="blockedQuantityIntr{{$index}}" style="width:7%; text-align: center;">
+                                                <span ng-if="SkuData.tableSkuInventoryIntransitCount != null">
+                                                    {{SkuData.tableSkuInventoryIntransitCount}}
+                                                </span>
+                                                    <span ng-if="SkuData.tableSkuInventoryIntransitCount == null">
+                                                    N/A
+                                                </span>
+
+                                                </td>
+                                                <td id="blockedQuantityExIn{{$index}}" style="width:7%; text-align: center;">
+                                                <span ng-if="SkuData.tableSkuInventoryExpectedInwardCount != null">
+                                                    {{SkuData.tableSkuInventoryExpectedInwardCount}}
+                                                </span>
+                                                    <span ng-if="SkuData.tableSkuInventoryExpectedInwardCount == null">
+                                                    N/A
+                                                </span>
+
+                                                </td>
+
+                                                <td id="blockedQuantityTotal{{$index}}" style="width:7%; text-align: center;">
+                                    <span>
+                                        {{SkuData.tableSkuInventoryAvailableCount + SkuData.tableSkuInventoryIntransitCount + SkuData.tableSkuInventoryBlockedCount + SkuData.tableSkuInventoryInwardQcFailedCount + SkuData.tableSkuInventoryOutwardQcFailedCount + SkuData.tableSkuInventoryAllocatedCount}}
+                                    </span>
+                                                </td>
+                                                <td id="blockedQuantityAction{{$index}}" style="text-align: center;">
+                                   <span>
+
+
+                                    <div ng-if = "disableAdjustQuantity[$index] == false"
+                                         title = "Adjust inventory"
+                                         class="tool-tip" ng-init="imgsrc='images/svg/SKU_Deactivate-70.svg'"
+                                         ng-mouseover="access.editAccess && (imgsrc='images/svg/SKU_Deactivate-70.svg')"
+                                         ng-mouseout="imgsrc='images/svg/SKU_Deactivate-70.svg'">
+                                        <img  ng-src="{{imgsrc}}" ng-click="BlockInventory(SkuData)"
+                                              style="height:20px; width: 20px;"/>
+
+                                    </div>
+
+                                       <div ng-if = "disableAdjustQuantity[$index] == true" title = "Adjust inventory" class="tool-tip" ng-init="imgsrc='images/svg/SKU_Deactivate-70.svg'"
+                                            ng-mouseover="imgsrc='images/svg/SKU_Deactivate-70.svg'"
+                                            ng-mouseout="imgsrc='images/svg/SKU_Deactivate-70.svg'">
+                                        <img  ng-src="{{imgsrc}}"       style="opacity:0.5;height:20px; width: 20px;"/>
+
+                                    </div>
+
+                                    </span>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+                                <button id="blockedQuantityCancel2" type="button" class="action-btn" ng-click="cancelBlockQuantityDataTableListDialog()">Done</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal fade" id="AdjustQuantity" role="dialog" data-backdrop="static" aria-labelledby="myModalLabelled" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <form ng-submit="AdjustmentQuantityForm.$valid && AdjustSkuQuantity(singleorderData,AdjustmentQuantityForm)" novalidate name="AdjustmentQuantityForm">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                                 height="100px">
+                                <button id="adjstSkuCntCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelBlockInventory(AdjustmentQuantityForm)">
+                                    <span aria-hidden="true">&times;</span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                                <p class="dialog-heading-p" id="myModalLabelled">Adjust Quantity</p>
+                            </div>
+                            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding:0px;">
+                                            <div class="row row-margin-top">
+                                                <div class="col-md-3 form-row-height">
+                                                    <span class="form-label-height semi-bold-text">Adjustment Type <span style="color:red">*</span></span>
+                                                </div>
+                                                <div class="col-md-6 form-row-height">
+                                                    <select id="adjstSkuCntType" id="adjtype"
+                                                            required
+                                                            class="form-control add-single-order-select"
+                                                            ng-options="option.tableSkuInventoryAdjTypeString for option in adjustmentTypeListFiltered track by option.idtableSkuInventoryAdjType"
+                                                            ng-model="singleorderData.adjustmentType"
+                                                            ng-change="onAdjustmentTypeSelected()"
+                                                            name="adjustmentType">
+                                                        <option value="" disabled selected style="display: none;">Select AdjustmentType
+                                                        </option>
+
+                                                    </select>
+                                                </div>
+                                                <div ng-if="AdjustmentQuantityForm.$submitted && AdjustmentQuantityForm.adjustmentType.$error.required" class="col-md-offset-3 col-md-6">
+                                                    <span class="error-message">
+                                                        Please select an Adjustment Type
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- List of blocked records-->
+                                        <div class="row row-margin-top" ng-if="singleorderData.adjustmentType.idtableSkuInventoryAdjType == 2 && blockedRecords.length > 0">
+                                            <div class="row row-margin-top row-margin-bottom-small" >
+                                                <div class="col-md-10 col-md-offset-1">
+                                                    <span class="semi-bold-text">Blocked quantity details</span>
+                                                </div>
+                                            </div>
+                                            <div class="row" ng-if="blockedRecords.length > 0">
+                                                <div class="col-md-10 col-md-offset-1">
+                                                    <table id="blockedQuantityTable"
+                                                           class="table boldtable table-responsive table-bordered table-hover">
+                                                        <thead class="data-grid-header">
+                                                        <tr>
+                                                            <th id="blockedRecordsWhH"><span class="fa fa-md"></span>&nbsp;&nbsp;Customer/Warehouse
+                                                            </th>
+                                                            <th id="blockedRecordsQtyH" style="text-align: right;"><span class="fa fa-md"></span>&nbsp;&nbsp;Quantity
+                                                            </th>
+                                                            <th id="blockedRecordsFDateH" style="text-align: center;"><span class="fa fa-md"></span>&nbsp;&nbsp;From Date
+                                                            </th>
+                                                            <th id="blockedRecordsTDateH" style="text-align: center;"><span class="fa fa-md"></span>&nbsp;&nbsp;To Date
+                                                            </th>
+                                                            <th id="blockedRecordsUQtyH" style="text-align: center;"><span class="fa fa-md"></span>&nbsp;&nbsp;Unblock Quantity
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody class="data-grid-data">
+                                                        <tr ng-repeat="blockedRecord in blockedRecords track by $index">
+                                                            <td id="blockedRecordsWh{{$index}}" ng-if="blockedRecord.tableWarehouseDetails != null">
+                                                                {{blockedRecord.tableWarehouseDetails.tableWarehouseDetailsShortname}}
+                                                            </td>
+                                                            <td id="blockedRecordsWh{{$index}}" ng-if="blockedRecord.tableCustomer != null">
+                                                                {{blockedRecord.tableCustomer.tableCustomerFullName}}
+                                                            </td>
+                                                            <td id="blockedRecordsQty{{$index}}" >
+                                                                {{blockedRecord.tableSkuAdjustmentInventoryMapAdjQuantity}}
+                                                            </td>
+                                                            <td id="blockedRecordsFDate{{$index}}">
+                                                                {{blockedRecord.tableSkuAdjustmentInventoryMapBlockedOnDatetime}}
+                                                            </td>
+                                                            <td id="blockedRecordsTDate{{$index}}" >
+                                                                {{blockedRecord.tableSkuAdjustmentInventoryMapBlockedTillDatetime}}
+                                                            </td>
+
+                                                            <td >
+                                                                <input class="darkgrey-bottom-border"
+                                                                       type="number"
+                                                                       id="blockedRecordsUQty{{$index}}"
+                                                                       min="1"
+                                                                       max = "{{blockedRecord.tableSkuAdjustmentInventoryMapAdjQuantity}}"
+                                                                       ng-model="blockedRecords[$index].unblockQuantity"
+                                                                       placeholder="Unblock quantity">
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- List of blocked records end-->
+
+                                        <div class="row row-margin-top" ng-if="singleorderData.adjustmentType.idtableSkuInventoryAdjType != 2 && singleorderData.adjustmentType.idtableSkuInventoryAdjType != null">
+                                            <div class="full-width" style="margin-top:10px;">
+                                                <div class="col-md-3 form-row-height">
+                                                    <span class="form-label-height semi-bold-text">Adjust Count <span style="color:red">*</span></span>
+                                                </div>
+                                                <div class="col-md-6 form-row-height">
+                                                    <input id="adjstSkuCntCount" type="text" class="darkgrey-bottom-border-number" name="adjustQuantity"
+                                                           required
+                                                           only-integer
+                                                           prevent-typing-greater
+                                                           max = "999999999"
+                                                           ng-model="singleorderData.adjustQuantity"
+                                                           placeholder="Enter Quantity to adjust">
+                                                </div>
+                                                <div ng-if="AdjustmentQuantityForm.$submitted && AdjustmentQuantityForm.adjustQuantity.$error.required" class="col-md-offset-3 col-md-6">
+                                                    <span class="error-message">
+                                                        Please enter the Adjust Count
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="row row-margin-top">
+                                            <div class="col-md-3 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Reason for adjustment <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <select id="adjstSkuCntReason"
+                                                        required
+                                                        class="form-control add-single-order-select"
+                                                        ng-options="option.tableSkuInventoryAdjustmentReasonString for option in adjustReasonList track by option.idtableSkuInventoryAdjustmentReasonId"
+                                                        ng-model="singleorderData.blockReason"
+                                                        ng-change="CheckBlockReason(singleorderData.blockReason)"
+                                                        name="blockReason">
+                                                    <option value="" disabled selected style="display: none;">Please Choose Reason
+                                                    </option>
+
+                                                </select>
+                                            </div>
+                                            <div ng-if="AdjustmentQuantityForm.$submitted && AdjustmentQuantityForm.blockReason.$error.required" class="col-md-offset-3 col-md-6">
+                                                    <span class="error-message">
+                                                        Please select the reason for adjustment
+                                                    </span>
+                                            </div>
+                                            <div class="col-md-offset-3 col-md-6 " ng-if="singleorderData.blockReason.tableSkuInventoryAdjustmentReasonString == 'Other'">
+                                                <textarea id="adjstSkuCntOtherReason" name="otherReason" required class="form-control" style="margin-top: 15px;" ng-model="singleorderData.OtherReason" placeholder="Enter your reason"></textarea>
+                                                <md-checkbox id="adjstSkuCntReasonCheck" role="checkbox" ng-model="singleorderData.OtherReasonCommit" style="margin-top:10px;font-size: 13px;">Add this reason to the adjustment reason list</md-checkbox>
+                                            </div>
+                                            <div ng-if="singleorderData.blockReason.tableSkuInventoryAdjustmentReasonString == 'Other' && AdjustmentQuantityForm.$submitted && AdjustmentQuantityForm.otherReason.$error.required" class="col-md-offset-3 col-md-6">
+                                                    <span class="error-message">
+                                                        Please enter the reason for adjustment
+                                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="row row-margin-top"
+                                             ng-if="subReason.idtableSkuInventoryAdjustmentReasonId == 1">
+                                            <div class="col-md-3 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Customer <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <angucomplete-alt id="customersMain" placeholder="Search customer"
+                                                                  pause="400"
+                                                                  selected-object="searchedCustomer"
+                                                                  remote-url="{{baseCustomerUrl}}"
+                                                                  title-field="tableCustomerFullName"
+                                                                  code-field="tableCustomerClientCustomerCode"
+                                                                  description-field="tableCustomerEmail"
+                                                                  phone-field="tableCustomerPhone"
+                                                                  input-name="tableCustomerFullName"
+                                                                  field-required="subReason.idtableSkuInventoryAdjustmentReasonId == 1"
+                                                                  input-class="main-bottom-border font input-less-padding"
+                                                                  initial-value="customerString"></angucomplete-alt>
+                                            </div>
+                                            <div ng-if="AdjustmentQuantityForm.$submitted && AdjustmentQuantityForm.tableCustomerFullName.$error['autocomplete-required']" class="col-md-offset-3 col-md-6">
+                                                    <span class="error-message">
+                                                        Please select the Customer
+                                                    </span>
+                                            </div>
+                                        </div>
+                                        <div class="row row-margin-top"
+                                             ng-if="subReason.idtableSkuInventoryAdjustmentReasonId == 2">
+                                            <div class="col-md-3 form-row-height">
+                                                <span class="form-label-height semi-bold-text">WareHouse <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <select id="adjstSkuCntWh" class="form-control add-single-order-select"
+                                                        required
+                                                        ng-options="option.tableWarehouseDetailsShortname for option in wareHousesData track by option.idtableWarehouseDetailsId"
+                                                        ng-model="singleorderData.wareHousesData" name="warehouse">
+                                                    <option value="" disabled selected style="display: none;">Please Choose
+                                                        WareHouse
+                                                    </option>
+
+                                                </select>
+                                            </div>
+                                            <div ng-if="AdjustmentQuantityForm.$submitted && AdjustmentQuantityForm.warehouse.$error.required" class="col-md-offset-3 col-md-6">
+                                                    <span class="error-message">
+                                                        Please select the WareHouse
+                                                    </span>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row row-margin-top"
+                                             ng-if="singleorderData.adjustmentType.idtableSkuInventoryAdjType == 1">
+                                            <div class="col-md-2 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Start Date <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-4 form-row-height">
+                                                <md-datepicker
+                                                        timezoned-date
+                                                        id="adjstSkuCntSDate"
+                                                        ng-model="singleorderData.tableScheduledBlockStartDatetime"
+                                                        ng-required="true"
+                                                        md-min-date="modalStartminDate" md-placeholder="Enter date"
+                                                        md-max-date="modalStartmaxDate" md-placeholder="Enter date"
+                                                        name="startDate"
+                                                        ng-change="mainsendStartDate(singleorderData.tableScheduledBlockStartDatetime,'blockInventory')"></md-datepicker>
+
+                                            </div>
+                                            <div class="col-md-2 form-row-height">
+                                                <span class="semi-bold-text">End Date <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-4 form-row-height">
+                                                <md-datepicker
+                                                        timezoned-date
+                                                        id="adjstSkuCntEDate"
+                                                        ng-model="singleorderData.tableScheduledBlockEndDatetime"
+                                                        ng-required="true"
+                                                        md-min-date="modalendminDate" md-placeholder="Enter date"
+                                                        name="endDate"
+                                                        ng-change="mainsendEndDate(singleorderData.tableScheduledBlockEndDatetime,'blockInventory')"></md-datepicker>
+
+                                            </div>
+                                            <div ng-if="AdjustmentQuantityForm.$submitted && AdjustmentQuantityForm.startDate.$error.required" class="col-md-offset-2 col-md-4">
+                                                    <span class="error-message">
+                                                        Start Date is required.
+                                                    </span>
+                                            </div>
+                                            <div ng-if="AdjustmentQuantityForm.$submitted && AdjustmentQuantityForm.endDate.$error.required" class="col-md-offset-2 col-md-4">
+                                                    <span class="error-message">
+                                                        End Date is required.
+                                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                                <button id="adjstSkuCntCancel2" type="button" class="cancel-btn" data-dismiss="modal" ng-click="cancelBlockInventory(AdjustmentQuantityForm)">Cancel
+                                </button>
+                                <button id="adjstSkuCntSubmit" type="submit" class="action-btn" ng-if="access.editAccess">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!--test-->
+
+
+<div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript">
+        $('#addOrderModal').on('hidden.bs.modal', function (e) {
+            $(this)
+                    .find("input,textarea,select")
+                    .val('')
+                    .end()
+                    .find("input[type=checkbox], input[type=radio]")
+                    .prop("checked", "")
+                    .end();
+            $("#productTable td").parent().remove();
+        })
+    </script>
+    <style>
+        .md-whiteframe-z1 {
+            z-index: 9999 !important;
+        }
+
+        .md-datepicker-triangle-button {
+            right: -5px !important;
+        }
+
+        .mainDropDownOrder {
+            width: 112px;
+        }
+
+        td .data-grid-header {
+            background-color: lightgray !important;
+            color: #333;
+        }
+
+        td .data-grid-header th {
+            font-size: 12px;
+            font-weight: normal;
+            text-align: center;
+        }
+    </style>

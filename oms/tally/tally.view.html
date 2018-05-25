@@ -1,0 +1,277 @@
+<link href="tally/tally.css" rel="stylesheet">
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-xs-8">
+            <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;">
+                <h4 class="screen-heading">Tally</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row-margin-top-medium pull-right" style="padding-left: 25px;padding-right: 15px;">
+                <a id="tallyMavenSetup" href="https://s3.ap-south-1.amazonaws.com/glmetadata1/tally/MavenTally.zip">
+                    Download Tally Maven Integration Setup
+                </a>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row row-margin-top-x-small">
+        <div class="col-md-12" ng-if="tallyIntegration.tableTallyIntegrationTallyLedgerAddressType != null">
+            <md-checkbox id="enableMultipleAddresses" ng-model="tallyIntegration.tableTallyIntegrationTallyLedgerAddressType"
+                         ng-change="updateLedgerAddress()"
+                         aria-label="Enable" ng-disabled="!access.editAccess" >
+            </md-checkbox>Multiple addresses are enabled in Tally
+        </div>
+        <div class="col-md-12" ng-if="tallyIntegration.tableTallyIntegrationTallyLedgerAddressType == null">
+            <md-radio-group id="enableMultipleAddressesRadio" ng-change="updateLedgerAddress()"
+                            ng-model="tallyIntegration.tableTallyIntegrationTallyLedgerAddressType" style="display: inline-flex;">
+                <md-radio-button value="true">Yes</md-radio-button>
+                <md-radio-button value="false" class="md-primary">No</md-radio-button>
+            </md-radio-group>
+            <span>Multiple addresses are enabled in Tally</span>
+        </div>
+    </div>
+
+    <div class="row row-margin-top-x-small">
+        <div class="col-md-12">
+            <md-toolbar class="md-small accordion-color">
+                <div class="md-toolbar-tools">
+                    <span class="font-big">From Tally to GSC Maven</span>
+                    <span flex=""></span>
+                    <md-button class="md-icon-button" aria-label="Favorite" ng-click="tallyToMaven = !tallyToMaven">
+                        <md-icon ng-show="!tallyToMaven" md-svg-icon="images/svg/expand_icon.svg">
+                        </md-icon>
+                        <md-icon ng-show="tallyToMaven" md-svg-icon="images/svg/collaps_icon.svg">
+                        </md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+        </div>
+    </div>
+    <div ng-show="tallyToMaven" class="row row-margin-top">
+        <div class="col-md-12 padding-top-20">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-offset-2 col-md-8">
+                        <table class="table boldtable table-responsive table-bordered table-hover">
+                            <thead class="data-grid-header">
+                                <tr>
+                                    <th>Masters</th>
+                                    <th>Last Updated</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="data-grid-data">
+                                <tr>
+                                    <td>
+                                        <span class="client-label" >
+                                            SKU
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{tallyIntegration.tableTallyIntegrationLastSkuUpdateFromTally | utcToLocalTimeOrHyphen}}
+                                    </td>
+
+                                    <td >
+                                        <!--<button ng-if="tallyIntegration.tableTallyIntegrationLastSkuUpdateFromTally != null" class="btn addsharpbutton">Sync</button>-->
+                                        <button ng-if="tallyIntegration.tableTallyIntegrationLastSkuUpdateFromTally == null"
+                                                ng-click="onFetchSkuFromTallyClicked()"
+                                                class="btn addsharpbutton">Fetch from Tally</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="client-label" >
+                                            Customer
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{tallyIntegration.tableTallyIntegrationLastCustUpdateFromTally | utcToLocalTimeOrHyphen}}
+                                    </td>
+
+                                    <td >
+                                        <!--<button ng-if="tallyIntegration.tableTallyIntegrationLastCustUpdateFromTally != null" class="btn addsharpbutton">Sync</button>-->
+                                        <button ng-if="tallyIntegration.tableTallyIntegrationLastCustUpdateFromTally == null"
+                                                ng-click="onFetchCustomerFromTallyClicked()"
+                                                class="btn addsharpbutton">Fetch from Tally</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="client-label" >
+                                            Vendor
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{tallyIntegration.tableTallyIntegrationLastVendorUpdateFromTally | utcToLocalTimeOrHyphen}}
+                                    </td>
+
+                                    <td >
+                                        <!--<button ng-if="tallyIntegration.tableTallyIntegrationLastSkuUpdateFromTally == null" class="btn addsharpbutton">Sync</button>-->
+                                        <button ng-if="tallyIntegration.tableTallyIntegrationLastVendorUpdateFromTally == null"
+                                                ng-click="onFetchVendorFromTallyClicked()"
+                                                class="btn addsharpbutton">Fetch from Tally</button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-margin-top-x-small">
+        <div class="col-md-12">
+            <md-toolbar class="md-small accordion-color">
+                <div class="md-toolbar-tools">
+                    <span class="font-big">From GSC Maven to Tally</span>
+                    <span flex=""></span>
+                    <md-button class="md-icon-button" aria-label="Favorite" ng-click="mavenToTally = !mavenToTally">
+                        <md-icon ng-show="!mavenToTally" md-svg-icon="images/svg/expand_icon.svg">
+                        </md-icon>
+                        <md-icon ng-show="mavenToTally" md-svg-icon="images/svg/collaps_icon.svg">
+                        </md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+        </div>
+    </div>
+    <div ng-show="mavenToTally" class="row row-margin-top">
+        <div class="col-md-12 padding-top-20">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-offset-2 col-md-8">
+                        <table class="table boldtable table-responsive table-bordered table-hover">
+                            <thead class="data-grid-header">
+                            <tr>
+                                <th>Masters</th>
+                                <th>Last Synced To Tally</th>
+                                <th>Last Updated In Maven</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody class="data-grid-data">
+                            <tr>
+                                <td>
+                                   <span class="client-label" >
+                                       SKU
+                                   </span>
+                                </td>
+                                <td>
+                                    {{tallyIntegration.tableTallyIntegrationLastSkuUpdateToTally | utcToLocalTimeOrHyphen}}
+                                </td>
+                                <td>
+                                    {{tallyIntegration.tableTallyIntegrationLastSkuUpdateMaven | utcToLocalTimeOrHyphen}}
+                                </td>
+                                <td>
+                                    <button ng-if="tallyIntegration.tableTallyIntegrationLastSkuUpdateFromTally != null
+                                                    && ((tallyIntegration.tableTallyIntegrationLastSkuUpdateMaven  > tallyIntegration.tableTallyIntegrationLastSkuUpdateToTally )
+                                                    || (tallyIntegration.tableTallyIntegrationLastSkuUpdateMaven!=null && tallyIntegration.tableTallyIntegrationLastSkuUpdateToTally == null))"
+                                            ng-click="onSyncToTallyClicked('Sku')"
+                                            class="btn addsharpbutton">Sync</button>
+                                    <!--<button ng-if="tallyIntegration.tableTallyIntegrationLastSkuUpdateToTally == null"
+                                            ng-click="onFetchSkuFromMavenClicked()"
+                                            class="btn addsharpbutton">Fetch from Maven</button>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="client-label" >
+                                        Customer
+                                    </span>
+                                </td>
+                                <td>
+                                    {{tallyIntegration.tableTallyIntegrationLastCustUpdateToTally | utcToLocalTimeOrHyphen}}
+                                </td>
+                                <td>
+                                    {{tallyIntegration.tableTallyIntegrationLastCustUpdateMaven | utcToLocalTimeOrHyphen}}
+                                </td>
+                                <td>
+                                    <button ng-if="tallyIntegration.tableTallyIntegrationLastCustUpdateFromTally != null
+                                                    && (( tallyIntegration.tableTallyIntegrationLastCustUpdateMaven > tallyIntegration.tableTallyIntegrationLastCustUpdateToTally)
+                                                    || (tallyIntegration.tableTallyIntegrationLastCustUpdateMaven!=null && tallyIntegration.tableTallyIntegrationLastCustUpdateToTally == null))"
+                                            ng-click="onSyncToTallyClicked('Customer')"
+                                            class="btn addsharpbutton">Sync</button>
+                                    <!--<button ng-if="tallyIntegration.tableTallyIntegrationLastCustUpdateToTally == null"
+                                            ng-click="onFetchCustFromMavenClicked()"
+                                            class="btn addsharpbutton">Fetch from Maven</button>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                   <span class="client-label" >
+                                       Vendor
+                                   </span>
+                                </td>
+                                <td>
+                                    {{tallyIntegration.tableTallyIntegrationLastVendorUpdateToTally | utcToLocalTimeOrHyphen}}
+
+                                </td>
+                                <td>
+                                    {{tallyIntegration.tableTallyIntegrationLastVendorUpdateMaven | utcToLocalTimeOrHyphen}}
+
+                                </td>
+                                <td>
+                                    <button ng-if="tallyIntegration.tableTallyIntegrationLastVendorUpdateFromTally != null
+                                                    && (( tallyIntegration.tableTallyIntegrationLastVendorUpdateMaven > tallyIntegration.tableTallyIntegrationLastVendorUpdateToTally)
+                                                        || (tallyIntegration.tableTallyIntegrationLastVendorUpdateMaven!=null && tallyIntegration.tableTallyIntegrationLastVendorUpdateToTally == null))"
+                                            ng-click="onSyncToTallyClicked('Vendor')"
+                                            class="btn addsharpbutton">Sync</button>
+                                    <!--<button ng-if="tallyIntegration.tableTallyIntegrationLastVendorUpdateToTally == null"
+                                            ng-click="onFetchVendorFromMavenClicked()"
+                                            class="btn addsharpbutton">Fetch from Maven</button>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                   <span class="client-label" >
+                                       Sale Invoice
+                                   </span>
+                                </td>
+                                <td>
+                                    {{tallyIntegration.tableTallyIntegrationLastSaleOrderUpdateToTally | utcToLocalTimeOrHyphen}}
+                                </td>
+                                <td>
+                                    {{tallyIntegration.tableTallyIntegrationLastSaleOrderUpdateMaven | utcToLocalTimeOrHyphen}}
+                                </td>
+                                <td>
+                                    <button ng-if="(tallyIntegration.tableTallyIntegrationLastSaleOrderUpdateMaven > tallyIntegration.tableTallyIntegrationLastSaleOrderUpdateToTally
+                                                         || (tallyIntegration.tableTallyIntegrationLastSaleOrderUpdateMaven!=null && tallyIntegration.tableTallyIntegrationLastSaleOrderUpdateToTally == null))"
+                                            ng-click="onSyncToTallyClicked('Sale Invoice')"
+                                            class="btn addsharpbutton">Sync</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                   <span class="client-label" >
+                                       Sale Return Invoice
+                                   </span>
+                                </td>
+                                <td>
+                                    {{tallyIntegration.tableTallyIntegrationLastSaleReturnUpdateToTally | utcToLocalTimeOrHyphen}}
+                                </td>
+                                <td>
+                                    {{tallyIntegration.tableTallyIntegrationLastSaleReturnUpdateMaven | utcToLocalTimeOrHyphen}}
+                                </td>
+                                <td>
+                                    <button ng-if="(tallyIntegration.tableTallyIntegrationLastSaleReturnUpdateMaven > tallyIntegration.tableTallyIntegrationLastSaleReturnUpdateToTally
+                                                         || (tallyIntegration.tableTallyIntegrationLastSaleReturnUpdateMaven!=null && tallyIntegration.tableTallyIntegrationLastSaleReturnUpdateToTally == null))"
+                                            ng-click="onSyncToTallyClicked('Sale Return')"
+                                            class="btn addsharpbutton">Sync</button>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div ng-include src="'./tally/noDataFoundDialog.html?version=1.0.0'"></div>

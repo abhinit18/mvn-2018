@@ -1,0 +1,41 @@
+
+<div class="modal fade" id="selectRateListDialog" role="dialog" aria-labelledby="selectRateListDialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+				<!-- Modal Header -->
+
+				<div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+					 height="100px">
+
+					<p class="dialog-heading-p">Select Rate List</p>
+
+				</div>
+
+				<div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+					<div class="full-width" style="">
+						<div class="tab-pane container-fluid" id="tab2">
+							<div class="row row-margin-top">
+								<div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Choose Rate List <span
+											style="color: red">*</span></span>
+								</div>
+								<div class="col-md-6 form-row-height">
+									<select required
+											name="rateListObject"
+											ng-model="assignedRateList"
+											id="assignedRateList"
+											class="form-control add-single-order-select"
+											ng-options="option.rateListName for option in rateList">
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+					<input id="discountRuleAddUpdate" type="submit"
+							class="action-btn" value="Assign" ng-click="assignRateList(assignedRateList)">
+				</div>
+			</div>
+	</div>
+</div>

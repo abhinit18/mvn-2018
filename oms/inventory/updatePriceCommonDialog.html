@@ -1,0 +1,179 @@
+<div class="modal fade" id="updatePriceCommonDialog" role="dialog" aria-labelledby="updatePriceDialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="updatePriceForm" accessible-form novalidate
+              ng-submit="submitUpdatePriceModal(updatepricemodal,updatePriceForm);">
+            <div class="modal-content">
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="invAddCancel1" type="button" class="close" data-dismiss="modal"
+                            ng-click="cancelupdatePriceDialog()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">Update Price</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+
+                    <div class="md-dialog-content">
+                        <div class="tab-content">
+                            <div class="tab-pane active container-fluid">
+                                <!-- Product Search -->
+                                <div class="container-fluid">
+                                    <div class="row search-row search-row-top-border padding-top-15">
+                                        <div class="col-md-2 ">
+                                            <span class="font">Warehouse</span>
+                                        </div>
+                                        <div class="col-md-2 select-style-small">
+                                            <select id="invWh" ng-model="filterObjectData.tableWarehouseDetails" ng-change="callDisabled();" ng-options="option.tableWarehouseDetailsShortname for option in wareHousesData track by option.idtableWarehouseDetailsId">
+                                                <option value="">
+                                                    Select
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2" style="margin-left: 10px;">
+                                            <span class="font">SKU</span>
+
+                                        </div>
+                                        <div class="col-md-4" style="margin-left: -45px;">
+                                            <angucomplete-alt id="productsfilter" placeholder="Search product" pause="400"
+                                                              selected-object="searchedProductForFilter" remote-url="{{baseSkuUrl}}"
+                                                              title-field="tableSkuClientSkuCode"
+                                                              description-field="tableSkuName"
+                                                              image-field="tableSkuImageUrl"
+                                                              initial-value="selectedSku"
+                                                              input-class="main-bottom-border font input-less-padding inv-search-input"></angucomplete-alt>
+                                            <button type="button" title="Click to see all SKUs." style="position: absolute;top: 0px; right: -5px;" class="btn btn-sm truncate-text" ng-click="masterSkuDialog($event, false);">. . .</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button id="invSearch" type="button" class="btn btn-default mybut"
+                                                    ng-click="searchUpdateInventoryAction()"
+                                                    style="margin-top: -5px; margin-right: 5px; margin-left: 10px !important;">Search
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SKU ID -->
+
+
+                                <hr/>
+
+
+                                <!-- MRP and MSP -->
+                                <!--<div class="full-width" infinite-scroll-distance="0" infinite-scroll-container="'#masterSKUModal'"-->
+                                <!--infinite-scroll="skuPagingFunction()" infinite-scroll-disabled='skuLoadBusy' infinite-scroll-parent="true" infinite-scroll-immediate-check="false"  style = "padding-top: 20px">-->
+                                <!--<div class="tab-content" >-->
+                                <div  class="clearfix"  infinite-scroll-parent infinite-scroll-container="'#masterSKUModal'" infinite-scroll="skuPagingFunction()" infinite-scroll-disabled='skuLoadBusy' infinite-scroll-immediate-check="false" style="width: 100%;" id="tab1">
+                                    <table id="productTable"
+                                           class="table boldtable table-responsive table-bordered table-hover">
+                                        <thead class="data-grid-header">
+                                        <tr>
+                                            <th class="text-left"><span class="fa fa-barcode fa-md"></span>&nbsp;&nbsp;SKU Name
+                                            </th>
+                                            <th class="text-left"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Seller SKU ID
+                                            </th>
+                                            <th class="text-left"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Warehouse
+                                            </th>
+                                            <th class="text-left"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;MRP
+                                            </th>
+                                            <th class="text-left"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;MSP
+                                            </th>
+                                            <th class="text-left action-col"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="data-grid-data" data-ng-repeat="inventoryData in inventoryLists " data-ng-switch
+                                               on="dayDataCollapse[$index]">
+
+                                        <div ng-repeat="SkuInventory in warehouseInventoryData">
+                                        <tr>
+                                            <td align="left">{{sku.tableSkuName}}</td>
+                                            <td align="left">
+                                                {{inventoryData.skuCode}}
+                                            </td>
+                                            <td align="left">
+                                                {{sku.tableSkuWarehouse}}
+                                            </td>
+                                            <td align="left">
+                                                <div class="col-md-4 form-row-height">
+                                                    <input class="darkgrey-bottom-border" placeholder="Enter MRP"
+                                                           tabindex="5"
+                                                           type="text"
+                                                           price ng-maxlength="14"
+                                                           id="invAddMRP" name="mrp"
+                                                           required
+                                                           ng-model="updatepricemodal.updatedMrp"
+                                                           ng-change="checkMspGrtMrp(updatepricemodal.updatedMrp,updatepricemodal.updatedMsp)">
+                                                    <span style="font-size: 11px; color: #c2c3c4;">
+                                            <span>Current MRP ( Max: {{updatepricemodal.maximumMrp}} |</span>
+                                            <span>Avg: {{updatepricemodal.weightedAvgMrp}} |</span>
+                                            <span>Min: {{updatepricemodal.minimumMrp}} )</span>
+                                        </span>
+                                                </div>
+                                            </td>
+                                            <td align="left">
+                                                <div class="col-md-4 form-row-height">
+                                                    <input class="darkgrey-bottom-border" placeholder="Enter MSP" value="0.00"
+                                                           tabindex="6"
+                                                           type="text"
+                                                           price ng-maxlength="14"
+                                                           id="invAddMSP" name="msp"
+                                                           ng-model="updatepricemodal.updatedMsp"
+                                                           ng-change="checkMspGrtMrp(updatepricemodal.updatedMrp,updatepricemodal.updatedMsp)">
+                                                    <span style="font-size: 11px; color: #c2c3c4;">
+                                            <span>Current MSP ( Max: {{updatepricemodal.maximumMsp}} |</span>
+                                            <span>Avg: {{updatepricemodal.weightedAvgMsp}} |</span>
+                                            <span>Min: {{updatepricemodal.minimumMsp}} )</span>
+                                        </span>
+                                                </div>
+                                            </td>
+                                            <td align="left">
+                                                <button type="button" style="margin-top:7px;" class="btn btn-sm btn-search-all" md-no-ink="false"
+                                                        ng-click="selectSku(sku.idtableSkuId, $event)" placeholder="Update"
+                                                >
+                                                    Update
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </div>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- {{inventoryData}} -->
+                    {{$parent.invData=inventoryData;""}}
+                </div>
+            </div>
+
+
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                 ng-if="singleOrderTab==true && bulkOrderTab==false">
+                <button id="invAddCancel2" class="cancel-btn" type="button"
+                        ng-click="cancelupdatePriceDialog()">
+                    Cancel
+                </button>
+                <button id="invAddSubmit" type="submit" ng-if="mode=='add'" class="action-btn">
+                    Update
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+        background-color: #E9EEEF;
+    }
+
+    .md-datepicker-calendar-pane {
+        z-index: 1200;
+    }
+</style>
+

@@ -1,0 +1,67 @@
+
+
+<div class="modal fade" id="cancelOrder" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="cancelOrderForm" accessible-form novalidate ng-submit="cancelOrderForm.$valid && selectCancelAction(orderId,tableSaleOrderId,remarks,LoadNewRason.reasonData,cancelOrderForm);">
+            <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="SRCnclCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelWarehouseSelection(cancelOrderForm)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Cancel Order Item</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="row row-margin-top-small">
+                    <div class="col-md-3">
+                        <span class="font">Order No.</span>
+                    </div>
+                    <div class="col-md-5">
+                        <input id="SRCnclNo" type="text" style="color: #F0592B;font-size: 16px; font-weight: 700; padding-top: 0px;" ng-model="orderNo" ng-readonly="true"></input>
+                    </div>
+                </div>
+                <div class="row row-margin-top-medium">
+                    <div class="col-md-3">
+                        <span class="font">Cancel Reason</span>
+                    </div>
+                    <div class="col-md-5">
+                        <select required name="cancelReason" id="SRCnclReason" ng-model="remarks" class="form-control">
+                            <option value="">
+                                Select Reason
+                            </option>
+                            <option ng-repeat="option in cancelReasonArray"
+                                    value={{option.tableSaleReturnCancelReasonString}}>
+                                {{option.tableSaleReturnCancelReasonString}}
+                            </option>
+                            <option value="other">Other Reason </option>
+                        </select>
+                        <div ng-if="cancelOrderForm.$submitted && cancelOrderForm.cancelReason.$error.required" class="full-width">
+                                <span class="error-msg">
+                                    Please select a valid reason
+                                </span>
+                        </div>
+                        <div class="full-width" ng-if = "remarks == 'other'">
+                            <textarea name="cancelreasonString" required="true"  caps id="SRCnclOReason"   class="form-control" style="margin-top: 15px;" ng-model="LoadNewRason.reasonData" ></textarea>
+                            <div ng-if="cancelOrderForm.$submitted && cancelOrderForm.cancelreasonString.$error.required" class="full-width">
+                                    <span class="error-msg">
+                                        Please enter the reason
+                                    </span>
+                            </div>
+                            <md-checkbox id="SRCnclCheckbox" role="checkbox" ng-model="LoadNewRason.ReasonCheckBox" style="margin-top:10px;font-size: 13px;">Add this reason to the cancel reason list</md-checkbox>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="SRCnclCnfrm" type="submit" id="confirmCancel" class="action-btn">
+                    Confirm
+                </button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>

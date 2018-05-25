@@ -1,0 +1,621 @@
+
+<script type="text/javascript">
+    $('#myModal').on('hidden.bs.modal', function(e) {
+        $(this)
+            .find("input")
+            .val('')
+    })
+</script>
+<script type="text/javascript">
+    $('#myModal1').on('hidden.bs.modal', function(e) {
+        $(this)
+            .find("input")
+            .val('')
+    })
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#myModal').keydown(function(e) {
+            if (e.keyCode == 27) {
+                return false;
+            } else {
+                //do something
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#myModal1').keydown(function(e) {
+            if (e.keyCode == 27) {
+                return false;
+            } else {
+                //do something
+            }
+        });
+    });
+</script>
+
+<div class="modal fade" id="addNormalSkuDialog"  data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <form name="addNormalSkuForm" accessible-form novalidate ng-submit="(!skuData.tableSkuWeight || skuData.tableSkuUowmType) && (( !skuData.tableSkuHeight && !skuData.tableSkuWidth && !skuData.tableSkuLength) || skuData.tableSkuUodmType) && addNormalSkuForm.$valid && saveSkuData(skuData,addNormalSkuForm)">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="newSkuCancel1" type="button" class="close" ng-click="newAttribute=null; cancelSkuData(addNormalSkuForm);">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p ng-show="dialogBoxSkuMode=='add'" style="font-size: 20px;font-weight: bolder;color: #30373B;">Add New Normal SKU</p>
+                <p ng-show="dialogBoxSkuMode=='edit'" style="font-size: 20px;font-weight: bolder;color: #30373B;">Edit Normal SKU</p>
+                <span flex></span>
+            </div>
+
+            <div class="modal-body">
+                <ul class="nav nav-tabs" id="normalSkuTab">
+                    <li class="active" ><a data-target="#normalSkuTab1" data-toggle="tab" class="btn sharp" ng-click="showNormalSkuTab=true;">Single SKU</a></li>
+                    <li ><a data-target="#normalSkuTab2" data-toggle="tab" class="btn sharp" ng-click="showNormalSkuTab=false;">Bulk SKU</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="normalSkuTab1" class="tab-pane active container-fluid">
+                        <div class="row row-margin-top">
+                            <div class="col-md-6">
+                                <div class="row" ng-show="dialogBoxSkuMode=='edit'">
+                                    <!-- SKU ID -->
+                                    <div class="col-md-4 form-row-height">
+                                        <span class="form-label-height semi-bold-text">System SKU ID</span>
+                                    </div>
+                                    <div class="col-md-8 form-row-height">
+                                        <input type="text" id="newSkuId"
+                                               ng-model="skuData.tableSkuSystemNo"
+                                               ng-readonly="true" class="form-control darkgrey-bottom-border font input-less-padding" style="border: none !important; margin-top: 3px; color: #F0592B; font-weight: 600;">
+                                    </div>
+
+                                </div>
+                                <div class="row" ng-show="dialogBoxSkuMode=='add'">
+                                    <!-- SKU ID -->
+                                    <div class="col-md-12 form-row-height">
+                                        <span class="form-label-height semi-bold-text" style="color: #737373;">NOTE: System SKU ID will be auto generated</span>
+                                    </div>
+                                </div>
+
+                                <div class="row padding-top-15">
+                                    <!-- Seller SKU ID -->
+                                    <div class="col-md-4 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Seller SKU ID <span style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-8 form-row-height">
+                                        <input placeholder="Enter Seller SKU ID"
+                                               type="text" id="newSkuId"
+                                               name="sellerSkuId" required ng-maxlength="45" ng-minlength="2"
+                                               ng-model="skuData.tableSkuClientSkuCode"
+                                               ng-change="skuClientCodeChanged(skuData.tableSkuClientSkuCode)"
+                                               class="form-control darkgrey-bottom-border font input-less-padding">
+                                    </div>
+                                    <div class="col-md-offset-4 col-md-8">
+                                     <span ng-if="addNormalSkuForm.$submitted && addNormalSkuForm.sellerSkuId.$error.required"  class="error-message">
+                                         Please enter the Seller SKU ID
+                                     </span>
+                                        <span ng-if="addNormalSkuForm.sellerSkuId.$dirty && addNormalSkuForm.sellerSkuId.$error.maxlength"  class="error-message">
+                                         Seller SKU ID should not exceed 45 characters.
+                                     </span>
+                                        <span ng-if="addNormalSkuForm.sellerSkuId.$dirty && addNormalSkuForm.sellerSkuId.$error.minlength"  class="error-message">
+                                         Seller SKU ID should have at least 2 characters.
+                                     </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div ngf-drop="changeSkuImgUrl1($file)" ngf-select="changeSkuImgUrl1($file)" ngf-select-disabled="isFile1SelectDisabled()" ng-model="skuImgFile1" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                            <div ng-class="{'img-holder': isImg1Present()}">
+                                                <img ng-src="{{skuImgUrl1}}" ng-mouseover="skuImageHover1()" ng-mouseleave="skuImageHover1()" ng-class="{darken: isImg1Present()}">
+                                                <div class="skuOverlay"></div>
+                                            </div>
+                                            <div class="del-img-btn text-center" ng-if="isImg1Present()">
+                                                <md-button id="newSkuDel" class="md-icon-button" md-no-ink="true" ng-click="confirmDeleteSkuImage('1')" placeholder="Delete">
+                                                    <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                            <div class="view-img-btn text-center" ng-if="isImg1Present()">
+                                                <md-button id="newSkuView" class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl1)" placeholder="Delete">
+                                                    <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div ngf-drop="changeSkuImgUrl2($file)" ngf-select="changeSkuImgUrl2($file)" ngf-select-disabled="isFile2SelectDisabled()" ng-model="skuImgFile2" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                            <div ng-class="{'img-holder': isImg2Present()}">
+                                                <img ng-src="{{skuImgUrl2}}" ng-mouseover="skuImageHover2()" ng-mouseleave="skuImageHover2()" ng-class="{darken: isImg2Present()}">
+                                                <div class="skuOverlay"></div>
+                                            </div>
+                                            <div class="del-img-btn text-center" ng-if="isImg2Present()">
+                                                <md-button id="newSkuDel" class="md-icon-button" md-no-ink="true" ng-click="confirmDeleteSkuImage('2')">
+                                                    <md-icon  md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                            <div class="view-img-btn text-center" ng-if="isImg2Present()">
+                                                <md-button id="newSkuView" class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl2)" placeholder="Delete">
+                                                    <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div ngf-drop="changeSkuImgUrl3($file)" ngf-select="changeSkuImgUrl3($file)" ngf-select-disabled="isFile3SelectDisabled()" ng-model="skuImgFile3" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                            <div ng-class="{'img-holder': isImg3Present()}">
+                                                <img ng-src="{{skuImgUrl3}}" ng-mouseover="skuImageHover3()" ng-mouseleave="skuImageHover3()" ng-class="{darken: isImg3Present()}">
+                                                <div class="skuOverlay"></div>
+                                            </div>
+                                            <div class="del-img-btn text-center" ng-if="isImg3Present()">
+                                                <md-button id="newSkuDel" class="md-icon-button" md-no-ink="true" ng-click="confirmDeleteSkuImage('3')">
+                                                    <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                            <div class="view-img-btn text-center" ng-if="isImg3Present()">
+                                                <md-button id="newSkuView" class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl3)" placeholder="Delete">
+                                                    <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div ngf-drop="changeSkuImgUrl4($file)" ngf-select="changeSkuImgUrl4($file)" ngf-select-disabled="isFile4SelectDisabled()" ng-model="skuImgFile4" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                            <div ng-class="{'img-holder': isImg4Present()}">
+                                                <img ng-src="{{skuImgUrl4}}" ng-mouseover="skuImageHover4()" ng-mouseleave="skuImageHover4()" ng-class="{darken: isImg4Present()}">
+                                                <div class="skuOverlay"></div>
+                                            </div>
+                                            <div class="del-img-btn text-center" ng-if="isImg4Present()">
+                                                <md-button id="newSkuDel" class="md-icon-button" md-no-ink="true" ng-click="confirmDeleteSkuImage('4')">
+                                                    <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                            <div class="view-img-btn text-center" ng-if="isImg4Present()">
+                                                <md-button id="newSkuView" class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl4)" placeholder="Delete">
+                                                    <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row margin-top-9">
+                            <div class="col-md-2 form-row-height">
+                                <span class="form-label-height semi-bold-text">Name <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-4 form-row-height">
+                                <input capitalize-first placeholder="Enter Name"
+                                       type="text" id="newSkuName"
+                                       name="skuName" required ng-maxlength="512" ng-minlength="2"
+                                       ng-model="skuData.tableSkuName"
+                                       ng-change="skuNameChanged(skuData.tableSkuName)"
+                                       class="form-control darkgrey-bottom-border font input-less-padding">
+                            </div>
+                            <div class="col-md-2 form-row-height">
+                                <span class="form-label-height semi-bold-text">ISBN/UPC/EAN</span>
+                            </div>
+                            <div class="col-md-4 form-row-height">
+                                <input placeholder="Enter ISBN/UPC/EAN" name="isbn" ng-maxlength="45" ng-minlength="2" type="text" id="upc" ng-model="skuData.tableSkuPrimaryUpcEan" ng-change="upcCodeChanged(skuData.tableSkuPrimaryUpcEan)" class="form-control darkgrey-bottom-border font input-less-padding">
+                            </div>
+                            <div class="col-md-offset-2 col-md-4">
+                             <span ng-if="addNormalSkuForm.$submitted && addNormalSkuForm.skuName.$error.required"  class="error-message">
+                                 Please enter the name
+                             </span>
+                                <span ng-if="addNormalSkuForm.skuName.$dirty && addNormalSkuForm.skuName.$error.maxlength"  class="error-message">
+                                 Name should not exceed 512 characters.
+                             </span>
+                                <span ng-if="addNormalSkuForm.skuName.$dirty && addNormalSkuForm.skuName.$error.minlength"  class="error-message">
+                                 Name should have at least 2 characters.
+                             </span>
+                            </div>
+                            <div class="col-md-offset-2 col-md-4">
+                             <span ng-if="addNormalSkuForm.isbn.$dirty && addNormalSkuForm.isbn.$error.maxlength"  class="error-message">
+                                 ISBN/UPC/EAN should not exceed 45 characters.
+                             </span>
+                                <span ng-if="addNormalSkuForm.isbn.$dirty && addNormalSkuForm.isbn.$error.minlength"  class="error-message">
+                                 ISBN/UPC/EAN should have at least 2 characters.
+                             </span>
+                            </div>
+                        </div>
+                        <div class="row margin-top-9">
+                            <div class="col-md-2 form-row-height">
+                                <span class="form-label-height semi-bold-text">Alternate code </span>
+                            </div>
+                            <div class="col-md-4 form-row-height">
+                                <input placeholder="Enter alternate code" name="alternateCode" ng-maxlength="45" type="text" id="newSkuACode" ng-model="skuData.tableSkuAlternateCode" class="form-control darkgrey-bottom-border font input-less-padding">
+                            </div>
+                            <div class="col-md-2 form-row-height">
+                                <span class="form-label-height semi-bold-text">Shelf Life Type <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-4 form-row-height">
+                                <select id="newSkuSLT"
+                                        name="tableSkuShelfLifeType" required
+                                        style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                        ng-change="shelfTypeChanged(skuData.tableSkuShelfLifeType)"
+                                        ng-model="skuData.tableSkuShelfLifeType"
+                                        ng-options="option as option.tableSkuShelfLifeTypeString for option in shelfTypeLists">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+                            <div class="col-md-offset-2 col-md-4">
+                             <span ng-if="addNormalSkuForm.alternateCode.$dirty && addNormalSkuForm.alternateCode.$error.maxlength"  class="error-message">
+                                 Alternate code should not exceed 45 characters.
+                             </span>
+                            </div>
+                            <div ng-if="addNormalSkuForm.$submitted && addNormalSkuForm.tableSkuShelfLifeType.$error.required" class="col-md-offset-2 col-md-4">
+                             <span class="error-message">
+                                 Please select the Shelf Life Type
+                             </span>
+                            </div>
+                        </div>
+                        <div class="row margin-top-9">
+                            <div class="col-md-2 form-row-height">
+                                <span class="form-label-height semi-bold-text">Category <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-4 form-row-height">
+                                <select ng-change="skuCategoryChanged(skuData.tableSkuNode)"
+                                        title="{{skuData.tableSkuNode.skuNodeName}}"
+                                        ng-model="skuData.tableSkuNode"
+                                        id="newSkuCategory"
+                                        name="category" required
+                                        style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                        ng-options="option as option.skuNodeName for option in categoryTypeLists track by option.idskuNodeId">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 form-row-height">
+                                <span class="form-label-height semi-bold-text">Brand <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-3 form-row-height">
+                                <select ng-change="skuBrandChanged(skuData.tableSkuBrandCode)"
+                                        ng-model="skuData.tableSkuBrandCode"
+                                        name="brand" required
+                                        id="newSkuBrand"
+                                        style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                        ng-options="option as option.tableSkuBrandCodeString for option in brandTypeLists">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 form-row-height" style="padding-left: 0px !important;">
+                                <img src="images/svg/blue_add.svg" style="width: 20px; height: 20px; cursor: pointer;" ng-click="openBrandBox();">
+                            </div>
+                            <div class="col-md-offset-2 col-md-4">
+                             <span ng-if="addNormalSkuForm.$submitted && addNormalSkuForm.category.$error.required" class="error-message">
+                                 Please select the Category
+                             </span>
+
+                            </div>
+                            <div class="col-md-offset-2 col-md-4">
+                             <span ng-if="addNormalSkuForm.$submitted && addNormalSkuForm.brand.$error.required"  class="error-message">
+                                 Please select the Brand
+                             </span>
+                                <span ng-if="addNormalSkuForm.brand.$dirty && addNormalSkuForm.brand.$error.maxlength"  class="error-message">
+                                 Brand should not exceed 45 characters.
+                             </span>
+                            </div>
+
+                        </div>
+                        <div class="row row-margin-top-small">
+                            <div class="col-md-2 form-row-height" ng-hide="true">
+                                <span class="form-label-height semi-bold-text">Classification</span>
+                            </div>
+                            <div class="col-md-4 form-row-height" ng-hide="true">
+                                <select ng-model="skuData.tableSkuAbcClassification"
+                                        id="newSkuClassif"
+                                        style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                        ng-options="option as option for option in skuClassificationArray">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 form-row-height">
+                                <span class="form-label-height semi-bold-text">HSN <span ng-if="clientInvoiceEnabled && (clientGstType =='Composition GST' || clientGstType =='Regular GST')" style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-4 form-row-height">
+                                <input ng-change="skuHSNChanged(skuData.tableHsn.tableHsnCode)"
+                                       name="hsnnumber" ng-maxlength="9" ng-required="clientInvoiceEnabled && (clientGstType =='Composition GST' || clientGstType =='Regular GST')"
+                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                       only-integer placeholder="Enter HSN number" type="text" id="newSkuHsn"
+                                       ng-model="skuData.tableHsn.tableHsnCode" class="form-control darkgrey-bottom-border font input-less-padding">
+                            </div>
+                            <div class="col-md-offset-8 col-md-4">
+                             <span ng-if="addNormalSkuForm.$submitted && addNormalSkuForm.hsnnumber.$error.required"  class="error-message">
+                                 Please enter the HSN
+                             </span>
+                                <span ng-if="addNormalSkuForm.hsnnumber.$dirty && addNormalSkuForm.hsnnumber.$error.maxlength"  class="error-message">
+                                 HSN should not exceed 9 characters.
+                             </span>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top-small">
+                            <div class="col-md-2 form-row-height">
+                                <span class="form-label-height semi-bold-text">Description <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-10 form-row-height">
+                            <textarea type="text" ng-change="skuDescChanged(skuData.tableSkuDescription)"
+                                      placeholder="Enter Description"
+                                      name="descr" required
+                                      id="newSkuDesc" ng-maxlength="2048" ng-minlength="2"
+                                      ng-model="skuData.tableSkuDescription"
+                                      class="form-control darkgrey-bottom-border font input-less-padding"></textarea>
+                            </div>
+                            <div class="col-md-offset-2 col-md-10">
+                             <span ng-if="addNormalSkuForm.$submitted && addNormalSkuForm.descr.$error.required"  class="error-message">
+                                 Please enter the Description
+                             </span>
+                                <span ng-if="addNormalSkuForm.descr.$dirty && addNormalSkuForm.descr.$error.maxlength"  class="error-message">
+                                 Description should not exceed 2048 characters.
+                             </span>
+                                <span ng-if="addNormalSkuForm.descr.$dirty && addNormalSkuForm.descr.$error.minlength"  class="error-message">
+                                 Description should have at least 2 characters.
+                             </span>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top">
+                            <md-toolbar class="md-small accordion-color">
+                                <div class="md-toolbar-tools">
+                                    <span class="font-big">Product Dimension</span>
+                                    <span flex=""></span>
+                                    <md-button class="md-icon-button" id="newSkuDim" aria-label="Favorite" ng-click="productDiminvRow()">
+                                        <md-icon ng-if="productDimClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                        <md-icon ng-if="productDimClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                        </div>
+                        <div ng-show="productDimClicked==true" class="row row-margin-top-small">
+                            <div class="col-md-12 row-margin-top-small">
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Dimension Unit</span>
+                                </div>
+                                <div class="col-md-4 form-row-height">
+                                    <select style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                            id="newSkuDimU"
+                                            ng-change="dimUnitChanged(skuData.tableSkuUodmType)"
+                                            ng-model="skuData.tableSkuUodmType"
+                                            ng-options="option as option.tableSkuUodmTypeString for option in dimLists">
+                                        <option value="">Select</option>
+                                    </select>
+                                    <div>
+                                        <span ng-if="!skuData.tableSkuUodmType && (skuData.tableSkuLength || skuData.tableSkuWidth || skuData.tableSkuHeight)"  class="error-message">
+                                            Please select dimension
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Length</span>
+                                </div>
+                                <div class="col-md-4 form-row-height">
+                                    <input  floating precision="2"
+                                            name="length" ng-required="skuData.tableSkuUodmType"
+                                            type="text" id="newSkuLength"
+                                            min="0" ng-model="skuData.tableSkuLength"
+                                            placeholder="Enter Length"
+                                            ng-change="skuLengthChanged(skuData.tableSkuLength)"
+                                            class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                </div>
+                                <div ng-if="addNormalSkuForm.$submitted && addNormalSkuForm.length.$error.required"  class="col-md-offset-8 col-md-4">
+                                 <span  class="error-message">
+                                     Please enter the Length
+                                 </span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 row-margin-top-small">
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Width</span>
+                                </div>
+                                <div class="col-md-4 form-row-height" >
+                                    <input  floating precision="2" type="text"
+                                            name="width" ng-required="skuData.tableSkuUodmType"
+                                            min="0" ng-model="skuData.tableSkuWidth"
+                                            id="newSkuWidth" placeholder="Enter Width"
+                                            ng-change="skuWidthChanged(skuData.tableSkuWidth)"
+                                            class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                </div>
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Height</span>
+                                </div>
+                                <div class="col-md-4 form-row-height">
+                                    <input  floating precision="2" type="text" min="0"
+                                            id="tableSkuHeight" placeholder="Enter Height"
+                                            name="height" ng-required="skuData.tableSkuUodmType"
+                                            ng-change="skuHeightChanged(skuData.tableSkuHeight)"
+                                            ng-model="skuData.tableSkuHeight"
+                                            id="newSkuHeight"
+                                            class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                </div>
+                                <div class="col-md-offset-2 col-md-4">
+                                 <span ng-if="addNormalSkuForm.$submitted && addNormalSkuForm.width.$error.required"   class="error-message">
+                                     Please enter the Width
+                                 </span>
+                                </div>
+                                <div   class="col-md-offset-2 col-md-4">
+                                 <span ng-if="addNormalSkuForm.$submitted && addNormalSkuForm.height.$error.required"  class="error-message">
+                                     Please enter the Height
+                                 </span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 row-margin-top-small">
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Weight Unit</span>
+                                </div>
+                                <div class="col-md-4 form-row-height"  >
+                                    <select  style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                             id="newSkuWeightU"
+                                             ng-change="weightUnitChanged(skuData.tableSkuUowmType)"
+                                             ng-model="skuData.tableSkuUowmType"
+                                             ng-options="option as option.tableSkuUowmTypeString for option in weightLists">
+                                        <option value="">Select</option>
+                                    </select>
+                                    <div>
+                                        <span ng-if="!skuData.tableSkuUowmType && skuData.tableSkuWeight"  class="error-message">
+                                            Please select dimension
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Weight</span>
+                                </div>
+                                <div class="col-md-4 form-row-height">
+                                    <input  type="text" floating precision="3"  type="text"
+                                            name="weight" ng-required="skuData.tableSkuUowmType"
+                                            id="newSkuWeight" placeholder="Enter Weight" min="0"
+                                            ng-change="skuWeightChanged(skuData.tableSkuWeight)"
+                                            ng-model="skuData.tableSkuWeight"
+                                            class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                </div>
+                                <div   class="col-md-offset-8 col-md-4">
+                                 <span ng-if="addNormalSkuForm.$submitted && addNormalSkuForm.weight.$error.required"  class="error-message">
+                                     Please enter the Weight
+                                 </span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div ng-show ="attributeListArray.length > 0" class="row row-margin-top-x-small">
+                            <md-toolbar class="md-small accordion-color">
+                                <div class="md-toolbar-tools">
+                                    <span class="font-big">Attributes Details</span>
+                                    <span flex=""></span>
+                                    <md-button class="md-icon-button" aria-label="Favorite" ng-click="attributesinvRow()">
+                                        <md-icon ng-if="attributesClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                        <md-icon ng-if="attributesClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                        </div>
+                        <div ng-if="attributesClicked==true" class="row">
+                            <div class="col-md-12" style="margin-top: 25px;margin-bottom:25px;">
+                                <div ng-if ="attributeListArray.length > 0">
+                                    <div class="row" ng-repeat="key in attributeListArray track by $index">
+                                        <div class="col-md-6 form-row-height">
+                                            <span class="form-label-height semi-bold-text" style="text-transform: capitalize;">{{key.attributeTypeString}}</span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height" >
+                                            <select ng-if = "key.attributeType == 'select'"
+                                                    id="newSku{{key.attributeTypeString}}"
+                                                    style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                                    ng-change="skuAttributeValueChanged(key, attributeListSelectedValuesArray[key.attributeTypeString])"
+                                                    ng-model="attributeListSelectedValuesArray[key.attributeTypeString]"
+                                                    ng-options="option as option.nodeAttributePossibleValuesValue for option in key.tableSkuNodeAttributePossibleValueses track by option.nodeAttributePossibleValuesValue">
+                                                <option value="">Select</option>
+                                            </select>
+                                            <input  class="form-control darkgrey-bottom-border font input-less-padding margin-top-9" ng-if = "key.attributeType == 'text'" ng-model="attributeListSelectedValuesArray[key.attributeTypeString]" ng-blur="skuAttributeValueAdded(key, attributeListSelectedValuesArray[key.attributeTypeString])">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if ="skuData.tableSkuNode != null && attributeListArray.length == 0">
+                                    There are no attributes in selected category. Go to Masters -> Category Master to define attributes.
+                                </div>
+                                <div ng-if ="skuData.tableSkuNode == null && attributeListArray.length == 0">
+                                    Select a category to configure relevant attributes.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top-x-small">
+                            <md-toolbar class="md-small accordion-color">
+                                <div class="md-toolbar-tools">
+                                    <span class="font-big">Properties</span>
+                                    <span flex=""></span>
+                                    <md-button id="newSkuProp" class="md-icon-button" aria-label="Favorite" ng-click="propinvRow()">
+                                        <md-icon ng-if="propertiesClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                        <md-icon ng-if="propertiesClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                        </div>
+                        <div ng-if="propertiesClicked==true" class="row">
+                            <div class="col-md-12" style="padding-left: 25px !important;">
+                                <div class="row row-margin-top-small row-margin-bottom-small">
+                                    <div class="col-md-6 font" ng-repeat="item in items">
+                                        <md-checkbox id="newSku{{item}}" ng-checked="exists(item, selected)" ng-click="toggle(item, selected)">
+                                            {{ item }} <span ng-if="exists(item, selected)"></span>
+                                        </md-checkbox>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="normalSkuTab2" class="tab-pane container-fluid">
+                        <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                            <div class="col-md-6 light-grey-right-border">
+                                <div class="bulk-upload-sku-img" data-toggle="modal" data-target="#skuBulkUpload" data-dismiss="modal"></div>
+                                <br>
+                                <span class="bulk-upload-sku-text" data-toggle="modal" data-target="#skuBulkUpload" data-dismiss="modal">Upload File</span>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="javascript:void(0);" ng-click="generateSkuTemplate()">
+                                    <div class="download-template-sku-img"></div>
+                                </a>
+                                <br>
+                                <span class="bulk-upload-sku-text">
+                                          <a href="javascript:void(0);" ng-click="generateSkuTemplate()">
+                                              Download File Template
+                                          </a>
+                                        </span>
+                            </div>
+                        </div>
+                        <div class="row upload-file-dialog-row">
+                            <div style="text-align: center;">
+                                <a ng-click="closeBulkUploadDialog()" style="color: #00ACE4; font-weight: 600;cursor: pointer;">Go to "Bulk upload reports" for more details.</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <span flex></span>
+                <button id="newSkuCancel2" type="button" class="cancel-btn" ng-click="cancelSkuData(addNormalSkuForm)">
+                    Cancel
+                </button>
+                <button id="newSkuSubmit" type="submit" ng-show="dialogBoxSkuMode=='add' && showNormalSkuTab" class="action-btn" >
+                    Add
+                </button>
+                <button id="newSkuUpdate" type="submit" ng-show="dialogBoxSkuMode=='edit' && showNormalSkuTab" class="action-btn" >
+                    Update
+                </button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addNewAttribute" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="newSkuAttrCancel1" type="button" class="close" ng-click="newAttribute=null; closeAttributeBox();">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Add New Attribute</p>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="col-md-4">
+                            <span class="font">Attribute Key</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input id="newSkuAttrKey" onkeypress="if (event.keyCode == 13) {return false;}" type="text" placeholder="Enter Attribute Name" ng-class="{submitted: isNewAttributeNameEntered}" ng-change="newAttributeNameChanged(newAttribute.attributeName)" ng-model="newAttribute.attributeName" class="form-control darkgrey-bottom-border font input-less-padding">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button id="newSkuAttrCancel2" type="button" class="action-btn" ng-click="addAttribute(newAttribute.attributeName);">Save</button>
+                <button id="newSkuAttrSubmit" type="button" class="cancel-btn" ng-click="newAttribute=null; closeAttributeBox();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+

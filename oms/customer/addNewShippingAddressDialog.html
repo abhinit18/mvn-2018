@@ -1,0 +1,287 @@
+<div class="modal fade" data-backdrop="static" id="shippingAddressModal" role="dialog" aria-labelledby="shippingAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px;">
+        <form name="shippingAddressForm" accessible-form novalidate ng-submit="shippingAddressForm.$valid && submitshippingAddressForm(shippingAddressForm)">
+            <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="customerSACancel1" type="button" class="close" ng-click="cancelShippingAddress(shippingAddressForm)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p ng-if="shipAddressMode=='add'" class="dialog-heading-p" id="shippingAddressModalLabel1">Add New Shipping Address</p>
+                <p ng-if="shipAddressMode=='edit'" class="dialog-heading-p" id="shippingAddressModalLabel2">Edit Shipping Address</p>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Information Area -->
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Contact Person Name <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input id="customerSAPerson" type="text" name="contactPersonName"
+                                           required ng-minlength="2" ng-maxlength="91"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="First Name"
+                                           ng-model="shippingAddress.tableAddressContactPerson1">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                 <span ng-if="shippingAddressForm.$submitted && shippingAddressForm.contactPersonName.$error.required"  class="error-message">
+                                     Please enter the Contact Person Name
+                                 </span>
+                                    <span ng-if="shippingAddressForm.contactPersonName.$dirty && shippingAddressForm.contactPersonName.$error.maxlength" class="error-message">
+                                     Contact Person Name should not exceed 45 characters.
+                                 </span>
+                                 <span ng-if="shippingAddressForm.contactPersonName.$dirty && shippingAddressForm.contactPersonName.$error.minlength" class="error-message">
+                                     Contact Person Name should have at least 2 characters.
+                                 </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Email Id <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input id="customerSAEmail" type="email" ng-maxlength="45" name="custEmail" required
+                                           class="form-control emailInput text-lowercase darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Email ID"
+                                           ng-model="shippingAddress.tableAddressEmail1"
+                                           ng-blur="checkEmail(shippingAddress.tableAddressEmail1)">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                     <span ng-if="shippingAddressForm.$submitted && shippingAddressForm.custEmail.$error.required"  class="error-message">
+                                         Please enter the Email Id
+                                     </span>
+                                     <span ng-if="shippingAddressForm.$submitted && shippingAddressForm.custEmail.$error.email"  class="error-message">
+                                         Please enter a valid Email Id
+                                     </span>
+                                     <span ng-if="shippingAddressForm.custEmail.$dirty && shippingAddressForm.custEmail.$error.required"  class="error-message">
+                                         Email Id should not exceed 45 characters.
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Phone Number <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text" numbers-only
+                                           name="phoneNumber" required
+                                           id="customerSAPhone" ng-maxlength="10" ng-minlength="10"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Phone no."
+                                           ng-model="shippingAddress.tableAddressPhone1">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                     <span ng-if="shippingAddressForm.$submitted && shippingAddressForm.phoneNumber.$error.required"  class="error-message">
+                                         Please enter the Phone Number.
+                                     </span>
+                                     <span ng-if="shippingAddressForm.phoneNumber.$dirty && (shippingAddressForm.phoneNumber.$error.maxlength || shippingAddressForm.phoneNumber.$error.minlength)"  class="error-message">
+                                         Please enter a valid 10 digit Phone Number.
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 1 <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text" name="addressLine" required
+                                           id="customerSAAddress1" ng-minlength="2" ng-maxlength="256"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Address Line 1"
+                                           ng-model="shippingAddress.tableAddress1"
+                                           ng-blur="callGetLatLong(showResult)">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                     <span ng-if="shippingAddressForm.$submitted && shippingAddressForm.addressLine.$error.required" class="error-message">
+                                         Please enter the Address
+                                     </span>
+                                     <span ng-if="shippingAddressForm.addressLine.$dirty && shippingAddressForm.addressLine.$error.maxlength" class="error-message">
+                                         Address Line 1 should not exceed 256 characters.
+                                     </span>
+                                     <span ng-if="shippingAddressForm.addressLine.$dirty && shippingAddressForm.addressLine.$error.minlength" class="error-message">
+                                         Address Line 1 should have at least 2 characters.
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 2</span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input id="customerSAAddress2" name="addressLine2" ng-maxlength="256" type="text" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Address Line 2" ng-model="shippingAddress.tableAddress2" ng-blur="callGetLatLong(showResult)">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                     <span ng-if="shippingAddressForm.addressLine2.$dirty && shippingAddressForm.addressLine2.$error.maxlength" class="error-message">
+                                         Address Line 2 should not exceed 256 characters.
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 3</span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input id="customerSAAddress3" ng-maxlength="256" name="addressLine3" type="text" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Address Line 3" ng-model="shippingAddress.tableAddress3" ng-blur="callGetLatLong(showResult)">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                     <span ng-if="shippingAddressForm.addressLine3.$dirty && shippingAddressForm.addressLine3.$error.maxlength" class="error-message">
+                                         Address Line 3 should not exceed 256 characters.
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">State <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select id="customerSAState" ng-model="customerAddress.stateData"
+                                            name="state" required
+                                            class="form-control"
+                                            ng-options="option as option.tableStateLongName for option in regionsStatesArray"
+                                            ng-change="regionsStatesDistrictData(customerAddress.stateData);checkVat(customersData.idtableCustomerId,customerAddress.stateData.idtableStateId);onStateChangedShipping();">
+                                            <option value="">Select State</option>
+                                    </select>
+                                </div>
+                                <div ng-if="shippingAddressForm.$submitted && shippingAddressForm.state.$error.required" class="col-md-offset-6 col-md-6">
+                                     <span class="error-message">
+                                         Please select the State
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">District <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select ng-model="customerAddress.districtData"
+                                            class="form-control" name="district" required
+                                            id="customerSADistrict"
+                                            ng-options="option as option.tableDistrictLongName for option in regionsStatesDistrictArray"
+                                            ng-change="regionsStatesDistrictsCityData(customerAddress.stateData,customerAddress.districtData);">
+                                            <option value="">Select District</option>
+                                    </select>
+                                </div>
+                                <div ng-if="shippingAddressForm.$submitted && shippingAddressForm.state.$error.required" class="col-md-offset-6 col-md-6">
+                                     <span class="error-message">
+                                         Please select the District
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">City <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select ng-model="shippingAddress.tableCity"
+                                            class="form-control" name="city" required
+                                            id="customerSACity"
+                                            ng-options="option as option.tableCityLongName for option in regionsStatesDistrictsCityArray"
+                                            ng-change="changeCity(shippingAddress.tableCity);">
+                                            <option value="">Select City</option>
+                                    </select>
+                                </div>
+                                <div ng-if="shippingAddressForm.$submitted && shippingAddressForm.city.$error.required" class="col-md-offset-6 col-md-6">
+                                     <span class="error-message">
+                                         Please select the City
+                                     </span>
+                                </div>
+                            </div>
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">PIN Code <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text" min="0" name="pinCode" required
+                                           id="customerSAPIN"
+                                           ng-pattern-restrict="^[0-9]*$"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           ng-blur="callGetLatLong(showResult)"
+                                           placeholder="Postal code"
+                                           ng-model="shippingAddress.tableAddressPin">
+                                </div>
+                                <div ng-if="shippingAddressForm.$submitted && shippingAddressForm.pinCode.$error.required" class="col-md-offset-6 col-md-6">
+                                     <span class="error-message">
+                                         Please select the PIN Code
+                                     </span>
+                                </div>
+                            </div>
+                            <div class="row padding-top-15">
+                                <div class="col-md-9 form-row-height">
+                                    <span> <md-checkbox id="SOAddBASame"
+                                            ng-model="shippingAddress.tableCustomerShippingAddressListIsPrimary"
+                                            aria-label="Enable"> </md-checkbox> &nbsp;Set as primary shipping address
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height" >
+                                    <span class="form-label-height semi-bold-text">GSTIN
+                                        <!--<span ng-if="customersData.tableGstType.tableGstTypeName == 'Regular GST' ||  customersData.tableGstType.tableGstTypeName == 'Composition GST'" style="color:red">*</span>-->
+                                    </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text" name="gstin"
+                                           id="customerSAGSTIN"
+                                           gstinvalidator="{{customerAddress.stateData}}"
+                                           ng-pattern="/^[0-3][0-9][A-Z]{5}[0-9]{4}[A-Z][0-9]Z[A-Z0-9]/"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="{{genericData.customerVatTinShippingPlaceholder}}"
+                                           ng-model="genericData.customerVatTinShipping">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                    <span ng-if="shippingAddressForm.$submitted && shippingAddressForm.gstin.$error.pattern"  class="error-message">
+                                        Please enter a valid GSTIN.
+                                    </span>
+                                    <span ng-if="shippingAddressForm.$submitted && shippingAddressForm.gstin.$error.gstin"  class="error-message">
+                                        State code provided in GSTIN does not match the state code of selected state.
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 padding-top-15">
+                            <!-- Map Area -->
+                            <demo-map ng-if="searchLocation" ng-model="searchLocation" class="demo-map"></demo-map>
+                        </div>
+                    </div>
+                    <div class="row row-margin-top" ng-if="genericData.customerVatTinShipping != null && genericData.customerVatTinShipping.length > 0">
+                        <div class="col-md-3 form-row-height">
+                            <span class="form-label-height semi-bold-text">GST Status Of Customer</span>
+                        </div>
+                        <div class="col-md-9">
+                            <md-radio-group name="natureOfCustomer" ng-model="tableGstTypeShipping.tableGstType.tableGstTypeName" >
+                                <md-radio-button id="customerSANature{{$index}}" ng-value="gst.tableGstTypeName" ng-repeat="gst in gstTypes""  class="md-primary">{{gst.tableGstTypeName}}</md-radio-button>
+                            </md-radio-group>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button id="customerSACancel2" type="button" class="cancel-btn" ng-click="cancelShippingAddress(shippingAddressForm)">Cancel</button>
+                <input id="customerSASubmit" ng-if="shipAddressMode=='add'" type="submit"
+                       class="action-btn" ng-click="setFormButtonValue('add');"
+                       value="Add" >
+
+                <input id="customerSAUpdate" ng-if="shipAddressMode=='edit'" type="submit"
+                       class="action-btn" ng-click="setFormButtonValue('edit')"
+                       value="Update" >
+            </div>
+        </div>
+        </form>
+    </div>
+</div>

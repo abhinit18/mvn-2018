@@ -1,0 +1,101 @@
+<link href="sku/sku.css" rel="stylesheet">
+<script type="text/ng-template" id="dialog3.tmpl.html" ng-controller="workOrderVasController">
+    <md-dialog aria-label="Add New Inventory" style="width: 800px;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p ng-show="dialogBoxKit=='add'" class="dialog-heading-p">Add New Kit</p>
+                    <p ng-show="dialogBoxKit=='edit'" class="dialog-heading-p">Update Kit</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelInventory()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+
+                    <div class="row">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Kit</span>
+                        </div>
+                        <div class="col-md-6">
+                            <angucomplete-alt id="products" placeholder="Search Kit" pause="400" selected-object="fullproductObj" remote-url="{{baseSkuUrl}}"
+                                              title-field="tableSkuClientSkuCode"
+                                              description-field="tableSkuName"
+                                              image-field="tableSkuImageUrl"
+                                input-class="form-control darkgrey-bottom-border" initial-value="initialSelected"></angucomplete-alt>
+                        </div>
+                        <div class="col-md-1">
+                            <span class="fa fa-plus fa-lg fa-lg" title="Add New SKU Kit" style="color: #00ACE4;margin-top: 10px;" ng-click="openAddSkuKitMode($event,kitData)"/>
+                        </div>
+                        <div class="col-md-4 inventory-avail" ng-show="availableQuantityMode==true">
+                            Available Quantity<br /> <b>{{freeMailertableWorkOrderSkuQuantity}}</b>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">SKU ID</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="skuid" name="skuid" ng-model="skuId" ng-readonly="true" class="darkgrey-bottom-border"></input>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Select WareHouse</span>
+                        </div>
+                        <div class="col-md-4">
+                            <select ng-model="kitData.tableWarehouseDetails" class="form-control" ng-options="option as option.tableWarehouseDetailsShortname for option in wareHousesData" ng-change="loadWareHousesData(kitData.tableWarehouseDetails)">
+                            <option value=""></option>
+                          </select>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Quantity</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input  type="text"
+                                    only-integer
+                                    prevent-typing-greater
+                                    max = "999999999"
+                                    id="quantity" name="quantity" ng-model="kitData.tableWorkOrderSkuQuantity" ng-blur="checkQuantityAvail(kitData.tableWorkOrderSkuQuantity,freeMailertableWorkOrderSkuQuantity)"
+                                    class="darkgrey-bottom-border-number"></input>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Start Date</span>
+                        </div>
+                        <div class="col-md-4">
+                            <md-datepicker timezoned-date ng-model="kitData.tableWorkOrderScheduledDatetime" md-min-date="startminDate" md-max-date="startmaxDate" md-placeholder="Enter date" ng-change="sendStartDate(kitData.tableWorkOrderScheduledDatetime)"></md-datepicker>
+                        </div>
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">End Date</span>
+                        </div>
+                        <div class="col-md-4">
+                            <md-datepicker timezoned-date ng-model="kitData.tableWorkOrderScheduledEndDatetime" md-min-date="endminDate" md-placeholder="Enter date" ng-change="sendEndDate(kitData.tableWorkOrderScheduledEndDatetime)"></md-datepicker>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <md-button class="cancel-btn" ng-click="cancelInventory()">
+                    Cancel
+                </md-button>
+                <md-button ng-show="dialogBoxKit=='add'" class="action-btn" ng-disabled="isDisabled" ng-click="addKitData(kitData)">
+                    Add
+                </md-button>
+                <md-button ng-show="dialogBoxKit=='edit'" class="action-btn" ng-click="updateSingleKit(kitData,kitData.idtableWorkOrderId,'kit')">
+                    Update
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<div ng-include src="'sku/addNewKitDialog.html?version=1.0.0'"></div>

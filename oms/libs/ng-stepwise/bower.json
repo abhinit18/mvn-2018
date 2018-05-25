@@ -1,0 +1,23 @@
+{
+    "name": "ng-stepwise",
+    "description": "Wizard progress bars for angularjs + bootstrap HTML5 app projects",
+    "main": [
+        "ng-stepwise.js",
+        "stepwise.css"
+    ],
+    "ignore": [
+        "**/.*",
+        "bower_components",
+        "example",
+        "*.sh"
+    ],
+    "license": "MIT",
+    "keywords": [
+        "step", "progress", "wizard"
+    ],
+    "dependencies": {
+        "angular": "~1.4.x",
+        "angular-sanitize": "~1.4.x",
+        "bootstrap": "*"
+    }
+}

@@ -1,0 +1,55 @@
+
+<div class="modal fade" data-keyboard="false" data-backdrop="static" id="approveImageDialog" role="dialog"
+     aria-labelledby="approveImageDialog" aria-hidden="true">
+    <!--<form name="addOrderForm" accessible-form novalidate ng-submit="addOrderForm.$valid && products.length > 0 && submitAddOrderForm(addOrderForm)">
+-->
+    <div class="modal-dialog modal-lg" >
+
+            <div class="modal-content">
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+
+                    <button id="SOAddCancel1" type="button" class="close" data-dismiss="modal" ng-click="clear();">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+
+                    <p class="dialog-heading-p">Enable/Disable confirmation</p>
+
+
+                </div>
+
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="full-width" style="margin-bottom: 15px;">
+
+                    <div>
+                        <h3 ng-show="imageApprovalConfirmationValue == true">Do you want to enable this image?</h3>
+
+                        <h3 ng-show="imageApprovalConfirmationValue == false">Do you want to disable this image?</h3>
+
+                    </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="uploadCancel" type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="closeApproveImageDialog()">
+                        Cancel
+                    </button>
+                    <input id="uploadImage" type="submit" class="action-btn"
+                            ng-click="approveImage(imageApprovalConfirmationValue);" value="Yes" />
+
+                </div>
+
+            </div>
+    </div>
+
+</div>
+
+
+<style >
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+        background-color: #E9EEEF;
+    }
+</style >

@@ -1,0 +1,1239 @@
+<link href="Salereturn/salereturn.css" rel="stylesheet">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-10 col-md-10 col-xs-12">
+            <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;"><h4
+                    class="screen-heading">Sale Return</h4></div>
+        </div>
+        <div class="col-md-2 text-right">
+            <span class="fa fa-external-link-square newTabIcon" ng-click="newTab()" title="New Tab"></span>
+        </div>
+    </div>
+    <div class="row orderscreen-channel row-margin-top-x-medium" style="padding-top: 20px !important;">
+        <div class="col-md-2">
+            <span class="font">Order No.</span>
+        </div>
+        <div class="col-md-2" style="padding-left:0px; margin-left: -60px;">
+            <input id="SRNo" type="text" class="main-bottom-border font input-less-padding" ng-model="filter.orderid"
+                   placeholder="Order No" ng-keypress="$event.keyCode == 13 && searchSaleReturnOrders()">
+        </div>
+        <div class="col-md-2" style="margin-left: 39px;">
+            <span class="font">Search SKU</span>
+
+        </div>
+        <div class="col-md-2" style="padding-left:0px; margin-left: -60px;">
+            <angucomplete-alt id="productsfilter" placeholder="Search product" pause="400"
+                              selected-object="searchedProductForFilter"
+                              remote-url="{{baseSkuUrl}}"
+                              title-field="tableSkuClientSkuCode"
+                              description-field="tableSkuName"
+                              image-field="tableSkuImageUrl"
+                              initial-value="filter.sku"
+                              input-class="main-bottom-border font input-less-padding"></angucomplete-alt>
+            <button id="SRSMore" type="button" title="Click to see all SKUs"
+                    style="position: absolute;top: 0px;right: -40px;" class="btn btn-sm truncate-text"
+                    ng-click="masterSkuDialog($event, false);">. . .
+            </button>
+        </div>
+        <div class="col-md-2" style="margin-left: 41px;">
+            <span class="font">Search Customers</span>
+
+        </div>
+        <div class="col-md-2" style="padding-left: 0px; margin-left: -20px;">
+            <angucomplete-alt id="customersfilter" placeholder="Search customer" pause="400"
+                              selected-object="searchedCustomerForFilter" remote-url="{{baseCustomerUrl}}"
+                              title-field="tableCustomerFullName"
+                              code-field="tableCustomerClientCustomerCode"
+                              description-field="tableCustomerEmail"
+                              phone-field="tableCustomerPhone"
+                              input-class="main-bottom-border font input-less-padding"
+                              initial-value="selectedCustomer"></angucomplete-alt>
+            <button id="SRCMore" type="button" title="Click to see all Customers"
+                    style="position: absolute;top: 0px; right: -40px;" class="btn btn-sm truncate-text"
+                    ng-click="masterCustomerDialog($event, false);">. . .
+            </button>
+        </div>
+    </div>
+
+    <div class="row orderscreen-channel">
+        <div class="col-md-2 margin-top-7">
+            <span class="font">Choose Channel</span>
+        </div>
+        <div class="col-md-1 select-style-small margin-top-9"
+             style="padding-left:0px; margin-left: -60px;width:190px;margin-top: 10px;">
+            <select id="SRChannel" ng-model="filter.saleChannel" name="filtersaleschannel"
+                    ng-options="option.tableSalesChannelValueInfoName for option in channelLists track by option.idtableSalesChannelValueInfoId"
+                    required>
+                <option value="">All</option>
+            </select>
+        </div>
+        <div class="col-md-2 margin-top-7" style="margin-left: 48px;">
+            <span class="font">Date</span>
+        </div>
+        <div class="col-md-2" style="margin-left: -100px;">
+            <md-datepicker id="SRSDate" timezoned-date ng-model="filter.start1Date" md-min-date="startminDate"
+                           md-max-date="startmaxDate"
+                           onkeydown="return false" ng-change="sendStartDate()" md-placeholder="Start Date"
+                           style="background-color: inherit;margin-top:3px;"></md-datepicker>
+            <button id="SRSDateClear" ng-if="filter.start1Date" title="Deselect Start Date"
+                    style="position:absolute;top:8px;" class="btn dateClear" ng-click="clearStartDate();">
+            </button>
+        </div>
+        <div class="col-md-2" style="margin-left:5px;">
+            <md-datepicker id="SREDate" timezoned-date ng-model="filter.end1Date" md-min-date="endminDate"
+                           md-max-date="endmaxDate"
+                           onkeydown="return false" ng-change="sendEndDate()" md-placeholder="End Date"
+                           style="background-color: inherit;margin-top:3px;"></md-datepicker>
+            <button id="SREDateClear" ng-if="filter.end1Date" title="Deselect End Date"
+                    style="position:absolute;top:8px;" class="btn dateClear" ng-click="clearEndDate()">
+            </button>
+        </div>
+        <div class="col-md-1">
+            <button id="SRSearch" type="button" class="btn btn-default mybut"
+                    ng-click="submitAction()"
+                    style="margin-left: 0px; !important; height:33px; min-height : auto">Search
+            </button>
+        </div>
+        <!--Don't remove this . TBD in future-->
+        <!--<div class="col-md-1">
+            <button type="button" class="btn sharp"
+                    style="background:#f0592b;color:#fff;height:auto;border-radius:4px !important;"
+                    ng-click="exportOrderReturnDataFile()"><span
+                    class="fa fa-download"></span><span
+                    style="color: #fff !important; font-weight: 400 !important;">&nbsp;Export</span>
+            </button>
+        </div>-->
+        <div class="col-md-1">
+            <button id="SRClear" title="Clear Applied Filters" class="btn clearFilter"
+                    ng-click="clearAction();skuId=null;customerid=null;">
+            </button>
+        </div>
+        <!--<div class="col-md-1">-->
+        <!--<md-icon ng-click="newTab()" md-svg-src="images/svg/new_tab.svg"-->
+        <!--&gt;</md-icon>-->
+        <!--</div>-->
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12">
+            <p class="screen-heading"></p>
+        </div>
+    </div>
+    <div class="row row-margin-top-small">
+        <div class="col-md-11">
+            <ul class="nav navbar-nav screen-tabs">
+                <li title="{{'All '+ allCount}}">
+                    <button type="button" class="btn sharp font"
+                            ng-class="{'activeTab' : defaultTab == 'all'}"
+                            ng-click="listOfStatesCount('all',1)"><span>All</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{allCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'New '+ newCount}}">
+                    <button type="button" class="btn sharp font"
+                            ng-class="{'activeTab' : defaultTab == 'new'}"
+                            ng-click="listOfStatesCount('new',1)"><span>New</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{newCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'QC Complete '+ QCCount}}">
+                    <button type="button" class="btn sharp font"
+                            ng-class="{'activeTab' : defaultTab == 'qccomplete'}"
+                            ng-click="listOfStatesCount('qccomplete',1)"><span>QC Complete</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;width:auto !important;">&nbsp;({{QCCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'GRN '+ grnCount}}">
+                    <button type="button" class="btn sharp"
+                            ng-class="{'activeTab' : defaultTab == 'grn'}"
+                            ng-click="listOfStatesCount('grn',1)"><span>GRN</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{grnCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'cancelled '+ cancelledCount}}">
+                    <button type="button" class="btn sharp"
+                            ng-class="{'activeTab' : defaultTab == 'cancelled'}"
+                            ng-click="listOfStatesCount('cancelled',1)"><span>Cancelled</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{cancelledCount}})</span>
+                    </button>
+                </li>
+
+            </ul>
+        </div>
+        <div class="col-md-1 order-table-tab-bar">
+            <button id="SRAddNew" type="button" class="btn addsharpbutton font pull-right" style="min-width: 120px;"
+                    ng-if="access.createAccess"
+                    ng-click="showAddOrderReturnModal($event)"><img src="images/svg/add.svg" style="height:20px;">
+                &nbsp;&nbsp;Add Sale Return
+            </button>
+        </div>
+    </div>
+    <div class="row main-list">
+        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+            <thead class="main-list-header-order">
+            <!-- table header -->
+            <tr>
+                <th id="SRNoH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tableSaleReturnSystemOrderNo',sortReverse,defaultTab)">
+                        Order No.&nbsp;
+                        <span ng-if="sortType == 'tableSaleReturnSystemOrderNo' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSaleReturnSystemOrderNo' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SRRefH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tableSaleReturnScRefNo',sortReverse,defaultTab)">
+                        Order Ref. No.&nbsp;
+                        <span ng-if="sortType == 'tableSaleReturnScRefNo' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSaleReturnScRefNo' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SRCNameH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tableCustomer.tableCustomerFirstName',sortReverse,defaultTab)">
+                        Customer Name&nbsp;
+                        <span ng-if="sortType == 'tableCustomer.tableCustomerFirstName' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableCustomer.tableCustomerFirstName' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SRChannelH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tableSalesChannelValueInfo.tableSalesChannelValueInfoName',sortReverse,defaultTab)">
+                        Sales Channel&nbsp;
+                        <span ng-if="sortType == 'tableSalesChannelValueInfo.tableSalesChannelValueInfoName' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSalesChannelValueInfo.tableSalesChannelValueInfoName' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SRCDateH" class="text-left">
+                    <a href="" ng-click="tableSorting('tableSaleReturnCreationDateTime',sortReverse,defaultTab)">
+                        Creation Date&nbsp;
+                        <span ng-if="sortType == 'tableSaleReturnCreationDateTime' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSaleReturnCreationDateTime' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SRPDateH" class="text-left">
+                    <a href="" ng-click="tableSorting('tableSaleReturnPickUpDateTime',sortReverse,defaultTab)">
+                        Pickup Date&nbsp;
+                        <span ng-if="sortType == 'tableSaleReturnPickUpDateTime' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSaleReturnPickUpDateTime' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SRDDateH" class="text-left">
+                    <a href="" ng-click="tableSorting('tableSaleReturnDropDateTime',sortReverse,defaultTab)">
+                        Drop Date&nbsp;
+                        <span ng-if="sortType == 'tableSaleReturnDropDateTime' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSaleReturnDropDateTime' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SRQtyH" class="text-left">
+                    <a href="" ng-click="tableSorting('skuQuantity',sortReverse,defaultTab)">
+                        Quantity&nbsp;
+                        <span ng-if="sortType == 'skuQuantity' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'skuQuantity' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SRTotalH" class="text-left">
+                    <a href="" ng-click="tableSorting('skuValue',sortReverse,defaultTab)">
+                        Total Amount&nbsp;
+                        <span ng-if="sortType == 'skuValue' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'skuValue' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SRActionH" class="text-left"><a>Action</a></th>
+                <th id="SRDropH" class="text-left"></th>
+            </tr>
+            </thead>
+            <tbody ng-if="showLoader">
+            <tr>
+                <td colspan="11" class="text-center">
+                    <md-progress-circular style="margin: 0 auto" class="md-hue-2"
+                                          md-diameter="40"></md-progress-circular>
+                </td>
+            </tr>
+            </tbody>
+            <tbody data-ng-repeat="orderData in orderLists" data-ng-switch on="dayDataCollapse[$index]">
+            <tr class="clickable-row-order">
+                <td id="SRNo{{$index}}" align="left">
+                    {{orderData.tableSaleReturnSystemOrderNo}}
+                </td>
+                <td id="SRRef{{$index}}" align="left">
+                    {{orderData.tableSaleReturnScRefNo}}
+                </td>
+                <td id="SRCName{{$index}}" align="left">{{orderData.tableCustomer.tableCustomerFullName}}</td>
+                <td id="SRChannel{{$index}}" align="left">
+                    {{orderData.tableSalesChannelValueInfo.tableSalesChannelValueInfoName}}
+                </td>
+                <td id="SRCDate{{$index}}" align="left">
+                    {{orderData.tableSaleReturnCreationDateTime | utcToLocalOrHyphen}}
+                </td>
+                <td id="SRPDate{{$index}}" align="left">
+                    {{orderData.tableSaleReturnPickUpDateTime | utcToLocalOrHyphen}}
+                </td>
+                <td id="SRDDate{{$index}}" align="left">
+                    {{orderData.tableSaleReturnDropDateTime | utcToLocalOrHyphen}}
+                </td>
+                <td id="SRQty{{$index}}" align="left">{{ totalQuantity(orderData.tableSaleReturnSkus) }}</td>
+                <td id="SRTotal{{$index}}" align="left">{{ totalCostAmount(orderData.tableSaleReturnSkus) |
+                    priceOrHyphen}}
+                </td>
+                <td id="SRAction{{$index}}" align="left">
+                    <div class="tool-tip">
+                        <img src="images/svg/remarks.svg" style="height:20px; width: 20px;"
+                             ng-click="openEditRemarkModal(orderData,$index);"/>
+
+                        <span class="tool-tip-text">
+                            <div class="popover fade left custom-pop-left in" role="tooltip" id="popover743808"
+                                 style="width:400px; display: block;">
+                                <div class="arrow pop-left" style="left: 50%;"></div>
+                                <h3 class="popover-title">Remarks</h3>
+
+                                <div class="popover-content"
+                                     style="word-wrap: break-word;float:left;width:100%;height:auto;max-height:100px;overflow-x: hidden;overflow-y:auto;">
+                                        <richtext class="text" body-text="orderData.tableSaleReturnRemarksFormatted">
+                                        </richtext>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <span ng-if="!hideeditbutton(orderData)">|</span>
+                    <img ng-src="{{imgsrc1}}"
+                         ng-attr-title="{{!access.editAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}"
+                         width="20px" height="20px"
+                         ng-if="!hideeditbutton(orderData)"
+                         ng-class="{disableAccess: !access.editAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                         ng-click="access.editAccess && (orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 || editOrder(orderData,'edit', $event))"
+                         ng-init="imgsrc1='images/svg/edit.svg'"
+                         ng-mouseover="access.editAccess &&  (imgsrc1='images/svg/edit_hover.svg')"
+                         ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                    <span>|</span>
+                    <img ng-src="{{imgsrc2}}"
+                         ng-attr-title="{{!access.createAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Copy'}}"
+                         width="20px" height="20px"
+                         ng-class="{disableAccess: !access.createAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                         ng-click="access.createAccess && (orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 || editOrder(orderData,'copy', $event))"
+                         ng-init="imgsrc2='images/svg/copy_active.svg'"
+                         ng-mouseover="access.createAccess && (imgsrc2='images/svg/copy_hover.svg')"
+                         ng-mouseout="imgsrc2='images/svg/copy_active.svg'">
+
+                </td>
+                <td id="SRDrop1{{$index}}" align="left"
+                    ng-if="dayDataCollapse == null || dayDataCollapse == undefined || dayDataCollapse == []"><img
+                        src="images/svg/expand_icon.svg" height="20"
+                        data-ng-click="selectTableRow($index, orderData.tableSaleOrderReturnClientOrderNo);stateTrials(orderLists[$index].tableSaleReturnSkus);"/>
+                </td>
+                <td id="SRDrop2{{$index}}" align="left" data-ng-switch-when="false"
+                    data-ng-click="selectTableRow($index, orderData.tableSaleOrderReturnClientOrderNo);stateTrials(orderLists[$index].tableSaleReturnSkus);">
+                    <img src="images/svg/expand_icon.svg" height="20"/></td>
+                <td id="SRDrop3{{$index}}" align="left" data-ng-switch-when="true"
+                    data-ng-click="selectTableRow($index, orderData.tableSaleOrderReturnClientOrderNo);stateTrials(orderLists[$index].tableSaleReturnSkus);">
+                    <img src="images/svg/collaps_icon.svg" height="20"/></td>
+            </tr>
+            <tr data-ng-switch-when="true"
+                style="border: 1px solid #C0C0C0; background-color: #FEFFFF !important; padding-bottom: 20px !important;"
+                data-ng-repeat="tableSkuData in orderLists[$index].tableSaleReturnSkus">
+                <td colspan="11">
+                    <div class="col-md-4 text-center" style="border-right: 1px solid #dedede;">
+                        <span ng-if="orderData.tableSaleReturnSystemOrderNo"
+                              style="display: block;padding:15px 0 15px 0;font-size: 14px;color: #F0592B;font-weight: bold ;">
+                               {{orderData.tableSaleReturnSystemOrderNo}} ({{$index + 1}} of {{orderData.tableSaleReturnSkus.length}})
+                        </span>
+                        <div class="box-table">
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Seller SKU ID :
+                                </div>
+                                <div class="box box2 short-sku-name"
+                                     style="max-width:200px">
+                                    {{tableSkuData.tableSku.tableSkuClientSkuCode}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    SKU Name :
+                                </div>
+                                <div class="box box2 short-sku-name" title="{{tableSkuData.tableSku.tableSkuDescription}}"
+                                     style="max-width:200px">
+                                    {{tableSkuData.tableSku.tableSkuName}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Qty :
+                                </div>
+                                <div class="box box2">
+                                    {{tableSkuData.tableSaleReturnSkuQuantity}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Cost Per SKU :
+                                </div>
+                                <div class="box box2">
+                                    Rs {{ tableSkuData.itemNetPrice | priceOrHyphen}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Service Cost :
+                                </div>
+                                <div class="box box2">
+                                    Rs {{ tableSkuData.serviceNetTotal | priceOrHyphen}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Total Cost :
+                                </div>
+                                <div class="box box2">
+                                    Rs {{ tableSkuData.netGrandTotal.toFixed(2) | priceOrHyphen}}
+                                </div>
+                            </div>
+                            <div ng-if="tableSkuData.tableSaleReturnSkuStateType.idtableSaleReturnSkuStateTypeId == 1 && access.editAccess"
+                                 class="boxes">
+                                <div class="box box1"></div>
+                                <div ng-if="defaultTab != 'cancelled'" class="box box2">
+                                    <button id="SRCancel{{$index}}"
+                                            ng-click="cancelSaleOrderReturnBox($event,orderData.idtableSaleReturnId,tableSkuData.idtableSaleReturnSkuId,orderData.tableSaleReturnSystemOrderNo);"
+                                            class="btn btn-default mybut1">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <ul ng-if="trialsLength[$index]>= 4" class="progress-indicator nocenter stacked"
+                            style="list-style: none;">
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][1]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][2]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble1"><img src="images/svg/current_icon.svg"
+                                                                             style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;color:black">{{fullTrialsArray[$index][3]}}</label></span>
+                            </li>
+                        </ul>
+                        <ul ng-if="trialsLength[$index] == 1" class="progress-indicator nocenter stacked"
+                            style="list-style: none;">
+                            <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                        </ul>
+                        <ul ng-if="trialsLength[$index] == 2" class="progress-indicator nocenter stacked"
+                            style="list-style: none;">
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                            <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][1]}}</label></span>
+                            </li>
+                        </ul>
+                        <ul ng-if="trialsLength[$index] == 3" class="progress-indicator nocenter stacked"
+                            style="list-style: none; padding-top: 30px !important;">
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][1]}}</label></span>
+                            </li>
+                            <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][2]}}</label></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <span ng-if="tableSkuData.tableSaleReturnSkuStateType.idtableSaleReturnSkuStateTypeId == 3"
+                              style="display: block;padding:15px 0 15px 0;font-size: 14px;color: #F0592B;font-weight: bold ;">GRN Details</span>
+
+                        <div ng-if="tableSkuData.tableSaleReturnSkuStateType.idtableSaleReturnSkuStateTypeId == 3"
+                             class="box-table">
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Total Quantity :
+                                </div>
+                                <div class="box box2">
+                                    {{tableSkuData.tableGrns[0].tableGrnTotalQty}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Good Quantity :
+                                </div>
+                                <div class="box box2">
+                                    {{tableSkuData.tableGrns[0].tableGrnGoodQty}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Bad Quantity :
+                                </div>
+                                <div class="box box2">
+                                    {{tableSkuData.tableGrns[0].tableGrnBadQty}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Date :
+                                </div>
+                                <div class="box box2">
+                                    {{tableSkuData.tableGrns[0].tableGrnDateTime | utcToLocalOrHyphen}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <span id="SRInfo{{$index}}" class="pull-right infoimgBox"
+                              ng-click="openInfoBox($event,tableSkuData.tableSaleReturnSkuStateTrails)"></span>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- END TABLE -->
+        <div class="row" style="margin-top: 0px;">
+            <div class="col-md-6" ng-show="defaultTab == 'all'">
+                <p class="showingOrderLabel" ng-show="orderSize<allCount">Showing Orders {{start + 1}} to {{end}}
+                    of {{allCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=allCount && allCount!=0">Showing Orders {{start + 1}}
+                    to {{allCount}} of {{allCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="allCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'new'">
+                <p class="showingOrderLabel" ng-show="orderSize<newCount">Showing Orders {{start + 1}} to {{end}}
+                    of {{newCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=newCount && newCount!=0">Showing Orders {{start + 1}}
+                    to {{newCount}} of {{newCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="newCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'qccomplete'">
+                <p class="showingOrderLabel" ng-show="orderSize<QCCount">Showing Orders {{start + 1}} to
+                    {{end}} of {{QCCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=QCCount && QCCount!=0">Showing Orders {{start
+                    + 1}} to {{QCCount}} of {{QCCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="QCCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'grn'">
+                <p class="showingOrderLabel" ng-show="orderSize<grnCount">Showing Orders {{start + 1}} to
+                    {{end}} of {{grnCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=grnCount && grnCount!=0">Showing Orders
+                    {{start + 1}} to {{grnCount}} of {{grnCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="grnCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'cancelled'">
+                <p class="showingOrderLabel" ng-show="orderSize<cancelledCount">Showing Orders {{start + 1}} to
+                    {{end}} of {{cancelledCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=cancelledCount && cancelledCount!=0">Showing Orders
+                    {{start + 1}} to {{cancelledCount}} of {{cancelledCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="cancelledCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6">
+        <span class="pull-right">
+        <!-- pager -->
+        <ul ng-if="vmPager.pages.length" class="pagination">
+        <li>
+                        <a><span style="padding-right: 5px;">Showing</span>
+                            <select ng-change="onRecordsPerPageChange(orderSize)" ng-model="orderSize"
+                                    name="recordsPerPage"
+                                    ng-options="option for option in recordsPerPage"
+                                    required>
+                            </select>
+                            <span style="padding-left: 5px;">records per page</span>
+                        </a>
+                    </li>
+            <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+        <a>&lt;&lt; First</a>
+        </li>
+        <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+        <a ng-click="listOfStatesCount(defaultTab,1)">&lt;&lt; First</a>
+        </li>
+        <li id="previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+        <a>&lt; Previous</a>
+        </li>
+        <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+        <a ng-click="listOfStatesCount(defaultTab,vmPager.currentPage - 1)">&lt; Previous</a>
+        </li>
+        <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+        <a ng-click="listOfStatesCount(defaultTab,page)">{{page}}</a>
+        </li>
+        <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages"
+            ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+        <a ng-click="listOfStatesCount(defaultTab,vmPager.currentPage + 1)">Next &gt;</a>
+        </li>
+        <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages"
+            ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+        <a>Next &gt;</a>
+        </li>
+        <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages"
+            ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+        <a ng-click="listOfStatesCount(defaultTab,vmPager.totalPages)">Last &gt;&gt;</a>
+        </li>
+        <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages"
+            ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+        <a>Last &gt;&gt;</a>
+        </li>
+        </ul>
+        </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" data-keyboard="false" id="addSaleReturnDialogRefKnown" role="dialog" data-backdrop="static"
+         data-keyboard="false"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form name="addSaleReturnDialogRefKnown" accessible-form novalidate
+                  ng-submit="addSaleReturnDialogRefKnown.$valid && submitAddSaleReturnOrderForm(addSaleReturnDialogRefKnown)">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                         height="100px">
+                        <button id="SRAddCancel1" type="button" class="close"
+                                ng-click="cancelSingleOrderReturn(addSaleReturnDialogRefKnown)">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <p class="dialog-heading-p" ng-if="singleOrderReturnMode == 'add'">Add Sale Order Return</p>
+
+                        <p class="dialog-heading-p" ng-if="singleOrderReturnMode == 'edit'">Edit Sale Order Return</p>
+                        <!--<p class="dialog-heading-p" ng-if="singleOrderReturnMode == 'EditDraft'">Draft Order</p>-->
+
+                        <p class="dialog-heading-p" ng-if="singleOrderReturnMode == 'copy'">Copy Sale Order Return</p>
+
+
+                    </div>
+                    <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                        <div class="full-width" style="margin-bottom: 15px;">
+                            <ul class="nav nav-tabs" id="ordertabs">
+                                <li class="active"><a data-target="#tab1" data-toggle="tab" class="btn sharp"
+                                                      ng-click="singleOrderReturnTabMode()" style="width:auto;">Single
+                                    Order
+                                    Return</a></li>
+                                <li ng-if="singleOrderReturnMode == 'add'"><a data-target="#tab2" data-toggle="tab"
+                                                                              class="btn sharp"
+                                                                              ng-click="bulkOrderReturnTabMode()"
+                                                                              style="width:auto;">Bulk
+                                    Order Return</a></li>
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane active container-fluid" id="tab1">
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Ref. No.</span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input ng-if="singleOrderReturnMode != 'edit'"
+                                               uniquesr
+                                               name="orderNumberId" type="text" id="SRAddRef1"
+                                               md-autofocus class="form-control darkgrey-bottom-border"
+                                               ng-maxlength="45"
+                                               ng-model="singleorderReturnData.tableSaleReturnScRefNo"
+                                               placeholder="Order Ref. No.">
+                                        <input
+                                                ng-if="singleOrderReturnMode == 'edit'" ng-readonly="false"
+                                                uniquesr
+                                                name="orderNumberId" type="text" id="SRAddRef2"
+                                                ng-maxlength="45"
+                                                class="form-control darkgrey-bottom-border"
+                                                ng-model="singleorderReturnData.tableSaleReturnScRefNo">
+                                        <i class="fa fa-question-circle-o date-help"
+                                           ng-if="singleOrderReturnMode != 'edit' && singleOrderReturnMode != 'copy'"
+                                           data-container="body" data-toggle="popover" data-trigger="focus"
+                                           tabindex="0" title="Ref. No." data-html="true"
+                                           data-content="Reference number can be any of the following :  <br/><br/> 1. Sales channel return order number
+                                                                                                                                                                                    <br/> 2. Return order reference number of any other system"
+                                           aria-hidden="true"></i>
+                                    </div>
+                                    <div ng-if="addSaleReturnDialogRefKnown.orderNumberId.$error.uniquesr"
+                                         class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Order ref. no. already exists!
+                                        </span>
+                                    </div>
+                                    <div ng-if="addSaleReturnDialogRefKnown.orderNumberId.$dirty && addSaleReturnDialogRefKnown.orderNumberId.$error.maxlength"
+                                         class="col-md-offset-3 col-md-6">
+                                         <span class="error-message">
+                                             Order Ref. No. should not exceed 45 characters.
+                                         </span>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top"
+                                     ng-if="singleorderReturnData.tableSaleOrder == null || singleorderReturnData.tableSaleOrder == undefined">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Sale Order No. <span
+                                                style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input ng-if="singleOrderReturnMode != 'edit'"
+                                               required name="saleorderNumberId"
+                                               type="text" id="SRAddNo1"
+                                               class="form-control darkgrey-bottom-border"
+                                               ng-model="genericData.saleOrderRefNo"
+                                               placeholder="Sale Order No.">
+                                        <i ng-if="singleOrderReturnMode != 'edit'"
+                                           class="fa fa-question-circle-o date-help"
+                                           data-container="body" data-toggle="popover" data-trigger="focus" tabindex="0"
+                                           title="Ref. No." data-html="true" data-content="Reference number can be any of the following :  <br/><br/> 1. Sales channel sale order ref. number
+                                                                                                                                                                                    <br/> 2. Sale order reference number of any other system"
+                                           aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-md-2 form-row-height">
+                                        <button id="SRAddGInfo"
+                                                ng-disabled="addSaleReturnDialogRefKnown.saleorderNumberId.$invalid"
+                                                type="button" class="btn small-actn-btn"
+                                                ng-click="getSaleOrderInfo(saleOrderRefNo)">
+                                            Get Info
+                                        </button>
+                                    </div>
+                                    <div ng-if="addSaleReturnDialogRefKnown.$submitted && addSaleReturnDialogRefKnown.saleorderNumberId.$error.required"
+                                         class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please enter the Sale Order number
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <div ng-show="singleorderReturnData.tableSaleOrder!=null && singleorderReturnData.tableSaleOrder!=undefined && genericData.foundReturnable==true">
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Sale Order No. <span
+                                                    style="color:red">*</span></span>
+                                        </div>
+
+                                        <div class="col-md-6 form-row-height">
+                                            <input ng-readonly="true"
+                                                   name="orderNumberId"
+                                                   type="text" id="SRAddNo2"
+                                                   class="form-control darkgrey-bottom-border"
+                                                   ng-model="singleorderReturnData.tableSaleOrder.tableSaleOrderSystemOrderNo"
+                                                   title="singleorderReturnData.tableSaleOrder.tableSaleOrderClientOrderNo"
+                                                   style="border: none !important; color: #786eff; font-weight: 600;">
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Channel </span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <input id="SRAddChannel"
+                                                   type="text"
+                                                   disabled="disabled"
+                                                   class="form-control darkgrey-bottom-border"
+                                                   ng-model="singleorderReturnData.tableSalesChannelValueInfo.tableSalesChannelValueInfoName"
+                                                   style="border: none !important; color: #786eff; font-weight: 600;">
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Customer </span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <input id="SRAddCustomer"
+                                                   type="text"
+                                                   disabled="disabled"
+                                                   class="form-control darkgrey-bottom-border"
+                                                   ng-model="singleorderReturnData.tableCustomer.tableCustomerFullName"
+                                                   style="border: none !important; color: #786eff; font-weight: 600;">
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height add-single-order-da-heading">
+                                                <span class="form-label-height semi-bold-text">Pickup Address <span
+                                                        style="color:red">*</span></span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <input id="SRAddPAddress"
+                                                   type="text"
+                                                   disabled="disabled"
+                                                   class="form-control darkgrey-bottom-border"
+                                                   ng-model="singleorderReturnData.tableAddress.tableAddressFull"
+                                                   style="border: none !important; color: #786eff; font-weight: 600;">
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-margin-top row-margin-bottom-small"
+                                         ng-if="singleorderReturnData.tableSaleReturnSkus.length > 0">
+                                        <div class="col-md-12 text-left">
+                                            <span class="semi-bold-text">List of Products</span>
+                                        </div>
+                                    </div>
+                                    <div class="row" ng-if="singleorderReturnData.tableSaleReturnSkus.length > 0">
+                                        <div class="col-md-12">
+                                            <table id="productTable"
+                                                   class="table boldtable table-responsive table-bordered table-hover">
+                                                <thead class="itemlist-grid-header">
+                                                <tr>
+                                                    <th id="SRAddSIdH">Seller SKU ID
+                                                    </th>
+                                                    <th id="SRAddSNameH">SKU
+                                                        Name
+                                                    </th>
+                                                    <th id="SRAddSSQtyH" style="text-align: right;"></span>Sale Order
+                                                        Quantity
+                                                    </th>
+                                                    <th id="SRAddSRetrndH" style="text-align: right;">Already Returned
+                                                    </th>
+                                                    <th id="SRAddSRQtyH" style="text-align: right;">Returnable Quantity
+                                                    </th>
+                                                    <th id="SRAddSQtyH" style="text-align: right;"></span>Quantity
+                                                    </th>
+                                                    <th id="SRAddSActionH" style="text-align: center;">Action
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="tableSaleReturnSku in singleorderReturnData.tableSaleReturnSkus track by $index">
+                                                    <td id="SRAddSId{{$index}}">
+                                                        {{tableSaleReturnSku.tableSku.tableSkuClientSkuCode}}
+                                                    </td>
+                                                    <td title="{{tableSaleReturnSku.tableSku.tableSkuDescription}}" id="SRAddSName{{$index}}">
+                                                        {{tableSaleReturnSku.tableSku.tableSkuName}}
+                                                    </td>
+                                                    <td id="SRAddSSQty{{$index}}">
+                                                        {{singleorderReturnData.tableSaleOrder.tableSaleOrderSkuses[$index].tableSaleOrderSkusSkuQuantity}}
+                                                    </td>
+                                                    <td id="SRAddSRetrnd{{$index}}">
+                                                        {{genericData.returnedQuantity[$index]}}
+                                                    </td>
+                                                    <td id="SRAddSRQty{{$index}}">
+                                                        {{singleorderReturnData.tableSaleOrder.tableSaleOrderSkuses[$index].tableSaleOrderSkusSkuQuantity
+                                                        - genericData.returnedQuantity[$index]}}
+                                                    </td>
+                                                    <td id="SRAddSQty{{$index}}" style="text-align: right;">
+                                                        <input type="text"
+                                                               only-integer
+                                                               id="SRAddSQty{{$index}}Qty"
+                                                               prevent-typing-greater
+                                                               class="darkgrey-bottom-border-number"
+                                                               max="{{singleorderReturnData.tableSaleOrder.tableSaleOrderSkuses[$index].tableSaleOrderSkusSkuQuantity - genericData.returnedQuantity[$index] }}"
+                                                               ng-model="tableSaleReturnSku.tableSaleReturnSkuQuantity"
+                                                        >
+                                                    </td>
+
+                                                    <td id="SRAddSAction{{$index}}"
+                                                        style="text-align: center; padding: 0;">
+                                                        <md-button id="SRAddSAction{{$index}}Rem"
+                                                                   ng-if="singleorderReturnData.tableSaleReturnSkus.length > 1"
+                                                                   class="md-icon-button" md-no-ink="true"
+                                                                   ng-click="removeProduct($index)" placeholder="Delete"
+                                                                   style="padding: 0px !important; margin: 0 !important; height: 0px;">
+
+                                                            <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                                     ng-init="imgsrc1='images/svg/delete.svg'"
+                                                                     ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                                     ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                                     style="width: 20px;"></md-icon>
+
+                                                        </md-button>
+                                                        <md-button id="SRAddSAction{{$index}}DRem"
+                                                                   ng-if="singleorderReturnData.tableSaleReturnSkus.length == 1"
+                                                                   class="md-icon-button" md-no-ink="true"
+                                                                   ng-disabled title="Can't be deleted."
+                                                                   placeholder="Delete"
+                                                                   style="padding: 0px !important; margin: 0 !important; height: 0px;">
+
+                                                            <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+
+                                                                     ng-init="imgsrc1='images/svg/delete.svg'"
+                                                                     ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                                     ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                                     style="width: 20px;"></md-icon>
+                                                        </md-button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Shipping Owner <span
+                                                    style="color:red">*</span> </span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <select id="SRAddSO" ng-model="singleorderReturnData.tableShippingOwnership"
+                                                    name="owner"
+                                                    ng-options="option.tableShippingOwnershipString for option in shippingOwnersData track by option.idtableShippingOwnershipId"
+                                                    required
+                                                    class="form-control add-single-order-select">
+                                                <option value="" disabled selected style="display: none;">Select
+                                                    Shipping Owner
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div ng-if="addSaleReturnDialogRefKnown.$submitted && addSaleReturnDialogRefKnown.owner.$error.required"
+                                             class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select Shipping Owner type
+                                        </span>
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Pickup Date <span
+                                                    ng-if="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                                    style="color: red">*</span></span> </span>
+
+                                        </div>
+                                        <div class="col-md-3 form-row-height">
+                                            <md-datepicker id="SRAddPDate"
+                                                           timezoned-date
+                                                           ng-model="singleorderReturnData.tableSaleReturnPickUpDateTime"
+                                                           ng-required="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                                           md-min-date="minDateShipping" md-placeholder="Enter date"
+                                                           name="pickUpDate"
+                                                           ng-change="onPickUpDateChange()"></md-datepicker>
+                                        </div>
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Drop Date <span
+                                                    ng-if="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                                    style="color: red">*</span></span> </span>
+                                        </div>
+                                        <div class="col-md-3 form-row-height">
+                                            <md-datepicker id="SRAddDDate"
+                                                           timezoned-date
+                                                           ng-model="singleorderReturnData.tableSaleReturnDropDateTime"
+                                                           ng-required="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                                           md-min-date="minDateDelivery" md-placeholder="Enter date"
+                                                           name="dropDate"
+                                                           ng-change="onDropDateChange()"></md-datepicker>
+                                        </div>
+                                        <div ng-if="addSaleReturnDialogRefKnown.$submitted && addSaleReturnDialogRefKnown.pickUpDate.$error.required"
+                                             class="col-md-offset-3 col-md-3">
+                                        <span class="error-message">
+                                            Please choose a Pickup Date
+                                        </span>
+                                        </div>
+                                        <div ng-if="addSaleReturnDialogRefKnown.$submitted && addSaleReturnDialogRefKnown.dropDate.$error.required"
+                                             class="col-md-offset-9 col-md-9">
+                                        <span class="error-message">
+                                            Please choose a Drop Date
+                                        </span>
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height add-single-order-da-heading">
+                                            <span class="form-label-height semi-bold-text">Return reason <span
+                                                    style="color:red">*</span></span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <select required id="SRAddRReason"
+                                                    ng-model="singleorderReturnData.tableSaleReturnReason"
+                                                    name="tableSaleReturnReason"
+                                                    class="form-control add-single-order-select"
+                                                    ng-options="option as option.tableSaleReturnReasonString for option in returnReasonArray track by option.idtableSaleReturnReasonId">
+                                                <option value="" disabled selected style="display: none;">Select return
+                                                    reason
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div ng-if="addSaleReturnDialogRefKnown.$submitted && addSaleReturnDialogRefKnown.tableSaleReturnReason.$error.required"
+                                             class="col-md-offset-3 col-md-6">
+                                            <span class="error-message">
+                                                Please select a return reason
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top row-margin-bottom-small"
+                                         ng-if="singleorderReturnData.tableSaleReturnRemarkses.length > 0">
+                                        <div class="col-md-10 col-md-offset-1">
+                                            <span class="semi-bold-text">Remarks History</span>
+                                        </div>
+                                    </div>
+                                    <div class="row" ng-if="singleorderReturnData.tableSaleReturnRemarkses.length > 0">
+                                        <div class="col-md-10 col-md-offset-1">
+                                            <table id="remarkstable"
+                                                   class="table boldtable table-responsive table-bordered table-hover">
+                                                <thead class="data-grid-header">
+                                                <tr>
+                                                    <th id="SRAddRhDateH" style="width:20%;">Date-Time</th>
+                                                    <th id="SRAddRhUserH" style="text-align: right;">User
+                                                    </th>
+                                                    <th id="SRAddRhRemarksH" style="text-align: right;">Remarks
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="data-grid-data">
+                                                <tr ng-repeat="remarks in singleorderReturnData.tableSaleReturnRemarkses">
+                                                    <td id="SRAddRhDate{{$index}}">
+                                                        {{remarks.tableSaleReturnRemarksDateTime |
+                                                        utcToLocalTimeOrHyphen}}
+                                                    </td>
+                                                    <td id="SRAddRhUser{{$index}}" style="text-align: right;">
+                                                        {{remarks.tableSaleReturnRemarksUser}}
+                                                    </td>
+                                                    <td id="SRAddRhRemarks{{$index}}" style="text-align: right;">
+                                                        {{remarks.tableSaleReturnRemarksString}}
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Remarks</span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <div>
+
+                                            <textarea class="form-control"
+                                                      name="remarksString"
+                                                      ng-trim="false"
+                                                      ng-maxlength="2000"
+                                                      id="SRAddRemarks"
+                                                      ng-model="singleorderReturnData.tableSaleReturnRemarks"
+                                                      placeholder="Enter Your Reason">
+                                            </textarea>
+                                            </div>
+                                            <div >
+                                            <h6 style="color:gray;">Maximum character limit:2000, Limit Left:
+                                                {{2000-singleorderReturnData.tableSaleReturnRemarks.length}}</h6>
+                                            </div>
+                                            <div ng-if="addSaleReturnDialogRefKnown.remarksString.$dirty && addSaleReturnDialogRefKnown.remarksString.$error.maxlength">
+                                                <span class="error-message">
+                                                    Maximum character limit reached
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane container-fluid" id="tab2">
+                                <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                                    <div class="col-md-6 light-grey-right-border">
+                                        <div ng-required="bulkOrderReturnTab" name="files" ngf-drop ngf-select
+                                             class="drop-box cursorPointer"
+                                             ng-change="uploadBulkOrderReturnFile(genericData.bulkOrderUploadfile);"
+                                             ng-model="genericData.bulkOrderUploadfile" ngf-drag-over-class="'dragover'"
+                                             accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                                            <img src="images/svg/upload_icon_1.svg"
+                                                 style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag file to
+                                            upload or click to select
+                                        </div>
+                                        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                                        <br>
+                                        <span id="uploadFileText1"
+                                              class="uploadFileLabel cursorPointer">Upload File</span>
+                                        <br>
+                                        <h5>
+
+                                        </h5>
+                                        <span>
+
+                                                <span><b>Selected File:</b></span>
+                                                <span ng-if="fileName != null" style="width:100%;word-wrap:break-word;">{{fileName}}</span>
+                                                <span ng-if="fileName == null">No file selected</span>
+                                            </span>
+                                        <br>
+                                        <span ng-if="addSaleReturnDialogRefKnown.files.$error.required"
+                                              class="error-msg">Please upload file</span><br>
+                                        <span ng-if="addSaleReturnDialogRefKnown.files.$error.pattern"
+                                              class="error-msg">Please upload a valid file</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a id="SRAddBODwnldFile" ng-click="downloadSaleReturnTemplate()">
+                                            <div class="downloadFileBulkOrder"></div>
+                                        </a>
+                                        <br>
+                                        <span id="SRAddBODwnldTemp" class="downloadFileLabel">
+                                                <a ng-click="downloadSaleReturnTemplate()">
+                                                    Download File Template
+                                                </a>
+                                            </span>
+                                    </div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <a ng-click="closeBulkUploadDialog()"
+                                       style="color: #00ACE4; font-weight: 600;cursor: pointer;">Go to "Bulk upload
+                                        reports"
+                                        for more details.</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                         ng-if="singleOrderReturnTab==true && bulkOrderReturnTab==false">
+                        <button id="SRAddCancel2" type="button" class="cancel-btn" data-dismiss="modal"
+                                ng-click="cancelSingleOrderReturn(addSaleReturnDialogRefKnown)"
+                                ng-if="access.editAccess">
+                            Cancel
+                        </button>
+                        <input id="SRAddSubmit" type="submit" class="action-btn"
+                               ng-if="singleOrderReturnMode != 'edit'"
+                               ng-click="setFormButtonValue('save')" value="Save">
+                        <input id="SRAddUpdate" type="submit" class="action-btn"
+                               ng-if="singleOrderReturnMode == 'edit'"
+                               ng-click="setFormButtonValue('update')" value="Update">
+                    </div>
+                    <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                         ng-if="singleOrderReturnTab==false && bulkOrderReturnTab==true">
+                        <button id="SRAddCancel3" type="button" class="cancel-btn" data-dismiss="modal"
+                                ng-click="cancelBulkUpload(addSaleReturnDialogRefKnown);singleOrderReturnTabMode()"
+                                ng-if="access.editAccess">Cancel
+                        </button>
+                        <button ng-disabled="disableBulkUpload" id="SRAddUpload" type="button" class="action-btn"
+                                ng-click="addSaleReturnDialogRefKnown.files.$valid && uploadSaleReturnBulkUpload(addSaleReturnDialogRefKnown)">
+                            Upload
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmEditOrder" role="dialog" data-backdrop="static" data-keyboard="false"
+         aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <p class="dialog-heading-p">Confirm Update Order</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top row-margin-bottom text-center">
+                            <div class="col-md-12">
+                                <span class="font">Your existing return order will be cancelled and a new return order will be created. <br/>Do you want to continue?</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="SRCnfrmCancel2" type="button" class="action-btn"
+                            ng-click="updateSingleOrderReturnConfirmed()">
+                        Yes
+                    </button>
+                    <button id="SRCnfrmSubmit" type="button" class="cancel-btn" data-dismiss="modal">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmSaleOrderReturnDialog" role="dialog" data-backdrop="static" data-keyboard="false"
+         aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <p class="dialog-heading-p">Sale Order Ref. Check</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top row-margin-bottom text-center">
+                            <div class="col-md-12">
+                                <span class="font">Do you have order reference no. ?</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="SRCnfrmSOCancel2" type="button" class="action-btn"
+                            ng-click="onSaleReferenceNumberOptionChanged(true, $event)">
+                        Yes
+                    </button>
+                    <button id="SRCnfrmSOSubmit" type="button" class="cancel-btn"
+                            ng-click="onSaleReferenceNumberOptionChanged(false, $event)">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        .md-datepicker-calendar-pane {
+            z-index: 9999 !important;
+        }
+    </style>
+</div>
+
+
+<div ng-include src="'Salereturn/editRemarksModal.html?version=1.0.0'"></div>
+<div ng-include src="'Salereturn/infoBoxDialog.html?version=1.0.0'"></div>
+<div ng-include src="'Salereturn/cancelSaleReturnDialog.html?version=1.0.0'"></div>
+<div ng-include src="'Salereturn/addSaleReturnDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterCustomerDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonDeleteConfirmationDialog.html?version=1.0.0'"></div>
+
+
+<style>
+    .mybut1 {
+        margin-left: 10px;
+        color: #F0592B;
+        font-weight: 600;
+        width: 100%;
+        min-height: 25px;
+        max-width: 85px;
+        float: right;
+        margin-bottom: 10px;
+    }
+
+    .order-table-tab-bar button {
+        padding: 6px 10px;
+        min-width: 85px !important;
+    }
+
+    .sharp {
+        width: 119px;
+    }
+</style>

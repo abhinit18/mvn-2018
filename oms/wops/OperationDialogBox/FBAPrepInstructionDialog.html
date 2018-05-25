@@ -1,0 +1,36 @@
+<div class="modal fade" id="fbaPrepInstructionModalDialog" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width: 600px">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="FBAPICancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelfbaPrepInstructionModal()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">FBA Prep Instruction</p>
+            </div>
+            <div class="modal-body" style="max-height: auto!important;" >
+                <div class="row">
+                    <div class="col-md-6 col-lg-6"><b>Prep Guidance:</b></div>
+                    <div class="col-md-6 col-lg-6">{{ fbaorder.prepinstruction.prepGuidance}}</div>
+                    <div class="col-md-6 col-lg-6"><b>Barcode Instruction:</b></div>
+                    <div class="col-md-6 col-lg-6">{{ fbaorder.prepinstruction.barcodeInstruction}}</div>
+                    <div class="col-md-6 col-lg-6"><b>Prep Instruction:</b></div>
+                    <div class="col-md-6 col-lg-6">
+                        <div class="col-md-6 col-lg-6" ng-repeat="instruction in fbaorder.prepinstruction.prepInstruction">
+                            {{instruction}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="FBAPICancel2" class="action-btn" ng-click="cancelfbaPrepInstructionModal()">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

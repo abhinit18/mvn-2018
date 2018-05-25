@@ -1,0 +1,628 @@
+<md-content class="md-padding" style="padding: 0px;overflow: hidden;background-color: white;">
+    <div class="row search-row-heading">
+        <md-toolbar class="md-small search-row-toolbar search-row">
+            <div class="md-toolbar-tools">
+                <md-icon md-svg-icon="images/svg/header_search.svg"></md-icon>
+                <span class="font">&nbsp;&nbsp;Search Work Order</span>
+                <span flex=""></span>
+                <md-button class="md-icon-button" aria-label="Favorite" ng-click="toggleQcSearchRow()">
+                    <md-icon ng-if="searchWorkOrderQcClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                    <md-icon ng-if="searchWorkOrderQcClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+    </div>
+    <div ng-show="searchWorkOrderQcClicked==true" class="row search-row search-row-content search-row-top-border">
+        <div layout="row">
+            <div class="inv-search-margin">
+                <span class="font">Select Warehouse</span>
+                <select ng-model="warehouseid" class="inventoryscreen-dropdown font" ng-change="callDisabledQc();">
+                    <option value="">
+                        Select
+                    </option>
+                    <option ng-repeat="option in wareHousesData"
+                        value="{{option.idtableWarehouseDetailsId}}">
+                        {{option.tableWarehouseDetailsShortname}}
+                    </option>
+                 </select>
+            </div>
+            <div>
+                <md-datepicker timezoned-date ng-model="start1Date" md-min-date="mainstartminDate" md-max-date="mainstartmaxDate" ng-change="mainsendStartDate(start1Date);callDisabledQc();" md-placeholder="Start Date" style="background-color: inherit;margin-top:3px;"></md-datepicker>
+                <md-datepicker timezoned-date ng-model="end1Date" md-min-date="mainendminDate" md-max-date="mainendmaxDate" ng-change="mainsendEndDate(end1Date);callDisabledQc();" md-placeholder="End Date" style="background-color: inherit;margin-top:3px;"></md-datepicker>
+                <button type="button" class="btn btn-default mybut"  ng-click="submitWorkOrderQcAction(warehouseid,start1Date,end1Date)">Submit</button>
+                <button title="Clear Applied Filters"  class="btn clearFilter" ng-click="clearAction4();warehouseid=null;start1Date=null;end1Date=null">
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <button type="button" class="btn addsharpbutton font pull-right btn-top-margin" ng-click="showAddQcDialog($event)"><img src="images/svg/add.svg" style="height:20px;">&nbsp;Create New QC</button>
+        </div>
+    </div>
+
+    <div class="row row-margin-top-small">
+        <div class="col-md-12">
+            <ul class="nav navbar-nav screen-tabs">
+                <li>
+                    <button type="button" class="btn sharp font" ng-style="tabsColorQc"
+                            ng-click="listOfWorkOrderQcCount('all',1)"><span>All</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{allCountQc}})</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn sharp font" ng-style="tabsColorQc1"
+                            ng-click="listOfWorkOrderQcCount('new',1)"><span>New</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{newCountQc}})</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn sharp font" ng-style="tabsColorQc2"
+                            ng-click="listOfWorkOrderQcCount('process',1)"><span>In Process</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{processCountQc}})</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn sharp" ng-style="tabsColorQc3"
+                            ng-click="listOfWorkOrderQcCount('hold',1)"><span>On Hold</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{holdCountQc}})</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn sharp" ng-style="tabsColorQc4"
+                            ng-click="listOfWorkOrderQcCount('closed',1)"><span>Closed</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{closedCountQc}})</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn sharp" ng-style="tabsColorQc5"
+                            ng-click="listOfWorkOrderQcCount('cancelled',1)"><span>Cancelled</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{cancelledCountQc}})</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div> 
+
+
+    <div class="row main-list">
+        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+            <thead class="main-list-header-wo">
+                <!-- table header -->
+                <tr>
+                    <td>Work Order Id</td>
+                    <td>Warehouse</td>
+                    <td>Created Date</td>
+                    <td>Start Date</td>
+                    <td>End Date</td>
+                    <td>Work Order Status</td>
+                    <td>Action</td>
+                    <td></td>     
+                </tr>
+            </thead>
+            <tbody ng-repeat="workOrderqcData in workOrderqcLists" data-ng-switch on="dayDataCollapseQc[$index]">
+                <tr class="clickable-row-wo">
+                    <td>{{workOrderqcData.idtableWorkOrderId}}</td>
+                    <td>{{workOrderqcData.tableWarehouseDetails.tableWarehouseDetailsShortname}}</td>
+                    <td>{{workOrderqcData.tableWorkOrderDatetime | utcToLocalOrHyphen}}</td>
+                    <td>{{workOrderqcData.tableWorkOrderScheduledDatetime | utcToLocalOrHyphen}}</td>
+                    <td>{{workOrderqcData.tableWorkOrderScheduledEndDatetime | utcToLocalOrHyphen}}</td>
+                    <td>{{workOrderqcData.tableWorkOrderStatusType.tableWorkOrderStatusTypeString}}</td>
+                    <td>
+                        <img ng-src="{{imgsrc1}}" title="Edit" width="20px" height="20px" data-ng-click="editWorkOrders($event,workOrderqcData.idtableWorkOrderId,workOrderqcData.tableWorkOrderType.idtableWorkOrderTypeId)" ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="imgsrc1='images/svg/edit_hover.svg'"
+                            ng-mouseout="imgsrc1='images/svg/edit.svg'" />&nbsp;|&nbsp;
+                        <img ng-if="workOrderqcData.tableWorkOrderStatusType.idtableWorkOrderStatusTypeId!=5" ng-src="{{imgsrc2}}" title="Cancel" width="20px" height="20px" data-ng-click="cancelWorkOrder(workOrderqcData.idtableWorkOrderId,workOrderqcData,$event)" ng-init="imgsrc2='images/svg/deactivate.svg'" ng-mouseover="imgsrc2='images/svg/deactivate_hover.svg'"
+                            ng-mouseout="imgsrc2='images/svg/deactivate.svg'" />
+                        <img ng-src="{{imgsrc2}}"  ng-if="workOrderqcData.tableWorkOrderStatusType.idtableWorkOrderStatusTypeId==5" style="pointer-events: none;cursor: default;" title="Cancel" width="20px" height="20px" data-ng-click="cancelWorkOrder(workOrderqcData.idtableWorkOrderId,workOrderqcData,$event)" ng-init="imgsrc2='images/svg/deactivate.svg'" ng-mouseover="imgsrc2='images/svg/deactivate_hover.svg'"
+                            ng-mouseout="imgsrc2='images/svg/deactivate.svg'" />                            
+                    </td>
+                    <td ng-click="selectTableRowQc($index, workOrderqcData.idtableWorkOrderId);stateTrials(workOrderqcData.tableWorkOrderStateTrails);" ng-show="dayDataCollapseQc == null || dayDataCollapseQc == undefined || dayDataCollapseQc == []"><img src="images/svg/expand_icon.svg" height="22" /></td>
+                    <td ng-click="selectTableRowQc($index, workOrderqcData.idtableWorkOrderId);stateTrials(workOrderqcData.tableWorkOrderStateTrails);" data-ng-switch-when="false"><img src="images/svg/expand_icon.svg" height="22" /></td>
+                    <td data-ng-switch-when="true" ng-click="selectTableRowQc($index, workOrderqcData.idtableWorkOrderId);stateTrials(workOrderqcData.tableWorkOrderStateTrails);"><img src="images/svg/collaps_icon.svg" height="22" /></td>                    
+                </tr>
+
+                    <tr data-ng-switch-when="true" class="vendor-acc-data-row" data-ng-repeat="tableSkuData in workOrderqcData.tableWorkOrderSkus">
+                        <td colspan="3" style="border-right: 1px solid #ddd !important; padding: 20px;">
+                            <div>
+                                <br> SKU Name:
+                                <span style="font-size: 14px;color: #30373B;font-weight: bold">
+                                        {{tableSkuData.tableSku.tableSkuName}}
+                                    </span>
+                                <br> Seller SKU ID:
+                                <span style="font-size: 14px;color: #30373B;font-weight: bold ">
+                                        {{tableSkuData.tableSku.tableSkuClientSkuCode}}
+                                    </span>
+                                <br> SKU Description:
+                                <span style="font-size: 14px;color: #30373B;font-weight: bold ">
+                                        {{tableSkuData.tableSku.tableSkuDescription}}
+                                </span>
+                            </div>
+                        </td>
+                        <td colspan="4">
+                            <ul ng-if="fullTrialsArray.length>= 4" class="progress-indicator nocenter stacked" style="list-style: none;">
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                        style="width: 20px;height: 20px;"/><label
+                                style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[0]}}</label></span>
+                                </li>
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                        style="width: 20px;height: 20px;"/><label
+                                style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[1]}}</label></span>
+                                </li>
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                        style="width: 20px;height: 20px;"/><label
+                                style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[2]}}</label></span>
+                                </li>
+                                <li class="completed"><span class="bubble1"><img src="images/svg/current_icon.svg"
+                                                                         style="width: 20px;height: 20px;"/><label
+                                style="padding-top: 20px;font-weight: bold;padding-left: 10px;color:black">{{fullTrialsArray[3]}}</label></span>
+                                </li>
+                            </ul>
+                            <ul ng-if="fullTrialsArray.length == 1" class="progress-indicator nocenter stacked" style="list-style: none;">
+                                <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[0]}}</label></span>
+                                </li>
+                            </ul>
+                            <ul ng-if="fullTrialsArray.length == 2" class="progress-indicator nocenter stacked" style="list-style: none;">
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                        style="width: 20px;height: 20px;"/><label
+                                style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[0]}}</label></span>
+                                </li>
+                                <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[1]}}</label></span>
+                                </li>
+                            </ul>
+                            <ul ng-if="fullTrialsArray.length == 3" class="progress-indicator nocenter stacked" style="list-style: none; padding-top: 30px !important;">
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                        style="width: 20px;height: 20px;"/><label
+                                style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[0]}}</label></span>
+                                </li>
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                        style="width: 20px;height: 20px;"/><label
+                                style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[1]}}</label></span>
+                                </li>
+                                <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[2]}}</label></span>
+                                </li>
+                            </ul>
+                        </td>
+                        <!-- TRIALS LENGTH == 1 -->
+                        <td colspan="3" ng-if="fullTrialsArray.length==1">
+                            <!-- Hold WareHouse Not Allocated -->
+                            <div class="wrapper" ng-if="fullIdArray[0]==7" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                            <!-- Hold Fraud Validation Failed -->
+                            <div class="wrapper" ng-if="fullIdArray[0]==5" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                            <!-- Hold Stock Unavailable -->
+                            <div class="wrapper" ng-if="fullIdArray[0]==10" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                                <span style="padding-left: 20px;padding-top: 10px;font-size:12px;color: #00ACE4;">
+                              Raise PO
+                              </span>
+                            </div>
+                            <!-- Hold Packing Material Unavailable -->
+                            <div class="wrapper" ng-if="fullIdArray[0]==12" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                                <span style="padding-left: 20px;padding-top: 10px;font-size:12px;color: #00ACE4;">
+                              Raise PO
+                              </span>
+                            </div>
+                            <!-- Hold Awaiting Shipping Details -->
+                            <div class="wrapper" ng-if="fullIdArray[0]==14" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                    <div ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId==1"
+                                         style="padding-left: 0px; width: 80px; height: 29px; text-align: center; vertical-align: middle; background-color: transparent; border-style: groove;">
+                                        <a style="color:#F0592B;" ng-click="redirectToFileUploadUrl()"
+                                           href="{{baseSchedulePickUpUrl}}/{{orderData.idtableSaleOrderId}}/{{tableSkuData.idtableSaleOrderSkusId}}"
+                                           download>
+                                            Select
+                                        </a>
+                                    </div>
+
+                                    <button ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId!=1"
+                                            ng-click="openShippingCarrierBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,tableSkuData,orderData.tableSaleOrderClientOrderNo,orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId)"
+                                            style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                        Select
+                                    </button>
+                                </span>
+                            </div>
+                            <!-- Hold ReturnWarehouseNotAllocated Details -->
+                            <div class="wrapper" ng-if="fullIdArray[0]==21" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                            <!-- Hold AwaitingReturnShippingDetails Details -->
+                            <div class="wrapper" ng-if="fullIdArray[0]==23" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                        </td>
+                        <!-- TRIALS LENGTH == 2 -->
+                        <td colspan="3" ng-if="fullTrialsArray.length==2">
+                            <!-- Hold WareHouse Not Allocated -->
+                            <div class="orderJourneyWrapperTrialLength2" ng-if="fullIdArray[1]==7" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                            <!-- Hold Fraud Validation Failed -->
+                            <div class="orderJourneyWrapperTrialLength2" ng-if="fullIdArray[1]==5" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                            <!-- Hold Stock Unavailable -->
+                            <div class="orderJourneyWrapperTrialLength2" ng-if="fullIdArray[1]==10" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                                <span style="padding-left: 20px;padding-top: 10px;font-size:12px;color: #00ACE4;">
+                              Raise PO
+                              </span>
+                            </div>
+                            <!-- Hold Packing Material Unavailable -->
+                            <div class="orderJourneyWrapperTrialLength2" ng-if="fullIdArray[1]==12" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                                <span style="padding-left: 20px;padding-top: 10px;font-size:12px;color: #00ACE4;">
+                              Raise PO
+                              </span>
+                            </div>
+                            <!-- Hold Awaiting Shipping Details -->
+                            <div class="orderJourneyWrapperTrialLength2" ng-if="fullIdArray[1]==14" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <div ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId==1"
+                                       style="padding-left: 0px; width: 80px; height: 29px; text-align: center; vertical-align: middle; background-color: transparent; border-style: groove;">
+                                      <a style="color:#F0592B;" ng-click="redirectToFileUploadUrl()"
+                                         href="{{baseSchedulePickUpUrl}}/{{orderData.idtableSaleOrderId}}/{{tableSkuData.idtableSaleOrderSkusId}}"
+                                         download>Select</a>
+                                  </div>
+
+                                  <button ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId!=1"
+                                          ng-click="openShippingCarrierBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,tableSkuData,orderData.tableSaleOrderClientOrderNo,orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Select
+                                  </button>
+                                </span>
+                            </div>
+                            <!-- Hold ReturnWarehouseNotAllocated Details -->
+                            <div class="orderJourneyWrapperTrialLength2" ng-if="fullIdArray[1]==21" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                            <!-- Hold AwaitingReturnShippingDetails Details -->
+                            <div class="orderJourneyWrapperTrialLength2" ng-if="fullIdArray[1]==23" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                        </td>
+                        <!-- TRIALS LENGTH == 3 -->
+                        <td colspan="3" ng-if="fullTrialsArray.length==3">
+                            <!-- Hold WareHouse Not Allocated -->
+                            <div class="orderJourneyWrapperTrialLength3" ng-if="fullIdArray[2]==7" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Select
+                                  </button>
+                                </span>
+                            </div>
+                            <!-- Hold Fraud Validation Failed -->
+                            <div class="orderJourneyWrapperTrialLength3" ng-if="fullIdArray[2]==5" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                    <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                            style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                        Select
+                                    </button>
+                                </span>
+                            </div>
+                            <!-- Hold Stock Unavailable -->
+                            <div class="orderJourneyWrapperTrialLength3" ng-if="fullIdArray[2]==10" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Select
+                                  </button>
+                              </span>
+                                <span style="padding-left: 20px;padding-top: 10px;font-size:12px;color: #00ACE4;">
+                              Raise PO
+                              </span>
+                            </div>
+                            <!-- Hold Packing Material Unavailable -->
+                            <div class="orderJourneyWrapperTrialLength3" ng-if="fullIdArray[2]==12" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)" style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Select
+                                  </button>
+                                </span>
+                                <span style="padding-left: 20px;padding-top: 10px;font-size:12px;color: #00ACE4;">
+                                  Raise PO
+                                </span>
+                            </div>
+                            <!-- Hold Awaiting Shipping Details -->
+                            <div class="orderJourneyWrapperTrialLength3" ng-if="fullIdArray[2]==14" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <div ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId==1" style="padding-left: 0px; width: 80px; height: 29px; text-align: center; vertical-align: middle; background-color: transparent; border-style: groove;">
+                                      <a style="color:#F0592B;" ng-click="redirectToFileUploadUrl()" href="{{baseSchedulePickUpUrl}}/{{orderData.idtableSaleOrderId}}/{{tableSkuData.idtableSaleOrderSkusId}}" download>
+                                         Select
+                                      </a>
+                                  </div>
+                                  <button ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId!=1" ng-click="openShippingCarrierBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,tableSkuData,orderData.tableSaleOrderClientOrderNo,orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId)" style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Select
+                                  </button>
+                                </span>
+                            </div>
+                            <!-- Hold ReturnWarehouseNotAllocated Details -->
+                            <div class="orderJourneyWrapperTrialLength3" ng-if="fullIdArray[2]==21" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Select
+                                  </button>
+                              </span>
+                            </div>
+                            <!-- Hold AwaitingReturnShippingDetails Details -->
+                            <div class="orderJourneyWrapperTrialLength3" ng-if="fullIdArray[2]==23" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Select
+                                  </button>
+                                </span>
+                            </div>
+                        </td>
+                        <!-- TRIALS LENGTH == 4 -->
+                        <td colspan="3" ng-if="fullTrialsArray.length>=4">
+                            <!-- Hold WareHouse Not Allocated -->
+                            <div class="orderJourneyWrapperTrialLength4" ng-if="fullIdArray[3]==7" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                            <!-- Hold Fraud Validation Failed -->
+                            <div class="orderJourneyWrapperTrialLength4" ng-if="fullIdArray[3]==5" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                            <!-- Hold Stock Unavailable -->
+                            <div class="orderJourneyWrapperTrialLength4" ng-if="fullIdArray[3]==10" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                                <span style="padding-left: 20px;padding-top: 10px;font-size:
+                                 12px;
+                                 color: #00ACE4;">
+                              Raise PO
+                              </span>
+                            </div>
+                            <!-- Hold Packing Material Unavailable -->
+                            <div class="orderJourneyWrapperTrialLength4" ng-if="fullIdArray[3]==12" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                                <span style="padding-left: 20px;padding-top: 10px;font-size:
+                                 12px;
+                                 color: #00ACE4;">
+                              Raise PO
+                              </span>
+                            </div>
+                            <!-- Hold Awaiting Shipping Details -->
+                            <div class="orderJourneyWrapperTrialLength4" ng-if="fullIdArray[3]==14" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <div ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId==1"
+                                       style="padding-left: 0px; width: 80px; height: 29px; text-align: center; vertical-align: middle; background-color: transparent; border-style: groove;">
+                                      <a style="color:#F0592B;" ng-click="redirectToFileUploadUrl()"
+                                         href="{{baseSchedulePickUpUrl}}/{{orderData.idtableSaleOrderId}}/{{tableSkuData.idtableSaleOrderSkusId}}"
+                                         download>Select</a>
+                                  </div>
+                                  <button ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId!=1"
+                                          ng-click="openShippingCarrierBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,tableSkuData,orderData.tableSaleOrderClientOrderNo,orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Select
+                                  </button>
+                                </span>
+                            </div>
+
+                            <!-- Hold ReturnWarehouseNotAllocated Details -->
+                            <div class="orderJourneyWrapperTrialLength4" ng-if="fullIdArray[3]==21" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                            <!-- Hold AwaitingReturnShippingDetails Details -->
+                            <div class="orderJourneyWrapperTrialLength4" ng-if="fullIdArray[3]==23" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Select
+                              </button>
+                              </span>
+                            </div>
+                        </td>
+                    </tr>                 
+            </tbody>
+        </table>
+        <!-- END TABLE -->
+        <div class="row" style="margin-top: 0px;">
+<!--             <div class="col-md-6">
+                <p class="showingOrderLabel" ng-show="allworkOrderQcSize<workOrdQcCount">Showing QC {{allworkOrderQcStart + 1}} to {{allworkOrderQcSize}} of {{workOrdQcCount}}
+                </p>
+                <p class="showingOrderLabel" ng-show="allworkOrderQcSize>=workOrdQcCount && workOrdQcCount!=0">Showing QC {{allworkOrderQcStart + 1}} to {{workOrdQcCount}} of {{workOrdQcCount}}
+                </p>
+                <p class="showingOrderLabel" ng-show="workOrdQcCount==0">No QC Available
+                </p>                
+            </div> -->
+
+            <div class="col-md-6" ng-show="defaultTabQc == 'all'">
+                <p class="showingOrderLabel" ng-show="allworkOrderQcSize<allCountQc">Showing Qcs {{allworkOrderQcStart + 1}} to {{allworkOrderQcSize}} of {{allCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="allworkOrderQcSize>=allCountQc && allCountQc!=0">Showing Qcs {{allworkOrderQcStart + 1}} to {{allCountQc}} of {{allCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="allCountQc==0">No Qcs Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTabQc == 'new'">
+                <p class="showingOrderLabel" ng-show="allworkOrderQcSize<newCountQc">Showing Qcs {{allworkOrderQcStart + 1}} to {{allworkOrderQcSize}} of {{newCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="allworkOrderQcSize>=newCountQc && newCountQc!=0">Showing Qcs {{allworkOrderQcStart + 1}} to {{newCountQc}} of {{newCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="newCountQc==0">No Qcs Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTabQc == 'process'">
+                <p class="showingOrderLabel" ng-show="allworkOrderQcSize<processCountQc">Showing Qcs {{allworkOrderQcStart + 1}} to {{allworkOrderQcSize}} of {{processCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="allworkOrderSize>=processCountQc && processCountQc!=0">Showing Qcs {{allworkOrderStart + 1}} to {{processCountQc}} of {{processCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="processCountQc==0">No Qcs Available
+                </p>
+            </div>
+
+            <div class="col-md-6" ng-show="defaultTabQc == 'hold'">
+                <p class="showingOrderLabel" ng-show="allworkOrderQcSize<holdCountQc">Showing Qcs {{allworkOrderQcStart + 1}} to {{allworkOrderQcSize}} of {{holdCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="allworkOrderQcSize>=holdCountQc && holdCountQc!=0">Showing Qcs {{allworkOrderQcStart + 1}} to {{holdCountQc}} of {{holdCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="holdCountQc==0">No Qcs Available
+                </p>
+            </div>
+
+            <div class="col-md-6" ng-show="defaultTabQc == 'closed'">
+                <p class="showingOrderLabel" ng-show="allworkOrderQcSize<closedCountQc">Showing Qcs {{allworkOrderQcStart + 1}} to
+                    {{allworkOrderQcSize}} of {{closedCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="allworkOrderSize>=closedCountQc && closedCountQc!=0">Showing Qcs {{allworkOrderQcStart + 1}} to {{closedCountQc}} of {{closedCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="closedCountQc==0">No Qcs Available
+                </p>
+            </div>
+
+            <div class="col-md-6" ng-show="defaultTabQc == 'cancelled'">
+                <p class="showingOrderLabel" ng-show="allworkOrderQcSize<cancelledCountQc">Showing Qcs {{allworkOrderQcStart + 1}} to {{allworkOrderQcSize}} of {{cancelledCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="allworkOrderSize>=cancelledCountQc && cancelledCountQc!=0">Showing Qcs {{allworkOrderQcStart + 1}} to {{cancelledCountQc}} of {{cancelledCountQc}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="cancelledCountQc==0">No Qcs Available
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <span class="pull-right">
+                    <!-- pager -->
+                    <ul ng-if="vmPagerWoQcStart.pages.length" class="pagination">
+                        <li ng-show="vmPagerWoQcStart.currentPage == 1" ng-class="{disabled:vmPagerWoQcStart.currentPage == 1}">
+                            <a>&lt;&lt; First</a>
+                        </li>
+                        <li ng-show="vmPagerWoQcStart.currentPage > 1" ng-class="{disabled:vmPagerWoQcStart.currentPage == 1}">
+                            <a ng-click="listOfWorkOrderQcCount(defaultTabQc,1)">&lt;&lt; First</a>
+                        </li>
+                        <li ng-show="vmPagerWoQcStart.currentPage == 1" ng-class="{disabled:vmPagerWoQcStart.currentPage == 1}">
+                            <a>&lt; Previous</a>
+                        </li>
+                        <li ng-show="vmPagerWoQcStart.currentPage > 1" ng-class="{enabled:vmPagerWoQcStart.currentPage > 1}">
+                            <a ng-click="listOfWorkOrderQcCount(defaultTabQc,vmPagerWoQcStart.currentPage - 1)">&lt; Previous</a>
+                        </li>
+                        <li ng-repeat="page in vmPagerWoQcStart.pages" ng-class="{active:vmPagerWoQcStart.currentPage == page}">
+                            <a ng-click="listOfWorkOrderQcCount(defaultTabQc,page)">{{page}}</a>
+                        </li>
+                        <li ng-show="vmPagerWoQcStart.currentPage < vmPagerWoQcStart.totalPages" ng-class="{enabled:vmPagerWoQcStart.currentPage > vmPagerWoQcStart.totalPages}">
+                            <a ng-click="listOfWorkOrderQcCount(defaultTabQc,vmPagerWoQcStart.currentPage + 1)">Next &gt;</a>
+                        </li>
+                        <li ng-show="vmPagerWoQcStart.currentPage == vmPagerWoQcStart.totalPages" ng-class="{disabled:vmPagerWoQcStart.currentPage == vmPagerWoQcStart.totalPages}">
+                            <a>Next &gt;</a>
+                        </li>
+                        <li ng-show="vmPagerWoQcStart.currentPage < vmPagerWoQcStart.totalPages" ng-class="{disabled:vmPagerWoQcStart.currentPage == vmPagerWoQcStart.totalPages}">
+                            <a ng-click="listOfWorkOrderQcCount(defaultTabQc,vmPagerWoQcStart.totalPages)">Last &gt;&gt;</a>
+                        </li>
+                        <li ng-show="vmPagerWoQcStart.currentPage == vmPagerWoQcStart.totalPages" ng-class="{disabled:vmPagerWoQcStart.currentPage == vmPagerWoQcStart.totalPages}">
+                            <a>Last &gt;&gt;</a>
+                        </li>
+                    </ul>
+                </span>
+            </div>
+        </div>
+    </div>
+</md-content>
+<!-- Add New Kit Dialog -->
+<div ng-include src="'workOrderVas/workOrders/addNewQcDialog.html?version=1.0.0'"></div>
+<div ng-include src="'workOrderVas/workOrders/cancelWorkOrder.html?version=1.0.0'"></div>

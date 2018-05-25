@@ -1,0 +1,69 @@
+<div class="modal fade" data-backdrop="static" id="cancelPODialog" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="cancelPOForm" accessible-form novalidate ng-submit="cancelPOForm.$valid && selectCancelAction(orderId,tableSaleOrderId,remarks,LoadNewRason.NewReason,cancelPOForm);">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="POCnclCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelWarehouseSelection(cancelOrderForm)">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Cancel Order Item</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="row row-margin-top-small">
+                        <div class="col-md-3">
+                            <span class="font">PO No.</span>
+                        </div>
+                        <div class="col-md-5">
+                            <input id="POCnclNo" type="text" style="color: #F0592B;font-size: 16px; font-weight: 700; padding-top: 0px;" ng-model="orderNo" ng-readonly="true"></input>
+                        </div>
+                    </div>
+                    <div class="row row-margin-top-medium">
+                        <div class="col-md-3">
+                            <span class="font">Cancel Reason</span>
+                        </div>
+                        <div class="col-md-5">
+                            <select id="POCnclReason" required name="cancelReason" ng-model="remarks" class="form-control">
+                                <option value="" disabled selected style="display: none;">Select cancel reason</option>
+                                <option ng-repeat="option in cancelReasonArray"
+                                        value={{option.tablePurchaseOrderCancelReasonString}}>
+                                    {{option.tablePurchaseOrderCancelReasonString}}
+                                </option>
+                                <option value="other">Other Reason </option>
+                            </select>
+                            <div ng-if="cancelPOForm.$submitted && cancelPOForm.cancelReason.$error.required" class="full-width">
+                                <span class="error-msg">
+                                    Please select a valid reason
+                                </span>
+                            </div>
+                            <div class="full-width" ng-if="remarks == 'other'">
+                                <textarea id="POCnclRText" name="cancelreasonString" required="true" ng-maxlength="128" caps class="form-control" style="margin-top: 15px;" ng-model="LoadNewRason.NewReason" placeholder="Enter your reason"></textarea>
+                                <div ng-if="cancelPOForm.$submitted && cancelPOForm.cancelreasonString.$error.required" class="full-width">
+                                    <span class="error-msg">
+                                        Please enter the reason
+                                    </span>
+                                </div>
+                                <div ng-if="cancelPOForm.$submitted && cancelPOForm.cancelreasonString.$error.maxlength" class="full-width">
+                                    <span class="error-msg">
+                                        Maximum characters should be less than 128
+                                    </span>
+                                </div>
+                                <md-checkbox role="checkbox" ng-model="LoadNewRason.ReasonCheckBox" style="margin-top:10px;font-size: 13px;">Add this reason to the cancel reason list</md-checkbox>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="POCnclCnfirm" type="submit" class="action-btn">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

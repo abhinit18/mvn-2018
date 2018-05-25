@@ -1,0 +1,82 @@
+<div class="modal fade" data-backdrop="static" id="editRemarkModal" role="dialog" aria-labelledby="editRemarkModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" >
+        <form name="editRemarksForm" novalidate ng-submit="editRemarksForm.$valid && access.editAccess && updateRemarks(genericData.newModalRemarks,editRemarksForm)">
+            <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="STERCancel1" type="button" class="close" ng-click="cancelEditRemarksModal(editRemarksForm)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only" >Close</span>
+                </button>
+                <p class="dialog-heading-p" id="editremarks" ng-if="!access.editAccess">Remarks</p>
+                <p class="dialog-heading-p" id="editremarks" ng-if="access.editAccess">Add Remarks</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="col-md-3 margin-top-5" ng-if="modalRemarks.length > 0">
+                            <span class="semi-bold-text" ng-if="!access.editAccess">Remarks</span>
+                            <span class="semi-bold-text" ng-if="access.editAccess">Old Remarks</span>
+                        </div>
+                        <div class="col-md-8 margin-top-5" ng-if="modalRemarks.length > 0">
+                            <table id="remarkstable2"
+                                   class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="data-grid-header">
+                                <tr>
+                                    <th id="STERDateH" style="width:20%;">Date-Time</th>
+                                    <th id="STERUserH" style="text-align: right;">User
+                                    </th>
+                                    <th id="STERRemarksH" style="text-align: right;">Remarks
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="data-grid-data">
+                                <tr ng-repeat="remarks in modalRemarks">
+                                    <td id="STERDate{{$index}}">{{remarks.tableStockXferOrderRemarksDateTime | utcToLocalTimeOrHyphen}}</td>
+                                    <td id="STERUser{{$index}}" style="text-align: right;">
+                                        {{remarks.tableStockXferOrderRemarksUser}}
+                                    </td>
+                                    <td id="STERRemarks{{$index}}" style="text-align: right;">
+                                        {{remarks.tableStockXferOrderRemarksString}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid" ng-if="access.editAccess">
+                    <div class="row row-margin-top">
+                        <div class="col-md-3 margin-top-5">
+                            <span class="semi-bold-text">New Remarks</span>
+                        </div>
+                        <div class="col-md-8">
+
+                                    <textarea caps id="STERRemarks" class="form-control"
+                                              maxlength="2000"
+                                              name="remarks" required
+                                              ng-trim="false" ng-model="genericData.newModalRemarks"
+                                              placeholder="Enter Your Remarks"></textarea>
+                            <h6 style="color:gray;">Maximum character limit:2000, Limit Left: {{2000-genericData.newModalRemarks.length}}</h6>
+                        </div>
+                        <div ng-if="editRemarksForm.$submitted && editRemarksForm.remarks.$error.required" class="col-md-offset-3 col-md-8">
+                            <span class="error-message">
+                                Please enter your remarks
+                            </span>
+                        </div>
+                        <div ng-if="editRemarksForm.$submitted && editRemarksForm.remarks.$error.maxlength" class="col-md-offset-3 col-md-8">
+                            <span class="error-message">
+                                Maximum character limit reached
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="STERCancel2" type="button" class="cancel-btn" ng-click="cancelEditRemarksModal(editRemarksForm)">Cancel</button>
+                <button id="STERSubmit" type="submit" class="action-btn" ng-if="access.editAccess">Add
+                </button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>

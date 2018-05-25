@@ -1,0 +1,75 @@
+<div class="modal fade" id="exportRatesDialog" role="dialog" aria-labelledby="exportRatesDialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="exportRates" accessible-form novalidate>
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="invAddCancel1" type="button" class="close" data-dismiss="modal"
+                            ng-click="cancelRatesExportDialog();">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">Export Rates</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="md-dialog-content">
+                        <div class="tab-pane container-fluid" id="tab2">
+
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Choose Rate List <span
+                                            style="color: red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select required
+                                            name="channelObject"
+                                            ng-model="selectedRateList"
+                                            id="selctedRateList"
+                                            class="form-control add-single-order-select"
+                                            ng-options="option.rateListName for option in rateList">
+                                            <option value="">Select a Rate List</option>
+                                    </select>
+                                </div>
+                                <div ng-if="exportRates.$submitted && exportRates.channelObject.$error.required"
+                                     class="col-md-offset-3 col-md-9">
+                                        <span class="error-message">
+                                            Please choose rate list you want to export!
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="uploadTab==false && downloadTab==true">
+                    <button id="invAddCancel2" class="cancel-btn" type="button"
+                            ng-click="cancelRatesExportDialog(exportRates, selectedRateList)">
+                        Cancel
+                    </button>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="uploadTab==true && downloadTab==false">
+                    <button id="invAddCancel3" type="button" class="cancel-btn"
+                            ng-click="cancelRatesExportDialog(exportRates, selectedRateList)">Cancel
+                    </button>
+                    <button id="invAddSubmit2" type="button" class="action-btn"
+                            ng-click="processRatesBulkExport(exportRates, selectedRateList)">
+                        Done
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+<style>
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+        background-color: #E9EEEF;
+    }
+
+    .md-datepicker-calendar-pane {
+        z-index: 1200;
+    }
+</style>

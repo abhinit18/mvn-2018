@@ -1,0 +1,66 @@
+<!-- <script type="text/ng-template" id="activateRule.tmpl.html" >
+    <md-dialog aria-label="Deactivate SKU" style="width: 600px;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p class="dialog-heading-p">Activate Rule</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelDiscountRuleData()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="row">
+                        <div class="col-md-12 margin-top-5 text-center">
+                            <span class="semi-bold-text">Are you sure you want to activate this Rule?</span>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button class="cancel-btn" ng-click="cancelDiscountRuleData()">
+                    No
+                </button>
+                <button class="action-btn" ng-click="activateDiscountRule()">
+                    Yes
+                </button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script> -->
+
+<div class="modal fade" id="activateDialog" role="dialog" aria-labelledby="activateDialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+        <form name="activatForm" accessible-form  novalidate>
+            <div class="modal-content" style="border-radius:0px;">
+                    <div style="background-color: #F2F7F8;">
+                        <div class="md-toolbar-tools">
+                            <p class="dialog-heading-p">Activate Rule</p>
+                            <span flex></span>
+                            <md-button class="md-icon-button" >
+                                <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog" ng-click="cancelDiscountRuleData('activate')"></md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+                    <div class="md-dialog-content conf-rule-content deactivate-content">
+                        <div class="row">
+                            <div class="col-md-12 margin-top-5 text-left">
+                                <span class="semi-bold-text">Are you sure you want to activate this Rule?</span>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="cancel-btn" ng-click="cancelDiscountRuleData('activate')">
+                    No
+                </button>
+                <input type="button" class="action-btn" value="Yes" ng-click="checkConflict(checkConflictData, 'activate')">
+            </div>
+        </form>
+</div>
+</div>
+

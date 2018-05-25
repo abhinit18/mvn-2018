@@ -1,0 +1,517 @@
+<div class="modal fade" data-backdrop="static" id="addSaleReturnDialogRefUnknown" role="dialog"
+     data-keyboard="false" aria-labelledby="myModalLabelleded" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="addOrderFormWithoutRef" accessible-form novalidate
+              ng-submit="addOrderFormWithoutRef.$valid && singleorderReturnData.tableSaleReturnSkus.length  > 0 && submitAddSaleReturnOrderForm(addOrderFormWithoutRef)">
+            <div class="modal-content">
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="SRAddWCancel1" type="button" class="close" data-dismiss="modal"
+                            ng-click="cancelSingleOrderReturn(addOrderFormWithoutRef)">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" ng-if="singleOrderReturnMode == 'add'">Add
+                        Sale Return</p>
+
+                    <p class="dialog-heading-p" ng-if="singleOrderReturnMode == 'edit'">Edit
+                        Sale Return</p>
+
+                    <p class="dialog-heading-p" ng-if="singleOrderReturnMode == 'copy'">Copy
+                        Sale Return</p>
+
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+
+                    <div class="full-width" style="margin-bottom: 15px;">
+                        <ul class="nav nav-tabs" id="ordertabswithoutref">
+                            <li class="active"><a data-target="#tab3" data-toggle="tab" class="btn sharp"
+                                                  ng-click="singleOrderReturnTabMode()" style="width:auto;">Single Sale
+                                Return</a>
+                            </li>
+                            <li ng-if="singleOrderReturnMode == 'add'"><a data-target="#tab4" data-toggle="tab"
+                                                                          class="btn sharp"
+                                                                          ng-click="bulkOrderReturnTabMode()"
+                                                                          style="width:auto;">Bulk Sale Return</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active container-fluid" id="tab3">
+
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Ref. No.</span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input ng-if="singleOrderReturnMode != 'edit'"
+                                           uniquesr
+                                           name="orderNumberId" type="text" id="SRAddWRef1"
+                                           md-autofocus class="form-control darkgrey-bottom-border"
+                                           ng-model="singleorderReturnData.tableSaleReturnScRefNo"
+                                           ng-maxlength="45"
+                                           placeholder="Order Ref. No.">
+                                    <input
+                                            ng-if="singleOrderReturnMode == 'edit'"
+                                            uniquesr
+                                            name="orderNumberId" type="text" id="SRAddWRef2"
+                                            class="form-control darkgrey-bottom-border"
+                                            ng-maxlength="45"
+                                            ng-model="singleorderReturnData.tableSaleReturnScRefNo">
+                                    <i class="fa fa-question-circle-o date-help"
+                                       ng-if="singleOrderReturnMode != 'edit' && singleOrderReturnMode != 'copy'"
+                                       data-container="body" data-toggle="popover" data-trigger="focus"
+                                       tabindex="0" title="Ref. No." data-html="true"
+                                       data-content="Reference number can be any of the following :  <br/><br/> 1. Sales channel return order number
+                                                                                                                                                                                    <br/> 2. Return order reference number of any other system"
+                                       aria-hidden="true"></i>
+                                </div>
+                                <div ng-if="addOrderFormWithoutRef.orderNumberId.$error.uniquesr"
+                                     class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Order ref. no. already exists!
+                                        </span>
+                                </div>
+                                <div ng-if="addOrderFormWithoutRef.orderNumberId.$dirty && addOrderFormWithoutRef.orderNumberId.$error.maxlength"
+                                     class="col-md-offset-3 col-md-6">
+                                         <span class="error-message">
+                                             Order Ref. No. should not exceed 45 characters.
+                                         </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Channel <span
+                                            style="color: red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select required id="SRAddWChannel"
+                                            name="channelObject"
+                                            ng-model="singleorderReturnData.tableSalesChannelValueInfo"
+                                            class="form-control add-single-order-select"
+                                            ng-options="option as option.tableSalesChannelValueInfoName for option in channelNamesData track by option.idtableSalesChannelValueInfoId">
+                                        <option value="" ng-selected>Choose
+                                            Channel
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="addOrderFormWithoutRef.$submitted && addOrderFormWithoutRef.channelObject.$error.required"
+                                     class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select a channel
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Add Product <span style="color: red">*</span></span>
+                                </div>
+                                <div class="col-md-4 form-row-height">
+                                    <angucomplete-alt id="products" placeholder="Search product"
+                                                      pause="400" selected-object="productObject"
+                                                      remote-url="{{baseSkuUrl}}"
+                                                      title-field="tableSkuClientSkuCode"
+                                                      description-field="tableSkuName"
+                                                      input-class="form-control darkgrey-bottom-border"
+                                                      image-field="tableSkuImageUrl"
+                                                      input-name="tableSkuName"
+                                                      field-required="singleorderReturnData.tableSaleReturnSkus.length == 0"
+                                                      initial-value="skuSelected"></angucomplete-alt>
+                                </div>
+                                <div class="col-md-1 form-row-height">
+                                    <button type="button" title="Click to see all SKUs."
+                                            style="position: absolute; top: 8px;" id="SRAddWSMore"
+                                            class="btn btn-sm truncate-text"
+                                            ng-click="masterSkuDialog($event, true);">. . .
+                                    </button>
+                                </div>
+                                <div class="col-md-2 form-row-height">
+                                    <input type="text"
+                                           ng-model="saleReturnFormData.returnQuantity" id="SRAddWQty"
+                                           only-integer
+                                           ng-required="skuSelected || singleorderReturnData.tableSaleReturnSkus.length == 0"
+                                           prevent-typing-greater
+                                           ng-maxlength="10"
+                                           name="quantity"
+                                           placeholder="Quantity"
+                                           class="form-control darkgrey-bottom-border textRightOnFocus"/>
+                                </div>
+
+                                <div class="col-md-2 form-row-height">
+                                        <span title="Add to List" class="form-label-height add-to-list-icon"
+                                              style="color: #f0592b;"
+                                              id="SRAddWSAdd"
+                                              ng-click="addProduct(searchedSku)"></span>
+                                </div>
+                                <div ng-if="addOrderFormWithoutRef.$submitted && addOrderFormWithoutRef.tableSkuName.$error['autocomplete-required']"
+                                     class="col-md-offset-3 col-md-4">
+                                        <span class="error-message">
+                                            Please select a product
+                                        </span>
+                                </div>
+                                <div ng-if="addOrderFormWithoutRef.tableSkuName.$valid  && addOrderFormWithoutRef.$submitted && (addOrderFormWithoutRef.quantity.$error.required || addOrderFormWithoutRef.quantity.$error.maxlength)"
+                                     class="col-md-offset-8 col-md-2">
+                                        <span class="error-message">
+                                            Please enter the quantity
+                                        </span>
+                                    <span ng-if="addOrderFormWithoutRef.tableSkuName.$valid  && addOrderFormWithoutRef.$submitted && addOrderFormWithoutRef.quantity.$error.maxlength"
+                                          class="error-message">
+                                            Quantity can not be greater than 999999999
+                                        </span>
+                                </div>
+                                <div ng-if="saleReturnFormData.returnQuantity && addOrderFormWithoutRef.$submitted && singleorderReturnData.tableSaleReturnSkus.length == 0"
+                                     class="col-md-12 text-center">
+                                        <span class="error-message">
+                                            Please add product(s) to the list.
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top row-margin-bottom-small"
+                                 ng-if="singleorderReturnData.tableSaleReturnSkus.length > 0">
+                                <div class="col-md-12 text-left">
+                                    <span class="semi-bold-text">List of Selected Products</span>
+                                </div>
+                            </div>
+                            <div class="row"
+                                 ng-if="singleorderReturnData.tableSaleReturnSkus.length  > 0">
+                                <div class="col-md-12">
+                                    <table id="productTablewithoutref"
+                                           class="table boldtable table-responsive table-bordered table-hover">
+                                        <thead class="itemlistwithoutid-grid-header">
+                                        <tr>
+                                            <th id="SRAddWSIdH">Seller SKU ID
+                                            </th>
+                                            <th id="SRAddWSNameH">SKU
+                                                Name
+                                            </th>
+                                            <th id="SRAddWSQtyH" style="text-align: right;">Quantity
+                                            </th>
+                                            <th id="SRAddWSActionH" style="text-align: center;">Action
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="data-grid-data">
+                                        <tr
+                                                ng-repeat="tableSaleReturnSku in singleorderReturnData.tableSaleReturnSkus">
+                                            <td id="SRAddWSId{{$index}}">
+                                                {{tableSaleReturnSku.tableSku.tableSkuClientSkuCode}}
+                                            </td>
+                                            <td title="{{tableSaleReturnSku.tableSku.tableSkuDescription}}" id="SRAddWSName{{$index}}">
+                                                {{tableSaleReturnSku.tableSku.tableSkuName}}
+                                            </td>
+                                            <td id="SRAddWSQty{{$index}}" style="text-align: right;">
+                                                {{tableSaleReturnSku.tableSaleReturnSkuQuantity}}
+                                            </td>
+                                            <td id="SRAddWSAction{{$index}}" style="text-align: center; padding: 0;">
+                                                <md-button
+                                                        class="md-icon-button" md-no-ink="true"
+                                                        id="SRAddWSAction{{$index}}Rem"
+                                                        ng-click="removeProduct($index)" placeholder="Delete"
+                                                        style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                    <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                             ng-init="imgsrc1='images/svg/delete.svg'"
+                                                             ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                             ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                             style="width: 20px;"></md-icon>
+                                                </md-button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Customer <span
+                                            style="color: red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <angucomplete-alt id="customers" placeholder="Search customer" pause="400"
+                                                      selected-object="customerObj" remote-url="{{baseCustomerUrl}}"
+                                                      title-field="tableCustomerFullName"
+                                                      code-field="tableCustomerClientCustomerCode"
+                                                      description-field="tableCustomerEmail"
+                                                      phone-field="tableCustomerPhone"
+                                                      input-name="tableCustomerFullName"
+                                                      field-required="true"
+                                                      input-class="form-control darkgrey-bottom-border"
+                                                      initial-value="custName"
+                                                      input-changed="customerChanged"></angucomplete-alt>
+                                </div>
+                                <div class="col-md-2 form-row-height">
+                                    <button type="button" title="Click to see all customers"
+                                            style="position: absolute; top: 8px;" id="SRAddWCMore"
+                                            class="btn btn-sm truncate-text"
+                                            ng-click="masterCustomerDialog($event, true);">. . .
+                                    </button>
+                                </div>
+                                <div ng-if="addOrderFormWithoutRef.$submitted && addOrderFormWithoutRef.tableCustomerFullName.$error['autocomplete-required']"
+                                     class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select a customer
+                                        </span>
+                                </div>
+
+
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height" style="padding-right: 1px">
+                                        <span class="form-label-height semi-bold-text">Shipping Owner <span
+                                                ng-if="custName"
+                                                style="color: red">*</span>
+                                        </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select id="SRAddWSO"
+                                            ng-model="singleorderReturnData.tableShippingOwnership"
+                                            name="owner"
+                                            ng-options="option.tableShippingOwnershipString for option in shippingOwnersData track by option.idtableShippingOwnershipId"
+                                            required class="form-control add-single-order-select">
+                                        <option value="" disabled selected style="display: none;">Select
+                                            Shipping Owner
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="custName && addOrderFormWithoutRef.$submitted && addOrderFormWithoutRef.owner.$error.required"
+                                     class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select Shipping Owner type
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height add-single-order-da-heading">
+                                        <span class="form-label-height semi-bold-text">Pickup Address <span
+                                                ng-if="custName && singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                                style="color: red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select id="SRAddWPAddress" ng-model="singleorderReturnData.tableAddress"
+                                            name="deliveryAddressName"
+                                            ng-required="custName && singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                            class="form-control add-single-order-select"
+                                            ng-options="option as option.tableAddressFull for option in deliveryAddressArray track by option.idtableAddressId">
+                                        <option value="" disabled selected style="display: none;">Select
+                                            Delivery Address
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="custName && addOrderFormWithoutRef.$submitted && addOrderFormWithoutRef.deliveryAddressName.$error.required"
+                                     class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select the Pickup Address
+                                        </span>
+                                </div>
+
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Pickup Date <span
+                                                ng-if="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                                style="color: red">*</span></span>
+                                </div>
+                                <div class="col-md-3 form-row-height">
+                                    <md-datepicker id="SRAddWPDate"
+                                                   ng-required="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                                   timezoned-date
+                                                   ng-model="singleorderReturnData.tableSaleReturnPickUpDateTime"
+                                                   md-min-date="startminDateDelivery"
+                                                   md-placeholder="Enter date" name="pickUpDate"
+                                                   ng-change="sendEndDate(singleorderReturnData.tableSaleReturnPickUpDateTime)"></md-datepicker>
+                                </div>
+
+                                <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Drop Date <span
+                                                ng-if="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                                style="color: red">*</span></span>
+                                </div>
+                                <div class="col-md-3 form-row-height">
+                                    <md-datepicker id="SRAddWDDate"
+                                                   ng-required="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                                   timezoned-date
+                                                   ng-model="singleorderReturnData.tableSaleReturnDropDateTime"
+                                                   md-min-date="endminDateDelivery"
+                                                   md-placeholder="Enter date" name="dropDate"
+                                                   ng-change="sendEndDate(singleorderReturnData.tableSaleReturnDropDateTime)"></md-datepicker>
+                                </div>
+                                <div ng-if="addOrderFormWithoutRef.$submitted && addOrderFormWithoutRef.pickUpDate.$error.required"
+                                     class="col-md-offset-3 col-md-3">
+                                        <span class="error-message">
+                                            Please choose a Pickup Date
+                                        </span>
+                                </div>
+                                <div ng-if="addOrderFormWithoutRef.$submitted && addOrderFormWithoutRef.dropDate.$error.required"
+                                     class="col-md-offset-9 col-md-9">
+                                        <span class="error-message">
+                                            Please choose a Drop Date
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height add-single-order-da-heading">
+                                        <span class="form-label-height semi-bold-text">Return reason <span
+                                                style="color: red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select required id="SRAddWRReason"
+                                            ng-model="singleorderReturnData.tableSaleReturnReason"
+                                            name="tableSaleReturnReason"
+                                            class="form-control add-single-order-select"
+                                            ng-options="option as option.tableSaleReturnReasonString for option in returnReasonArray track by option.idtableSaleReturnReasonId">
+                                        <option value="" disabled selected style="display: none;">Select
+                                            return reason
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="addOrderFormWithoutRef.$submitted && addOrderFormWithoutRef.tableSaleReturnReason.$error.required"
+                                     class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select a return reason
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top row-margin-bottom-small"
+                                 ng-if="singleorderReturnData.tableSaleReturnRemarkses.length > 0">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <span class="semi-bold-text">Remarks History</span>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="singleorderReturnData.tableSaleReturnRemarkses.length > 0">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <table id="remarkstable"
+                                           class="table boldtable table-responsive table-bordered table-hover">
+                                        <thead class="data-grid-header">
+                                        <tr>
+                                            <th id="SRAddWRhDateH" style="width:20%;">Date-Time</th>
+                                            <th id="SRAddWRhUserH" style="text-align: right;">User
+                                            </th>
+                                            <th id="SRAddWRhRemarksH" style="text-align: right;">Remarks
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="data-grid-data">
+                                        <tr ng-repeat="remarks in singleorderReturnData.tableSaleReturnRemarkses">
+                                            <td id="SRAddWRhDate{{$index}}">{{remarks.tableSaleReturnRemarksDateTime |
+                                                utcToLocalTimeOrHyphen}}
+                                            </td>
+                                            <td id="SRAddWRhUser{{$index}}" style="text-align: right;">
+                                                {{remarks.tableSaleReturnRemarksUser}}
+                                            </td>
+                                            <td id="SRAddWRhRemarks{{$index}}" style="text-align: right;">
+                                                {{remarks.tableSaleReturnRemarksString}}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Remarks</span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+
+                                    <div>
+                                        <textarea caps class="form-control" id="SRAddWRemarks"
+                                                  name="remarksString"
+                                                  ng-model="singleorderReturnData.tableSaleReturnRemarks"
+                                                  ng-maxlength="2000" ng-model="newModalRemarks"
+                                                  placeholder="Enter Your Reason">
+                                        </textarea>
+                                    </div>
+                                    <div >
+                                        <h6 style="color:gray;">Maximum character limit: 2000, Limit Left:
+                                            {{2000-singleorderReturnData.tableSaleReturnRemarks.length}}</h6>
+                                    </div>
+                                    <div ng-if="addOrderFormWithoutRef.remarksString.$dirty && addOrderFormWithoutRef.remarksString.$error.maxlength">
+                                        <span class="error-message">
+                                            Maximum character limit reached
+                                        </span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="tab-pane container-fluid" id="tab4">
+                            <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                                <div class="col-md-6 light-grey-right-border">
+                                    <div ng-required="bulkOrderReturnTab" name="files" ngf-drop ngf-select
+                                         class="drop-box cursorPointer"
+                                         ng-change="uploadBulkOrderReturnFile(genericData.bulkOrderUploadfile);"
+                                         ng-model="genericData.bulkOrderUploadfile"
+                                         ngf-drag-over-class="'dragover'" accept=".xls,.xlsx"
+                                         ngf-pattern="'.xls,.xlsx'">
+                                        <img src="images/svg/upload_icon_1.svg"
+                                             style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag file to
+                                        upload or click to select
+                                    </div>
+                                    <div ngf-no-file-drop>File Drag/Drop is not supported for this
+                                        browser
+                                    </div>
+                                    <br> <span id="uploadFileText"
+                                               class="uploadFileLabel cursorPointer">Upload File</span> <br>
+                                    <h5></h5>
+                                    <span> <span><b>Selected File:</b></span> <span
+                                            ng-if="fileName != null" style="width: 100%; word-wrap: break-word;">{{fileName}}</span>
+                                        <!--<span ng-if="fileName == null">No file selected</span>-->
+                                        </span>
+                                    <br>
+                                    <span ng-if="addOrderFormWithoutRef.files.$error.required" class="error-msg">Please upload file</span><br>
+                                    <span ng-if="addOrderFormWithoutRef.files.$error.pattern" class="error-msg">Please upload a valid file</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <a ng-click="downloadSaleReturnTemplate()">
+                                        <div class="downloadFileBulkOrder"></div>
+                                    </a>
+                                    <br>
+                                    <span id="SRAddWBODwnldTemp" class="downloadFileLabel"> <a
+                                            ng-click="downloadSaleReturnTemplate()">
+                                    Download File Template </a></span>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <a ng-click="closeBulkUploadDialog()"
+                                   style="color: #00ACE4; font-weight: 600; cursor: pointer;">Go to
+                                    "Bulk upload reports" for more details.</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="singleOrderReturnTab==true && bulkOrderReturnTab==false">
+                    <button id="SRAddWCancel2" type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelSingleOrderReturn(addOrderFormWithoutRef)">Cancel
+                    </button>
+                    <input id="SRAddWSubmit" type="submit" class="action-btn"
+                           ng-if="singleOrderReturnMode != 'edit' && singleOrderReturnMode != 'copy'"
+                           ng-click="setFormButtonValue('save')" value="Save">
+                    <input id="SRAddWUpdate" type="submit" class="action-btn"
+                           ng-if="singleOrderReturnMode == 'edit'"
+                           ng-click="setFormButtonValue('update')" value="Update">
+                    <input id="SRAddWCopy" type="submit" class="action-btn"
+                           ng-if="singleOrderReturnMode == 'copy'"
+                           ng-click="setFormButtonValue('add')" value="Add">
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="singleOrderReturnTab==false && bulkOrderReturnTab==true">
+                    <button id="SRAddWCancel3" type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelBulkUpload(addOrderFormWithoutRef);singleOrderReturnTabMode()">Cancel
+                    </button>
+                    <button ng-disabled="disableBulkUpload" id="SRAddWUpload" type="button" class="action-btn"
+                            ng-click="(addOrderFormWithoutRef.files.$valid) &&  uploadSaleReturnBulkUpload(addOrderFormWithoutRef)">
+                        Upload
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+        background-color: #E9EEEF;
+    }
+</style>
+

@@ -1,0 +1,54 @@
+<div class="modal fade" id="viewInvoices" role="dialog" aria-labelledby="viewInvoices" aria-hidden="true">
+    <div class="modal-dialog" style="width: 900px;">
+
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                    <button id="POVICancel1" type="button" class="close" ng-click="onCancelViewInvoicesClicked()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only" >Close</span>
+                    </button>
+                    <p class="dialog-heading-p" id="editremarks" ng-if="!access.editAccess">Invoices</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 margin-top-5">
+                                <span class="semi-bold-text" >Invoices</span>
+                            </div>
+                            <div class="col-md-8 margin-top-5" ng-if="selectedPo.tablePurchaseInvoices && selectedPo.tablePurchaseInvoices.length > 0">
+                                <table id="invoicetable"
+                                       class="table boldtable table-responsive table-bordered table-hover">
+                                    <thead class="data-grid-header">
+                                    <tr>
+                                        <th id="POVIDateH">Invoice Date</th>
+                                        <th id="POVINoH">Invoice Number
+                                        </th>
+                                        <th id="POVIEditH">
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="data-grid-data">
+                                    <tr ng-repeat="tablePurchaseInvoice in selectedPo.tablePurchaseInvoices">
+                                        <td id="POVIDate{{$index}}">{{tablePurchaseInvoice.tablePurchaseInvoiceDateTime | utcToLocalTimeOrHyphen}}</td>
+                                        <td id="POVINo{{$index}}" style="text-align: right;">
+                                            {{tablePurchaseInvoice.tablePurchaseInvoiceNumber}}
+                                        </td>
+                                        <td id="POVI1Edit{{$index}}" style="text-align: right;" ng-if="tablePurchaseInvoice.tableGrns != null && tablePurchaseInvoice.tableGrns.length > 0">
+                                            <a style="cursor:pointer;" ng-click="onViewInvoiceLinkClicked(tablePurchaseInvoice)">View</a></td>
+                                        <td id="POVI2Edit{{$index}}" style="text-align: right;" ng-if="(tablePurchaseInvoice.tableGrns == null || (tablePurchaseInvoice.tableGrns != null && tablePurchaseInvoice.tableGrns.length == 0))">
+                                            <a style="cursor:pointer;" ng-click="onEditInvoiceLinkClicked(tablePurchaseInvoice)">Edit</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button type="button" id="POVICancel2" class="cancel-btn" ng-click="onCancelViewInvoicesClicked()">Cancel</button>
+                </div>
+            </div>
+    </div>
+</div>

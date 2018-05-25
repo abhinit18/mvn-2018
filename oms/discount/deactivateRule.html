@@ -1,0 +1,30 @@
+<div class="modal fade" id="deactivateDialog" role="dialog" aria-labelledby="deactivateDialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+        <form name="deactivatForm" accessible-form  novalidate>
+            <div class="modal-content" style="border-radius:0px;">
+                    <div style="background-color: #F2F7F8;">
+                        <div class="md-toolbar-tools">
+                            <p class="dialog-heading-p">Deactivate Rule</p>
+                            <span flex></span>
+                            <md-button class="md-icon-button" >
+                                <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog" ng-click="cancelDiscountRuleData('deactivate')"></md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+                    <div class="md-dialog-content conf-rule-content deactivate-content">
+                        <div class="row">
+                            <div class="col-md-12 margin-top-5 text-left">
+                                <span class="semi-bold-text">Are you sure you want to deactivate this Rule?</span>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="cancel-btn" ng-click="cancelDiscountRuleData('deactivate')">
+                    No
+                </button>
+                <input type="button" class="action-btn" value="Yes" ng-click="deactivateDiscountRule()">
+            </div>
+        </form>
+</div>
+</div>

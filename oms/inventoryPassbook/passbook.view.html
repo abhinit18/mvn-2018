@@ -1,0 +1,444 @@
+<link href="inventoryPassbook/passbook.css" rel="stylesheet">
+<div class="container-fluid" ng-init="onLoad()">
+
+    <div class="row orderscreen-channel row-margin-top-x-medium" style="margin-top:10px;padding-top: 20px !important;">
+        <div class="full-width full-width-filter">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="padding-left: 0px;">
+                <div class="col-md-3">
+                    <span class="font">Warehouse</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="full-width select-style-small" style="width:100%;margin-left:35px;">
+                        <select id="passbookWarehouse" ng-model="filter.warehouseid" name="warehouseid"
+                                ng-options="option.idtableWarehouseDetailsId as option.tableWarehouseDetailsShortname for option in wareHousesData"
+                                required>
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding-left:0px;">
+                <div class="col-md-3" style="padding: 0px;">
+                    <span class="font">Search SKU</span>
+                </div>
+                <div class="col-md-8" style="padding-left:0px;">
+                    <angucomplete-alt id="productsfilter" placeholder="Search product" pause="400" selected-object="searchedProductForFilter"
+                                      remote-url="{{baseSkuUrl}}"
+                                      title-field="tableSkuClientSkuCode"
+                                      description-field="tableSkuName"
+                                      image-field="tableSkuImageUrl"
+                                      input-class="main-bottom-border font input-less-padding"></angucomplete-alt>
+                    <button type="button" title="Click to see all SKUs." style="position: absolute;top: 0px;right: -40px;" class="btn btn-sm truncate-text" ng-click="masterSkuDialog($event, false);">. . .</button>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                <div class="col-md-6" style="padding: 0px;">
+                    <span class="font">Select Category</span>
+                </div>
+                <div class="col-md-6" style="padding: 0px;">
+                    <div class="full-width select-style-small">
+                        <select id="passbookCategory" ng-model="filter.category" name="filtercategory"
+                                ng-options="option.idskuNodeId as option.skuNodeName for option in categoryTypeLists"
+                                required>
+                            <option value="">All</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="width: 31%;padding-right:0px;">
+                <div class="col-md-1" style="padding: 0px;">
+                    <span class="font">Date</span>
+                </div>
+                <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" style="margin-top: -10px;">
+                    <md-datepicker id="passbookSDate" timezoned-date ng-model="filter.startdate" md-min-date="startmindate" md-max-date="startmaxdate"
+                                   onkeydown="return false" ng-change="sendStartDate(filter.startdate)" md-placeholder="Start Date"
+                                   style="background-color: inherit;margin-top:3px;margin-left:-37px;"></md-datepicker>
+                    <button id="passbookSDateClear" ng-if="filter.startdate" title="Deselect Start Date"
+                            style="position:absolute;top:8px;margin-left:8px;" class="btn dateClear"     ng-click="clearStartDate();">
+                    </button>
+                    <md-datepicker id="passbookEDate" timezoned-date ng-model="filter.enddate" md-min-date="endmindate" md-max-date="endmaxdate"
+                                   onkeydown="return false" ng-change="sendEndDate(filter.enddate)" md-placeholder="End Date"
+                                   style="background-color: inherit;margin-top:3px;"></md-datepicker>
+                    <button id="passbookEDateClear" ng-if="filter.enddate" title="Deselect End Date"
+                            style="position:absolute;top:8px;margin-left:8px;" class="btn dateClear" ng-click="clearEndDate()">
+                    </button>
+                </div>
+            </div>
+            
+            <button id="passbookSearch"  type="button" class="btn btn-default btn-sm mybut"
+                     ng-click="getInventoryPassbookCount()"
+                     style="margin-left: -0px !important;height:33px;min-height:auto;min-width:50px;margin-top: -7px;">Search
+            </button>
+            <button id="passbookClear" title="Clear Applied Filters" style="margin-top:-3px;margin-left:10px;" class="btn clearFilter"
+                     ng-click="clearAction()">
+            </button>
+            <button id="passbookExport" title="Export Inventory Passbook" style="margin-top:-3px;margin-left:0px;" class="btn export"
+                    ng-click="inventoryExport()">
+            </button>
+        </div>
+    </div>
+    <div class="full-width" ng-show="!showinventories" style="margin-top:10px; margin-bottom:10px;">
+        <span class="total-count-heading"><b>Select a filter criteria</b></span>
+    </div>
+    <div class="full-width" ng-show="showinventories" style="margin-top:10px; margin-bottom:10px;">
+        <span class="total-count-heading"><b>Opening Count :</b></span>
+        <span class="total-count-heading">{{inventoryPassbookResponse.openingCount}}</span>
+    </div>
+
+
+    <div class="row main-list inventoryPassbookDataHeading" ng-show="showinventories">
+        <table border="1" class="table table-striped-custom table-condensed table-responsive table-hover inventorytable" style="border:2px solid black;">
+            <thead class="main-list-header-order ">
+            <!-- table header -->
+            <tr >
+                <td id="passbookDateH" style="border-right: 2px solid black">
+                    &nbsp;
+                </td>
+                <td id="passbookInwardH" colspan="4" style="border-right: 2px solid black">
+                    Inward
+                </td>
+                <td id="passbookOutwardH" colspan="4" style="border-right: 2px solid black">
+                    Outward
+                </td>
+                <td id="passbookAdjustmentH" colspan="2" style="border-right: 2px solid black">
+                    Adjustments
+                </td>
+                <td id="passbookBalanceH" style="border-right: 2px solid black">
+                    Balance&nbsp;
+                </td>
+            </tr>
+            </thead>
+            <thead class="main-list-header-order subTableHeading" style="background: gray;color:#333;">
+            <!-- table header -->
+            <tr style="color:black">
+                <td id="passbookDate1H" style="border-right: 2px solid black">
+                    &nbsp;
+                </td>
+                <td id="passbookPOH" >
+                    PO&nbsp;
+                </td>
+                <td id="passbookSTInH">
+                    ST In&nbsp;
+                </td>
+                <td id="passbookSaleH">
+                    Sale Return&nbsp;
+                </td>
+                <td id="passbookRGInH" style="border-right: 2px solid black">
+                    RG In&nbsp;
+                </td>
+                <td id="passbookSOH">
+                    SO&nbsp;
+                </td>
+                <td id="passbookSTOutH" style="text-align: center">
+                    ST Out&nbsp;
+                </td>
+                <td id="passbookPRH">
+                    PR&nbsp;
+                </td>
+                <td id="passbookRGOutH" style="border-right: 2px solid black">
+                    RG Out&nbsp;
+                </td>
+                <td id="passbookAdjustmentIncreaseH" style="border-right: 2px solid black">
+                   Increase
+                </td>
+                <td id="passbookAdjustmentDecreaseH" style="border-right: 2px solid black">
+                    Decrease
+                </td>
+                <td id="passbookBalance1H" >
+                    &nbsp;
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+                <tr class="clickable-row-order" ng-repeat="passbook in inventoryPassbookResponse.dateWiseTransactionInventories track by $index" ng-if="passbook.purchaseOrder || passbook.stIn || passbook.saleReturn || passbook.rgIn || passbook.saleOrder || passbook.stOut || passbook.purchaseReturn || passbook.rgOut || passbook.increasedInDay || passbook.decreasedInDay || passbook.balance">
+                    <td id="passbookDate1{{$index}}" style="border-right: 2px solid black">
+                        <span ng-if="passbook.date" style="color:black">{{passbook.date}}</span>
+                    </td>
+                    <td id="passbookPO{{$index}}" style="color: green;font-weight: bold;">
+                        <span class="underline" ng-if="passbook.purchaseOrder" ng-click="getSkuInventories('PO',passbook.date)">{{passbook.purchaseOrder}}</span>
+                        <span ng-if="!passbook.purchaseOrder" >-</span>
+                    </td>
+                    <td id="passbookSTIn{{$index}}" style="color: green;font-weight: bold;">
+                        <span class="underline" ng-if="passbook.stIn" ng-click="getSkuInventories('Stock Transfer In',passbook.date)">{{passbook.stIn}}</span>
+                        <span ng-if="!passbook.stIn" >-</span>
+                    </td>
+                    <td id="passbookSale{{$index}}" style="color: green;font-weight: bold;">
+                        <span class="underline" ng-if="passbook.saleReturn" ng-click="getSkuInventories('Sale Return',passbook.date)">{{passbook.saleReturn}}</span>
+                        <span ng-if="!passbook.saleReturn" >-</span>
+                    </td>
+                    <td id="passbookRGIn{{$index}}" style="color: green;font-weight: bold;border-right: 2px solid black" >
+                        <span class="underline" ng-if="passbook.rgIn" ng-click="getSkuInventories('Returnable Goods Order In',passbook.date)">{{passbook.rgIn}}</span>
+                        <span ng-if="!passbook.rgIn" >-</span>
+                    </td>
+                    <td id="passbookSO{{$index}}" style="color: red;font-weight: bold;">
+                        <span class="underline" ng-if="passbook.saleOrder" ng-click="getSkuInventories('Sale Order',passbook.date)">{{passbook.saleOrder}}</span>
+                        <span ng-if="!passbook.saleOrder" >-</span>
+                    </td>
+                    <td id="passbookSTOut{{$index}}" style="color:red;font-weight: bold;text-align: center">
+                        <span class="underline" ng-if="passbook.stOut" ng-click="getSkuInventories('Stock Transfer Out',passbook.date)">{{passbook.stOut}}</span>
+                        <span ng-if="!passbook.stOut" >-</span>
+                    </td>
+                    <td id="passbookPR{{$index}}" style="color:red;font-weight: bold;">
+                        <span class="underline" ng-if="passbook.purchaseReturn" ng-click="getSkuInventories('Purchase Return',passbook.date)">{{passbook.purchaseReturn}}</span>
+                        <span ng-if="!passbook.purchaseReturn" >-</span>
+                    </td>
+                    <td id="passbookRGOut{{$index}}" style="color:red;font-weight: bold;border-right: 2px solid black">
+                        <span class="underline" ng-if="passbook.rgOut" ng-click="getSkuInventories('Returnable Goods Order Out',passbook.date)">{{passbook.rgOut}}</span>
+                        <span ng-if="!passbook.rgOut" >-</span>
+                    </td>
+                    <td  colspan="1" id="passbookIncrease{{$index}}" style="color:green;font-weight: bold;border-right: 2px solid black">
+                        <span class="underline" ng-if="passbook.increasedInDay" ng-click="getSkuInventories('Increase in adjustment',passbook.date)">{{passbook.increasedInDay}}</span>
+                        <span ng-if="!passbook.increasedInDay">-</span>
+                    </td>
+                    <td  colspan="1" id="passbookDecrease{{$index}}" style="color:red;font-weight: bold;border-right: 2px solid black">
+                        <span class="underline" ng-if="passbook.decreasedInDay" ng-click="getSkuInventories('Decrease in adjustment',passbook.date)">{{passbook.decreasedInDay}}</span>
+                        <span ng-if="!passbook.decreasedInDay" ></span>
+                    </td>
+                    <td id="passbookBalance1{{$index}}" style="font-weight: bold;">
+                        <span ng-mouseover="getInventorySnapBalanace(passbook.date,$index)"
+                              ng-mouseleave="hidePopover($index)"
+                              class="tool-tip">
+                            {{passbook.balance!=null?passbook.balance:"NA"}}
+                             <span class="tool-tip-passbook-text" id="{{'tool-tip-Inventory-Count'+$index}}">
+                                    <div class="popover fade left custom-InventoryPopOver-left in" role="tooltip"
+                                         id="popover743808" style="width:250px; display: block;">
+                                        <div class="arrow pop-left" style="left: 50%;"></div>
+                                        <h3 class="popover-title">Inventory Count</h3>
+                                        <div class="popover-content no-padding"
+                                             style="word-wrap: break-word;float:left;width:100%;height:auto;overflow-x: hidden;overflow-y:auto;">
+                                            <h5 class="col-lg-12 col-sm-12 col-md-12 col-xs-12 no-padding">
+                                                <span class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <span class="font"><span style="width:50%"><b>Available :</b> {{inventorySnap.available}}</span></span><br>
+                                                    <span class="font"><span style="width:50%"><b>Allocated :</b></span> {{inventorySnap.allocated}}</span><br>
+                                                    <span class="font"><span style="width:50%"><b>Blocked :</b></span> {{inventorySnap.blocked}}</span><br>
+
+                                                </span>
+                                                <span class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <span class="font"><span style="width:50%"><b>Bad :</b></span> {{inventorySnap.bad}}</span><br>
+                                                    <span class="font"><span style="width:50%"><b>Shipped :</b></span> {{inventorySnap.shipped}}</span><br>
+                                                    <span class="font"><span style="width:50%"><b>Intransit :</b></span> {{inventorySnap.intransit}}</span>
+                                                </span>
+                                            </h5>
+
+                                        </div>
+                                    </div>
+                                </span>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- END TABLE -->
+        <div class="row" style="margin-top: 0px;">
+            <div class="col-md-6">
+                <p class="showingOrderLabel" ng-show="pagesize<totalInventories">Showing Inventories {{pagestart + 1}} to {{pagesize}}
+                    of {{totalInventories}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="pagesize>=totalInventories && totalInventories!=0">Showing Inventories {{pagestart + 1}}
+                    to {{totalInventories}} of {{totalInventories}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="totalInventories==0">No Inventories Available
+                </p>
+            </div>
+            <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPager.pages.length" class="pagination">
+                            <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a ng-click="getInventoryPassbook(1)">&lt;&lt; First</a>
+                            </li>
+                            <li id="previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="getInventoryPassbook(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="getInventoryPassbook(page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="getInventoryPassbook(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="getInventoryPassbook(defaultTab,vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ViewPassbook" role="dialog"  data-keyboard="false"
+         aria-hidden="true">
+        <div class="modal-dialog modal-md" style="width:700px;">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="passbookViewCancel1" type="button" class="close" ng-click="CancelViewPassbook()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">View SKU Inventory</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top row-margin-bottom text-center">
+                            <div class="full-width">
+                                <span class="font">
+                                    <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                                        <thead class="main-list-header-order">
+                                        <tr>
+                                            <td id="passbookViewCodeH" >
+                                                Seller SKU ID
+                                            </td>
+                                            <td id="passbookViewNameH" >
+                                                SKU Name
+                                            </td>
+                                            <td id="passbookViewNumberH">
+                                                SKU System Number
+                                            </td>
+                                            <td id="passbookViewCountH">
+                                                Count
+                                            </td>
+                                        </tr>
+                                        </thead>
+                                        <tbody data-ng-repeat="passbookData in skuInventories track by $index">
+                                        <tr class="clickable-row-order">
+                                            <td id="passbookViewCode{{$index}}"  style="vertical-align: middle;cursor: pointer;">
+                                                <span class="tool-tip" style="width:100px;word-wrap:break-word;"
+                                                      ng-mouseover="getSkuTransactionDetails(passbookData.skuId,$index)"
+                                                      ng-mouseleave="SkuInventoryPopOverHide($index)"
+                                                        >
+                                                {{passbookData.skuCode}}
+                                                    <span class="tool-tip-passbook-text" id="{{'tool-tip-SkuInventory-Count'+$index}}"
+                                                          style="left:-85%;">
+                                                        <div class="popover fade left custom-InventoryPopOver-right in" role="tooltip" id="popover743608" style="width:400px; display: block;">
+                                                            <div class="arrow pop-right" style="left: -10px;"></div>
+                                                            <h3 class="popover-title"><b>Transaction Details</b></h3>
+                                                            <div class="popover-content no-padding" style="float:left;width:100%;height:auto;overflow-x: hidden;overflow-y:auto;">
+                                                            <div>
+                                                                        <div class="col-md-6 bg-gray color-white ft-weight">Order Id</div>
+                                                                        <div class="col-md-6 bg-gray color-white ft-weight text-center">Quantity</div>
+                                                                <div class="full-width" ng-repeat="transaction in skuTransactionDetails track by $index">
+                                                                    <div class="col-md-6  color-blue cr-pointer" ng-click="openTransaction(transaction.transactionId)">
+                                                                        <h5 class="ft-weight">{{transaction.transactionId}}</h5>
+                                                                    </div>
+                                                                    <div class="col-md-6 text-center"><h5>{{transaction.quantity}}</h5></div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    </span>
+                                                </span>
+                                            </td>
+                                            <td id="passbookViewName{{$index}}" class="short-sku-name" title="{{passbookData.skuName}}">
+                                                {{passbookData.skuName}}
+                                            </td>
+                                            <td id="passbookViewNumber{{$index}}" style="vertical-align: middle;">
+                                                {{passbookData.skuSystemNumber}}
+                                            </td>
+                                            <td id="passbookViewCount{{$index}}" style="vertical-align: middle;cursor: pointer;">
+                                                <span class="tool-tip"
+                                                      ng-mouseover="hoverIn($index)" ng-mouseleave="hoverOut($index)"
+                                                >
+                                                {{passbookData.count}}
+                                                    <span class="tool-tip-passbook-text" id="{{'tool-tip-SkuInventory-goodbadCount'+$index}}" style="left:-250px">
+                                                        <div class="popover fade left custom-InventoryPopOver-right in" id="popover743800" role="tooltip" style="top:-23px !important;width:150px; display: block;">
+                                                            <div class="arrow pop-left" style="top:31px;left: -10px;"></div>
+                                                            <div class="popover-content" style="float:left;width:100%;height:auto;max-height:100px;overflow-x: hidden;overflow-y:auto;">
+                                                            <div>
+                                                                    <div class="col-md-6 no-padding"><b>Good :</b></div>
+                                                                    <div class="col-md-6" ng-if="passbookData.goodCount">{{passbookData.goodCount}}</div>
+                                                                    <div class="col-md-6" ng-if="!passbookData.goodCount">0</div>
+                                                                    <div class="col-md-6 no-padding"><b>Bad :</b></div>
+                                                                    <div class="col-md-6" ng-if="passbookData.badCount">{{passbookData.badCount}}</div>
+                                                                    <div class="col-md-6" ng-if="!passbookData.badCount">0</div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    </span>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="passbookViewSubmit" type="button" class="action-btn" data-dismiss="modal" ng-click="CancelViewPassbook()">
+                        Done
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script type="text/javascript">
+    $('#addOrderModal').on('hidden.bs.modal', function (e) {
+        $(this)
+                .find("input,textarea,select")
+                .val('')
+                .end()
+                .find("input[type=checkbox], input[type=radio]")
+                .prop("checked", "")
+                .end();
+        $("#productTable td").parent().remove();
+    });
+    $('#addOrderModal').on('shown.bs.modal', function (e) {
+        var addOrderBody = $('#addOrderModal .modal-body');
+        if (addOrderBody.scrollTop() != 0) {
+            addOrderBody.animate({
+                scrollTop: 0
+            }, 800);
+        }
+    });
+</script>
+<style>
+    .mybut1 {
+        margin-left: 10px;
+        color: #F0592B;
+        font-weight: 600;
+        width: 100%;
+        min-height: 25px;
+        max-width: 85px;
+        float: right;
+        margin-bottom: 10px;
+    }
+
+    .order-table-tab-bar button{
+        padding:6px 10px;min-width:85px !important;
+    }
+    .sharp{
+        width:119px;
+    }
+    .md-datepicker-button{
+        right: -20px;
+    }
+</style>
+<div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>

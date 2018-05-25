@@ -1,0 +1,122 @@
+<link rel="stylesheet" href="css/multiple-select.css">
+<script type="text/ng-template" id="dialog6.tmpl.html" ng-controller="workOrderVasController">
+    <md-dialog aria-label="Add New QC" style="width: 800px;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p ng-show="dialogBoxQC=='add'" class="dialog-heading-p">Add New QC</p>
+                    <p ng-show="dialogBoxQC=='edit'" class="dialog-heading-p">Update QC</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelInventory()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+
+                    <div class="row">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Product</span>
+                        </div>
+                        <div class="col-md-6">
+                            <angucomplete-alt id="products" placeholder="Search product" pause="400" selected-object="fullproductObj" remote-url="{{baseSkuUrl}}"
+                                              title-field="tableSkuClientSkuCode"
+                                              description-field="tableSkuName"
+                                              image-field="tableSkuImageUrl"
+                                input-class="form-control darkgrey-bottom-border" initial-value="initialSelected"></angucomplete-alt>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Choose QC</span>
+                        </div>
+                        <div class="col-md-6">
+                            <multiple-autocomplete ng-model="selectedList" suggestions-arr="optionsList">
+                            </multiple-autocomplete>
+                        </div>
+                        <div class="col-md-4 margin-top-10">
+                            <a class="anchor-btn" data-toggle="modal" data-target="#myModal1"><span class="fa fa-plus fa-lg" /> Add New QC
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Available Quantity</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text"
+                                   only-integer
+                                   prevent-typing-greater
+                                   max = "999999999"
+                                   ng-model="qcData.tableWorkOrderSkuQuantity" class="darkgrey-bottom-border-number"/>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Start Date</span>
+                        </div>
+                        <div class="col-md-4">
+                            <md-datepicker timezoned-date ng-model="qcData.tableWorkOrderScheduledDatetime" md-min-date="startminDate" md-max-date="startmaxDate" ng-change="sendStartDate(qcData.tableWorkOrderScheduledDatetime)" md-placeholder="Enter date"></md-datepicker>
+                        </div>
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">End Date</span>
+                        </div>
+                        <div class="col-md-4">
+                            <md-datepicker timezoned-date  ng-model="qcData.tableWorkOrderScheduledEndDatetime" md-min-date="endminDate" ng-change="sendEndDate(qcData.tableWorkOrderScheduledEndDatetime)" md-placeholder="Enter date"></md-datepicker>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <md-button class="cancel-btn" ng-click="cancelInventory()">
+                    Cancel
+                </md-button>
+                <md-button class="action-btn" ng-show="dialogBoxQC=='add'" ng-click="addQcData(qcData,selectedList)">
+                    Add
+                </md-button>
+                <md-button class="action-btn" ng-show="dialogBoxQC=='edit'" ng-click="updateSingleKit(qcData,qcData.idtableWorkOrderId,'qc',selectedList)">
+                    Update
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal1" data-backdrop="static" data-keyboard="false" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                    <button type="button" class="close" data-dismiss="modal">
+                      <span aria-hidden="true">&times;</span>
+                      <span class="sr-only">Close</span>
+                  </button>
+                    <p class="dialog-heading-p">Add New QC</p>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span class="font">QC Name</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control darkgrey-bottom-border font input-less-padding" type="text" ng-model="qcName"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modal-dialog-footer">
+                    <button type="button" class="action-btn" ng-click="addQc(qcName);qcName=null" data-dismiss="modal">Save</button>
+                    <button type="button" class="cancel-btn" ng-click="closeBrandBox();qcName=null" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

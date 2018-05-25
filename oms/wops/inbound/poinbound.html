@@ -1,0 +1,644 @@
+<link href="wops/inbound/inbound.css" rel="stylesheet">
+        <!-- <div class="row search-row-heading">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right" style="padding-right:0px;">
+                <span class="fa fa-external-link-square newTabIcon" ng-click="newTab()" title="New Tab"></span>
+            </div>
+        </div> -->
+        <div ng-init="onPageInitialize();" class="row orderscreen-channel" style="margin-top: 10px;">
+            <div class="col-md-3">
+                <span class="font">Destination Warehouse</span>
+                <select id="inbndPoDWh"
+                        ng-model="wareHouseId"
+                        ng-change="callDisabled();" style="width:113px;" class="orderscreen-dropdown mainDropDownOrder"
+                        ng-options="option.tableWarehouseDetailsShortname for option in wareHousesData track by option.idtableWarehouseDetailsId">
+                    <option value="">
+                        All
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <span class="font">PO No.</span>
+                <input id="inbndPoNo" type="text" class=" main-bottom-border" ng-change="callDisabled();" placeholder="PO No." trim-space
+                       ng-model="systemOrderNo" style="margin-left:10px;width:170px;margin-top: 3px;">
+            </div>
+            <div class="col-md-3">
+                <span class="font">Ref. No.</span>
+                <input id="inbndRefNo" type="text" class=" main-bottom-border" ng-change="callDisabled();" placeholder="Ref. No." trim-space ng-model="ClientOrderNo" style="margin-left:10px;width:170px;margin-top: 3px;">
+            </div>
+            <div class="col-md-3">
+                <div class="col-md-6" style="margin-top:3px; left:-40px;">
+                    <span class="font">Search SKU</span>
+                </div>
+                <div class="col-md-6" style="padding-left:0px; left:-80px;">
+                    <angucomplete-alt id="productsfilter" placeholder="Search product" pause="400" selected-object="
+                    searchedProductForFilter" remote-url="{{baseSkuUrl}}"
+                                      title-field="tableSkuClientSkuCode"
+                                      description-field="tableSkuName"
+                                      image-field="tableSkuImageUrl"
+                                      input-class="main-bottom-border font form-control"></angucomplete-alt>
+                <button type="button" style="position: absolute;top: 0px; right: -40px;" class="btn btn-sm truncate-text" ng-click="masterSkuDialog($event, false);">. . .</button>
+				</div>
+				
+				
+				
+            </div>
+            
+            <div class="col-md-12 row-margin-top-small" style="padding-left:0px;">
+                <div class="col-md-3">
+                    <div class="col-md-6" style="margin-top:3px;padding-left:0px;">
+                        <span class="font">Search Vendors</span>
+                    </div>
+                    <div class="col-md-6" style="padding-left:0px;">
+                        <angucomplete-alt id="vendorsfilter" placeholder="Search Vendor" pause="400" style="margin-top:-2px;"
+                                          selected-object="searchedVendor" remote-url="{{baseCustomerUrl}}"
+                                          title-field="tableVendorClientVendorCode"
+                                          description-field="tableVendorName"
+                                          input-class="form-control main-bottom-border"></angucomplete-alt>
+                    <button type="button" style="position: absolute;top: 0px; right: -40px;" class="btn btn-sm truncate-text" ng-click="masterVendorDialog($event, false);">. . .</button>
+                    </div>
+                </div>
+                <!-- {{startDate | date : "yyyy-MM-dd" }}{{endDate | date : "yyyy-MM-dd"}} -->
+                <div class="col-md-8 col-md-offset-1">
+                <div class="col-md-1 margin-top-7">
+                    <span class="font">Date</span>
+                </div>
+                <div class="col-md-3">
+                    <md-datepicker timezoned-date ng-model="start1Date"  md-min-date="startminDate" md-max-date="startmaxDate"
+                                   onkeydown="return false" ng-change="sendStartDate(start1Date);callDisabled();"
+                                   md-placeholder="Start Date" id="inbndPoSDate"
+                                   style="background-color: inherit;margin-top:3px;"></md-datepicker>
+                    <button id="inbndPoSDateClear" ng-if="start1Date != null || start1Date != undefined" title="Deselect Start Date"
+                            class="btn dateClear" ng-click="clearStartDate();">
+                    </button>
+
+                </div>
+                <div class="col-md-3">
+                    <md-datepicker id="inbndPoEDate" timezoned-date ng-model="end1Date" md-min-date="endminDate" md-max-date="endmaxDate"
+                                   onkeydown="return false" ng-change="sendEndDate(end1Date);callDisabled();" md-placeholder="End Date"
+                                   style="background-color: inherit;margin-top:3px;"></md-datepicker>
+                    <button id="inbndPoEDateClear" ng-if="end1Date != null || end1Date != undefined" title="Deselect End Date"
+                            class="btn dateClear" ng-click="clearEndDate()">
+                    </button>
+                </div>
+                <button id="inbndPoSearch" type="button"  class="btn btn-default mybut" style="margin-left:0px;"
+                        ng-click="submitAction(wareHouseId,skuId,start1Date,end1Date,vendorId,systemOrderNo,ClientOrderNo)">Search
+                </button>
+
+                <button id="inbndPoClear" type="button"  style="margin-top:6px;" title="Clear Applied Filters" class="btn clearFilter" ng-click="clearAction();">
+                </button>
+                <!--<md-icon ng-click="$parent.activateTab('tab1');newTab()" md-svg-src="images/svg/new_tab.svg"-->
+                         <!--style="margin-left: 10px !important;"></md-icon>-->
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-10">
+                <ul class="nav navbar-nav orderscreen-tabs">
+                    <li title="{{'New '+ newCount}}">
+                        <button type="button" class="btn sharp font"
+                                ng-class="{'activeTab' : defaultTab == 'new'}"
+                                ng-click="listOfStatesCount('new',1)">New ({{newCount}})
+                        </button>
+                    </li>
+                    <li title="{{'In Transit '+ holdCount}}">
+                        <button type="button" class="btn sharp font"
+                                ng-class="{'activeTab' : defaultTab == 'intransit'}"
+                                ng-click="listOfStatesCount('intransit',1)">In Transit ({{holdCount}})
+                        </button>
+                    </li>
+                    <li title="{{'In Process '+ processCount}}">
+                        <button type="button" class="btn sharp"
+                                ng-class="{'activeTab' : defaultTab == 'inprocess'}"
+                                ng-click="listOfStatesCount('inprocess',1)">In Process ({{processCount}})
+                        </button>
+                    </li>
+                    <li title="{{'GRN '+ returnCount}}">
+                        <button type="button" class="btn sharp"
+                                ng-class="{'activeTab' : defaultTab == 'grn'}"
+                                ng-click="listOfStatesCount('grn',1)">GRN ({{returnCount}})
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="row main-list">
+            <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                <thead class="main-list-header-order">
+                <!-- table header -->
+                <tr>
+                    <th id="inbndPoNoH" class="text-left"><a href=""
+                       ng-click="tableSorting('tablePurchaseOrderSystemOrderNo',sortReverse,defaultTab)">
+                        PO No.&nbsp;
+                        <span ng-if="sortType == 'tablePurchaseOrderSystemOrderNo' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tablePurchaseOrderSystemOrderNo' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                    <th id="inbndRefNoH" class="text-left"><a href=""
+                       ng-click="tableSorting('tablePurchaseOrderClientOrderNo',sortReverse,defaultTab)">
+                        Ref No.&nbsp;
+                        <span ng-if="sortType == 'tablePurchaseOrderClientOrderNo' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tablePurchaseOrderClientOrderNo' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                <th id="inbndPoCdateH" class="text-left"><a href=""
+                       ng-click="tableSorting('tablePurchaseOrderDate',sortReverse,defaultTab)">
+                        Creation Date&nbsp;
+                        <span ng-if="sortType == 'tablePurchaseOrderDate' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tablePurchaseOrderDate' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                <th id="inbndPoEDH" class="text-left"> <a href=""
+                       ng-click="tableSorting('tablePurchaseOrderDropDate',sortReverse,defaultTab)">
+                        Exp. Delivery&nbsp;
+                        <span ng-if="sortType == 'tablePurchaseOrderDropDate' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tablePurchaseOrderDropDate' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                <th id="inbndPoIQtyH" class="text-left"><a href=""
+                       ng-click="tableSorting('quantity',sortReverse,defaultTab)">
+                        Item Quantity&nbsp;
+                        <span ng-if="sortType == 'quantity' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'quantity' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                    <th id="inbndPoVendorH" class="text-left"><a href=""
+                       ng-click="tableSorting('tableVendor.tableVendorName',sortReverse,defaultTab)">
+                        Vendor Name&nbsp;
+                        <span ng-if="sortType == 'tableVendor.tableVendorName' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableVendor.tableVendorName' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                    <th id="inbndPoWhH" class="text-left"><a href=""
+                                             ng-click="tableSorting('tableWarehouseDetails.tableWarehouseDetailsLongname',sortReverse,defaultTab)">
+                        Warehouse&nbsp;
+                        <span ng-if="sortType == 'tableWarehouseDetails.tableWarehouseDetailsLongname' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableWarehouseDetails.tableWarehouseDetailsLongname' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                    <th ng-if="genericData.isAdmin=='true'" id="inbndPoTotalH" class="text-left"><a href=""
+                       ng-click="tableSorting('charges',sortReverse,defaultTab)">
+                        Total Amount&nbsp;
+                        <span ng-if="sortType == 'charges' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'charges' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                    <!-- Below is just placeholder to keep design intact -->
+                    <th ng-if="genericData.isAdmin=='false'" id="POTotalH1" class="text-left">
+                    </th>
+                    <th id="inbndPoRmrksH" class="text-left"><a>Remarks</a></th>
+                    <th id="inbndPoDrpH" class="text-left"></th>
+                </tr>
+                </thead>
+                <tbody ng-if="showLoader">
+                <tr>
+                    <td colspan="9" class="text-center">
+                        <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody data-ng-repeat="poData in orderLists" data-ng-switch on="dayDataCollapse[$index]">
+                <tr class="clickable-row-order">
+                    <td id="inbndPoNo{{$index}}" align="left">{{poData.tablePurchaseOrderSystemOrderNo}}</td>
+                    <td id="inbndRefNo{{$index}}" align="left">{{poData.tablePurchaseOrderClientOrderNo}}</td>
+                    <td id="inbndPoCdate{{$index}}" align="left">
+                        {{poData.tablePurchaseOrderDate | utcToLocalOrHyphen}}
+                    </td>
+                    <td id="inbndPoED{{$index}}" align="left">
+                        {{poData.tablePurchaseOrderDropDate | utcToLocalOrHyphen}}
+                    </td>
+                    <td id="inbndPoIQty{{$index}}"  align="left">{{totalQuantity(poData.tablePurchaseOrderSkuses)}}</td>
+                    <td id="inbndPoVendor{{$index}}" align="left">{{poData.tableVendor.tableVendorName}}</td>
+                    <td id="inbndPoWh{{$index}}" align="left">{{poData.tableWarehouseDetails.tableWarehouseDetailsLongname}}</td>
+                    <td ng-if="genericData.isAdmin=='true'" id="inbndPoTotal{{$index}}" align="left">{{ totalCostAmount(poData.tablePurchaseOrderSkuses)  | priceOrHyphen}}</td>
+                    <!-- Below is just placeholder to keep design intact -->
+                    <td ng-if="genericData.isAdmin=='false'"></td>
+                    <td id="inbndPoRmrks{{$index}}" align="left">
+                        <div class="tool-tip">
+                            <img src="images/svg/remarks.svg" style="height:20px; width: 20px;" ng-click="openEditRemarkModal(poData,$index);"/>
+                            <span class="commonTooltip">
+                                    <span class="tool-tip-text">
+                                        <div class="popover fade left custom-pop-left in" role="tooltip" id="popover743808" style="width:200px; display: block;">
+                                            <div class="arrow pop-left" style="left: 50%;"></div>
+                                            <h3 class="popover-title">Remarks</h3>
+                                            <div class="popover-content" style="word-wrap: break-word;float:left;width:100%;height:auto;max-height:100px;overflow-x: hidden;overflow-y:auto;">
+                                                <richtext class="text" body-text="poData.tablePurchaseOrderRemarksFormatted">
+                                                </richtext>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </span>
+                        </div>
+                    </td>
+                    <td id="inbndPoDrp1{{$index}}" align="left" ng-show="dayDataCollapse == null || dayDataCollapse == undefined || dayDataCollapse == []">
+                        <img src="images/svg/expand_icon.svg" height="20"
+                             data-ng-click="selectTableRow($index, poData.tablePurchaseOrderClientOrderNo);stateTrials(orderLists[$index].tablePurchaseOrderSkuses);"/>
+                    </td>
+                    <td id="inbndPoDrp2{{$index}}" align="left" data-ng-switch-when="false"
+                        data-ng-click="selectTableRow($index, poData.tablePurchaseOrderClientOrderNo);stateTrials(orderLists[$index].tablePurchaseOrderSkuses);">
+                        <img src="images/svg/expand_icon.svg" height="20"/></td>
+                    <td id="inbndPoDrp3{{$index}}" align="left" data-ng-switch-when="true"
+                        data-ng-click="selectTableRow($index, poData.tablePurchaseOrderClientOrderNo);stateTrials(orderLists[$index].tablePurchaseOrderSkuses);">
+                        <img src="images/svg/collaps_icon.svg" height="20"/></td>
+                </tr>
+                <tr data-ng-switch-when="true">
+                    <td colspan="12" ng-if="access.editAccess ">
+                        <div class="full-width" style="background:#fff;padding: 10px 10px 5px 10px;" ng-if="showinvoice==true || viewinvoice == true || showgrnall == true">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <span class="sidebar-btn full-width" style="margin-right: 20px;" >
+                                    <div ng-if="access.editAccess
+                                                && showgrnall==true
+                                                && (poData.tableWarehouseDetails.tableWarehouseDetailsWmsId == null)">
+                                        <button type="button"
+                                                ng-click="showGRNDialogForAllItems($event,orderLists[$index])"
+                                                class="pull-right btn btn-default mybut1 mybutton1">
+                                                Quick GRN
+                                            </button>
+                                    </div>
+                                <div ng-if="access.editAccess && showinvoice==true && (poData.tableWarehouseDetails.tableWarehouseDetailsWmsId == null)">
+                                            <button id="inbndPoDrpAI{{$index}}" type="button"
+                                                    ng-if="access.editAccess "
+                                                    ng-click="OpenAddInvoiceDialog(poData)"
+                                                    class="pull-right btn btn-default mybut1 mybutton1">
+                                                Add Invoice
+                                            </button>
+                                </div>
+                                <div ng-if="viewinvoice == true">
+                                            <button id="inbndPoDrpVI{{$index}}" type="button"
+                                                    ng-click="onViewInvoiceButtonClicked(poData)"
+                                                    class="pull-right btn btn-default mybut1 mybutton1">
+                                                View Invoice
+                                            </button>
+                                </div>
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-ng-switch-when="true" style="border: 1px solid #C0C0C0; background-color: #FEFFFF !important;"
+                    data-ng-repeat="tableSkuData in orderLists[$index].tablePurchaseOrderSkuses">
+                    <td colspan="9">
+
+                        <div class="col-md-4 text-center">
+
+                        <span ng-if="poData.tablePurchaseOrderSystemOrderNo" style="display: block;padding:15px 0 15px 0;font-size: 14px;color: #F0592B;font-weight: bold ;">
+                              {{poData.tablePurchaseOrderSystemOrderNo}} ({{$index + 1}} of {{poData.tablePurchaseOrderSkuses.length}})
+                        </span>
+                            <div class="box-table">
+                                <div class="boxes">
+                                    <div class="box box1">
+                                        Seller SKU ID :
+                                    </div>
+                                    <div class="box box2 short-sku-name"  style="max-width:200px">
+                                        {{tableSkuData.tableSku.tableSkuClientSkuCode}}
+                                    </div>
+                                </div>
+                                <div class="boxes">
+                                    <div class="box box1">
+                                        SKU Name :
+                                    </div>
+                                    <div class="box box2 short-sku-name" title="{{tableSkuData.tableSku.tableSkuDescription}}" style="max-width:200px">
+                                        {{tableSkuData.tableSku.tableSkuName}}
+                                    </div>
+                                </div>
+                                <div class="boxes">
+                                    <div class="box box1">
+                                        Qty :
+                                    </div>
+                                    <div class="box box2">
+                                        {{tableSkuData.tablePurchaseOrderSkusSkuQuantity}}
+                                    </div>
+                                </div>
+                                <div ng-if="genericData.isAdmin=='true'" class="boxes">
+                                    <div class="box box1">
+                                        Cost Per Product :
+                                    </div>
+                                    <div class="box box2">
+                                        Rs {{ getTotal(tableSkuData) }}
+                                    </div>
+                                </div>
+                                <div ng-if="genericData.isAdmin=='true'" class="boxes">
+                                    <div class="box box1">
+                                        Total Cost :
+                                    </div>
+                                    <div class="box box2">
+                                        Rs {{ totalCostPerProduct(tableSkuData) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+
+                            <a id="inbndPoDrpPL{{$index}}" href="javascript:void(0);" class="btn btn-default  mg-btm mybutton1" ng-click="printbarcodeLabel(tableSkuData)">
+                                Print Label
+                            </a>
+
+                        </div>
+                        <div class="col-md-1">
+                            <ul ng-if="trialsLength[$index]>= 4" class="progress-indicator nocenter stacked"
+                                style="list-style: none;">
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                style="width: 20px;height: 20px;"/>
+
+                            <label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][0]}}</label></span>
+                                </li>
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                style="width: 20px;height: 20px;"/><label
+                                        style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][1]}}</label></span>
+                                </li>
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                style="width: 20px;height: 20px;"/><label
+                                        style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][2]}}</label></span>
+                                </li>
+                                <li class="completed"><span class="bubble1"><img src="images/svg/current_icon.svg"
+                                                                                 style="width: 20px;height: 20px;"/><label
+                                        style="padding-top: 20px;font-weight: bold;padding-left: 10px;color:black">{{fullTrialsArray[$index][3]}}</label></span>
+                                </li>
+                            </ul>
+                            <ul ng-if="trialsLength[$index] == 1" class="progress-indicator nocenter stacked"
+                                style="list-style: none;">
+                                <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                        style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][0]}}</label></span>
+                                </li>
+                            </ul>
+                            <ul ng-if="trialsLength[$index] == 2" class="progress-indicator nocenter stacked"
+                                style="list-style: none;">
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                style="width: 20px;height: 20px;"/><label
+                                        style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][0]}}</label></span>
+                                </li>
+                                <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                        style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][1]}}</label></span>
+                                </li>
+                            </ul>
+                            <ul ng-if="trialsLength[$index] == 3" class="progress-indicator nocenter stacked"
+                                style="list-style: none;">
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                style="width: 20px;height: 20px;"/><label
+                                        style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][0]}}</label></span>
+                                </li>
+                                <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                style="width: 20px;height: 20px;"/><label
+                                        style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][1]}}</label></span>
+                                </li>
+                                <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                        style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][2]}}</label></span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div ng-if="tableSkuData.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 9 || tableSkuData.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 10" class="col-md-12 text-center">
+                        <span style="display: block;padding:15px 0 15px 0;font-size: 14px;color: #F0592B;font-weight: bold ;">
+                              GRN Details
+                        </span>
+                                <div class="box-table">
+                                    <div class="boxes">
+                                        <div class="box box1">
+                                            Total Quantity :
+                                        </div>
+                                        <div class="box box2">
+                                            {{tableSkuData.tableGrns[0].tableGrnTotalQty}}
+                                        </div>
+                                    </div>
+                                    <div class="boxes">
+                                        <div class="box box1">
+                                            Good Quantity :
+                                        </div>
+                                        <div class="box box2">
+                                            {{tableSkuData.tableGrns[0].tableGrnGoodQty}}
+                                        </div>
+                                    </div>
+                                    <div class="boxes">
+                                        <div class="box box1">
+                                            Bad Quantity :
+                                        </div>
+                                        <div class="box box2">
+                                            {{tableSkuData.tableGrns[0].tableGrnBadQty}}
+                                        </div>
+                                    </div>
+                                    <div class="boxes">
+                                        <div class="box box1">
+                                            Date :
+                                        </div>
+                                        <div class="box box2">
+                                            {{tableSkuData.tableGrns[0].tableGrnDateTime | utcToLocalOrHyphen}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <span id="inbndPoDrpInfo{{$index}}" class="pull-right infoimgBox"
+                                  ng-click="openInfoBox($event,tableSkuData.tablePurchaseOrderSkuStateTrails)"></span>
+                        </div>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="full-width">
+                <div class="col-md-6" ng-show="defaultTab == 'all'">
+                    <p class="showingOrderLabel" ng-show="orderSize<allCount">Showing Orders {{start + 1}} to
+                        {{end}}
+                        of {{allCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=allCount && allCount!=0">Showing Orders {{start +
+                        1}}
+                        to {{allCount}} of {{allCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="allCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'new'">
+                    <p class="showingOrderLabel" ng-show="orderSize<newCount">Showing Orders {{start + 1}} to
+                        {{end}}
+                        of {{newCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=newCount && newCount!=0">Showing Orders {{start +
+                        1}}
+                        to {{newCount}} of {{newCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="newCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'inprocess'">
+                    <p class="showingOrderLabel" ng-show="orderSize<processCount">Showing Orders {{start + 1}} to
+                        {{end}} of {{processCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=processCount && processCount!=0">Showing Orders
+                        {{start
+                        + 1}} to {{processCount}} of {{processCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="processCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'intransit'">
+                    <p class="showingOrderLabel" ng-show="orderSize<shippingCount">Showing Orders {{start + 1}} to
+                        {{end}} of {{shippingCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=shippingCount && shippingCount!=0">Showing Orders
+                        {{start + 1}} to {{shippingCount}} of {{shippingCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="shippingCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'grn'">
+                    <p class="showingOrderLabel" ng-show="orderSize<returnCount">Showing Orders {{start + 1}} to
+                        {{end}} of {{returnCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=returnCount && returnCount!=0">Showing Orders
+                        {{start +
+                        1}} to {{returnCount}} of {{returnCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="returnCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'hold'">
+                    <p class="showingOrderLabel" ng-show="orderSize<holdCount">Showing Orders {{start + 1}} to
+                        {{end}}
+                        of {{holdCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=holdCount && holdCount!=0">Showing Orders {{start +
+                        1}}
+                        to {{holdCount}} of {{holdCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="holdCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'cancelled'">
+                    <p class="showingOrderLabel" ng-show="orderSize<cancelledCount">Showing Orders {{start + 1}} to
+                        {{end}} of {{cancelledCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=cancelledCount && cancelledCount!=0">Showing Orders
+                        {{start + 1}} to {{cancelledCount}} of {{cancelledCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="cancelledCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'delivered'">
+                    <p class="showingOrderLabel" ng-show="orderSize<deliveredCount">Showing Orders {{start + 1}} to
+                        {{end}} of {{deliveredCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=deliveredCount && deliveredCount!=0">Showing Orders
+                        {{start + 1}} to {{deliveredCount}} of {{deliveredCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="deliveredCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+                    <ul ng-if="vmPager.pages.length" class="pagination">
+                        <li>
+                            <a><span style="padding-right: 5px;">Showing</span>
+                                <select ng-change="onRecordsPerPageChange(orderSize)"  ng-model="orderSize" name="recordsPerPage"
+                                        ng-options="option for option in recordsPerPage"
+                                        required>
+                                </select>
+                                <span style="padding-left: 5px;">records per page</span>
+                            </a>
+                        </li>
+                        <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                            <a>&lt;&lt; First</a>
+                        </li>
+                        <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                            <a ng-click="listOfStatesCount(defaultTab,1)">&lt;&lt; First</a>
+                        </li>
+                        <li id="previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                            <a>&lt; Previous</a>
+                        </li>
+                        <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                            <a ng-click="listOfStatesCount(defaultTab,vmPager.currentPage - 1)">&lt; Previous</a>
+                        </li>
+                        <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                            <a ng-click="listOfStatesCount(defaultTab,page)">{{page}}</a>
+                        </li>
+                        <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                            ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                            <a ng-click="listOfStatesCount(defaultTab,vmPager.currentPage + 1)">Next &gt;</a>
+                        </li>
+                        <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                            ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                            <a>Next &gt;</a>
+                        </li>
+                        <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                            ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                            <a ng-click="listOfStatesCount(defaultTab,vmPager.totalPages)">Last &gt;&gt;</a>
+                        </li>
+                        <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                            ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                            <a>Last &gt;&gt;</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal fade" id="addOrderModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <form ng-submit="PoModal.$valid && saveSingleOrder()" name="PoModal" accessible-form novalidate>
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                                 height="100px">
+                                <button type="button" class="close" data-dismiss="modal" ng-click="cancelSingleOrder()">
+                                    <span aria-hidden="true">&times;</span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                                <p class="dialog-heading-p" id="myModalLabel">Add Purchase Order</p>
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-target="#tab1" data-toggle="tab" class="btn sharp"
+                                                          ng-click="singleOrderTabMode()">Single Order</a></li>
+                                    <li ng-if="singleOrderMode == 'add'"><a data-target="#tab2" data-toggle="tab"
+                                                                            class="btn sharp"
+                                                                            ng-click="bulkOrderTabMode()">Bulk Order</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div ng-include src="'po/editRemarksModal.html?version=1.0.0'"></div>
+        <div ng-include src="'po/viewInvoices.html?version=1.0.0'"></div>
+        <div ng-include src="'po/viewPurchaseInvoiceDialog.html?version=1.0.0'"></div>
+        <div ng-include src="'wops/OperationDialogBox/AddPoInvoiceDialog.html?version=1.0.0'"></div>
+        <div ng-include src="'po/purchaseInvoicePdf.html?version=1.0.0'"></div>
+        <style>
+            .mg-btm{
+                margin-bottom: 10px;
+            }
+            .tool-tip-text{
+                top:15px !important;
+            }
+        </style>
+
+

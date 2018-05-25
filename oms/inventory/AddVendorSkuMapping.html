@@ -1,0 +1,211 @@
+<div class="modal fade" id="VendorSkuMapDialog" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="VendorSkuMapForm" novalidate ng-submit="VendorSkuMapForm.$valid && saveVendorSkuMap(VendorSkuMapForm)">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="vndrSkuMpCancel1" type="button" class="close" ng-click="cancelCleanData(VendorSkuMapForm)">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">Add Vendor SKU</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Vendors <span style="color: red">*</span></span>
+                            </div>
+                            <div class="col-md-3 form-row-height">
+                                <select id="vndrSkuMpVendor" ng-model="inventoryData.tableVendor"
+                                        tabindex="4"
+                                        required
+                                        name="vendor"
+                                        ng-options="option.tableVendorName for option in allVendorsData track by option.idtableVendorId"
+                                        class="form-control">
+                                    <option value="">Select Vendor</option>
+                                </select>
+                            </div>
+                            <div ng-if="VendorSkuMapForm.$submitted && VendorSkuMapForm.vendor.$error.required" class="col-md-offset-3 col-md-3">
+                                <span class="error-message">
+                                     Please select a vendor
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Search SKU <span style="color: red">*</span></span>
+                            </div>
+                            <div class="col-md-3 form-row-height">
+                                <!-- SKU Search Control -->
+                                <input id="vndrSkuMpSku" type="text" class="form-control darkgrey-bottom-border font" readonly ng-model="TableSkuName"
+                                       placeholder="Enter Vendor SKU Code">
+                            </div>
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Vendor SKU Code</span>
+                            </div>
+                            <div class="col-md-3 form-row-height">
+                                <!-- Input -->
+                                <input type="text" ng-change="vendorSkuCodeChanged(vendorSkuData.tableVendorSystemSkuMapVendorSkuCode)"
+                                       name="vendorSkuCode"
+                                       id="vndrSkuMpCode"
+                                       class="form-control darkgrey-bottom-border font" ng-model="vendorSkuData.tableVendorSystemSkuMapVendorSkuCode"
+                                       placeholder="Enter Vendor SKU Code">
+                            </div>
+                            <!--<div ng-if="VendorSkuMapForm.$submitted && VendorSkuMapForm.vendorSkuCode.$error.required" class="col-md-offset-9 col-md-3">-->
+                                <!--<span class="error-message">-->
+                                     <!--Please enter the SKU Vendor Code-->
+                                <!--</span>-->
+                            <!--</div>-->
+                        </div>
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 form-row-height">
+                                 <span class="form-label-height semi-bold-text">Min Order Qty</span>
+                            </div>
+                            <div class="col-md-3 form-row-height">
+                                <!-- Input -->
+                                <input type="text" only-integer
+                                       prevent-typing-greater
+                                       id="vndrSkuMpMinQty"
+                                       ng-maxlength="10"
+                                       name="minOrderQty"
+                                       ng-change="minOrderQtyChanged(vendorSkuData.tableVendorSystemSkuMapMinOrderQty)"
+                                       class="form-control darkgrey-bottom-border-number font" ng-model="vendorSkuData.tableVendorSystemSkuMapMinOrderQty"
+                                       placeholder="Enter Min Order Quantity">
+                            </div>
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Lead Time</span>
+                            </div>
+                            <div class="col-md-3 form-row-height">
+                                <!-- Input -->
+                                <input type="text" only-integer
+                                       prevent-typing-greater
+                                       id="vndrSkuMpLT"
+                                       ng-maxlength="10"
+                                       name="leadTime"
+                                       ng-change="leadTimeChanged(vendorSkuData.tableVendorSystemSkuMapLeadTime)"
+                                       class="form-control darkgrey-bottom-border-number font" ng-model="vendorSkuData.tableVendorSystemSkuMapLeadTime" placeholder="Enter Lead Time (In Days)">
+                            </div>
+                            <div class="col-md-offset-3 col-md-3">
+                                <!--<span ng-if="VendorSkuMapForm.$submitted && VendorSkuMapForm.minOrderQty.$error.required"  class="error-message">-->
+                                     <!--Please enter the minimum order quantity-->
+                                <!--</span>-->
+                                <!--<span ng-if="VendorSkuMapForm.$submitted && VendorSkuMapForm.minOrderQty.$error.maxlength"  class="error-message">-->
+                                     <!--Minimum order quantity limit exceeded-->
+                                <!--</span>-->
+                            </div>
+                            <div class="col-md-offset-9 col-md-3">
+                               <!--<span ng-if="VendorSkuMapForm.$submitted && VendorSkuMapForm.leadTime.$error.required"  class="error-message">-->
+                                     <!--Please enter the Lead Time in Days-->
+                                <!--</span>-->
+                                <!--<span ng-if="VendorSkuMapForm.$submitted && VendorSkuMapForm.leadTime.$error.maxlength"  class="error-message">-->
+                                     <!--Lead Time limit exceeded-->
+                                <!--</span>-->
+                            </div>
+                        </div>
+                        <div class="row row-margin-top">
+                            <div class="col-md-12">
+                                <!-- Pricing Tiers Accordion -->
+                                <div class="row row-margin-top-x-small">
+                                    <md-toolbar class="md-small accordion-color">
+                                        <div class="md-toolbar-tools">
+                                            <span class="font-big">Pricing Tiers Details</span>
+                                            <span flex=""></span>
+                                            <md-button id="vndrSkuMpPTD" class="md-icon-button" aria-label="Favorite" ng-click="pricingtierDetailRow()">
+                                                <md-icon ng-if="!pricingtierDetailsClicked" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                                <md-icon ng-if="pricingtierDetailsClicked" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                            </md-button>
+                                        </div>
+                                    </md-toolbar>
+                                </div>
+                                <div ng-if="pricingtierDetailsClicked==true" class="row accordion-color">
+                                    <div class="col-md-12" style="padding-left: 25px !important;">
+
+                                        <div class="row row-margin-top-small">
+                                            <div class="col-md-3 form-row-height">
+                                                <input type="text" only-integer
+                                                       prevent-typing-greater
+                                                       max = "999999999"
+                                                       id="vndrSkuMpMinQTy"
+                                                       ng-class="{submitted: isPTMinQtyEntered}"
+                                                       ng-change="PTMinQtyChanged(PT.tableVendorSkuPricingTiersQtyMin)"
+                                                       ng-model="PT.tableVendorSkuPricingTiersQtyMin"
+                                                       placeholder="Min Quantity"
+                                                       class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                            </div>
+                                            <div class="col-md-3 form-row-height">
+                                                <input type="text" only-integer
+                                                       prevent-typing-greater
+                                                       max = "999999999"
+                                                       id="vndrSkuMpMaxQty"
+                                                       ng-class="{submitted: isPTMaxQtyEntered}"
+                                                       ng-change="PTMaxQtyChanged(PT.tableVendorSkuPricingTiersQtyMax)"
+                                                       ng-model="PT.tableVendorSkuPricingTiersQtyMax" placeholder="Max Quantity"
+                                                       class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                            </div>
+                                            <div class="col-md-3 form-row-height">
+                                                <input id="vndrSkuMpPrice" type="text" ng-change="PTPriceChanged(PT.tableVendorSkuPricingTiersPrice)" min="1" ng-model="PT.tableVendorSkuPricingTiersPrice" placeholder="Price" class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                            </div>
+                                            <div class="col-md-3 form-row-height">
+                                                <button id="vndrSkuMpSkuAdd" type="button" class="btn small-actn-btn" ng-click="addPricingtier();">
+                                                    Add to List
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="row row-margin-top" ng-if="pricingTiers.length > 0">
+                                            <div class="col-md-12">
+                                                <span class="font">List of Selected Pricing Tiers</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row row-margin-top-small row-margin-bottom-small" ng-if="pricingTiers.length > 0">
+                                            <div class="col-md-12">
+                                                <table class="table boldtable table-responsive table-bordered table-hover" style="width:100%;">
+                                                    <thead class="data-grid-header">
+                                                    <tr>
+                                                        <th id="vndrSkuMpMinQtyH" style="text-align: right;"><span class="fa fa-cart-arrow-down fa-md"></span>&nbsp;&nbsp;Min Qty</th>
+                                                        <th id="vndrSkuMpMaxQtyH" style="text-align: right;"><span class="fa fa-cart-arrow-down fa-md"></span>&nbsp;&nbsp;Max Qty</th>
+                                                        <th id="vndrSkuMpPriceH" style="text-align: right;"><span class="fa fa-inr fa-md"></span>&nbsp;&nbsp;Price</th>
+                                                        <th id="vndrSkuMpActionH" style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody class="data-grid-data">
+                                                    <tr ng-repeat="tiers in pricingTiers">
+                                                        <td id="vndrSkuMpMinQty{{$index}}" style="text-align: right;">{{tiers.tableVendorSkuPricingTiersQtyMin}}</td>
+                                                        <td id="vndrSkuMpMaxQty{{$index}}" style="text-align: right;">{{tiers.tableVendorSkuPricingTiersQtyMax}}</td>
+                                                        <td id="vndrSkuMpPrice{{$index}}" style="text-align: right;">{{tiers.tableVendorSkuPricingTiersPrice | priceOrHyphen}}</td>
+                                                        <td id="vndrSkuMpAction{{$index}}" style="text-align: center; padding: 0;">
+                                                            <md-button class="md-icon-button" md-no-ink="true" ng-click="removeProduct($index)" placeholder="Delete" style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                                <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image" ng-init="imgsrc1='images/svg/delete.svg'" ng-mouseover="imgsrc1='images/svg/delete_hover.svg'" ng-mouseout="imgsrc1='images/svg/delete.svg'" style="width: 20px;"></md-icon>
+                                                            </md-button>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="vndrSkuMpCancel2" type="button" class="cancel-btn" ng-click="cancelCleanData(VendorSkuMapForm)">
+                        Cancel
+                    </button>
+                    <button id="vndrSkuMpSubmit" type="submit"  class="action-btn">
+                        Add
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+

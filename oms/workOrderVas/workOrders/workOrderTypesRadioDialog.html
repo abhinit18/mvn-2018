@@ -1,0 +1,49 @@
+<script type="text/ng-template" id="dialog10.tmpl.html" ng-controller="workOrderVasController">
+    <md-dialog aria-label="Add New Work Order" style="width: 800px; position: relative;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: bolder;color: #30373B;">Add New Work Order</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelWorkOrderType()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div layout="row">
+                        <b style="width: 35%;font-weight:bold">Please Select the Work Order Type</b>
+                    </div>
+                    <div class="row" style="padding-top: 15px;padding-left: 15px">
+                        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                            <thead class="workOrderSelection-menu">
+                                <tr height="45">
+                                    <td colspan="1" style="padding-top:15px;font-size: 14px;text-align: center; font-weight: 600;">Select</td>
+                                    <td colspan="1" style="padding-top:15px;font-size: 14px;text-align: center; font-weight: 600;">Work Order Type</td>
+                                </tr>
+                            </thead>
+                            <tbody data-ng-repeat="option in workOrdersTypes">
+                                <tr height="60">
+                                    <td colspan="1" style="padding-top:15px;font-size: 14px;text-align: center;color:#30373B;"><input type="radio" name="choice" ng-model="radio" value="{{option.idtableWorkOrderTypeId}}" ng-change="onvalue(radio)" />
+                                    </td>
+                                    <td colspan="1" style="padding-top:15px;font-size: 14px;text-align: center;color: #F0592B;font-weight: 600;">{{option.tableWorkOrderTypeString}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <md-button class="cancel-btn" ng-click="cancelWorkOrderType()">
+                    Cancel
+                </md-button>
+                <md-button class="action-btn" ng-click="selectWorkOrderTypeAction(radio,$event);">
+                    Select
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

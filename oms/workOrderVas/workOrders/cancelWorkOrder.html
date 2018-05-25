@@ -1,0 +1,48 @@
+<script type="text/ng-template" id="dialog333.tmpl.html" ng-controller="workOrderVasController">
+    <md-dialog aria-label="Cancel Work Order" style="width: 800px;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p class="dialog-heading-p">Cancel Work Order</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelInventory()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="row">
+                        <div class="col-md-6 margin-top-5">
+                            <span class="semi-bold-text">Are you sure you want to cancel this work order?</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Cancel Reason</span>
+                        </div>
+                        <div class="col-md-10 margin-top-5">
+                            <select style="width:50%" ng-model="remarks" class="orderscreen-dropdown">
+                              <option ng-repeat="option in cancelReasonArray"
+                              value={{option.tableWorkOrderCancelReasonString}}>
+                              {{option.tableWorkOrderCancelReasonString}}
+                          </option>
+                      </select>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <md-button class="cancel-btn" ng-click="cancelInventory()">
+                    No
+                </md-button>
+                <md-button class="action-btn" ng-click="cancelWorkOrderApi(workOrderId,workOrderData,remarks)">
+                    Yes
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

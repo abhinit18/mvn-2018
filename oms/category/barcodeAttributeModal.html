@@ -1,0 +1,41 @@
+<div class="modal fade" data-backdrop="static" id="barcodeattributeform" role="dialog" aria-labelledby="barcodeprinting" aria-hidden="true">
+
+    <form name="barcodeattributeform" accessible-form novalidate ng-submit="barcodeattributeform.$valid && submitBarcodeUpdateForm(barcodeattributeform)">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px" width="400px">
+                    <button type="button" class="close" ng-click="cancelBarcodeAttributeForm(form)">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" id="myModalLabel">Barcode Attributes</p>
+
+                </div>
+
+
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;margin-top:15px;">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-6 font" ng-repeat="attributes in attrDetails" ng-if="$odd">
+                                <md-checkbox ng-checked="exists(attributes, selectedBarcodeAttributes)" ng-click="toggle(attributes, selectedBarcodeAttributes)">
+                                    {{ attributes.attributeTypeString }} <span ng-if="exists(attributes, selectedBarcodeAttributes)"></span>
+                                </md-checkbox>
+                            </div>
+                            <div class="col-md-6 font" ng-repeat="attributes in attrDetails" ng-if="$even">
+                                <md-checkbox ng-checked="exists(attributes, selectedBarcodeAttributes)" ng-click="toggle(attributes, selectedBarcodeAttributes)">
+                                    {{ attributes.attributeTypeString }} <span ng-if="exists(attributes, selectedBarcodeAttributes)"></span>
+                                </md-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button type="button" class="cancel-btn" ng-click="cancelBarcodeAttributeForm(form)">Cancel</button>
+                    <button type="submit" class="action-btn" >Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

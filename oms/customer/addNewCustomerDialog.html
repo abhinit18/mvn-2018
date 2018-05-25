@@ -1,0 +1,798 @@
+<div class="modal fade" id="addCustomerDialog" role="dialog" aria-labelledby="addCustomerDialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg" >
+        <form name="addCustomerForm" accessible-form novalidate ng-submit="addCustomerForm.$valid && saveCustomerData(customersData,genericData.customerMode,addCustomerForm)">
+            <div class="modal-content">
+
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="customerAddModalCancel1" type="button" class="close" ng-click="cancelCustomerData(addCustomerForm)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" ng-if="genericData.customerMode == 'add'">Add New Customer</p>
+                <p class="dialog-heading-p" ng-if="genericData.customerMode == 'edit'">Edit Customer</p>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="full-width" style="margin-bottom: 15px;">
+                    <ul class="nav nav-tabs" id="customertabs">
+                        <li class="active"><a data-target="#customertab1" data-toggle="tab" class="btn sharp"
+                                              style="width: 130px"
+                                              ng-click="singleCustomerTabMode()">Single Customer</a></li>
+                        <li ng-if="genericData.customerMode=='add'"><a data-target="#customertab2"
+                                                                       data-toggle="tab" class="btn sharp"
+                                                                       ng-click="bulkCustomerTabMode()">Bulk
+                            Customer</a></li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane active container-fluid customerTabHeight" id="customertab1">
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Customer Ref. No.</span>
+                            </div>
+                            <div class="col-md-6 form-row-height">
+                            <input name="customerRefNo" ng-maxlength="45" id="customerAddModalRef" ng-model="customersData.tableCustomerClientCustomerCode"
+                                   type="text" class="darkgrey-bottom-border" placeholder="Customer Ref. No.">
+                            </div>
+                            <div ng-if="addCustomerForm.customerRefNo.$dirty && addCustomerForm.customerRefNo.$error.maxlength" class="col-md-offset-3 col-md-6">
+                                 <span class="error-message">
+                                     Customer Ref. No. should not exceed 45 characters.
+                                 </span>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Sales Channel <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-6 form-row-height">
+                                <select ng-model="customersData.tableSalesChannelValueInfo"
+                                        class="form-control selectClass"
+                                        name="salesChannel"
+                                        required
+                                        id="customerAddModalSales"
+                                        ng-options="option as option.tableSalesChannelValueInfoName for option in creationSourceArray track by option.idtableSalesChannelValueInfoId">
+                                        <option value="" disabled selected style="display: none;">Select Sales Channel
+                                        </option>
+                                </select>
+                            </div>
+                            <div ng-if="addCustomerForm.$submitted && addCustomerForm.salesChannel.$error.required" class="col-md-offset-3 col-md-6">
+                                 <span class="error-message">
+                                     Please select the Sales Channel
+                                 </span>
+                            </div>
+                        </div>
+
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Company Name</span>
+                            </div>
+                            <div class="col-md-6 form-row-height">
+                                <input type="text"
+                                       capitalize-first name="customerCompany"
+                                       id="customerAddModalCompany" ng-maxlength="45"
+                                       class="darkgrey-bottom-border" placeholder="Company name"
+                                       ng-model="customersData.tableCustomerCompany" ng-pattern="/^[a-zA-Z0-9 ._&()/-]{1,135}$/">
+                                <span class="error-message">
+                                    <span ng-show="addCustomerForm.customerCompany.$error.pattern">Invalid company name, only '.', '_', '&', '(', ')', '/', '-' are allowed.</span>
+                                </span>
+                            </div>
+                            <div ng-if="addCustomerForm.customerCompany.$dirty && addCustomerForm.customerCompany.$error.maxlength" class="col-md-offset-3 col-md-6">
+                                 <span class="error-message">
+                                     Company Name should not exceed 45 characters.
+                                 </span>
+                            </div>
+                        </div>
+                        <!--<div class="row row-margin-top">-->
+                            <!--<div class="col-md-3 form-row-height">-->
+                                <!--<span class="form-label-height semi-bold-text">Nature Of Customer<span style="color:red">*</span></span>-->
+                            <!--</div>-->
+                            <!--<div class="col-md-9 form-row-height">-->
+                                <!--<md-radio-group name="natureOfCustomer" ng-required="true" ng-model="customersData.tableGstType.tableGstTypeName" style="display: inline-flex;">-->
+                                    <!--<md-radio-button ng-value="gst.tableGstTypeName" ng-repeat="gst in gstTypes""  class="md-primary">{{gst.tableGstTypeName}}</md-radio-button>-->
+                                <!--</md-radio-group>-->
+                            <!--</div>-->
+                            <!--<div ng-if="addCustomerForm.$submitted && addCustomerForm.natureOfCustomer.$error.required" class="col-md-offset-3 col-md-6">-->
+                                 <!--<span class="error-message">-->
+                                     <!--Please choose the Nature Of Customer-->
+                                 <!--</span>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Contact Person Name <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-3 form-row-height">
+                                <input type="text" class="darkgrey-bottom-border"
+                                       name="firstName" required ng-maxlength="45" ng-minlength="2"
+                                       id="customerAddModalfirstName"
+                                       placeholder="First Name" ng-model="customersData.tableCustomerFirstName" capitalize-first ng-pattern="/^[A-Za-z .]{1,45}$/">&nbsp;&nbsp;&nbsp;
+                                <span class="error-message">
+                                    <span ng-show="addCustomerForm.firstName.$error.pattern">Only '.' and alphabets are allowed.</span>
+                                </span>
+                            </div>
+
+                            <div class="col-md-3 form-row-height">
+                                <input type="text" class="darkgrey-bottom-border"
+                                       name="lastName" required ng-maxlength="45" ng-minlength="2"
+                                       id="customerAddModallastName"
+                                       placeholder="Last Name" ng-model="customersData.tableCustomerLastName" capitalize-first ng-pattern="/^[A-Za-z .]{1,45}$/">
+                                <span class="error-message">
+                                    <span ng-show="addCustomerForm.firstName.$error.pattern">Only '.' and alphabets are allowed.</span>
+                                </span>
+                            </div>
+                            <div class="col-md-offset-3 col-md-3">
+                                 <span ng-if="addCustomerForm.$submitted && addCustomerForm.firstName.$error.required" class="error-message">
+                                     Please enter the First Name
+                                 </span>
+                                 <span ng-if="addCustomerForm.firstName.$dirty && addCustomerForm.firstName.$error.maxlength" class="error-message">
+                                     First Name should not exceed 45 characters.
+                                 </span>
+                                 <span ng-if="addCustomerForm.firstName.$dirty && addCustomerForm.firstName.$error.minlength" class="error-message">
+                                     First Name should have at least 2 characters.
+                                 </span>
+                            </div>
+                            <div class="col-md-3">
+                                <span ng-if="addCustomerForm.$submitted && addCustomerForm.lastName.$error.required" class="error-message">
+                                     Please enter the Last Name
+                                 </span>
+                                <span ng-if="addCustomerForm.lastName.$dirty && addCustomerForm.lastName.$error.maxlength" class="error-message">
+                                     Last Name should not exceed 45 characters.
+                                 </span>
+                                <span ng-if="addCustomerForm.lastName.$dirty && addCustomerForm.lastName.$error.minlength" class="error-message">
+                                     Last Name should have at least 2 characters.
+                                 </span>
+                            </div>
+                        </div>
+
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Email Id <span style="color:red">*</span></span>
+                            </div>
+
+                            <div class="col-md-6 form-row-height">
+                                <input type="email" name="custEmail" required
+                                       id="custEmail" class="darkgrey-bottom-border text-lowercase emailInput"
+                                       placeholder="Email ID" ng-maxlength="45"
+                                       id="customerAddModalEmail"
+                                       ng-model="customersData.tableCustomerEmail">
+                            </div>
+                            <div  class="col-md-offset-3 col-md-6">
+                                 <span ng-if="addCustomerForm.$submitted && addCustomerForm.custEmail.$error.required" class="error-message">
+                                     Please enter the Email Id
+                                 </span>
+                                 <span ng-if="addCustomerForm.$submitted && addCustomerForm.custEmail.$error.email" class="error-message">
+                                     Please enter a valid Email Id
+                                 </span>
+                                 <span ng-if="addCustomerForm.custEmail.$dirty && addCustomerForm.custEmail.$error.maxlength" class="error-message">
+                                     Email Id should not exceed 45 characters.
+                                 </span>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Phone Number <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-6 form-row-height">
+                                <input id="customerAddModalPhone" type="text" required
+                                       numbers-only name="phNo" ng-maxlength="10" ng-minlength="10" class="darkgrey-bottom-border"
+                                       placeholder="Phone no." ng-model="customersData.tableCustomerPhone">
+                                       <span ng-if="myForm.phNo.$error.pattern == true" ng-init="validatePhone()"></span>
+                            </div>
+                            <div  class="col-md-offset-3 col-md-6">
+                                 <span ng-if="addCustomerForm.$submitted && addCustomerForm.phNo.$error.required" class="error-message">
+                                     Please enter Phone Number
+                                 </span>
+                                 <span ng-if="addCustomerForm.phNo.$dirty && (addCustomerForm.phNo.$error.maxlength || addCustomerForm.phNo.$error.minlength)" class="error-message">
+                                     Please enter a 10 digit Phone Number
+                                 </span>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top-x-small" ng-show="genericData.customerMode=='add'">
+                            <md-toolbar class="md-small accordion-color">
+                                <div class="md-toolbar-tools" style="width:100% ">
+                                    <span class="font-big">Add Shipping Address</span>
+                                    <span flex=""></span>
+                                    <md-button id="customerAddModalASA" class="md-icon-button" aria-label="Favorite"
+                                               ng-click="shipAddrClickedRow()">
+                                        <md-icon ng-show="shipAddrClicked==false"
+                                                 md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                        <md-icon ng-show="shipAddrClicked==true"
+                                                 md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                        </div>
+                        <div ng-if="shipAddrClicked==true && genericData.customerMode=='add'" >
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Address Line 1 <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <input id="customerAddModalAddress1" type="text" ng-maxlength="256" ng-minlength="2" name="addressLine" required
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       placeholder="Address line 1" ng-model="shippingAddress.tableAddress1"
+                                                       ng-blur="callGetLatLong(showResult)">
+                                            </div>
+                                            <div class="col-md-offset-6 col-md-6">
+                                               <span ng-if="addCustomerForm.$submitted && addCustomerForm.addressLine.$error.required"  class="error-message">
+                                                   Please enter the Address
+                                               </span>
+                                               <span ng-if="addCustomerForm.addressLine.$dirty && addCustomerForm.addressLine.$error.maxlength"  class="error-message">
+                                                   Address Line 1 should not exceed 256 characters.
+                                               </span>
+                                               <span ng-if="addCustomerForm.addressLine.$dirty && addCustomerForm.addressLine.$error.minlength"  class="error-message">
+                                                   Address Line 1 should have at least 2 characters.
+                                               </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Address Line 2</span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <input type="text" name="addressLine2" ng-maxlength="256"
+                                                       id="customerAddModalAddress2"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       placeholder="Address line 2" ng-model="shippingAddress.tableAddress2"
+                                                       ng-blur="callGetLatLong(showResult)">
+                                            </div>
+                                            <div class="col-md-offset-6 col-md-6">
+                                               <span ng-if="addCustomerForm.addressLine2.$dirty && addCustomerForm.addressLine2.$error.maxlength"  class="error-message">
+                                                   Address Line 2 should not exceed 256 characters.
+                                               </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Address Line 3</span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <input type="text" name="addressLine3" ng-maxlength="256"
+                                                       id="customerAddModalAddress3"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       placeholder="Address line 3" ng-model="shippingAddress.tableAddress3"
+                                                       ng-blur="callGetLatLong(showResult)">
+                                            </div>
+                                            <div class="col-md-offset-6 col-md-6">
+                                               <span ng-if="addCustomerForm.addressLine3.$dirty && addCustomerForm.addressLine3.$error.maxlength"  class="error-message">
+                                                   Address Line 3 should not exceed 256 characters.
+                                               </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">State <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <select ng-model="customerAddress.stateData"
+                                                        class="form-control"
+                                                        name="state" required
+                                                        id="customerAddModalState"
+                                                        ng-options="option as option.tableStateLongName for option in regionsStatesArray"
+                                                        ng-change="regionsStatesDistrictData(customerAddress.stateData);checkVat(customersData.idtableCustomerId,customerAddress.stateData.idtableStateId);onStateChangedShipping();">
+                                                    <option value="">Select State</option>
+                                                </select>
+                                            </div>
+                                            <div ng-if="addCustomerForm.$submitted && addCustomerForm.state.$error.required" class="col-md-offset-6 col-md-6">
+                                               <span class="error-message">
+                                                   Please select the State
+                                               </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">District <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <select ng-model="customerAddress.districtData"
+                                                        class="form-control"
+                                                        name="district" required
+                                                        id="customerAddModalDistrict"
+                                                        ng-options="option as option.tableDistrictLongName for option in regionsStatesDistrictArray"
+                                                        ng-change="regionsStatesDistrictsCityData(customerAddress.stateData,customerAddress.districtData);">
+                                                    <option value="">Select District</option>
+                                                </select>
+                                            </div>
+                                            <div ng-if="addCustomerForm.$submitted && addCustomerForm.district.$error.required" class="col-md-offset-6 col-md-6">
+                                               <span class="error-message">
+                                                   Please select the District
+                                               </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">City <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <select ng-model="shippingAddress.tableCity"
+                                                        class="form-control" name="city" required
+                                                        id="customerAddModalCity"
+                                                        ng-options="option as option.tableCityLongName for option in regionsStatesDistrictsCityArray"
+                                                        ng-change="changeCity(shippingAddress.tableCity);">
+                                                    <option value="">Select City</option>
+                                                </select>
+                                            </div>
+                                            <div ng-if="addCustomerForm.$submitted && addCustomerForm.city.$error.required" class="col-md-offset-6 col-md-6">
+                                               <span class="error-message">
+                                                   Please select the City
+                                               </span>
+                                            </div>
+                                        </div>
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">PIN Code <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <input type="text" name="pincode" required
+                                                       id="customerAddModalPIN"
+                                                       ng-pattern-restrict="^[0-9]*$" min="0"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       ng-blur="callGetLatLong()" placeholder="Postal code"
+                                                       ng-model="shippingAddress.tableAddressPin">
+                                            </div>
+                                            <div ng-if="addCustomerForm.$submitted && addCustomerForm.pincode.$error.required" class="col-md-offset-6 col-md-6">
+                                               <span class="error-message">
+                                                   Please enter the PIN Code
+                                               </span>
+                                            </div>
+                                        </div>
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">GSTIN
+                                                </span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <input type="text" name="gstin"
+                                                       placeholder="{{genericData.customerVatTinShippingPlaceholder}}"
+                                                       id="customerAddModalGSTIN"
+                                                       gstinvalidator="{{customerAddress.stateData}}"
+                                                       ng-pattern="/^[0-3][0-9][A-Z]{5}[0-9]{4}[A-Z][0-9]Z[A-Z0-9]/"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       ng-model="genericData.customerVatTinShipping">
+                                            </div>
+                                            <div class="col-md-offset-6 col-md-6">
+                                               <span ng-if="addCustomerForm.$submitted && addCustomerForm.gstin.$error.pattern"  class="error-message">
+                                                   Please enter a valid GSTIN.
+                                               </span>
+                                               <span ng-if="addCustomerForm.$submitted && addCustomerForm.gstin.$error.gstin"  class="error-message">
+                                                   State code provided in GSTIN does not match the state code of selected state.
+                                               </span>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-md-6 padding-top-15">
+                                        <!-- Map Area -->
+                                        <demo-map ng-if="searchLocation" ng-model="searchLocation"
+                                                  class="addrdemo-map"></demo-map>
+                                    </div>
+
+                                </div>
+                                <div class="row row-margin-top"  ng-if="genericData.customerVatTinShipping != null && genericData.customerVatTinShipping.length > 0">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">GST Status Of Customer</span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <md-radio-group  name="natureOfCustomer" ng-model="tableGstTypeShipping.tableGstType.tableGstTypeName" >
+                                            <md-radio-button id="customerAddModalGSTIN{{$index}}" ng-checked="gst.tableGstTypeName == 'Unknown'" ng-value="gst.tableGstTypeName" ng-repeat="gst in gstTypes""  class="md-primary content-fit">{{gst.tableGstTypeName}}</md-radio-button>
+                                        </md-radio-group>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+
+                        <div ng-if="genericData.customerMode == 'add'">
+                        <span class="add-new-sp-row">
+                            <md-checkbox id="customerAddModalSameAddress"
+                                    ng-model="genericData.shipAddrBillAddrSame" aria-label="Enable">
+                            </md-checkbox> Billing address same as shipping address
+                        </span>
+                        </div>
+
+                        <br>
+                        <div class="row row-margin-top-x-small" ng-if = "!genericData.shipAddrBillAddrSame" ng-show="genericData.customerMode=='add'">
+                            <md-toolbar class="md-small accordion-color">
+                                <div class="md-toolbar-tools" style="width:100% ">
+                                    <span class="font-big">Add Billing Address</span>
+                                    <span flex=""></span>
+                                    <md-button id="customerAddModalABA" class="md-icon-button" aria-label="Favorite"
+                                               ng-click="billingAddrClickedRow()">
+                                        <md-icon ng-show="billingAddrClicked==false"
+                                                 md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                        <md-icon ng-show="billingAddrClicked==true"
+                                                 md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                        </div>
+                        <div ng-if="billingAddrClicked==true && genericData.customerMode=='add' && !genericData.shipAddrBillAddrSame">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Address Line 1 <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <input id="customerAddModalBAddress1" type="text" required ng-maxlength="256" ng-minlength="2" name="addressLineBill"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       placeholder="Address line 1" ng-model="billingAddress.tableAddress1">
+                                            </div>
+                                            <div class="col-md-offset-6 col-md-6">
+                                               <span ng-if="addCustomerForm.$submitted && addCustomerForm.addressLineBill.$error.required"  class="error-message">
+                                                   Please enter the Address
+                                               </span>
+                                                <span ng-if="addCustomerForm.addressLineBill.$dirty && addCustomerForm.addressLineBill.$error.maxlength"  class="error-message">
+                                                   Address Line 1 should not exceed 256 characters.
+                                               </span>
+                                                <span ng-if="addCustomerForm.addressLineBill.$dirty && addCustomerForm.addressLineBill.$error.minlength"  class="error-message">
+                                                   Address Line 1 should have at least 2 characters.
+                                               </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Address Line 2</span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <input type="text" id="customerAddModalBAddress2" name="addressLineBill2" ng-maxlength="256"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       placeholder="Address line 2" ng-model="billingAddress.tableAddress2">
+                                            </div>
+                                            <div class="col-md-offset-6 col-md-6">
+                                               <span ng-if="addCustomerForm.addressLineBill2.$dirty && addCustomerForm.addressLineBill2.$error.maxlength"  class="error-message">
+                                                   Address Line 2 should not exceed 256 characters.
+                                               </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Address Line 3</span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <input type="text" id="customerAddModalBAddress3" name="addressLineBill3" ng-maxlength="256"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       placeholder="Address line 3" ng-model="billingAddress.tableAddress3">
+                                            </div>
+                                            <div class="col-md-offset-6 col-md-6">
+                                               <span ng-if="addCustomerForm.addressLineBill3.$dirty && addCustomerForm.addressLineBill3.$error.maxlength"  class="error-message">
+                                                   Address Line 3 should not exceed 256 characters.
+                                               </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">State <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <select ng-model="customerBillingAddress.stateData"
+                                                        id="customerAddModalBState"
+                                                        class="form-control" name="stateBill" required
+                                                        ng-options="option as option.tableStateLongName for option in regionsStatesArray"
+                                                        ng-change="regionsStatesDistrictDataForBilling(customerBillingAddress.stateData);checkVat(customerBillingAddress.stateData);onStateChangedBilling();">
+                                                    <option value="">Select State</option>
+                                                </select>
+                                            </div>
+                                            <div ng-if="addCustomerForm.$submitted && addCustomerForm.stateBill.$error.required" class="col-md-offset-6 col-md-6">
+                                               <span class="error-message">
+                                                   Please select the State
+                                               </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">District <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <select ng-model="customerBillingAddress.districtData"
+                                                        id="customerAddModalBDistrict"
+                                                        class="form-control" name="districtBill" required
+                                                        ng-options="option as option.tableDistrictLongName for option in regionsStatesDistrictArrayForBilling"
+                                                        ng-change="regionsStatesDistrictsCityDataForBilling(customerBillingAddress.stateData,customerBillingAddress.districtData);">
+                                                    <option value="">Select District</option>
+                                                </select>
+                                            </div>
+                                            <div ng-if="addCustomerForm.$submitted && addCustomerForm.districtBill.$error.required" class="col-md-offset-6 col-md-6">
+                                               <span class="error-message">
+                                                   Please select the District
+                                               </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">City <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <select ng-model="billingAddress.tableCity"
+                                                        id="customerAddModalBCity"
+                                                        class="form-control" name="cityBill" required
+                                                        ng-options="option as option.tableCityLongName for option in regionsStatesDistrictsCityArrayForBilling"
+                                                        ng-change="changeCity(customerAddress.city);">
+                                                    <option value="">Select City</option>
+                                                </select>
+                                            </div>
+                                            <div ng-if="addCustomerForm.$submitted && addCustomerForm.cityBill.$error.required" class="col-md-offset-6 col-md-6">
+                                               <span class="error-message">
+                                                   Please select the City
+                                               </span>
+                                            </div>
+                                        </div>
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">PIN Code <span style="color:red">*</span></span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <input type="text" name="pincodeBill" required
+                                                       ng-pattern-restrict="^[0-9]*$" min="0"
+                                                       id="customerAddModalBPIN"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       placeholder="Enter pin"
+                                                       ng-model="billingAddress.tableAddressPin">
+                                            </div>
+                                            <div ng-if="addCustomerForm.$submitted && addCustomerForm.pincodeBill.$error.required" class="col-md-offset-6 col-md-6">
+                                               <span class="error-message">
+                                                   Please enter the PIN Code
+                                               </span>
+                                            </div>
+                                        </div>
+                                        <div class="row padding-top-15">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">GSTIN </span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <input type="text" name="gstinBill"
+                                                       placeholder="{{genericData.customerVatTinBillingPlaceholder}}"
+                                                       id="customerAddModalBGSTIN"
+                                                       gstinvalidator="{{customerBillingAddress.stateData}}"
+                                                       ng-pattern="/^[0-3][0-9][A-Z]{5}[0-9]{4}[A-Z][0-9]Z[A-Z0-9]/"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       ng-model="genericData.customerVatTinBilling">
+                                            </div>
+                                            <div class="col-md-offset-6 col-md-6">
+                                               <span ng-if="addCustomerForm.$submitted && addCustomerForm.gstinBill.$error.pattern"  class="error-message">
+                                                   Please enter a valid GSTIN.
+                                               </span>
+                                                <span ng-if="addCustomerForm.$submitted && addCustomerForm.gstinBill.$error.gstin"  class="error-message">
+                                                   State code provided in GSTIN does not match the state code of selected state.
+                                               </span>
+                                            </div>
+                                        </div>
+                                        <div class="row row-margin-top"  ng-if="genericData.customerVatTinBilling != null && genericData.customerVatTinBilling.length > 0">
+                                            <div class="col-md-3 form-row-height">
+                                                <span class="form-label-height semi-bold-text">GST Status Of Customer</span>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <md-radio-group  name="natureOfCustomer" ng-model="tableGstTypeBilling.tableGstType.tableGstTypeName" >
+                                                    <md-radio-button id="customerAddModalBillingGSTIN{{$index}}" ng-checked="gst.tableGstTypeName == 'Unknown'" ng-value="gst.tableGstTypeName" ng-repeat="gst in gstTypes""  class="md-primary content-fit">{{gst.tableGstTypeName}}</md-radio-button>
+                                                </md-radio-group>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="row row-margin-top-x-small">
+                            <md-toolbar class="md-small accordion-color">
+                                <div class="md-toolbar-tools" style="width:100% ">
+                                    <span class="font-big">Configure order return parameters</span>
+                                    <span flex=""></span>
+                                    <md-button id="customerAddModalCORP" class="md-icon-button" aria-label="Favorite"
+                                               ng-click="returnParamsClickedRow()">
+                                        <md-icon ng-show="returnParamsClicked==false"
+                                                 md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                        <md-icon ng-show="returnParamsClicked==true"
+                                                 md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                        </div>
+                        <div ng-if="returnParamsClicked==true">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-12 form-row-height">
+                                            <span class="add-new-sp-row">
+                                                <md-checkbox id="customerAddModalROE"
+                                                        ng-model="customersData.tableCustomerReturnOnlyExpired" aria-label="Enable">
+                                                </md-checkbox> Return only expired
+                                            </span>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-6 form-row-height">
+                                                <span class="form-label-height semi-bold-text">
+                                                   Return window
+                                                </span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <input type="text" id="customerAddModalRW" name="returnWindow" ng-maxlength="3" only-integer
+                                                       ng-model="customersData.tableCustomerReturnWindowInDays" placeholder="Return window in days"
+                                                       class="form-control darkgrey-bottom-border-number input-less-padding">
+                                            </div>
+                                            <div ng-if="addCustomerForm.returnWindow.$dirty && addCustomerForm.returnWindow.$error.maxlength" class="col-md-offset-6 col-md-6">
+                                               <span class="error-message">
+                                                   Return window should not exceed 3 characters.
+                                               </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 padding-top-15">
+                                                <div class="col-md-6 form-row-height" >
+                                                    <span class="form-label-height semi-bold-text">
+                                                       Return threshold basis
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <div class="col-md-12">
+                                                        <md-radio-group name="threshold" ng-model="genericData.returnType" ng-change="changeReturnType()">
+                                                            <md-radio-button id="customerAddModalReturnType{{$index}}"  ng-repeat="returnType in returnTypes" ng-value="returnType.returnTypeString" class="md-primary" ng-style="{'display':'inline'}">
+                                                                {{returnType.returnTypeDisplayString}}&nbsp;&nbsp;
+                                                            </md-radio-button>
+                                                        </md-radio-group>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                            <span ng-if="genericData.returnType == 'valuebased'">
+                                                            <input type="text" id="returntype1" step="0.01"
+                                                                   percentage
+                                                                   id="customerAddModalValue"
+                                                               ng-model="customersData.tableCustomerReturnValue" placeholder="% Value"
+                                                               class="form-control darkgrey-bottom-border input-less-padding">
+                                                            </span>
+                                                            <span ng-if="genericData.returnType == 'quantitybased'">
+                                                            <input type="text" id="returntype2" percentage
+                                                                   id="customerAddModalQuantity"
+                                                               ng-model="customersData.tableCustomerReturnQuantity" placeholder="% Quantity"
+                                                               class="form-control darkgrey-bottom-border input-less-padding">
+                                                            </span>
+                                                    </div>
+                                                </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--===================================== add customer for bulk upload =======================-->
+
+                    <div class="tab-pane container-fluid customerTabHeight" id="customertab2">
+                        <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                            <div class="col-md-6 light-grey-right-border">
+                                <div id="uploadFileButton" class="uploadFileBulkOrder"
+                                     data-toggle="modal" data-target="#customersBulkUpload"
+                                     data-dismiss="modal"></div>
+                                <br>
+                                <span id="uploadFileText" class="uploadFileLabel"
+                                      data-toggle="modal" data-target="#customersBulkUpload" data-dismiss="modal">Upload File</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span ng-click="downloadCustomerBulkUploadTemplate();">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </span>
+                                <br>
+                                <span class="downloadFileLabel">
+                                            <span ng-click="downloadCustomerBulkUploadTemplate();" >
+                                                Download File Template
+                                            </span>
+                                        </span>
+                            </div>
+                        </div>
+                        <div class="row upload-file-dialog-row">
+                            <div style="text-align: center;">
+                                <a ng-click="closeBulkUploadDialog()"
+                                   style="color: #00ACE4; font-weight: 600;cursor: pointer;">Go to "Bulk upload
+                                    reports" for more details.</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+                <div ng-if="singleCustomerTab==true && bulkCustomerTab==false">
+                    <button id="customerAddModalCancel2" type="button" class="cancel-btn" ng-click="cancelCustomerData(addCustomerForm)">
+                        Cancel
+                    </button>
+                    <button id="customerAddModalUpdate" type="submit" class="action-btn" ng-if="genericData.customerMode == 'edit'">
+                        Update
+                    </button>
+                    <button id="customerAddModalSubmit" type="submit" class="action-btn" ng-if="genericData.customerMode == 'add'">
+                        Add
+                    </button>
+                </div>
+                <div ng-if="singleCustomerTab==false && bulkCustomerTab==true" >
+
+                    <button id="customerAddModalCancel3" type="button" class="cancel-btn" ng-click="cancelCustomerData()">Cancel
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<!-- Bulk Upload customers File Dialog -->
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="customersBulkUpload" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog modalDialogProp modal-lg">
+        <form name="customersBulkUploadForm" novalidate ng-submit="customersBulkUploadForm.$valid && uploadBulkOrderFile(uploadedFile.bulkOrderUploadfile,customersBulkUploadForm);">
+        <div class="modal-content">
+            <div class="modal-header modal-dialog-header">
+                <button id="customerBulkModalCancel1" type="button" class="close" ng-click="cancelCustomerBulkData(customersBulkUploadForm)" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Upload File</p>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row upload-file-dialog-row">
+                        <div class="col-md-3 bulkFile-heading-col font">Select a File</div>
+                        <div class="col-md-8">
+                            <div id="customerBulkModalFile" ng-required="true" name="files" ngf-drop ngf-select class="drop-box cursorPointer" ng-model="uploadedFile.bulkOrderUploadfile"
+                                 ngf-drag-over-class="'dragover'" accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                                <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag
+                                file to upload or click to select
+                            </div>
+                            <div ngf-no-file-drop class="cursorPointer">File Drag/Drop is not supported for this browser</div>
+
+
+                        </div>
+                    </div>
+                    <div class="row upload-file-dialog-row">
+                        <div class="col-md-3 bulkFile-heading-col"></div>
+                        <div class="col-md-8 font">File:&nbsp;&nbsp;{{uploadedFile.bulkOrderUploadfile.name}}</div>
+                    </div>
+                    <div class="row upload-file-dialog-row">
+                        <div class="col-md-3 bulkFile-heading-col"></div>
+                        <div class="col-md-8">
+                            <b class="fileFormat">* File Format should be .xls,.xlsx</b>
+                            <br>
+                            <span ng-if="customersBulkUploadForm.$submitted && customersBulkUploadForm.files.$error.required" class="error-msg">Please upload file</span><br>
+                            <span ng-if="customersBulkUploadForm.$submitted && customersBulkUploadForm.files.$error.pattern" class="error-msg">Please upload a valid file</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button id="customerBulkModalCancel2" type="button" class="cancel-btn" ng-click="cancelCustomerBulkData(customersBulkUploadForm)" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button ng-disabled="disableBulkUpload" id="customerBulkModalUpload" type="submit" class="action-btn"
+                        >Upload
+                </button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+        background-color: #E9EEEF;
+    }
+    md-radio-button .md-label{margin-left:23px;margin-right:10px;}
+</style>

@@ -1,0 +1,516 @@
+<div class="modal fade" id="addReturnableGoodsOrderDialog" role="dialog"
+     data-backdrop="static"
+     data-keyboard="false"
+     aria-labelledby="addReturnableGoodsOrderDialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" >
+        <form name="addReturnableGoodsOrderDialog" accessible-form novalidate ng-submit="addReturnableGoodsOrderDialog.$valid && singleorderReturnData.tableReturnableGoodsOrderSkus.length && submitAddReturnableGoodsOrderForm(addReturnableGoodsOrderDialog)">
+            <div class="modal-content">
+            <!-- Modal Header -->
+
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+
+                <button id="RGAddCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelSingleReturnableGoodsOrder(addReturnableGoodsOrderDialog)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+
+                <p class="dialog-heading-p" ng-if="genericData.singleReturnableGoodsOrderMode == 'add'">Add Returnable
+                    Goods Order</p>
+
+                <p class="dialog-heading-p" ng-if="genericData.singleReturnableGoodsOrderMode == 'edit'">Edit Returnable
+                    Goods Order</p>
+
+                <p class="dialog-heading-p" ng-if="genericData.singleReturnableGoodsOrderMode == 'copy'">Copy Returnable
+                    Goods Order</p>
+
+
+
+            </div>
+
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <ul class="nav nav-tabs" id="ordertabs">
+                    <li class="active"><a data-target="#tabOne" data-toggle="tab" class="btn sharp"
+                                          ng-click="singleReturnableGoodsOrderTabMode()" style="width:auto;">Single
+                        Returnable Goods Order</a>
+                    </li>
+                    <!--Uncomment this when backend implementation is complete -->
+                    <li ng-if="genericData.singleReturnableGoodsOrderMode == 'add'">
+                        <a data-target="#tabFour" data-toggle="tab" class="btn sharp" ng-click="bulkReturnableGoodsOrderTabMode()" style="width:auto;">Bulk
+                        Returnable Goods Order</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active container-fluid" id="tabOne">
+                        <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height  semi-bold-text">Order Ref. No. </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input ng-if="genericData.singleReturnableGoodsOrderMode != 'edit'"
+                                           name="orderNumberId"
+                                           type="text" id="RGAddRef1"
+                                           uniquerg
+                                           class="form-control darkgrey-bottom-border"
+                                           ng-model="singleorderReturnData.tableReturnableGoodsOrderRefNo"
+                                           placeholder="Order Ref. No.">
+                                    <input ng-if="genericData.singleReturnableGoodsOrderMode == 'edit'"
+                                           uniquerg name="orderNumberId"
+                                           placeholder="Order Ref. No."
+                                           type="text" id="RGAddRef2"
+                                           class="form-control darkgrey-bottom-border"
+                                           ng-model="singleorderReturnData.tableReturnableGoodsOrderRefNo">
+                                    <i class="fa fa-question-circle-o date-help"
+                                       ng-if="genericData.singleReturnableGoodsOrderMode != 'edit'"
+                                       data-container="body" data-toggle="popover" data-trigger="focus" tabindex="0"
+                                       title="Ref. No." data-html="true"
+                                       data-content="Reference number can be a reference number of any other system"
+                                       aria-hidden="true"></i>
+
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.orderNumberId.$error.uniquerg" class="col-md-offset-3 col-md-6">
+                                            <span class="error-message">
+                                                Order ref. no. already exists!
+                                            </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height  semi-bold-text">Warehouse <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select required id="RGAddWh"
+                                            name="warehouse" ng-model="singleorderReturnData.tableWarehouseDetails"
+                                            class="form-control add-single-order-select" ng-change="resetSelectedModalValuesAfterWarehouseChanged()"
+                                            ng-options="option.tableWarehouseDetailsShortname for option in wareHousesData track by option.idtableWarehouseDetailsId">
+                                        <option value="" disabled selected style="display: none;">Choose Warehouse
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.$submitted && addReturnableGoodsOrderDialog.warehouse.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select a warehouse
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height  semi-bold-text">Vendor <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select id="RGAddVendor" class="form-control add-single-order-select"
+                                            name="vendor" required ng-change="resetSelectedModalValuesAfterVendorChanged()"
+                                            skufound
+                                            ng-options="option.tableVendorName for option in vendorsData track by option.idtableVendorId"
+                                            ng-model="singleorderReturnData.tableVendor">
+                                        <option value="" disabled selected style="display: none;">Select
+                                            Vendor
+                                        </option>
+
+                                    </select>
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.$submitted && addReturnableGoodsOrderDialog.vendor.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select a Vendor
+                                        </span>
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.vendor == '' && addReturnableGoodsOrderDialog.vendor.$error.skufound" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            No sku's found for this vendor
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height  semi-bold-text">Quantity Type <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select id="RGAddQtyT"
+                                            class="form-control add-single-order-select" required
+                                            ng-options="option for option in quantityTypes track by option"
+                                            ng-model="singleorderReturnData.tableReturnableGoodsOrderQuantityType"
+                                            name="quantityType">
+                                        <option value="" disabled selected style="display: none;">Select Quantity Type
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.$submitted && addReturnableGoodsOrderDialog.quantityType.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select the Quantity Type
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top"
+                                 ng-if="singleorderReturnData.tableVendor.idtableVendorId != null && vendorSkus.length > 0">
+                                <div class="form-label-height  col-md-3 form-row-height">
+                                    <span class="semi-bold-text">Add Product <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-3 form-row-height">
+                                    <angucomplete-alt id="products" placeholder="Search product" pause="400"
+                                                      selected-object="searchedProduct"
+                                                      local-data="vendorSkus"
+                                                      search-fields="tableSkuClientSkuCode,tableSkuName,tableSkuDescription,tableSkuPrimaryUpcEan"
+                                                      title-field="tableSkuClientSkuCode"
+                                                      description-field="tableSkuName"
+                                                      image-field="tableSkuImageUrl"
+                                                      input-name="tableSkuName"
+                                                      field-required="singleorderReturnData.tableReturnableGoodsOrderSkus.length == 0 && (singleorderReturnData.tableVendor.idtableVendorId != null && vendorSkus.length > 0)"
+                                                      input-class="form-control darkgrey-bottom-border"></angucomplete-alt>
+                                </div>
+                                <div class="col-md-1 form-row-height">
+
+                                    <button id="RGAddSMore" type="button" title="Click here to see all SKUs."
+                                            class="btn btn-sm truncate-text"
+                                            ng-click="masterSkuDialog($event, true);">. . .
+                                    </button>
+                                </div>
+                                <div class="col-md-2 form-row-height no-padding">
+                                    <span form-label-height  class="col-md-8  no-padding semi-bold-text">(Avl. Qty.)</span>
+                                    <span form-label-height  class="col-md-4 no-padding" >
+                                            <input id="RGAddQAvail" disabled type="text" ng-value="availableQuantityOfSkuAndVendor" />
+                                        </span>
+                                </div>
+                                <div class="col-md-2 form-row-height">
+                                    <input
+                                            type="text"
+                                            ng-model="genericData.returnQuantity" id="RGAddQty"
+                                            name="returnqtrywithoutref"
+                                            only-integer
+                                            ng-required="searchedSku && singleorderReturnData.tableReturnableGoodsOrderSkus.length == 0"
+                                            prevent-typing-greater
+                                            max = "{{availableQuantityOfSkuAndVendor}}"
+                                            greater-than-one
+                                            placeholder="Quantity"
+                                            class="form-control darkgrey-bottom-border-number"
+                                            style="text-align: right;"/>
+                                </div>
+                                <div class="col-md-1 form-row-height">
+                                    <span title="Add to List" class="form-label-height add-to-list-icon"
+                                          style="color: #f0592b;"
+                                          id="RGAddSkuAdd"
+                                          ng-click="addProduct()"
+                                          ng-disabled="addReturnableGoodsOrderDialog.returnqtrywithoutref.$invalid"></span>
+
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.$submitted && addReturnableGoodsOrderDialog.tableSkuName.$error['autocomplete-required']" class="col-md-offset-3 col-md-3">
+                                        <span class="error-message">
+                                            Please select a product
+                                        </span>
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.tableSkuName.$valid  && addReturnableGoodsOrderDialog.$submitted && addReturnableGoodsOrderDialog.returnqtrywithoutref.$error.required" class="col-md-offset-7 col-md-2">
+                                        <span class="error-message">
+                                            Please enter the quantity
+                                        </span>
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.tableSkuName.$valid  && addReturnableGoodsOrderDialog.$submitted && addReturnableGoodsOrderDialog.returnqtrywithoutref.$error['greater-than-one']" class="col-md-offset-7 col-md-2">
+                                        <span class="error-message">
+                                            Add at least 1 item
+                                        </span>
+                                </div>
+                                <div ng-if="vendorSkus && addReturnableGoodsOrderDialog.$submitted && singleorderReturnData.tableReturnableGoodsOrderSkus.length == 0" class="col-md-12 text-center">
+                                        <span class="error-message">
+                                            Please add product(s) to the list.
+                                        </span>
+                                </div>
+                            </div>
+
+                            <div class="row row-margin-top row-margin-bottom-small"
+                                 ng-if="singleorderReturnData.tableReturnableGoodsOrderSkus.length > 0">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <span class="semi-bold-text">List of Selected Products</span>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="singleorderReturnData.tableReturnableGoodsOrderSkus.length  > 0">
+                                <div class="col-md-12">
+                                    <table id="productTablewithoutref"
+                                           class="table boldtable table-responsive table-bordered table-hover">
+                                        <thead class="itemlist-grid-header">
+                                        <tr>
+                                            <th id="RGAddSIdH">Seller SKU ID
+                                            </th>
+                                            <th id="RGAddSNameH">SKU Name
+                                            </th>
+                                            <th id="RGAddSQtyH" style="text-align: right;">Quantity
+                                            </th>
+                                            <th id="RGAddSActionH" style="text-align: center;">Action
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody >
+                                        <tr ng-repeat="tableReturnableGoodsOrderSku in singleorderReturnData.tableReturnableGoodsOrderSkus">
+                                            <td id="RGAddSId{{$index}}">{{tableReturnableGoodsOrderSku.tableSku.tableSkuClientSkuCode}}</td>
+                                            <td title="tableReturnableGoodsOrderSku.tableSku.tableSkuDescription" id="RGAddSName{{$index}}">{{tableReturnableGoodsOrderSku.tableSku.tableSkuName}}</td>
+                                            <td id="RGAddSQty{{$index}}" style="text-align: right;">
+                                                {{tableReturnableGoodsOrderSku.tableReturnableGoodsOrderSkuQuantity}}
+                                            </td>
+                                            <td id="RGAddSAction{{$index}}" style="text-align: center; padding: 0;">
+                                                <md-button class="md-icon-button" md-no-ink="true"
+                                                           ng-click="removeProduct($index)" placeholder="Delete"
+                                                           style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                    <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                             ng-init="imgsrc1='images/svg/delete.svg'"
+                                                             ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                             ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                             style="width: 20px;"></md-icon>
+                                                </md-button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height" style="padding-right: 1px">
+                                    <span class="form-label-height  semi-bold-text">Shipping Owner <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select id="RGAddSO" ng-model="singleorderReturnData.tableShippingOwnership"
+                                            name="owner"
+                                            ng-options="option.tableShippingOwnershipString for option in shippingOwnersData track by option.idtableShippingOwnershipId"
+                                            required
+                                            class="form-control add-single-order-select">
+                                        <option value="" disabled selected style="display: none;">Select Shipping
+                                            Owner
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.$submitted && addReturnableGoodsOrderDialog.owner.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select Shipping Owner type
+                                        </span>
+                                </div>
+                            </div>
+                            <!--If warehouse is glaucus and shipping owner is sender drop address is mandatory -->
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height add-single-order-da-heading">
+                                            <span class="form-label-height  semi-bold-text">Drop Address
+                                                <span style="color:red"> *</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select id="RGAddDAddress" ng-model="singleorderReturnData.tableAddress"
+                                            name="pickupLocation"
+                                            ng-required="singleorderReturnData.tableWarehouseDetails.tableWarehouseType.idtableWarehouseTypeId == 1 && singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                            ng-options="option as option.tableAddressFull for option in deliveryAddressArray track by option.idtableAddressId"
+                                            class="form-control add-single-order-select">
+                                        <option value="" disabled selected style="display: none;">Select Vendor
+                                            Address
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.$submitted && addReturnableGoodsOrderDialog.pickupLocation.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select the Vendor Address
+                                        </span>
+                                </div>
+
+                            </div>
+
+
+                            <!--If warehouse is glaucus and shipping owner is receiver pick date is mandatory -->
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height  semi-bold-text">Pickup Date
+                                            <span ng-if="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                                  style="color:red"> *</span></span>
+                                </div>
+
+                                <div class="col-md-3 form-row-height">
+                                    <md-datepicker id="RGAddPDate"
+                                            timezoned-date
+                                            ng-model="singleorderReturnData.tableReturnableGoodsOrderPickupDate"
+                                            required
+                                            ng-required="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                            md-min-date="minDateShipping" md-max-date="maxDateShipping"
+                                            md-placeholder="Enter date"
+                                            name="pickUpDate"
+                                            ng-change="onPickUpDateChange(singleorderReturnData.tableReturnableGoodsOrderPickupDate)"></md-datepicker>
+                                </div>
+                                <!--If warehouse is glaucus and shipping owner is sender drop date is mandatory -->
+                                <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height  semi-bold-text">Drop Date
+                                        <span ng-if="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                              style="color:red"> *</span></span>
+                                </div>
+                                <div class="col-md-3 form-row-height">
+                                    <md-datepicker id="RGAddDDate"
+                                            timezoned-date
+                                            ng-model="singleorderReturnData.tableReturnableGoodsOrderDropDate"
+                                            ng-required="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                            md-min-date="minDateDelivery" md-max-date="maxDateDelivery"
+                                            md-placeholder="Enter date"
+                                            name="dropDate"
+                                            ng-change="onDropDateChange(singleorderReturnData.tableReturnableGoodsOrderDropDate)"></md-datepicker>
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.$submitted && addReturnableGoodsOrderDialog.pickUpDate.$error.required" class="col-md-offset-3 col-md-3">
+                                        <span class="error-message">
+                                            Please choose a Pickup Date
+                                        </span>
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.$submitted && addReturnableGoodsOrderDialog.dropDate.$error.required" class="col-md-offset-9 col-md-3">
+                                        <span class="error-message">
+                                            Please choose a Drop Date
+                                        </span>
+                                </div>
+                            </div>
+
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height add-single-order-da-heading">
+                                            <span class="form-label-height  semi-bold-text">Return reason <span
+                                                    style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select required id="RGAddRReason"
+                                            ng-model="singleorderReturnData.tableReturnableGoodsOrderReason"
+                                            name="tableReturnableGoodsOrderReason"
+                                            class="form-control add-single-order-select"
+                                            ng-options="option as option.tableReturnableGoodsOrderReasonString for option in returnReasonArray track by option.idtableReturnableGoodsOrderReasonId">
+                                        <option value="" disabled selected style="display: none;">Select return reason
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="addReturnableGoodsOrderDialog.$submitted && addReturnableGoodsOrderDialog.tableReturnableGoodsOrderReason.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select a return reason
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top row-margin-bottom-small"
+                                 ng-if="singleorderReturnData.tableReturnableGoodsOrderRemarkses.length > 0">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <span class="semi-bold-text">Remarks History</span>
+                                </div>
+                            </div>
+                            <div class="row"
+                                 ng-if="singleorderReturnData.tableReturnableGoodsOrderRemarkses.length > 0">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <table id="remarkstable"
+                                           class="table boldtable table-responsive table-bordered table-hover">
+                                        <thead class="data-grid-header">
+                                        <tr>
+                                            <th id="RGAddRhDateH" style="width:20%;">Date-Time</th>
+                                            <th id="RGAddRhUserH" style="text-align: right;">User
+                                            </th>
+                                            <th id="RGAddRhRemarksH" style="text-align: right;">Remarks
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="data-grid-data">
+                                        <tr ng-repeat="remarks in singleorderReturnData.tableReturnableGoodsOrderRemarkses">
+                                            <td id="RGAddRhDate{{$index}}">{{remarks.tableReturnableGoodsOrderRemarksDateTime |
+                                                utcToLocalTimeOrHyphen}}
+                                            </td>
+                                            <td id="RGAddRhUser{{$index}}" style="text-align: right;">
+                                                {{remarks.tableReturnableGoodsOrderRemarksUser}}
+                                            </td>
+                                            <td id="RGAddRhRemarks{{$index}}" style="text-align: right;">
+                                                {{remarks.tableReturnableGoodsOrderRemarksString}}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height  semi-bold-text">Remarks</span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+
+                                    <textarea caps class="form-control" id="RGAddRemarks"
+                                              ng-model="singleorderReturnData.tableReturnableGoodsOrderRemarks"
+                                              placeholder="Enter remarks"></textarea>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="tab-pane container-fluid" id="tabFour">
+                        <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                            <div class="col-md-6 light-grey-right-border">
+                                <div ng-required="bulkReturnableGoodsOrderTab" name="files" ngf-drop ngf-select class="drop-box cursorPointer"
+                                     ng-change="uploadBulkOrderFile(genericData.bulkOrderUploadfile);"
+                                     ng-model="genericData.bulkOrderUploadfile" ngf-drag-over-class="'dragover'"
+                                     accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                                    <img src="images/svg/upload_icon_1.svg"
+                                         style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag file to
+                                    upload or click to select
+                                </div>
+                                <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                                <br>
+                                <span id="uploadFileText1" class="uploadFileLabel cursorPointer">Upload File</span>
+                                <br>
+                                <h5>
+
+                                </h5>
+                                <span>
+                                        <span><b>Selected File:</b></span>
+                                        <span ng-if="fileName != null" style="width:100%;word-wrap:break-word;">{{fileName}}</span>
+                                        <span ng-if="fileName == null">No file selected</span>
+                                    </span>
+                                <br>
+                                <span ng-if="addReturnableGoodsOrderDialog.files.$error.required" class="error-msg">Please upload file</span><br>
+                                <span ng-if="addReturnableGoodsOrderDialog.files.$error.pattern" class="error-msg">Please upload a valid file</span>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="javascript:void(0);" ng-click="downloadReturnableGoodsOrderTemplate()">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <br>
+                                <span class="downloadFileLabel">
+                                                <a href="javascript:void(0);"
+                                                   ng-click="downloadReturnableGoodsOrderTemplate()">
+                                                    Download File Template
+                                                </a>
+                                            </span>
+                            </div>
+                        </div>
+                        <div style="text-align: center;">
+                            <a ng-click="closeBulkUploadDialog()"
+                               style="color: #00ACE4; font-weight: 600;cursor: pointer;">Go to "Bulk upload reports"
+                                for more details.</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;" ng-if="ReturnableGoodsOrderTab==true && bulkReturnableGoodsOrderTab==false">
+                <button id="RGAddCancel2" type="button" class="cancel-btn" data-dismiss="modal" ng-click="cancelSingleReturnableGoodsOrder(addReturnableGoodsOrderDialog)">
+                    Cancel
+                </button>
+                <input id="RGAddSubmit" type="submit" class="action-btn"
+                       ng-if="genericData.singleReturnableGoodsOrderMode != 'edit'"
+                       ng-click="setFormButtonValue('save')" value="Save"/>
+                <input id="RGAddUpdate" type="submit" class="action-btn"
+                       ng-if="genericData.singleReturnableGoodsOrderMode == 'edit'"
+                       ng-click="setFormButtonValue('update')" value="Update"/>
+            </div>
+
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="ReturnableGoodsOrderTab==false && bulkReturnableGoodsOrderTab==true">
+                    <button id="RGAddCancel3" type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelSingleReturnableGoodsOrder(addReturnableGoodsOrderDialog);singleReturnableGoodsOrderTabMode()">Cancel
+                    </button>
+                    <button ng-disabled="disableBulkUpload" id="RGAddUpload" type="button" class="action-btn"  ng-click="addReturnableGoodsOrderDialog.files.$valid && uploadReturableGoods(genericData.bulkOrderUploadfile,addReturnableGoodsOrderDialog)">Upload
+                    </button>
+             </div>
+
+
+
+            <!--Uncomment this once backend implementation is complete -->
+          <!--  <md-dialog-actions style="background-color: #30373B; min-height: 60px;"
+                               layout="row"> <span flex></span>
+
+
+            </md-dialog-actions>-->
+        </div>
+        </form>
+
+
+    </div>
+</div>
+
+
+
+<style>
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+        background-color: #E9EEEF;
+    }
+</style>

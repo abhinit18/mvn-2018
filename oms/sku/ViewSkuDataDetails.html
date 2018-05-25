@@ -1,0 +1,242 @@
+<div class="modal fade" id="SkuDetailedView" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="skuDetCancel1" type="button" class="close" ng-click="closeSkuView()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">View SKU Details</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top">
+                            <div class="col-md-6">
+
+                                <div class="row padding-top-15">
+                                    <!-- Seller SKU ID -->
+                                    <div class="col-md-4 margin-top-9">
+                                        <span class="font">Seller SKU ID</span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5>{{SkuDataDetailedView.tableSkuClientSkuCode}}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div class="sku-drop-box" >
+                                            <img ng-src="{{skuImgUrl1}}" ng-mouseover="skuImageHover1()" ng-mouseleave="skuImageHover1()" ng-class="{darken: isImg1Present()}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div class="sku-drop-box" >
+                                            <img ng-src="{{skuImgUrl2}}" ng-mouseover="skuImageHover2()" ng-mouseleave="skuImageHover2()" ng-class="{darken: isImg2Present()}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div class="sku-drop-box" >
+                                            <img ng-src="{{skuImgUrl3}}" ng-mouseover="skuImageHover3()" ng-mouseleave="skuImageHover3()" ng-class="{darken: isImg3Present()}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div class="sku-drop-box" >
+                                            <img ng-src="{{skuImgUrl4}}" ng-mouseover="skuImageHover4()" ng-mouseleave="skuImageHover4()" ng-class="{darken: isImg4Present()}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row margin-top-9">
+                            <div class="col-md-2 margin-top-9">
+                                <span class="font">Name </span>
+                            </div>
+                            <div class="col-md-4  margin-top-9">
+                                {{SkuDataDetailedView.tableSkuName}}
+                            </div>
+                            <div class="col-md-2 margin-top-9">
+                                <span class="font">ISBN/UPC/EAN</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>{{SkuDataDetailedView.tableSkuPrimaryUpcEan}}</h5>
+                            </div>
+                        </div>
+                        <div class="row margin-top-9">
+                            <div class="col-md-6">
+                                <div class="row ">
+                                    <div class="col-md-4  margin-top-9">
+                                        <span class="font">Category </span>
+                                    </div>
+
+                                    <div class="col-md-7 ">
+                                        <h5>{{SkuDataDetailedView.tableSkuNode.skuNodeName}}</h5>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row ">
+                                    <div class="col-md-4  margin-top-9">
+                                        <span class="font">Brand </span>
+                                    </div>
+                                    <div class="col-md-6  margin-top-9">
+                                        {{SkuDataDetailedView.tableSkuBrandCode.tableSkuBrandCodeString}}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row margin-top-9">
+                            <div class="col-md-2 margin-top-9">
+                                <span class="font">Alternate code </span>
+                            </div>
+                            <div class="col-md-4">
+                                {{SkuDataDetailedView.tableSkuAlternateCode?SkuDataDetailedView.tableSkuAlternateCode:'-'}}
+                            </div>
+                            <div class="col-md-2 margin-top-9">
+                                <span class="font">Shelf Life Type</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>{{SkuDataDetailedView.tableSkuShelfLifeType.tableSkuShelfLifeTypeString}}</h5>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top-small">
+                            <div class="col-md-2 margin-top-9">
+                                <span class="font">Description </span>
+                            </div>
+                            <div class="col-md-10">
+                                <h5>{{SkuDataDetailedView.tableSkuDescription}}</h5>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top">
+                            <div class="full-width" style="background: #f7fbfb;padding:10px;">
+                                <h4 style="color:#333;">Dimensions</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12" style="margin-top: 25px !important;margin-bottom:25px;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <span class="font">Dimension Unit</span>
+                                            </div>
+                                            <div class="col-md-7 " style="left: -15px;margin:0px;" ng-class="{submitted: isDimUnitSelected}">
+                                                <h5 style="margin-top: 0px;">{{SkuDataDetailedView.tableSkuUodmType.tableSkuUodmTypeString}}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <div class="col-md-5 text-right">
+                                                <span class="font">Length</span>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <h5 style="margin-top: 0px;">{{SkuDataDetailedView.tableSkuLength}}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <span class="font">Width</span>
+                                            </div>
+                                            <div class="col-md-7" style="margin-left:-30px;">
+                                                <h5 style="margin-top: 0px;padding-left: 10px;">{{SkuDataDetailedView.tableSkuWidth}}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <div class="col-md-5  text-right">
+                                                <span class="font">Height</span>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <h5 style="margin-top: 0px;">{{SkuDataDetailedView.tableSkuHeight}}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row ">
+
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <span class="font">Weight Unit</span>
+                                            </div>
+                                            <div class="col-md-7 " style="left: -15px;margin:0px;" ng-class="{submitted: isWeightUnitSelected}">
+                                                <h5 style="margin-top: 0px;">{{SkuDataDetailedView.tableSkuUowmType.tableSkuUowmTypeString}}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="col-md-5  text-right">
+                                            <span class="font">Weight</span>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <h5 style="margin-top: 0px;">{{SkuDataDetailedView.tableSkuWeight}}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top-x-small">
+                            <div class="full-width" style="background: #f7fbfb;padding: 10px;color:#333;">
+                                <h4>Attribute Details</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12" style="margin-top: 25px;margin-bottom:25px;">
+                                <div ng-if ="SkuDataDetailedView.tableSkuAttributeses.length > 0">
+                                    <div class="row" ng-repeat="key in SkuDataDetailedView.tableSkuAttributeses track by $index">
+                                        <div class="col-md-4 margin-top-9">
+                                            <span class="font" style="text-transform: capitalize;">{{key.tableSkuNodeAttributeType.attributeTypeString}}</span>
+                                        </div>
+                                        <div class="col-md-4 margin-top-9" >
+                                            <span class="font" style="text-transform: capitalize;">{{key.tableSkuNodeAttributePossibleValues.nodeAttributePossibleValuesValue}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if ="SkuDataDetailedView.tableSkuAttributeses.length == 0">
+                                    There are no attributes in selected category. Go to Masters -> Category Master to define attributes.
+                                </div>
+                                <!--skuData.tableSkuNode != null &&-->
+                                <div ng-if ="SkuDataDetailedView.tableSkuAttributeses.length == 0">
+                                    Select a category to configure relevant attributes.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row-margin-top-x-small">
+                            <div class="full-width" style="background: #f7fbfb;color:#333;padding: 10px;">
+                                <h4>Properties</h4>
+                            </div>
+                        </div>
+                        <div  class="row">
+                            <div class="col-md-12" style="padding-left: 25px !important;">
+                                <div class="row row-margin-top-small row-margin-bottom-small">
+                                    <div class="col-md-6 font" ng-repeat="item in items">
+                                        <md-checkbox id="skuDet{{item}}" disabled="disabled" ng-checked="exists(item, selected)">
+                                            {{ item }}
+                                        </md-checkbox>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modal-dialog-footer">
+                    <button id="skuViewCloseButton" type="button" class="cancel-btn" ng-click="closeSkuView()">
+                        Close
+                    </button>
+                </div>
+            </div>
+    </div>
+</div>

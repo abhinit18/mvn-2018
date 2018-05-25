@@ -1,0 +1,359 @@
+
+<link href="customer/customer.css" rel="stylesheet">
+<div class="container-fluid" ng-init="onLoad()">
+    <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;"><h4 class="screen-heading">Customers Master</h4></div>
+    <div class="row customer-search row-margin-top-small" style="margin-left: auto; margin-right: auto;">
+        <div class="col-xs-2" style="padding-top: 5px;">
+            <span class="total-count-heading">Total Customers</span>
+        </div>
+        <div class="col-xs-1">
+            <div class="circle-oval circle-orange" style="margin-left: -45px;">
+                    <span>
+                {{customerCount}}
+              </span>
+            </div>
+        </div>
+        <div class="vertical_line"></div>
+        <img width="22px" height="22px" src="images/svg/header_search.svg" style="float:left;margin-top:5px;" />
+        <div class="col-md-2 col-lg-2">
+            <select class="form-control selectClass" ng-model="searchSection">
+                <option value="customer">Search Customer</option>
+                <option value="sku">Search SKU</option>
+            </select>
+        </div>
+        <div ng-if="searchSection == 'customer'" class="row col-md-7 col-lg-7">
+            <div class="col-xs-3 font">Search Customer</div>
+            <div class="col-xs-5">
+                <input id="customerSearch" type="text" class="main-bottom-border font input-less-padding" ng-model="customerText" ng-change="callDisabledMutual(customerText);" placeholder="Search Customer">
+            </div>
+            <div class="col-xs-2">
+                <button id="customerSearchSubmit" type="button" style="margin-left: 0px !important; margin-top: -5px !important;" class="btn btn-default mybut"  ng-click="submitcustomerSearchAction(customerText)">Submit</button>
+            </div>
+            <div class="col-xs-1">
+                <button id="customerSearchClear" title="Clear Applied Filters"  class="btn clearFilter" ng-click="clearMutualcustomerAction();customerText=null">
+                </button>
+            </div>
+        </div>
+        <div ng-if="searchSection == 'sku'" class="row col-md-7 col-lg-7">
+            <div class="col-xs-3 font">Search SKU</div>
+            <div class="col-xs-4">
+                <angucomplete-alt id="products" placeholder="Search product" pause="400" selected-object="searchedProduct" remote-url="{{baseSkuUrl}}"
+                                  title-field="tableSkuClientSkuCode"
+                                  description-field="tableSkuName"
+                                  image-field="tableSkuImageUrl"
+                                  input-changed="newChanged"
+                                  input-class="main-bottom-border font input-less-padding"></angucomplete-alt>
+            </div>
+            <div class="col-xs-1">
+                <button id="customerSkuSearchMore" type="button" title="Click here to see all SKUs." style="position: absolute;top: 0px;" class="btn btn-sm truncate-text" ng-click="masterSkuDialog($event);">. . .</button>
+            </div>
+            <div class="col-xs-2">
+                <button id="customerSkuSearchSubmit" type="button" style="margin-left: 0px !important; margin-top: -5px !important;" class="btn btn-default mybut"  ng-click="submitSkuSearchAction(searchedProduct.originalObject.idtableSkuId)">Submit</button>
+            </div>
+            <div class="col-xs-1">
+                <button id="customerSkuSearchClear"  title="Clear Applied Filters" class="btn clearFilter" ng-click="clearMutualSkuAction();">
+                </button>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<div class="container-fluid customers-listheading">
+    <div class="row" style="margin-left: auto; margin-right: auto;">
+        <div class="col-md-12 text-right">
+            <button id="customerExport" type="button" class="btn addsharpbutton font" style="min-width: 100px;" ng-click="exportCustomers()">
+                <i class="fa fa-download" aria-hidden="true"></i> &nbsp;Export
+            </button>
+            <button id="customerAddNew" ng-if="access.createAccess" type="button" class="btn addsharpbutton font" style="min-width: 200px;" ng-click="addCustomer($event)">
+                <img width="20px" height="20px" color="white" src="images/svg/add.svg"> &nbsp;Add New Customer
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row main-list">
+        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+            <thead class="main-list-header-cust">
+            <tr>
+                <th id="customerNameHeader" class="text-left">
+                    <a ng-if = "genericData.enableSorting" href="" ng-click="tableSorting('tableCustomerFirstName',sortReverse)">
+                        Customer Name&nbsp;
+                        <span ng-if="sortType == 'tableCustomerFirstName' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableCustomerFirstName' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                    <a ng-if = "!genericData.enableSorting">
+                        Customer Name&nbsp;&nbsp;
+                    </a>
+                </th>
+                <th id="customerNoHeader" class="text-left">
+                    <a ng-if = "genericData.enableSorting" href="" ng-click="tableSorting('tableCustomerSystemNo',sortReverse)">
+                        Customer No&nbsp;
+                        <span ng-if="sortType == 'tableCustomerSystemNo' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableCustomerSystemNo' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                    <a ng-if = "!genericData.enableSorting">
+                        Customer No&nbsp;&nbsp;
+                    </a>
+                </th>
+                <th id="customerRefHeader" class="text-left">
+                    <a ng-if = "genericData.enableSorting" href="" ng-click="tableSorting('tableCustomerClientCustomerCode',sortReverse)">
+                        Customer Ref.&nbsp;
+                        <span ng-if="sortType == 'tableCustomerClientCustomerCode' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableCustomerClientCustomerCode' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                    <a ng-if = "!genericData.enableSorting">
+                        Customer Ref.&nbsp;&nbsp;
+                    </a>
+                </th>
+                <th id="customerSalesChannelHeader" class="text-left">
+                    <a ng-if = "genericData.enableSorting" href="" ng-click="tableSorting('tableSalesChannelValueInfo.tableSalesChannelValueInfoName',sortReverse)">
+                        Sales Channel&nbsp;
+                        <span ng-if="sortType == 'tableSalesChannelValueInfo.tableSalesChannelValueInfoName' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSalesChannelValueInfo.tableSalesChannelValueInfoName' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                    <a ng-if = "!genericData.enableSorting">
+                        Sales Channel&nbsp;&nbsp;
+                    </a>
+                </th>
+                <th id="customerEmailHeader" class="text-left">Email Id</th>
+                <th id="customerPhoneHeader" class="text-left">Phone No</th>
+                <th id="customerActionHeader" class="text-left action-col">Action</th>
+                <th id="customerDropHeader" class="text-left"></th>
+            </tr>
+            </thead>
+            <tbody ng-if="showLoader">
+            <tr>
+                <td colspan="9" class="text-center">
+                    <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                </td>
+            </tr>
+            </tbody>
+            <tbody data-ng-repeat="customerData in customersLists" data-ng-switch on="dayDataCollapse[$index]">
+            <tr class="clickable-row-cust" ng-class="{red: customerData.tableCustomerIsBlacklisted}">
+                <td id="customerName{{$index}}" align="left">{{customerData.tableCustomerFirstName}} {{customerData.tableCustomerLastName}}</td>
+                <td id="customerNo{{$index}}" align="left">{{customerData.tableCustomerSystemNo}}</td>
+                <td id="customerRef{{$index}}" align="left"><a href="#/order/customer/{{customerData.idtableCustomerId}}">{{customerData.tableCustomerClientCustomerCode}}</a></td>
+                <td id="customerSalesChannel{{$index}}" align="left">{{customerData.tableSalesChannelValueInfo.tableSalesChannelValueInfoName}}</td>
+                <td id="customerEmail{{$index}}" align="left">{{customerData.tableCustomerEmail}}</td>
+                <td id="customerPhone{{$index}}" align="left">{{customerData.tableCustomerPhone}}</td>
+                <td id="customerAction{{$index}}" align="left">
+                    <img ng-src="{{imgsrc1}}" ng-attr-title="{{!access.editAccess || customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit Customer'}}"  width="20px" height="20px" ng-hide="customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 || customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 4" data-ng-click="access.editAccess && (customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 || editCustomer($event,customerData.idtableCustomerId))"
+                         ng-init="imgsrc1='images/svg/edit.svg'" ng-class="{disableAccess: !access.editAccess || customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')" ng-mouseout="imgsrc1='images/svg/edit.svg'" />
+                    <img ng-class="{disableAccess: !access.editAccess || customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"  ng-if="!customerData.tableCustomerIsBlacklisted" ng-src="images/svg/black_list.svg" ng-attr-title="{{!access.editAccess || customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Move to black list'}}" width="20px" height="20px" data-ng-click="access.editAccess && blacklistCustomer(customerData)">
+                    <img ng-class="{disableAccess: !access.editAccess || customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}" ng-if="customerData.tableCustomerIsBlacklisted" ng-src="images/svg/white_list.svg" ng-attr-title="{{!access.editAccess || customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Move to black list'}}" width="20px" height="20px" data-ng-click="access.editAccess && whitelistCustomer(customerData)">
+                </td>
+                <td align="left" id="customerDrop1{{$index}}" ng-show="dayDataCollapse == null || dayDataCollapse == undefined || dayDataCollapse == []" data-ng-click="selectTableRow($index, customerData.idtableCustomerId)"><img src="images/svg/expand_icon.svg" height="22" /></td>
+                <td align="left" id="customerDrop2{{$index}}" data-ng-switch-when="false" data-ng-click="selectTableRow($index, customerData.idtableCustomerId)"><img src="images/svg/expand_icon.svg" height="22" /></td>
+                <td align="left" id="customerDrop3{{$index}}" data-ng-switch-when="true" data-ng-click="selectTableRow($index, customerData.idtableCustomerId)"><img src="images/svg/collaps_icon.svg" height="22" /></td>
+            </tr>
+
+            <tr data-ng-switch-when="true" class="customer-acc-data-row">
+                <td colspan="9">
+                    <!-- Header Row -->
+                    <div class="row">
+                        <div class="col-xs-6">
+                            Shipping Address
+                        </div>
+                        <div class="col-xs-6">
+                            Billing Address
+                        </div>
+                    </div>
+
+                    <!-- Data Row -->
+                    <div class="row">
+
+                        <!-- Shipping Addresses -->
+                        <div class="col-xs-6">
+                            <div class="row" data-ng-repeat="shipList in customerData.tableCustomerShippingAddressLists">
+                                <div class="col-xs-8">
+                                    <span>{{shipList.tableAddress.tableAddressFull}} <span ng-if="shipList.tableCustomerShippingAddressListIsPrimary == true" style="color:red">*</span></span>
+                                </div>
+                                <div class="col-xs-4" ng-hide="customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 || customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 4">
+                                    <span id="customerEditShippingAddress{{$index}}" class="pull-right" ng-if="access.editAccess" ng-click="editShippingAddressCustomer(customerData,shipList.idtableCustomerShippingAddressListId)">Edit Address</span>
+                                </div>
+                                <div class="col-xs-12">
+                                    <hr />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Billing Addresses -->
+                        <div class="col-xs-6">
+                            <div class="row" data-ng-repeat="shipList1 in customerData.tableCustomerBillingAddressLists">
+                                <div class="col-xs-8">
+                                    <span>{{shipList1.tableAddress.tableAddressFull}} <span ng-if="shipList1.tableCustomerBillingAddressListIsPrimary == true" style="color:red">*</span></span>
+                                </div>
+                                <div class="col-xs-4" ng-hide="customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 || customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 4">
+                                    <span id="customerEditBillingAddress{{$index}}" class="pull-right" ng-if="access.editAccess" ng-click="editBillingAddressCustomer(customerData,shipList1.idtableCustomerBillingAddressListId)">Edit Address</span>
+                                </div>
+                                <div class="col-xs-12">
+                                    <hr />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Rows -->
+                    <div class="row add-address-row" ng-if="access.createAccess" ng-hide="customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 || customerData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 4">
+                        <div class="col-xs-6" >
+                            <span id="customerAddShippingAddress{{$index}}" ng-click="addShippingAddress(customerData)">Add New Shipping Address</span>
+                        </div>
+                        <div class="col-xs-6">
+                            <span id="customerAddBillingAddress{{$index}}" ng-click="addBillingAddress(customerData)"> Add New Billing Address</span>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <!-- <div class="row edit-cust-row">
+                        <div class="col-xs-12">
+                            <span ng-click="editCustomer($event,customerData.idtableCustomerId)">Edit Customer</span>
+                        </div>
+                    </div> -->
+
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+        <!-- END TABLE -->
+        <div class="row" style="margin-top: 0px;">
+            <div class="col-md-6">
+                <p class="showingOrderLabel" ng-show="customerSize<customerCount">Showing Customers {{start + 1}} to {{end}} of {{customerCount}}
+                </p>
+                <p class="showingOrderLabel" ng-show="customerSize>=customerCount && customerCount!=0">Showing Customers {{start + 1}} to {{customerCount}} of {{customerCount}}
+                </p>
+                <p class="showingOrderLabel" ng-show="customerCount==0">No Customers Available
+                </p>
+            </div>
+            <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPager.pages.length && modeCustomer=='normal'" class="pagination">
+                            <li>
+                                <a><span style="padding-right: 5px;">Showing</span>
+                                    <select ng-change="onRecordsPerPageChange(customerSize)"  ng-model="customerSize" name="recordsPerPage"
+                                            ng-options="option for option in recordsPerPage"
+                                            required>
+                                    </select>
+                                    <span style="padding-left: 5px;">records per page</span>
+                                </a>
+                            </li>
+                            <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a ng-click="listOfCustomerCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li id="Previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li id="Previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="listOfCustomerCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="listOfCustomerCount(page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                            <a ng-click="listOfCustomerCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="listOfCustomerCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                        <ul ng-if="vmPager.pages.length && modeCustomer=='mutual'" class="pagination">
+                          <li>
+                                <a><span style="padding-right: 5px;">Showing</span>
+                                    <select ng-change="onRecordsPerPageChange(customerSize)"  ng-model="customerSize" name="recordsPerPage"
+                                            ng-options="option for option in recordsPerPage"
+                                            required>
+                                    </select>
+                                    <span style="padding-left: 5px;">records per page</span>
+                                </a>
+                            </li>
+                            <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                              <a>&lt;&lt; First</a>
+                          </li>
+                          <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                              <a ng-click="listOfMutualCustomersCount(1)">&lt;&lt; First</a>
+                          </li>
+                            <li id="previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="listOfMutualCustomersCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="listOfMutualCustomersCount(page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="listOfMutualCustomersCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="listOfMutualCustomersCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                        <ul ng-if="vmPager.pages.length && modeCustomer=='skuFull'" class="pagination">
+                          <li>
+                                <a><span style="padding-right: 5px;">Showing</span>
+                                    <select ng-change="onRecordsPerPageChange(customerSize)"  ng-model="customerSize" name="recordsPerPage"
+                                            ng-options="option for option in recordsPerPage"
+                                            required>
+                                    </select>
+                                    <span style="padding-left: 5px;">records per page</span>
+                                </a>
+                            </li>
+                            <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                              <a>&lt;&lt; First</a>
+                          </li>
+                          <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                              <a ng-click="listOfMutualSkuCount(1)">&lt;&lt; First</a>
+                          </li>
+                            <li id="previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="listOfMutualSkuCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="listOfMutualSkuCount(page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="listOfMutualSkuCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="listOfMutualSkuCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add New Customer Dialog -->
+<div ng-include src="'customer/addNewCustomerDialog.html?version=1.0.0'"></div>
+<!-- Add New Customer Shipping Addresss Dialog -->
+<div ng-include src="'customer/addNewShippingAddressDialog.html?version=1.0.0'"></div>
+<!-- Add New Customer Billing Addresss Dialog -->
+<div ng-include src="'customer/addNewBillingAddressDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>

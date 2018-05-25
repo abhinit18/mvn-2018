@@ -1,0 +1,451 @@
+<link href="settings/shippingpartners/shippingpartners.css" rel="stylesheet">
+<div class="container-fluid shipping-partner-container" ng-init="onLoad()">
+    <div class="row" style="margin-left: auto; margin-right: auto;">
+        <div class="col-md-12">
+            <p class="screen-heading">Shipping Partners</p>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left: auto; margin-right: auto;">
+        <div class="col-md-4 shipping-partner-list-heading">
+            Select the Shipping Partner
+        </div>
+        <div class="col-md-8 shipping-partner-name padding-left-35">
+            {{shippingPartnerName}}
+        </div>
+    </div>
+
+    <div class="row margin-top-10" style="margin-left: auto; margin-right: auto;">
+        <div class="col-md-4 light-border">
+            <!-- ng-repeat on row -->
+            <div ng-repeat="partnerData in shippingPartnersData" class="row shipping-partner-row"
+                 ng-class="{active: isActive(partnerData.tableShippingCarrierMetaDataName)}"
+                 ng-click="listOfSubShippingPartners(partnerData)">
+                <div>
+                    <img class="col-md-5 light-border shipping-partner-img"
+                         ng-src="{{partnerData.tableShippingCarrierMetaDataLogo}}">
+                </div>
+                <div class="col-md-7 shipping-partner-name padding-top-21 padding-left-25">
+                    {{partnerData.tableShippingCarrierMetaDataName}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8" ng-if="shippingPartnerName">
+            <div class="row main-list padding-left-35 padding-top-0 padding-right-0">
+                <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                    <thead class="main-list-header-sp">
+                    <tr>
+                        <td>Name of Shipping Partner</td>
+                        <td>Action</td>
+                    </tr>
+                    </thead>
+
+                    <!-- ng-repeat on tbody -->
+                    <tbody ng-repeat="subShippingPartnerData in subShippingPartnersData">
+                    <tr class="clickable-row-sp">
+                        <td>{{subShippingPartnerData.tableShippingCarrierConfigName}}</td>
+                        <td>
+                            <img ng-src="{{imgsrc1}}" title="Edit" width="20px" height="20px"
+                                 ng-click="editShippingCarrierConfig(subShippingPartnerData.idtableClientShippingCarrierConfigId)"
+                                 ng-init="imgsrc1='images/svg/edit.svg'"
+                                 ng-mouseover="imgsrc1='images/svg/edit_hover.svg'"
+                                 ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row padding-left-35">
+                <div class="col-md-12">
+                    <div class="row warehouses-search">
+                        <img width="22px" height="22px" src="images/svg/blue_add.svg"/>
+                        <span class="add-new-sp-row" style="cursor: pointer" ng-click="openChannel()">&nbsp;&nbsp;Add New Shipping Partner</span>
+                        <img width="22px" height="22px" ng-show="addNewShippingPartnerClicked==false" class="pull-right"
+                             src="images/svg/expand_icon.svg" ng-click="toggleShippingPartnerRow();"/>
+                        <img width="22px" height="22px" ng-show="addNewShippingPartnerClicked==true" class="pull-right"
+                             src="images/svg/collaps_icon.svg" ng-click="toggleShippingPartnerRow();"/>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="addNewShippingPartnerClicked==true">
+                <div class="row padding-left-35 padding-top-25 padding-right-15 integration-row-heading">
+                    Configure {{shippingPartnerName}}
+                    <span ng-show="(subpartnerData.tableShippingCarrierMetaData.idtableShippingCarrierMetaDataId == 3 || subpartnerData.tableShippingCarrierMetaData.idtableShippingCarrierMetaDataId == 2 ) && shipPartnerMode=='edit'"
+                          class="pull-right add-new-sp-row" style="cursor: pointer" data-toggle="modal"
+                          data-target="#uploadRates">&nbsp;&nbsp;Upload Rates</span>
+                    <span ng-show="(subpartnerData.tableShippingCarrierMetaData.idtableShippingCarrierMetaDataId == 3 || subpartnerData.tableShippingCarrierMetaData.idtableShippingCarrierMetaDataId == 2) && shipPartnerMode=='edit'"
+                          class="pull-right add-new-sp-row" style="cursor: pointer" data-toggle="modal"
+                          data-target="#uploadAwb">&nbsp;&nbsp;Upload AWB</span>
+                    <hr/>
+                </div>
+
+                <div class="row padding-left-35">
+                    <div class="col-md-4 font margin-top-5">Shipping Partner Name</div>
+                    <div class="col-md-4">
+                        <!-- input -->
+                        <input type="text" ng-model="subpartnerData.tableShippingCarrierConfigName"
+                               placeholder="Configuration name"
+                               class="form-control darkgrey-bottom-border input-less-padding"
+                               ng-class="{submitted: isShippingName}"/>
+                    </div>
+                </div>
+                <div class="row padding-left-35 padding-top-25" ng-repeat="key in metapartnerData track by $index">
+                    <div class="col-md-4 font margin-top-5">{{key.tableShippingCarrierMetaDataField}}</div>
+                    <div class="col-md-4">
+                        <input type="text" ng-model="key.tableShippingCarrierConfigVal" placeholder="Type Here"
+                               class="form-control darkgrey-bottom-border input-less-padding"
+                               ng-class="{submitted: isMetaEntered[$index]}"/>
+                    </div>
+                </div>
+                <div class="row padding-left-35 padding-top-25">
+                    <div class="col-md-12" ng-show="partnerData.idtableShippingCarrierMetaDataId!=2">
+                        ** To authorize the Glaucus Integration with {{shippingPartnerName}} <br/> account please follow
+                        these <a style="cursor: pointer"
+                                 ng-click="openHelpModal(partnerData.idtableShippingCarrierMetaDataId)">steps</a>
+                    </div>
+                </div>
+                <div class="row padding-left-35">
+                    <hr/>
+                </div>
+
+                <div class="row page-actions-row">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <md-button class="cancel-btn" style="margin-right: 0px !important; left: 30px;"
+                                   ng-click="cancelData(partnerData)">
+                            Cancel
+                        </md-button>
+                        <md-button ng-show="shipPartnerMode=='add'"
+                                   ng-click="saveSubShippingPartner(subpartnerData,partnerData,metapartnerData)"
+                                   class="action-btn pull-right" style="margin-right: 0px !important;">
+                            Done
+                        </md-button>
+                        <md-button ng-show="shipPartnerMode=='edit'"
+                                   ng-click="editSubShippingPartner(subpartnerData,partnerData,metapartnerData)"
+                                   class="action-btn pull-right" style="margin-right: 0px !important;">
+                            Update
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 text-center row-margin-top-larger font" ng-if="!shippingPartnerName">Please select a
+            Shipping Partner
+        </div>
+    </div>
+</div>
+<!-- Add New AWB Type Dialog -->
+<div class="modal fade" data-backdrop="static" id="uploadAwb" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="cancelGeneric()" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="myModalLabel">Upload AWB</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                    <div class="col-md-6 light-grey-right-border">
+                        <div class="bulk-upload-sku-img" data-toggle="modal" data-target="#awbBulkUpload"
+                             data-dismiss="modal"></div>
+                        <br>
+                        <span class="bulk-upload-sku-text" data-toggle="modal" data-target="#awbBulkUpload"
+                              data-dismiss="modal">Upload File</span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{downloadAWBTemplateUrl}}" download>
+                            <div class="download-template-sku-img"></div>
+                        </a>
+                        <br>
+                        <span class="bulk-upload-sku-text">
+                      <a href="{{downloadAWBTemplateUrl}}" download>
+                          Download File Template
+                      </a>
+                  </span>
+                    </div>
+                </div>
+                <div class="row upload-file-dialog-row">
+                    <div style="text-align: center;">
+                        <a ng-click="closeBulkUploadDialogAwb()" style="color: #00ACE4; font-weight: 600;">Go to "Bulk
+                            upload reports" for more details.</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="cancel-btn" data-dismiss="modal" ng-click="cancelGeneric()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add New Rates Type Dialog -->
+<div class="modal fade" data-backdrop="static" id="uploadRates" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="cancelGeneric()" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="myModalLabel">Upload Rates</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                    <div class="col-md-6 light-grey-right-border">
+                        <div class="bulk-upload-sku-img" data-toggle="modal" data-target="#ratesBulkUpload"
+                             data-dismiss="modal"></div>
+                        <br>
+                        <span class="bulk-upload-sku-text" data-toggle="modal" data-target="#ratesBulkUpload"
+                              data-dismiss="modal">Upload File</span>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{{downloadRatesTemplateUrl}}" download>
+                            <div class="download-template-sku-img"></div>
+                        </a>
+                        <br>
+                        <span class="bulk-upload-sku-text">
+                      <a href="{{downloadRatesTemplateUrl}}" download>
+                          Download File Template
+                      </a>
+                  </span>
+                    </div>
+                </div>
+                <div class="row upload-file-dialog-row">
+                    <div style="text-align: center;">
+                        <a ng-click="closeBulkUploadDialogRates()" style="color: #00ACE4; font-weight: 600;">Go to "Bulk
+                            upload reports" for more details.</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="cancel-btn" data-dismiss="modal" ng-click="cancelGeneric()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload AWB File Dialog -->
+<div class="modal fade" data-backdrop="static" id="awbBulkUpload" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog modalDialogProp modal-lg">
+        <div class="modal-content">
+            <div class="modal-header modal-dialog-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">Upload File</h4>
+            </div>
+            <div class="container"></div>
+            <div class="modal-body">
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col font">Select a File</div>
+                    <div class="col-md-8">
+                        <div ngf-drop ngf-select class="drop-box cursorPointer" ng-model="bulkOrderAwbUploadfile"
+                             ngf-drag-over-class="'dragover'" accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                            <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag
+                            file to upload or click to select
+                        </div>
+                        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+
+                    </div>
+                </div>
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col"></div>
+                    <div class="col-md-8 font">File:&nbsp;&nbsp;{{bulkOrderAwbUploadfile.name}}</div>
+                </div>
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col"></div>
+                    <div class="col-md-8">
+                        <b class="fileFormat">* File Format should be .xls,.xlsx</b>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button type="button" class="cancel-btn" ng-click="bulkOrderAwbUploadfile=null;" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="button" class="action-btn"
+                        ng-click="uploadBulkAwbOrderFile(subpartnerData.idtableClientShippingCarrierConfigId,bulkOrderAwbUploadfile);bulkOrderAwbUploadfile=null;"
+                        data-dismiss="modal">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Rates File Dialog -->
+<div class="modal fade" data-backdrop="static" id="ratesBulkUpload" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog modalDialogProp modal-lg">
+        <div class="modal-content">
+            <div class="modal-header modal-dialog-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">Upload File</h4>
+            </div>
+            <div class="container"></div>
+            <div class="modal-body">
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col font">Select a File</div>
+                    <div class="col-md-8">
+                        <div ngf-drop ngf-select class="drop-box cursorPointer" ng-model="bulkOrderRatesUploadfile"
+                             ngf-drag-over-class="'dragover'" accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                            <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag
+                            file to upload or click to select
+                        </div>
+                        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+
+                    </div>
+                </div>
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col"></div>
+                    <div class="col-md-8 font">File:&nbsp;&nbsp;{{bulkOrderRatesUploadfile.name}}</div>
+                </div>
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col"></div>
+                    <div class="col-md-8">
+                        <b class="fileFormat">* File Format should be .xls,.xlsx</b>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button type="button" class="cancel-btn" ng-click="bulkOrderRatesUploadfile=null;" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="button" class="action-btn"
+                        ng-click="uploadBulkRatesOrderFile(subpartnerData.idtableClientShippingCarrierConfigId,bulkOrderRatesUploadfile);bulkOrderRatesUploadfile=null;"
+                        data-dismiss="modal">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" id="helpFedexModal" role="dialog" aria-labelledby="helpSaleChannelModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="clearHelpDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="uploadAppDocLabel">Fedex Integration</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row rowSale-margin-top-large text-center" style="margin-left: 1%">
+                        <div class="fedex-img"></div>
+                    </div>
+                    <div style="margin-left:5px;">
+                        <b>Do not have FeEx account number</b>.You already need to have a account number from FedEx.
+                        <br>
+                        Contact to FedEx support team through following link.
+                        <br>
+                        <a>http://www.fedex.com/us/customersupport/?cc=us</a>
+                    </div>
+                    <br>
+                    <ol class="fedex-instructions">
+                        <li>Go to https://www.fedex.com/wpor/web/jsp/commonTC.jsp.</li>
+                        <li>Login.</li>
+                        <li>Do you intend to resell your software? Select "No"</li>
+                        <li>Please check the box next to each type of FedEx web services you intend to use in your
+                            integration solution.
+                            Click on "FedEx Web Services for Shipping (includes Rate, Track, etc.)" check box only.
+                        </li>
+                        <li>Please indicate whether you are developing your FedEx integration solution as a Corporate
+                            Developer or as a Consultant. Choose "Corporate Developer".
+                        </li>
+                        <li>Click Next and then Click "I Accept" to accept the license agreement.</li>
+                        <li>Click Next and then add contact information.</li>
+                        <li>Click Next and do not click on check box and again click "Next".</li>
+                        <li>Copy the "Authentication Key" and "Meter Number" use them for filling out current
+                            information along with "Account Number"
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="cancel-btn" ng-click="clearHelpDialog()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" id="helpecomXpressModal" role="dialog" aria-labelledby="helpSaleChannelModal"
+     aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="clearHelpDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="uploadAppDocLabel">EcomExpress Integration</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row rowSale-margin-top-large text-center" style="margin-left: 1%">
+                        <div class="ecomxpress-img"></div>
+                    </div>
+                    <div style="margin-left:5px;">Follow the steps given below to get credential for EcomExpress:</div>
+                    <ol class="fedex-instructions">
+                        <li>Click here (https://www.ecomexpress.in/costu-enquiry.html) to log on to EcomExpress
+                            website.
+                        </li>
+                        <li>You can drop a mail on the given email ID to reach them.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="cancel-btn" ng-click="clearHelpDialog()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" id="helpxpressBeesModal" role="dialog" aria-labelledby="helpxpressBeesModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="clearHelpDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="uploadAppDocLabel">XpressBees Integration</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row rowSale-margin-top-large text-center" style="margin-left: 1%">
+                        <div class="xpressbees-img"></div>
+                    </div>
+                    <div style="margin-left:5px;">Follow the steps given below to get credential for XpressBees:</div>
+                    <ol class="fedex-instructions">
+                        <li>Click here (http://www.xpressbees.com/BusinessEnquiry.aspx) to log on to XpressBees
+                            website.
+                        </li>
+                        <li>Fill up the form given on the website and click submit. Please provide correct contact
+                            information.
+                        </li>
+                        <li>You will be called/emailed by XpressBees business representative.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="cancel-btn" ng-click="clearHelpDialog()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+

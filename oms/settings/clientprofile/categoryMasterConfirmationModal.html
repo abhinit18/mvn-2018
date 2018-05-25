@@ -1,0 +1,33 @@
+<div class="modal fade" id="categoryMasterConfirmationModal" role="dialog" aria-labelledby="categoryMasterConfirmationModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" >
+        <form name="categoryMasterConfirmationForm" accessible-form novalidate ng-submit="categoryMasterConfirmationForm.$valid && updateCategoryMaster(categoryMasterConfirmationForm)">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                    <button type="button" class="close" ng-click="cancelCategoryMasterModal(categoryMasterConfirmationForm)">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only" >Close</span>
+                    </button>
+                    <p class="dialog-heading-p" ng-if="categoryMaster.warning == false">Confirmation</p>
+                    <p class="dialog-heading-p" ng-if="categoryMaster.warning == true">Warning</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top" ng-if="categoryMaster.warning == true">
+                            1) Category for any existing SKUs with Amazon categories will be updated to 'Undefined'.</br>
+                            2) Amazon Product can not be pull from Amazon. </br>Do you want to continue?
+                        </div>
+                        <div class="row row-margin-top" ng-if="categoryMaster.warning == false">
+                            Do you want to continue?
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button type="button" class="cancel-btn" ng-click="cancelCategoryMasterModal(categoryMasterConfirmationForm)">Cancel</button>
+                    <button type="submit" class="action-btn">Continue
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

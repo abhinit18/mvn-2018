@@ -1,0 +1,283 @@
+<!--<script type="text/ng-template" id="dialog334.tmpl.html">-->
+    <!--<md-dialog aria-label="Deactivate SKU" style="width: 600px;" ng-cloak>-->
+        <!--<form>-->
+            <!--<md-toolbar style="background-color: #F2F7F8;">-->
+                <!--<div class="md-toolbar-tools">-->
+                    <!--<p class="dialog-heading-p">Activate SKU</p>-->
+                    <!--<span flex></span>-->
+                    <!--<md-button class="md-icon-button" ng-click="cancelSkuData()">-->
+                        <!--<md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>-->
+                    <!--</md-button>-->
+                <!--</div>-->
+            <!--</md-toolbar>-->
+
+            <!--<md-dialog-content>-->
+                <!--<div class="md-dialog-content">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-md-12 margin-top-5 text-center">-->
+                            <!--<span class="semi-bold-text">Are you sure you want to activate this SKU?</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</md-dialog-content>-->
+            <!--<md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">-->
+                <!--<span flex></span>-->
+                <!--<button class="cancel-btn" ng-click="cancelSkuData()">-->
+                    <!--No-->
+                <!--</button>-->
+                <!--<button class="action-btn" ng-click="activateSkuApi(skuId, skuData, type)">-->
+                    <!--Yes-->
+                <!--</button>-->
+            <!--</md-dialog-actions>-->
+        <!--</form>-->
+    <!--</md-dialog>-->
+<!--</script>-->
+
+<div class="modal fade" data-backdrop="static" id="activateSKUDialog" role="dialog" aria-labelledby="showskuinventory" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="skuAcCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelSkuData()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Activate SKU</p>
+
+            </div>
+
+
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;margin-top:15px;"><div class="row">
+                <div class="col-md-12 margin-top-5 text-center">
+                    <span class="semi-bold-text">Are you sure you want to activate this SKU?</span>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="skuAcCancel2" class="cancel-btn" ng-click="cancelSkuData()">
+                    No
+                </button>
+                <button id="skuAcSubmit" class="action-btn" ng-click="activateSkuApi(skuId, skuData, type)">
+                    Yes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--============================================================== Sku mapping =====================================-->
+
+
+<!--<script type="text/ng-template" id="dialog339.tmpl.html">-->
+    <!--<md-dialog aria-label="Deactivate SKU" style="width: 600px;" ng-cloak>-->
+        <!--<form>-->
+            <!--<md-toolbar style="background-color: #F2F7F8;">-->
+                <!--<div class="md-toolbar-tools">-->
+                    <!--<p class="dialog-heading-p">SKU Mapping</p>-->
+                    <!--<span flex></span>-->
+                    <!--<md-button class="md-icon-button" ng-click="cancelSkuData()">-->
+                        <!--<md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>-->
+                    <!--</md-button>-->
+                <!--</div>-->
+            <!--</md-toolbar>-->
+
+            <!--<md-dialog-content>-->
+                <!--<div class="md-dialog-content">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-md-12 margin-top-5">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">-->
+                                    <!--<h5>SKU ID</h5>-->
+                                <!--</div>-->
+                                <!--<div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">-->
+                                    <!--<h5>{{SkuDetailes.clientSkuCode}}</h5>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">-->
+                                    <!--<h5>SKU Name</h5>-->
+                                <!--</div>-->
+                                <!--<div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">-->
+                                    <!--<h5 style="color:orangered;">{{SkuDetailes.SkuName}}</h5>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<hr>-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">-->
+                                    <!--<h4 class="text-center">Channel Map</h4>-->
+                                    <!--<table id="productTable"-->
+                                           <!--class="table boldtable table-responsive table-bordered table-hover">-->
+                                        <!--<thead class="data-grid-header">-->
+                                        <!--<tr>-->
+                                            <!--<th style="width:10% !important;">&nbsp;&nbsp;Channel</th>-->
+                                            <!--<th style="width:7.5%;">Channel Id</th>-->
+                                        <!--</tr>-->
+                                        <!--</thead>-->
+                                        <!--<tbody class="data-grid-data" ng-repeat="MapData in SkuMapDataTableChannel">-->
+                                        <!--<tr>-->
+                                            <!--<td>-->
+                                                <!--<span style="color:orangered">{{MapData.salesChannelName}}</span>-->
+                                            <!--</td>-->
+                                            <!--<td style="text-align: center;">-->
+                                                <!--<span ng-if="MapData.skuCode != null">-->
+                                                    <!--{{MapData.skuCode}}-->
+                                                <!--</span>-->
+                                                <!--<span ng-if="MapData.skuCode == null">-->
+                                                    <!--N/A-->
+                                                <!--</span>-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
+                                        <!--</tbody>-->
+                                    <!--</table>-->
+                                <!--</div>-->
+                                <!--<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">-->
+                                    <!--<h4 class="text-center">Vendor Map</h4>-->
+                                    <!--<table id="productTable"-->
+                                           <!--class="table boldtable table-responsive table-bordered table-hover">-->
+                                        <!--<thead class="data-grid-header">-->
+                                        <!--<tr>-->
+                                            <!--<th style="width:10% !important;">&nbsp;&nbsp;Vendor</th>-->
+                                            <!--<th style="width:7.5%;">Vendor Code</th>-->
+                                        <!--</tr>-->
+                                        <!--</thead>-->
+                                        <!--<tbody class="data-grid-data" ng-repeat="MapVendorData in SkuMapDataTableVendor">-->
+                                        <!--<tr>-->
+                                            <!--<td>-->
+                                                <!--<span style="color:orangered">{{MapVendorData.vendorName}}</span>-->
+                                            <!--</td>-->
+                                            <!--<td style="text-align: center;">-->
+                                                <!--<span ng-if="MapVendorData.skuCode != null">-->
+                                                    <!--{{MapVendorData.skuCode}}-->
+                                                <!--</span>-->
+                                                <!--<span ng-if="MapVendorData.skuCode == null">-->
+                                                    <!--N/A-->
+                                                <!--</span>-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
+                                        <!--</tbody>-->
+                                    <!--</table>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</md-dialog-content>-->
+            <!--<md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">-->
+                <!--<span flex></span>-->
+                <!--&lt;!&ndash;<button class="cancel-btn" ng-click="cancelSkuData()">&ndash;&gt;-->
+                    <!--&lt;!&ndash;Cancel&ndash;&gt;-->
+                <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                <!--<button class="action-btn" ng-click="cancelSkuData()">-->
+                    <!--Ok-->
+                <!--</button>-->
+            <!--</md-dialog-actions>-->
+        <!--</form>-->
+    <!--</md-dialog>-->
+<!--</script>-->
+
+<div class="modal fade" data-backdrop="static" id="viewSKUMapDialog" role="dialog" aria-labelledby="showskuinventory" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button type="button" class="close" data-dismiss="modal" ng-click="cancelSkuData()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">SKU Mapping</p>
+
+            </div>
+
+
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;margin-top:15px;">
+
+                <div class="row">
+                    <div class="col-md-12 margin-top-5">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <h5>SKU ID</h5>
+                            </div>
+                            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                                <h5>{{SkuDetailes.clientSkuCode}}</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <h5>SKU Name</h5>
+                            </div>
+                            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                                <h5 style="color:orangered;">{{SkuDetailes.SkuName}}</h5>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <h4 class="text-center">Channel Map</h4>
+                                <table id="productTable"
+                                       class="table boldtable table-responsive table-bordered table-hover">
+                                    <thead class="data-grid-header">
+                                    <tr>
+                                        <th style="width:10% !important;">&nbsp;&nbsp;Channel</th>
+                                        <th style="width:7.5%;">Channel Id</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="data-grid-data" ng-repeat="MapData in SkuMapDataTableChannel">
+                                    <tr>
+                                        <td>
+                                            <span style="color:orangered">{{MapData.salesChannelName}}</span>
+                                        </td>
+                                        <td style="text-align: center;">
+                                                <span ng-if="MapData.skuCode != null">
+                                                    {{MapData.skuCode}}
+                                                </span>
+                                            <span ng-if="MapData.skuCode == null">
+                                                    N/A
+                                                </span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <h4 class="text-center">Vendor Map</h4>
+                                <table id="productTable"
+                                       class="table boldtable table-responsive table-bordered table-hover">
+                                    <thead class="data-grid-header">
+                                    <tr>
+                                        <th style="width:10% !important;">&nbsp;&nbsp;Vendor</th>
+                                        <th style="width:7.5%;">Vendor Code</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="data-grid-data" ng-repeat="MapVendorData in SkuMapDataTableVendor">
+                                    <tr>
+                                        <td>
+                                            <span style="color:orangered">{{MapVendorData.vendorName}}</span>
+                                        </td>
+                                        <td style="text-align: center;">
+                                                <span ng-if="MapVendorData.skuCode != null">
+                                                    {{MapVendorData.skuCode}}
+                                                </span>
+                                            <span ng-if="MapVendorData.skuCode == null">
+                                                    N/A
+                                                </span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button class="action-btn" ng-click="cancelSkuData()">
+                    Ok
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

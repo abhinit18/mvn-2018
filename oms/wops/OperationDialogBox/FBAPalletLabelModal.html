@@ -1,0 +1,28 @@
+<div class="modal fade" id="fbaPalletLabelModalDialog" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width: 900px">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="FBAPLCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelFbaPalletLabelModal()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">In Transit</p>
+            </div>
+            <div class="modal-body" style="max-height: auto!important;" >
+                <div class="col-md-5">Enter Pallet Quantity</div>
+                <input id="FBAPLQty" type="text" class="col-md-5 main-bottom-border" placeholder="Pallet Quantity" trim-space ng-model="fbaorder.palletquantity" style="font-size:14px;margin-left:10px;width:170px;">
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="FBAPLCancel2" class="cancel-btn" ng-click="cancelFbaPalletLabelModal()">
+                    Cancel
+                </button>
+                <button id="FBAPLPrint" class="action-btn" ng-click="printPalletLabel(fbaorder.palletquantity)">
+                    Print Pallet Label
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

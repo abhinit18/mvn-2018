@@ -1,0 +1,87 @@
+<div class="modal fade" id="addupdategstmodal" role="dialog" aria-labelledby="addupdategst" aria-hidden="true">
+    <div class="modal-dialog" >
+        <form name="addupdategstform" accessible-form novalidate ng-submit="addupdategstform.$valid && access.editAccess && addgstin(addupdategstform);">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                    <button id="clientprofileAddGSTModalCancelButton1" type="button" class="close" ng-click="canceladdupdategstmodal(addupdategstform)">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only" >Close</span>
+                    </button>
+                    <p class="dialog-heading-p" id="editremarks1" ng-if="genericData.gstmode == 'edit'">Edit GSTIN</p>
+                    <p class="dialog-heading-p" id="addremarks1" ng-if="genericData.gstmode == 'add'">Add GSTIN</p>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top">
+
+                            <div class="row padding-top-15 col-md-12">
+                                <div class="col-md-4 form-row-height">
+                                    <span class="form-label-height semi-bold-text">State <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-8 form-row-height" ng-if="genericData.gstmode == 'add'">
+                                    <select ng-change="onStateChanged(option)"
+                                            ng-model="vatToBeEdited.tableState"
+                                            class="form-control"
+                                            name="state"
+                                            required
+                                            id="clientprofileGSTStateSelect"
+                                            ng-options="option as option.tableStateLongName for option in statesArray track by option.idtableStateId">
+                                        <option value="">Select State</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-8 form-row-height" ng-if="genericData.gstmode == 'edit'">
+                                    <h4 id="stateofvat" style="padding-left:15px;padding-right:15px;color:#F0592B;">{{vatToBeEdited.tableState.tableStateLongName}}</h4>
+                                </div>
+                                <div ng-if="addupdategstform.$submitted && addupdategstform.state.$error.required" class="col-md-offset-4 col-md-8">
+                                        <span class="error-message">
+                                            Please select a state
+                                        </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15 col-md-12">
+                                <div class="col-md-4 form-row-height">
+                                    <span class="form-label-height semi-bold-text">GSTIN <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-8 form-row-height">
+                                    <input type="text"
+                                           name="gstin"
+                                           alphanum
+                                           required
+                                           gstinvalidator="{{vatToBeEdited.tableState}}"
+                                           ng-pattern="/^[0-3][0-9][A-Z]{5}[0-9]{4}[A-Z][0-9]Z[A-Z0-9]/"
+                                           maxlength="15"
+                                           id="clientprofileGSTIN"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"  placeholder="GSTIN"
+                                           ng-model="vatToBeEdited.tableClientStateWiseVatNo">
+                                </div>
+                                <div class="col-md-offset-4 col-md-8">
+                                    <span ng-if="addupdategstform.$submitted && addupdategstform.gstin.$error.required"  class="error-message">
+                                        Please enter a GSTIN.
+                                    </span>
+                                    <span ng-if="addupdategstform.$submitted && addupdategstform.gstin.$error.pattern"  class="error-message">
+                                        Please enter a valid GSTIN.
+                                    </span>
+                                    <span ng-if="addupdategstform.$submitted && addupdategstform.gstin.$error.gstin"  class="error-message">
+                                        State code provided in GSTIN does not match the state code of selected state.
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid" ng-if="access.editAccess">
+
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <input id="clientprofileAddGSTModalCancelButton2" type="button" class="cancel-btn"
+                           ng-click="canceladdupdategstmodal(addupdategstform);" value="Cancel"/>
+                    <input id="clientprofileAddGSTModalSubmitButton1" type="submit" class="action-btn" ng-if="genericData.gstmode == 'edit'" value="Update"/>
+                    <input id="clientprofileAddGSTModalSubmitButton2" type="submit" class="action-btn" ng-if="genericData.gstmode == 'add'" value="Add"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

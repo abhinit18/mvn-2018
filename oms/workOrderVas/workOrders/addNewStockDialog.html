@@ -1,0 +1,102 @@
+<script type="text/ng-template" id="dialog7.tmpl.html" ng-controller="workOrderVasController">
+    <md-dialog aria-label="Add New Stock Audit" style="width: 800px;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p ng-show="dialogBoxStock=='add'" class="dialog-heading-p">Add New Stock Audit</p>
+                    <p ng-show="dialogBoxStock=='edit'" class="dialog-heading-p">Update Stock Audit</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelInventory()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Select WareHouse</span>
+                        </div>
+                        <div class="col-md-6">
+                            <select ng-model="stockData.tableWarehouseDetails" class="form-control" ng-options="option as option.tableWarehouseDetailsShortname for option in wareHousesData">
+                              <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Add Product</span>
+                        </div>
+                        <div class="col-md-6">
+                                <angucomplete-alt id="products" placeholder="Search product" pause="400" selected-object="stockproductObj" remote-url="{{baseSkuUrl}}"
+                                                  title-field="tableSkuClientSkuCode"
+                                                  description-field="tableSkuName"
+                                                  image-field="tableSkuImageUrl"
+                                input-class="form-control darkgrey-bottom-border" initial-value="initialSelected"></angucomplete-alt>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn small-actn-btn" ng-click="addProduct(stockproductObj)">Add to List</button>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-10">
+                            <span class="semi-bold-text">List of Selected Products</span>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top-small">
+                        <div class="col-md-10">
+                            <table class="table boldtable table-responsive table-bordered table-hover" style="width:65%;">
+                                <thead class="data-grid-header">
+                                    <tr>
+                                        <th>
+                                            <span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;Product Name
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="data-grid-data">
+                                    <tr ng-repeat="product in products">
+                                        <td>{{product.tableSku.tableSkuName}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Start Date</span>
+                        </div>
+                        <div class="col-md-4">
+                            <md-datepicker timezoned-date ng-model="stockData.tableWorkOrderScheduledDatetime" md-min-date="startminDate" md-max-date="startmaxDate" ng-change="sendStartDate(stockData.tableWorkOrderScheduledDatetime)" md-placeholder="Enter date"></md-datepicker>
+                        </div>
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">End Date</span>
+                        </div>
+                        <div class="col-md-4">
+                            <md-datepicker timezoned-date ng-model="stockData.tableWorkOrderScheduledEndDatetime" md-min-date="endminDate" ng-change="sendEndDate(stockData.tableWorkOrderScheduledEndDatetime)" md-placeholder="Enter date"></md-datepicker>
+                        </div>
+                    </div>
+
+                </div>
+            </md-dialog-content>
+            <!-- {{kitData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <md-button class="cancel-btn" ng-click="cancelInventory()">
+                    Cancel
+                </md-button>
+                <md-button ng-show="dialogBoxStock=='add'" class="action-btn" ng-click="addStockData(stockData)">
+                    Add
+                </md-button>
+                <md-button ng-show="dialogBoxStock=='edit'" class="action-btn" ng-click="updateSingleKit(stockData,stockData.idtableWorkOrderId,'stock')">
+                    Update
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

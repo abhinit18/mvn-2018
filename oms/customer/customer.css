@@ -1,0 +1,301 @@
+/* Customer Main Page Style */
+
+.customer-heading {
+    font-size: 22px;
+    padding: 25px 0px 20px 0px;
+    font-weight: 600;
+    color: #30373B;
+}
+
+.customer-subheading {
+    font-size: 16px;
+    font-weight: 600;
+    color: #30373B;
+}
+
+.customer-search-row {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 50px;
+}
+
+.customer-subsearchcustomer {
+    font-size: 14px;
+    font-weight: 600;
+    color: #30373B;
+}
+
+.customer-subsearchregion {
+    font-size: 14px;
+    font-weight: 600;
+    color: #30373B;
+}
+
+.customer-search {
+    background-color: #F2F7F8;
+    padding: 16px;
+}
+
+.customersearch-dropdown {
+    border: none;
+    border-bottom: 1px solid #B5B5B6;
+    background-color: inherit;
+    font-size: 14px;
+    width: 180px;
+    margin-top: -10px;
+}
+
+.customers-listheading {
+    font-size: 18px;
+    padding: 10px 0px 0px 0px;
+    font-weight: 600;
+    color: #30373B;
+}
+
+.main-list-header-cust {
+    background: #30373B;
+    color: #f5fafd !important;
+}
+
+.main-list-header-cust a, .main-list-header-cust a:hover, .main-list-header-cust a:focus {
+    color: #f5fafd !important;
+    text-decoration: none;
+}
+
+.main-list-header-cust>tr {
+    border: 1px solid #C0C0C0;
+    height: 45px;
+}
+
+.main-list-header-cust>tr>td {
+    padding-top: 10px !important;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.main-list-header-cust>tr>td:first-child {
+    width: 10%;
+    text-align: center;
+}
+
+.main-list-header-cust>tr>td:nth-child(2) {
+    width: 13%;
+}
+
+.main-list-header-cust>tr>td:nth-child(3) {
+    width: 13%;
+}
+
+.main-list-header-cust>tr>td:nth-child(4) {
+    width: 12%;
+}
+
+.main-list-header-cust>tr>td:nth-child(5) {
+    width: 13%;
+}
+
+.main-list-header-cust>tr>td:nth-child(6) {
+    width: 14%;
+}
+
+.main-list-header-cust>tr>td:nth-child(7) {
+    width: 10%;
+    text-align: right;
+}
+
+.main-list-header-cust>tr>td:nth-child(8) {
+    width: 10%;
+    text-align: center;
+}
+
+.main-list-header-cust>tr>td:nth-child(9) {
+    width: 5%;
+}
+
+.clickable-row-cust {
+    height: 50px;
+    border-bottom: 1px solid #C0C0C0;
+}
+
+.clickable-row-cust:hover {
+    background: #D3DDDF;
+}
+
+.clickable-row-cust.red>td {
+    color: #EA212B !important;
+}
+
+.clickable-row-cust>td {
+    padding-top: 14px !important;
+    font-size: 14px;
+    color: #30373B;
+}
+.clickable-row-cust>td:nth-child(2) {
+    font-weight: 600;
+}
+
+.clickable-row-cust.red>td:nth-child(3)>a {
+    color: #EA212B !important;
+    font-size: 15px;
+    font-weight: 800;
+    text-transform: none;
+    text-decoration: none;
+}
+
+.clickable-row-cust:not(.red)>td:nth-child(3)>a {
+    font-size: 14px;
+    color: #F0592B !important;
+    font-weight: 800;
+}
+.clickable-row-cust>td:nth-child(8)>img.disabled {
+    cursor: not-allowed !important;
+}
+.clickable-row-cust>td a{
+    text-decoration: none;
+    text-transform: none;
+}
+.customer-acc-data-row {
+    border-right: 1px solid #C0C0C0;
+    border-left: 1px solid #C0C0C0;
+    background-color: #FEFFFF !important;
+}
+
+.customer-acc-data-row>td>.row:first-child {
+    font-size: 16px;
+    font-weight: 600;
+    padding-top: 10px;
+}
+
+.customer-acc-data-row>td>.row:first-child>.col-xs-6 {
+    padding-bottom: 10px;
+}
+
+.customer-acc-data-row>td>.row>.col-xs-6:first-child, .edit-cust-row>.col-xs-12 {
+    padding-left: 40px !important;
+}
+
+.customer-acc-data-row>td>.row>.col-xs-6:nth-child(2) {
+    padding-left: 30px !important;
+    padding-right: 25px !important;
+}
+
+.customer-acc-data-row>td>.row:first-child>.col-xs-6:first-child, .customer-acc-data-row>td>.row:nth-child(2)>.col-xs-6:first-child, .add-address-row>.col-xs-6:first-child {
+    border-right: 1px solid #C0C0C0;
+}
+
+.customer-acc-data-row span {
+    font-size: 12px;
+    color: #00ACE4;
+    font-weight: 600;
+}
+
+.customer-acc-data-row hr {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.edit-cust-row {
+    padding-bottom: 20px;
+}
+
+.edit-cust-row>.col-xs-12>span {
+    font-size: 16px;
+}
+
+
+/* Customer Main Page Style Ends Here*/
+
+
+/* Customer Add Dialog Header CSS */
+
+.md-dialog-content .customerfieldskey {
+    width: 25%;
+}
+
+.md-dialog-content .customerfieldsvalue {
+    border: none;
+    border-bottom: 1px solid #B5B5B6;
+    background-color: inherit;
+    font-size: 14px;
+    width: 40%;
+    padding-top: 0px;
+}
+
+.md-dialog-content .customer-code-edit-mode {
+    border: none;
+    background-color: inherit;
+    font-size: 14px;
+    width: 40%;
+    padding-top: 0px;
+    color: #F0592B;
+    font-weight: bolder;
+}
+
+.md-dialog-content .selectClass {
+    width: 40%;
+}
+
+
+/* Shipping Address Styles */
+
+.md-dialog-content .subHeadaddressValues {
+    border: none;
+    border-bottom: 1px solid #B5B5B6;
+    background-color: inherit;
+    font-size: 14px;
+    width: 40%;
+    padding-top: 0px;
+}
+
+
+html {
+    overflow-y: hidden;
+}
+
+.customer-search-row .customer-inputtext {
+    border: none;
+    border-bottom: 1px solid #B5B5B6;
+    background-color: inherit;
+    font-size: 14px;
+    margin-top: -10px;
+}
+
+.upload-file-dialog-row {
+    margin-left: 3%;
+    margin-right: 3%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.addrdemo-map {
+    display: block;
+    height: 290px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/*.customerTabHeight{*/
+    /*height:400px;*/
+/*}*/
+.data-grid-header {
+    background-color: #30373B;
+    color: #fff;
+}
+
+.content-fit{
+    width:fit-content;
+}
+
+/*overwrighting deepti's css*/
+.col-md-2,.col-md-3{
+    padding-left:15px!important;
+}
+
+.vertical_line{
+    width: 2px;
+    height: 37px;
+    float: left;
+    background: #a1a1a1;
+    margin-left: -20px;
+}

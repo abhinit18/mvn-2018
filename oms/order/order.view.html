@@ -1,0 +1,1461 @@
+<link href="order/order.css" rel="stylesheet">
+<link href="customer/customer.css" rel="stylesheet">
+<div ng-init="onPageInitialize();"  ng-if="pagename" class="container-fluid">
+    <div class="row">
+        <div class="col-lg-10 col-md-10 col-xs-12">
+            <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;"><h4 class="screen-heading">Sale Order</h4></div>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-default addsharpbutton row-margin-top-medium pull-right "
+                    ng-click="newTab()">
+                <span class="fa fa-external-link-square"></span>
+                <span style="color: #fff !important; font-weight: 400 !important;">&nbsp;New Tab</span>
+            </button>
+        </div>
+    </div>
+    <div class="row orderscreen-channel row-margin-top-x-medium" style="padding-top: 20px !important;">
+        <div class="col-md-2" >
+            <span class="font">Search Customers</span>
+
+        </div>
+        <div class="col-md-2" >
+            <angucomplete-alt id="customersfilter" placeholder="Search customer" pause="400"
+                              selected-object="searchedCustomer" remote-url="{{baseCustomerUrl}}"
+                              title-field="tableCustomerFullName"
+                              code-field="tableCustomerClientCustomerCode"
+                              description-field="tableCustomerEmail"
+                              phone-field="tableCustomerPhone"
+                              input-class="main-bottom-border font input-less-padding"
+                              initial-value="selectedCustomer"></angucomplete-alt>
+        </div>
+        <div class="col-md-1">
+            <button id="SOCMore" type="button" title="Click to see all customers."  class="btn btn-sm truncate-text" ng-click="masterCustomerDialog($event, false);">. . .</button>
+        </div>
+
+        <div class="col-md-2">
+            <span class="font">Search SKU</span>
+
+        </div>
+        <div class="col-md-2" >
+            <angucomplete-alt id="productsfilter" placeholder="Search SKU" pause="400" selected-object="searchedProductForFilter"
+                              remote-url="{{baseSkuUrl}}"
+                              title-field="tableSkuClientSkuCode"
+                              description-field="tableSkuName"
+                              image-field="tableSkuImageUrl"
+                              input-class="main-bottom-border font input-less-padding"
+                              initial-value="selectedSku"></angucomplete-alt>
+        </div>
+        <div class="col-md-1">
+            <button id="SOSMore" type="button" title="Click to see all SKUs."  class="btn btn-sm truncate-text" ng-click="masterSkuDialog($event, false);">. . .</button>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-default addsharpbutton "
+                    ng-click="downloadInvoices()"><span class="fa fa-download"></span><span
+                    style="color: #fff !important; font-weight: 400 !important;">&nbsp;Invoices</span>
+            </button>
+        </div>
+
+        <div class="col-md-1">
+            <button id="SOExport" type="button" class="btn btn-default addsharpbutton "
+                    ng-click="exportOrderDataFile()"><span class="fa fa-download"></span><span
+                    style="color: #fff !important; font-weight: 400 !important;">&nbsp;Export</span>
+            </button>
+        </div>
+
+
+    </div>
+
+    <div class="row orderscreen-channel">
+        <div class="col-md-2" >
+            <span class="font">Order No.</span>
+        </div>
+        <div class="col-md-2" >
+            <input id="SONo" type="text" class="main-bottom-border font input-less-padding" ng-model="filter.orderid" placeholder="Order No" ng-keypress="$event.keyCode == 13 && searchSaleOrders()">
+        </div>
+        <div class="col-md-1" >
+            <span class="font">Ref No.</span>
+        </div>
+        <div class="col-md-2" >
+            <input id="SORef" type="text" class="main-bottom-border font input-less-padding" ng-model="filter.refid" ng-change="callDisabled();" placeholder="Ref No" ng-keypress="$event.keyCode == 13 && searchSaleOrders()">
+        </div>
+        <div class="col-md-2" >
+            <span class="font">Sales Channel</span>
+        </div>
+        <div class="col-md-2 select-style-small " >
+            <select id="SOChannel" ng-model="filter.saleChannel" name="filtersaleschannel"
+                    ng-options="option.tableSalesChannelValueInfoName for option in channelLists track by option.idtableSalesChannelValueInfoId"
+                    required>
+                <option value="">All</option>
+            </select>
+        </div>
+    </div>
+    <div class="row orderscreen-channel">
+        <div class="col-md-2 margin-top-10" >
+            <span class="font">Sales Channel Date</span>
+        </div>
+        <div class="col-md-3" >
+            <md-datepicker id="SOSCSDate"
+                           title="Sales channel date"
+                           timezoned-date ng-model="filter.start1Date" md-min-date="startminDate" md-max-date="startmaxDate"
+                           onkeydown="return false" ng-change="sendStartDate(filter.start1Date)" md-placeholder="Start Date"
+                           style="background-color: inherit;margin-top:3px;"></md-datepicker>
+            <button id="SOSCSDateClear" ng-if="filter.start1Date" title="Deselect Start Date" style="position:absolute;top:8px;" class="btn dateClear" ng-click="clearStartDate();">
+            </button>
+        </div>
+        <div class="col-md-3">
+            <md-datepicker id="SOSCEDate"
+                           title="Sales channel date"
+                           timezoned-date ng-model="filter.end1Date" md-min-date="endminDate" md-max-date="endmaxDate"
+                           onkeydown="return false" ng-change="sendEndDate(filter.end1Date)" md-placeholder="End Date"
+                           style="background-color: inherit;margin-top:3px;"></md-datepicker>
+            <button id="SOSCEDateClear" ng-if="filter.end1Date" title="Deselect End Date" style="position:absolute;top:8px;" class="btn dateClear" ng-click="clearEndDate()">
+            </button>
+        </div>
+        <div class="col-md-1">
+            <button id="SOSearch" type="button" class="btn btn-default mybut"
+                    ng-click="submitAction()"
+                    style="margin-left: 0px !important;height:33px;min-height:auto;">Search
+            </button>
+        </div>
+        <div class="col-md-1">
+            <button id="SOClear" title="Clear Applied Filters"  class="btn clearFilter"
+                    ng-click="clearAction()">
+            </button>
+
+        </div>
+        <!--<div class="col-md-1">-->
+        <!--<md-icon ng-click="newTab()" md-svg-src="images/svg/new_tab.svg"-->
+        <!--style="margin-left: 10px !important;"></md-icon>-->
+        <!--</div>-->
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12">
+            <p class="screen-heading"></p>
+        </div>
+    </div>
+    <div class="row row-margin-top-small">
+        <div class="col-md-11">
+            <ul class="nav navbar-nav screen-tabs">
+                <li title="{{'All '+ allCount}}">
+                    <button type="button" class="btn sharp font"
+                            ng-class="{'activeTab' : defaultTab == 'all'}"
+                            ng-click="listOfStatesCount('all',1)"><span>All</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{allCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'New '+ newCount}}">
+                    <button type="button" class="btn sharp font"
+                            ng-class="{'activeTab' : defaultTab == 'new'}"
+                            ng-click="listOfStatesCount('new',1)"><span>New</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{newCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'In Process '+ processCount}}">
+                    <button type="button" class="btn sharp font"
+                            ng-class="{'activeTab' : defaultTab == 'process'}"
+                            ng-click="listOfStatesCount('process',1)"><span>In Process</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{processCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'Shipped '+ shippingCount}}">
+                    <button type="button" class="btn sharp"
+                            ng-class="{'activeTab' : defaultTab == 'shipping'}"
+                            ng-click="listOfStatesCount('shipping',1)"><span>Shipped</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{shippingCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'Return '+ returnCount}}">
+                    <button type="button" class="btn sharp"
+                            ng-class="{'activeTab' : defaultTab == 'return'}"
+                            ng-click="listOfStatesCount('return',1)"><span>Return</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{returnCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'On Hold '+ holdCount}}">
+                    <button type="button" class="btn sharp"
+                            ng-class="{'activeTab' : defaultTab == 'hold'}"
+                            ng-click="listOfStatesCount('hold',1)"><span>On Hold</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{holdCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'Cancelled '+ cancelledCount}}">
+                    <button type="button" class="btn sharp"
+                            ng-class="{'activeTab' : defaultTab == 'cancelled'}"
+                            ng-click="listOfStatesCount('cancelled',1)"><span>Cancelled</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{cancelledCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'Delivered '+ deliveredCount}}">
+                    <button type="button" class="btn sharp"
+                            ng-class="{'activeTab' : defaultTab == 'delivered'}"
+                            ng-click="listOfStatesCount('delivered',1)"><span>Delivered</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{deliveredCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'Draft '+ draftCount}}">
+                    <button type="button" class="btn sharp"
+                            ng-class="{'activeTab' : defaultTab == 'draft'}"
+                            ng-click="listOfStatesCount('draft',1)"><span>Draft</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{draftCount}})</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-1 order-table-tab-bar" ng-if="access.createAccess">
+            <button id="SOAddNew" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px;"
+                    ng-click="showAddOrderModal($event)"><img src="images/svg/add.svg" style="height:20px;">
+                &nbsp;&nbsp;Add Order
+            </button>
+        </div>
+    </div>
+    <div class="row main-list">
+        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+            <thead class="main-list-header-order">
+            <!-- table header -->
+            <tr>
+                <th id="SONoH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tableSaleOrderSystemOrderNo',sortReverse,defaultTab)">
+                        Order No.&nbsp;
+                        <span ng-if="sortType == 'tableSaleOrderSystemOrderNo' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSaleOrderSystemOrderNo' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SORefH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tableSaleOrderClientOrderNo',sortReverse,defaultTab)">
+                        Ref. No.&nbsp;
+                        <span ng-if="sortType == 'tableSaleOrderClientOrderNo' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSaleOrderClientOrderNo' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SOCNameH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tableCustomer.tableCustomerFirstName',sortReverse,defaultTab)">
+                        Customer Name&nbsp;
+                        <span ng-if="sortType == 'tableCustomer.tableCustomerFirstName' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableCustomer.tableCustomerFirstName' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SOChannelH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tableSalesChannelValueInfo.tableSalesChannelValueInfoName',sortReverse,defaultTab)">
+                        Sales Channel&nbsp;
+                        <span ng-if="sortType == 'tableSalesChannelValueInfo.tableSalesChannelValueInfoName' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSalesChannelValueInfo.tableSalesChannelValueInfoName' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SOCDateH" class="text-left">
+                    <a href="" ng-click="tableSorting('tableSaleOrderScDateTime',sortReverse,defaultTab)">
+                        Channel Date&nbsp;
+                        <span ng-if="sortType == 'tableSaleOrderScDateTime' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSaleOrderScDateTime' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SOEDH" class="text-left">
+                    <a href="" ng-click="tableSorting('tableSaleOrderLatestShippngDate',sortReverse,defaultTab)">
+                        Exp. Dispatch&nbsp;
+                        <span ng-if="sortType == 'tableSaleOrderLatestShippngDate' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSaleOrderLatestShippngDate' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SOEDelH" class="text-left">
+                    <a href="" ng-click="tableSorting('tableSaleOrderLatestDeliveryDate',sortReverse,defaultTab)">
+                        Exp. Delivery&nbsp;
+                        <span ng-if="sortType == 'tableSaleOrderLatestDeliveryDate' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableSaleOrderLatestDeliveryDate' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SOQtyH" class="text-left">
+                    <a href="" ng-click="tableSorting('skuQuantity',sortReverse,defaultTab)">
+                        Quantity&nbsp;
+                        <span ng-if="sortType == 'skuQuantity' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'skuQuantity' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SOTotalH" class="text-left">
+                    <a href="" ng-click="tableSorting('skuValue',sortReverse,defaultTab)">
+                        Total Amount&nbsp;
+                        <span ng-if="sortType == 'skuValue' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'skuValue' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="SOActionH" class="text-left action-col"><a>Action</a></th>
+                <th id="SODropH" class="text-left"></th>
+            </tr>
+            </thead>
+            <tbody ng-if="showLoader">
+            <tr>
+                <td colspan="11" class="text-center">
+                    <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                </td>
+            </tr>
+            </tbody>
+            <tbody data-ng-repeat="orderData in orderLists" data-ng-switch on="dayDataCollapse[$index]">
+            <tr class="clickable-row-order">
+                <td id="SONo{{$index}}" align="left">{{orderData.tableSaleOrderSystemOrderNo}}</td>
+                <td id="SORef{{$index}}" class="short-sku-name" style="text-overflow: ellipsis; overflow: hidden;" align="left">{{orderData.tableSaleOrderClientOrderNo}}</td>
+                <td id="SOCName{{$index}}" align="left">{{orderData.tableCustomer.tableCustomerFullName}}</td>
+                <td id="SOChannel{{$index}}" align="left">{{orderData.tableSalesChannelValueInfo.tableSalesChannelValueInfoName}}</td>
+                <td id="SOCDate{{$index}}" align="left">
+                    {{orderData.tableSaleOrderScDateTime | utcToLocalOrHyphen}}
+                </td>
+                <td id="SOED{{$index}}" align="left">
+                    {{orderData.tableSaleOrderLatestShippngDate | utcToLocalOrHyphen}}
+                </td>
+                <td id="SOEDel{{$index}}" align="left">
+                    {{orderData.tableSaleOrderLatestDeliveryDate | utcToLocalOrHyphen}}
+                </td>
+                <td id="SOQty{{$index}}" align="left">{{ totalQuantity(orderData.tableSaleOrderSkuses) }}</td>
+                <td id="SOAction{{$index}}" align="left">{{ totalCostAmount(orderData.tableSaleOrderSkuses)  | priceOrHyphen}}</td>
+                <td id="SOTotal{{$index}}" align="left">
+                    <div class="tool-tip">
+                        <img src="images/svg/remarks.svg" style="height:20px; width: 20px;" ng-click="openEditRemarkModal(orderData,$index);"/>
+
+                        <span class="tool-tip-text">
+                                    <div class="popover fade left custom-pop-left in" role="tooltip" id="popover743808" style="width:400px; display: block;">
+                                        <div class="arrow pop-left" style="left: 50%;"></div>
+                                        <h3 class="popover-title">Remarks</h3>
+                                        <div class="popover-content" style="word-wrap: break-word;float:left;width:100%;height:auto;max-height:100px;overflow-x: hidden;overflow-y:auto;">
+
+                                            <h5>
+                                                <richtext class="text" body-text="orderData.tableSaleOrderRemarksFormatted">
+                                                </richtext>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </span>
+                    </div>
+                    <span ng-if="!hideeditbutton(orderData)">|</span>
+                    <img ng-src="{{imgsrc1}}" ng-attr-title="{{!access.editAccess || (orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1) ? 'You do not have permission' : 'Edit'}}" width="20px" height="20px"
+                         ng-if="!DeleteAndConfimData && !hideeditbutton(orderData)"
+                         ng-class="{'disableAccess': !access.editAccess || (orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1)}"
+                         ng-click="access.editAccess && (orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 || editOrder(orderData.idtableSaleOrderId,'edit', $event))"
+                         ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                         ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                    <img ng-src="{{imgsrc1}}" ng-attr-title="{{!access.editAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}" width="20px" height="20px"
+                         ng-if="DeleteAndConfimData"
+                         ng-class="{'disableAccess': !access.editAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                         ng-click="access.editAccess && (orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 || editOrder(orderData.idtableSaleOrderId,'EditDraft', $event))"
+                         ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="imgsrc1='images/svg/edit_hover.svg'"
+                         ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                    <span>|</span>
+                    <div class="tool-tip" ng-if="DeleteAndConfimData">
+                                    <span class="">
+                                          <span class="fa fa-trash fa-lg" title="Delete Draft" ng-click="openDeleteDraftDialog(orderData)"></span>
+                                    </span>
+                    </div>
+                    <img ng-src="{{imgsrc2}}" ng-attr-title="{{!access.createAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Copy'}}" width="20px" height="20px"
+                         ng-if="!DeleteAndConfimData"
+                         ng-class="{disableAccess: !access.createAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                         ng-click="access.createAccess && (orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 || copyOrder(orderData.idtableSaleOrderId, $event))"
+                         ng-init="imgsrc2='images/svg/copy_active.svg'"
+                         ng-mouseover="access.createAccess && (imgsrc2='images/svg/copy_hover.svg')"
+                         ng-mouseout="imgsrc2='images/svg/copy_active.svg'">
+                </td>
+                <td id="SODrop1{{$index}}" align="center" ng-if="dayDataCollapse == null || dayDataCollapse == undefined || dayDataCollapse == []"><img
+                        src="images/svg/expand_icon.svg" height="20"
+                        data-ng-click="selectTableRow($index, orderData.tableSaleOrderClientOrderNo);stateTrials(orderLists[$index].tableSaleOrderSkuses);"/>
+                </td>
+                <td id="SODrop2{{$index}}" align="left" data-ng-switch-when="false"
+                    data-ng-click="selectTableRow($index, orderData.tableSaleOrderClientOrderNo);stateTrials(orderLists[$index].tableSaleOrderSkuses);">
+                    <img src="images/svg/expand_icon.svg" height="20"/></td>
+                <td id="SODrop3{{$index}}" align="left" data-ng-switch-when="true"
+                    data-ng-click="closeTableRow($index);">
+                    <img src="images/svg/collaps_icon.svg" height="20"/></td>
+            </tr>
+            <tr data-ng-switch-when="true"
+                style="border: 1px solid #C0C0C0; background-color: #FEFFFF !important;">
+                <td colspan="11" style="padding:0px;">
+                    <button id="SOAllocateWhButton" class="btn btn-default mybut1" ng-if="access.editAccess && saleOrderIsAllocateWhButton(orderData.tableSaleOrderSkuses)" style="
+                float: right;margin-top:10px;" ng-click="allocateWhToSOSku(orderData.idtableSaleOrderId)">Allocate Wh
+                    </button>
+                    <button id="CancelOrdButton" class="btn btn-default mybut1" ng-if="access.editAccess && orderData.tableSaleOrderSkuses.length === skuWarehousesObjs.length && showCancelBtn(orderData.tableSaleOrderSkuses)" style="
+                float: right;margin-top:10px;" ng-click="cancelOrders(orderData)">Cancel
+                    </button>
+                </td>
+            </tr>
+            <tr data-ng-switch-when="true"
+                style="border: 1px solid #C0C0C0; background-color: #FEFFFF !important; padding-bottom: 20px !important;"
+                data-ng-repeat="tableSkuData in orderLists[$index].tableSaleOrderSkuses track by $index" ng-init="n = $index">
+
+                <td colspan="11">
+                    <div class="col-md-4 text-center" style="border-right: 1px solid #dedede;">
+                        <span ng-if="orderData.tableSaleOrderSystemOrderNo" style="display: block;padding:15px 0 15px 0;font-size: 14px;color: #F0592B;font-weight: bold ;">
+                              {{orderData.tableSaleOrderSystemOrderNo}} ({{$index + 1}} of {{orderData.tableSaleOrderSkuses.length}})
+                        </span>
+                        <div class="box-table">
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Seller SKU ID :
+                                </div>
+                                <div class="box box2 short-sku-name" style="max-width:200px">
+                                    {{tableSkuData.tableSku.tableSkuClientSkuCode}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    SKU Name :
+                                </div>
+                                <div class="box box2 short-sku-name" title="{{tableSkuData.tableSku.tableSkuDescription}}" style="max-width:200px">
+                                    {{tableSkuData.tableSku.tableSkuName}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Qty :
+                                </div>
+                                <div class="box box2">
+                                    {{tableSkuData.tableSaleOrderSkusSkuQuantity}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Cost Per SKU :
+                                </div>
+                                <div class="box box2">
+                                    <span ng-if="tableSkuData.tableSku.tableCountry.idtableCountryId == 1">Rs.</span> <span ng-if="tableSkuData.tableSku.tableCountry.idtableCountryId == 2">$</span> {{ tableSkuData.itemNetPrice | priceOrHyphen}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Service Cost :
+                                </div>
+                                <div class="box box2">
+                                    <span ng-if="tableSkuData.tableSku.tableCountry.idtableCountryId == 1">Rs.</span> <span ng-if="tableSkuData.tableSku.tableCountry.idtableCountryId == 2">$</span> {{ tableSkuData.serviceNetTotal | priceOrHyphen}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Total Cost :
+                                </div>
+                                <div class="box box2">
+                                    <span ng-if="tableSkuData.tableSku.tableCountry.idtableCountryId == 1">Rs.</span> <span ng-if="tableSkuData.tableSku.tableCountry.idtableCountryId == 2">$</span> {{ tableSkuData.netGrandTotal  | priceOrHyphen}}
+                                </div>
+                            </div>
+                            <div  ng-if="skuWarehouses.length > 0" class="boxes">
+                                <div class="box box1">
+                                    Allocated Warehouse :
+                                </div>
+                                <div class="box box2">
+                                    {{skuWarehouses[n]}}
+                                </div>
+                            </div>
+                            <div ng-if="access.editAccess && tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId!=6 && tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId!=16 && tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId!=17 && tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId!=18 && tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId!=19" class="boxes">
+                                <div class="box box1"></div>
+                                <!-- <div ng-if="defaultTab != 'cancelled'" class="box box2">
+                                    <button id="SOCancel{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" ng-click="cancelSaleOrderBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderSystemOrderNo);"
+                                            class="btn btn-default mybut1">
+                                        Cancel
+                                    </button>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <ul ng-if="trialsLength[$index]>= 4" class="progress-indicator nocenter stacked"
+                            style="list-style: none;">
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][1]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][2]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble1"><img src="images/svg/current_icon.svg"
+                                                                             style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;color:black">{{fullTrialsArray[$index][3]}}</label></span>
+                            </li>
+                        </ul>
+                        <ul ng-if="trialsLength[$index] == 1" class="progress-indicator nocenter stacked"
+                            style="list-style: none;">
+                            <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                        </ul>
+                        <ul ng-if="trialsLength[$index] == 2" class="progress-indicator nocenter stacked"
+                            style="list-style: none;">
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                            <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][1]}}</label></span>
+                            </li>
+                        </ul>
+                        <ul ng-if="trialsLength[$index] == 3" class="progress-indicator nocenter stacked"
+                            style="list-style: none; padding-top: 30px !important;">
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][1]}}</label></span>
+                            </li>
+                            <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][2]}}</label></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div ng-if="trialsLength[$index]==1" class="col-md-4">
+                        <!-- Hold WareHouse Not Allocated -->
+                        <div class="wrapper" ng-if="(fullIdArray[$index][0]==7 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                        <!-- Hold Fraud Validation Failed -->
+                        <div class="wrapper" ng-if="(fullIdArray[$index][0]==5 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                        <!-- Hold Stock Unavailable -->
+                        <div class="wrapper" ng-if="(fullIdArray[$index][0]==10 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+
+                        </div>
+                        <!-- Hold Packing Material Unavailable -->
+                        <div class="wrapper" ng-if="(fullIdArray[$index][0]==12 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+
+                        </div>
+                        <!-- Hold Awaiting Shipping Details -->
+                        <div class="wrapper" ng-if="fullIdArray[$index][0]==14" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                    <div ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId==1 && orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1"
+                                         style="padding-left: 0px; width: 80px; height: 29px; text-align: center; vertical-align: middle; background-color: transparent; border-style: groove;">
+                                        <a id="SOSelect1{{$index}}" style="color:#F0592B;" ng-click="redirectToFileUploadUrl()"
+                                           href="{{baseSchedulePickUpUrl}}/{{orderData.idtableSaleOrderId}}/{{tableSkuData.idtableSaleOrderSkusId}}"
+                                           download>
+                                            Select
+                                        </a>
+                                    </div>
+
+                                    <button id="SOSelect2{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId!=1"
+                                            ng-click="openShippingCarrierBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,tableSkuData,orderData.tableSaleOrderClientOrderNo,orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId)"
+                                            style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                        Select
+                                    </button>
+                                </span>
+                        </div>
+                        <!-- Hold ReturnWarehouseNotAllocated Details -->
+                        <div class="wrapper" ng-if="(fullIdArray[$index][0]==21 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                        <!-- Hold AwaitingReturnShippingDetails Details -->
+                        <div class="wrapper" ng-if="(fullIdArray[$index][0]==23 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)" style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                    </div>
+                    <div ng-if="trialsLength[$index]==2" class="col-md-4">
+
+                        <!-- Hold WareHouse Not Allocated -->
+                        <div class="orderJourneyWrapperTrialLength2" ng-if="(fullIdArray[$index][1]==7 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                        <!-- Hold Fraud Validation Failed -->
+                        <div class="orderJourneyWrapperTrialLength2" ng-if="(fullIdArray[$index][1]==5 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                        <!-- Hold Stock Unavailable -->
+                        <div class="orderJourneyWrapperTrialLength2" ng-if="(fullIdArray[$index][1]==10 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+
+                        </div>
+                        <!-- Hold Packing Material Unavailable -->
+                        <div class="orderJourneyWrapperTrialLength2" ng-if="(fullIdArray[$index][1]==12 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+
+                        </div>
+                        <!-- Hold Awaiting Shipping Details -->
+                        <div class="orderJourneyWrapperTrialLength2" ng-if="fullIdArray[$index][1]==14"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <div ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId==1 && orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1"
+                                       style="padding-left: 0px; width: 80px; height: 29px; text-align: center; vertical-align: middle; background-color: transparent; border-style: groove;">
+                                      <a id="SOSelect3{{$index}}" style="color:#F0592B;" ng-click="redirectToFileUploadUrl()"
+                                         href="{{baseSchedulePickUpUrl}}/{{orderData.idtableSaleOrderId}}/{{tableSkuData.idtableSaleOrderSkusId}}"
+                                         download>Select</a>
+                                  </div>
+
+                                  <button id="SOSelect4{{$index}}" ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId!=1 && orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1"
+                                          ng-click="openShippingCarrierBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,tableSkuData,orderData.tableSaleOrderClientOrderNo,orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Select
+                                  </button>
+                                </span>
+                        </div>
+                        <!-- Hold ReturnWarehouseNotAllocated Details -->
+                        <div class="orderJourneyWrapperTrialLength2" ng-if="(fullIdArray[$index][1]==21 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"   ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                        <!-- Hold AwaitingReturnShippingDetails Details -->
+                        <div class="orderJourneyWrapperTrialLength2" ng-if="(fullIdArray[$index][1]==23 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"  ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                    </div>
+                    <div ng-if="trialsLength[$index]==3" class="col-md-4">
+
+                        <!-- Hold WareHouse Not Allocated -->
+                        <div class="orderJourneyWrapperTrialLength3" ng-if="(fullIdArray[$index][2]==7 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"  ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Allocate Warehouse
+                                  </button>
+                                </span>
+                        </div>
+                        <!-- Hold Fraud Validation Failed -->
+                        <div class="orderJourneyWrapperTrialLength3" ng-if="(fullIdArray[$index][2]==5 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                    <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"  ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                            style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                        Allocate Warehouse
+                                    </button>
+                                </span>
+                        </div>
+                        <!-- Hold Stock Unavailable -->
+                        <div class="orderJourneyWrapperTrialLength3" ng-if="(fullIdArray[$index][2]==10 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"  ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Allocate Warehouse
+                                  </button>
+                              </span>
+
+                        </div>
+                        <!-- Hold Packing Material Unavailable -->
+                        <div class="orderJourneyWrapperTrialLength3" ng-if="(fullIdArray[$index][2]==12 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"  ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Allocate Warehouse
+                                  </button>
+                                </span>
+
+                        </div>
+                        <!-- Hold Awaiting Shipping Details -->
+                        <div class="orderJourneyWrapperTrialLength3" ng-if="fullIdArray[$index][2]==14"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <div ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId==1 && orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1"
+                                       style="padding-left: 0px; width: 80px; height: 29px; text-align: center; vertical-align: middle; background-color: transparent; border-style: groove;">
+                                      <a id="SOSelect5{{$index}}" style="color:#F0592B;" ng-click="redirectToFileUploadUrl()"
+                                         href="{{baseSchedulePickUpUrl}}/{{orderData.idtableSaleOrderId}}/{{tableSkuData.idtableSaleOrderSkusId}}"
+                                         download>
+                                          Select
+                                      </a>
+                                  </div>
+                                  <button id="SOSelect6{{$index}}" ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId!=1 && orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1"
+                                          ng-click="openShippingCarrierBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,tableSkuData,orderData.tableSaleOrderClientOrderNo,orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Select
+                                  </button>
+                                </span>
+                        </div>
+                        <!-- Hold ReturnWarehouseNotAllocated Details -->
+                        <div class="orderJourneyWrapperTrialLength3" ng-if="(fullIdArray[$index][2]==21 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"  ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Allocate Warehouse
+                                  </button>
+                              </span>
+                        </div>
+                        <!-- Hold AwaitingReturnShippingDetails Details -->
+                        <div class="orderJourneyWrapperTrialLength3" ng-if="(fullIdArray[$index][2]==23 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"  ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Allocate Warehouse
+                                  </button>
+                                </span>
+                        </div>
+                    </div>
+                    <div ng-if="trialsLength[$index]>=4" class="col-md-4">
+
+                        <!-- Hold WareHouse Not Allocated -->
+                        <div class="orderJourneyWrapperTrialLength4" ng-if="(fullIdArray[$index][3]==7 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"  ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                        <!-- Hold Fraud Validation Failed -->
+                        <div class="orderJourneyWrapperTrialLength4" ng-if="(fullIdArray[$index][3]==5 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"  ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                        <!-- Hold Stock Unavailable -->
+                        <div class="orderJourneyWrapperTrialLength4" ng-if="(fullIdArray[$index][3]==10 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"  ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+
+                        </div>
+                        <!-- Hold Packing Material Unavailable -->
+                        <div class="orderJourneyWrapperTrialLength4" ng-if="(fullIdArray[$index][3]==12 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate"  ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+
+                        </div>
+                        <!-- Hold Awaiting Shipping Details -->
+                        <div class="orderJourneyWrapperTrialLength4" ng-if="fullIdArray[$index][3]==14"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                                  <div ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId==1 && orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1"
+                                       style="padding-left: 0px; width: 80px; height: 29px; text-align: center; vertical-align: middle; background-color: transparent; border-style: groove;">
+                                      <a id="SOSelect7{{$index}}" style="color:#F0592B;" ng-click="redirectToFileUploadUrl()"
+                                         href="{{baseSchedulePickUpUrl}}/{{orderData.idtableSaleOrderId}}/{{tableSkuData.idtableSaleOrderSkusId}}"
+                                         download>Select</a>
+                                  </div>
+                                  <button id="SOSelect8{{$index}}" ng-if="orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId!=1 && orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1"
+                                          ng-click="openShippingCarrierBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,tableSkuData,orderData.tableSaleOrderClientOrderNo,orderData.tableSalesChannelValueInfo.idtableSalesChannelValueInfoId)"
+                                          style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                      Select
+                                  </button>
+                                </span>
+                        </div>
+
+                        <!-- Hold ReturnWarehouseNotAllocated Details -->
+                        <div class="orderJourneyWrapperTrialLength4" ng-if="(fullIdArray[$index][3]==21 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                        <!-- Hold AwaitingReturnShippingDetails Details -->
+                        <div class="orderJourneyWrapperTrialLength4" ng-if="(fullIdArray[$index][3]==23 && !clients_Profile.tableClientProfileAutoAllocateWhHoldNotAllocated) && allocateWhButton(tableSkuData.tableSaleOrderSkuStateType.idtableSaleOrderSkuStateTypeId)"
+                             style="padding-top:3px">
+                                <span style="padding-left: 0px">
+                              <button id="SOAllocWh{{$index}}" ng-show="orderData.tableSaleOrderFulfillmentOwner.idtableSaleOrderFulfillmentOwnerId!=1" class="btn-warehouse-allocate" ng-click="openWareHouseBox($event,orderData.idtableSaleOrderId,tableSkuData.idtableSaleOrderSkusId,orderData.tableSaleOrderClientOrderNo)"
+                                      style="color:#F0592B;width:80px;background-color:transparent;border-style: groove;text-align: center;">
+                                  Allocate Warehouse
+                              </button>
+                              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <span id="SOInfo{{$index}}" class="pull-right infoimgBox" ng-click="openInfoBox($event,tableSkuData.tableSaleOrderSkuStateTrails)"></span>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- END TABLE -->
+        <div class="row" style="margin-top: 0px;">
+            <div class="col-md-6" ng-show="defaultTab == 'all'">
+                <p class="showingOrderLabel" ng-show="orderSize<allCount">Showing Orders {{start + 1}} to {{end}}
+                    of {{allCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=allCount && allCount!=0">Showing Orders {{start + 1}}
+                    to {{allCount}} of {{allCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="allCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'new'">
+                <p class="showingOrderLabel" ng-show="orderSize<newCount">Showing Orders {{start + 1}} to {{end}}
+                    of {{newCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=newCount && newCount!=0">Showing Orders {{start + 1}}
+                    to {{newCount}} of {{newCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="newCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'process'">
+                <p class="showingOrderLabel" ng-show="orderSize<processCount">Showing Orders {{start + 1}} to
+                    {{end}} of {{processCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=processCount && processCount!=0">Showing Orders {{start
+                    + 1}} to {{processCount}} of {{processCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="processCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'shipping'">
+                <p class="showingOrderLabel" ng-show="orderSize<shippingCount">Showing Orders {{start + 1}} to
+                    {{end}} of {{shippingCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=shippingCount && shippingCount!=0">Showing Orders
+                    {{start + 1}} to {{shippingCount}} of {{shippingCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="shippingCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'return'">
+                <p class="showingOrderLabel" ng-show="orderSize<returnCount">Showing Orders {{start + 1}} to
+                    {{end}} of {{returnCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=returnCount && returnCount!=0">Showing Orders {{start +
+                    1}} to {{returnCount}} of {{returnCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="returnCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'hold'">
+                <p class="showingOrderLabel" ng-show="orderSize<holdCount">Showing Orders {{start + 1}} to {{end}}
+                    of {{holdCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=holdCount && holdCount!=0">Showing Orders {{start + 1}}
+                    to {{holdCount}} of {{holdCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="holdCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'cancelled'">
+                <p class="showingOrderLabel" ng-show="orderSize<cancelledCount">Showing Orders {{start + 1}} to
+                    {{end}} of {{cancelledCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=cancelledCount && cancelledCount!=0">Showing Orders
+                    {{start + 1}} to {{cancelledCount}} of {{cancelledCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="cancelledCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'delivered'">
+                <p class="showingOrderLabel" ng-show="orderSize<deliveredCount">Showing Orders {{start + 1}} to
+                    {{end}} of {{deliveredCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=deliveredCount && deliveredCount!=0">Showing Orders
+                    {{start + 1}} to {{deliveredCount}} of {{deliveredCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="deliveredCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="defaultTab == 'draft'">
+                <p class="showingOrderLabel" ng-show="orderSize<draftCount">Showing Orders {{start + 1}} to
+                    {{end}} of {{draftCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="orderSize>=draftCount && draftCount!=0">Showing Orders
+                    {{start + 1}} to {{draftCount}} of {{draftCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="draftCount==0">No Orders Available
+                </p>
+            </div>
+            <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPager.pages.length" class="pagination">
+                            <li>
+                                <a><span style="padding-right: 5px;">Showing</span>
+                                    <select ng-change="onRecordsPerPageChange(orderSize)"  ng-model="orderSize" name="recordsPerPage"
+                                            ng-options="option for option in recordsPerPage"
+                                            required>
+                                    </select>
+                                    <span style="padding-left: 5px;">records per page</span>
+                                </a>
+                            </li>
+                            <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a ng-click="listOfStatesCount(defaultTab,1)">&lt;&lt; First</a>
+                            </li>
+                            <li id="previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="listOfStatesCount(defaultTab,vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="listOfStatesCount(defaultTab,page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="listOfStatesCount(defaultTab,vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="listOfStatesCount(defaultTab,vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--========================== bulk order request results ===================-->
+
+    <div class="modal fade" id="BulkedaddOrderModal" role="dialog" data-backdrop="static" data-keyboard="false"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <span><b>Bulk order upload results</b></span>
+                    <button id="SOBORCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelSingleOrder()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <!--<p class="dialog-heading-p" id="myModalLabel">Add Order</p>-->
+
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-target="#table1" data-toggle="tab" class="btn sharp sharped"
+                                              ng-click="downloadLink('success');">Success </a></li>
+                        <li><a data-target="#table2" data-toggle="tab" class="btn sharp sharped"
+                               ng-click="downloadLink('duplicate');">Duplicate </a></li>
+                        <li><a data-target="#table3" data-toggle="tab" class="btn sharp sharped"
+                               ng-click="downloadLink('existing');">Existing </a></li>
+                        <li><a data-target="#table4" data-toggle="tab" class="btn shar sharp sharped"
+                               ng-click="downloadLink('error');">Error</a></li>
+                    </ul>
+                </div>
+                <div class="modal-body" style="overflow: auto;padding-top: 0px">
+
+                    <div class="tab-content">
+                        <div class="tab-pane active container-fluid" id="table1">
+                            <div class="container-fluid" ng-if="successDatatable.length == 0">
+                                <h2 class="text-center">No Success Order Placed</h2>
+                            </div>
+                            <div class="container-fluid " ng-if="successDatatable.length != 0">
+                                <table class="table table-stripped">
+                                    <tr>
+                                        <th id="SOBORAdrs1H">Address Line 1</th>
+                                        <th id="SOBORAdrs2H">Address Line 2</th>
+                                        <th id="SOBORAdrs3H">Address Line 3</th>
+                                        <th id="SOBORBEH">Buyer Email</th>
+                                        <th id="SOBORBFH">Buyer First Name</th>
+                                        <th id="SOBORBLH">Buyer Last Name</th>
+                                        <th id="SOBORBPH">Buyer Phone</th>
+                                        <th id="SOBORCityH">City</th>
+                                        <th id="SOBORCFH">Cod Fee</th>
+                                        <th id="SOBORCFDH">COD Fee Discount</th>
+                                        <th id="SOBORDateH">Date</th>
+                                        <th id="SOBORDscntH">Discount</th>
+                                        <th id="SOBORDistrctH">District</th>
+                                        <th id="SOBORGMTH">Gift Message Text</th>
+                                        <th id="SOBORGWLH">Gift Wrap Level</th>
+                                        <th id="SOBORGWPH">Gift Wrap Price</th>
+                                        <th id="SOBORGWTH">Gift Wrap Tax</th>
+                                        <th id="SOBORITH">Item Tax</th>
+                                        <th id="SOBORMRPH">MRP</th>
+                                        <th id="SOBORIdH">OrderId</th>
+                                        <th id="SOBORIIdH">Order Item Id</th>
+                                        <th id="SOBORPTH">Payment Type</th>
+                                        <th id="SOBORPinH">Pincode</th>
+                                        <th id="SOBORPPIH">Price Per Item</th>
+                                        <th id="SOBORQtyH">Quantity</th>
+                                        <th id="SOBORRFH">Recipient First Name</th>
+                                        <th id="SOBORRLH">Recipient Last Name</th>
+                                        <th id="SOBORSAH">Shipping Amount</th>
+                                        <th id="SOBORSTH">Shipping Tax</th>
+                                        <th id="SOBORSIH">Sku Id</th>
+                                        <th id="SOBORStateH">State</th>
+                                    </tr>
+                                    <tr ng-repeat="data in successDatatable">
+                                        <td id="SOBORAdrs1{{$index}}">{{data.addressLine1}}</td>
+                                        <td id="SOBORAdrs2{{$index}}">{{data.addressLine2}}</td>
+                                        <td id="SOBORAdrs3{{$index}}">{{data.addressLine3}}</td>
+                                        <td id="SOBORBE{{$index}}">{{data.buyerEmail}}</td>
+                                        <td id="SOBORBF{{$index}}">{{data.buyerFirstName}}</td>
+                                        <td id="SOBORBL{{$index}}">{{data.buyerLastName}}</td>
+                                        <td id="SOBORBP{{$index}}">{{data.buyerPhone}}</td>
+                                        <td id="SOBORCity{{$index}}">{{data.city}}</td>
+                                        <td id="SOBORCF{{$index}}">{{data.codFee}}</td>
+                                        <td id="SOBORCFD{{$index}}">{{data.codFeeDiscount}}</td>
+                                        <td id="SOBORDate{{$index}}">{{data.creationDate.millis | date:'MM/dd/yyyy'}}</td>
+                                        <td id="SOBORDscnt{{$index}}">{{data.Discount}}</td>
+                                        <td id="SOBORDistrct{{$index}}">{{data.district}}</td>
+                                        <td id="SOBORGMT{{$index}}">{{data.giftMessageText}}</td>
+                                        <td id="SOBORGWL{{$index}}">{{data.giftWrapLevel}}</td>
+                                        <td id="SOBORGWP{{$index}}">{{data.giftWrapPrice | priceOrHyphen}}</td>
+                                        <td id="SOBORGWT{{$index}}">{{data.giftWrapTax}}</td>
+                                        <td id="SOBORIT{{$index}}">{{data.itemTax}}</td>
+                                        <td id="SOBORMRP{{$index}}">{{data.mRP}}</td>
+                                        <td id="SOBORId{{$index}}">{{data.orderId}}</td>
+                                        <td id="SOBORIId{{$index}}">{{data.orderItemId}}</td>
+                                        <td id="SOBORPT{{$index}}">{{data.paymentType}}</td>
+                                        <td id="SOBORPin{{$index}}">{{data.pincode}}</td>
+                                        <td id="SOBORPPI{{$index}}">{{data.pricePerItem}}</td>
+                                        <td id="SOBORQty{{$index}}">{{data.quantity}}</td>
+                                        <td id="SOBORRF{{$index}}">{{data.recipientFirstName}}</td>
+                                        <td id="SOBORRL{{$index}}">{{data.recipientLastName}}</td>
+                                        <td id="SOBORSA{{$index}}">{{data.shippingAmount}}</td>
+                                        <td id="SOBORST{{$index}}">{{data.shippingTax}}</td>
+                                        <td id="SOBORSI{{$index}}">{{data.skuId}}</td>
+                                        <td id="SOBORState{{$index}}">{{data.state}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane container-fluid" id="table2">
+                            <div class="container-fluid" ng-if="duplicateDatatable.length == 0">
+                                <h2 class="text-center">No Duplicate Order Placed</h2>
+                            </div>
+                            <div class="container-fluid " ng-if="duplicateDatatable.length != 0">
+                                <table class="table table-stripped">
+                                    <tr>
+                                        <th id="SOBOR1Adrs1H">Address Line 1</th>
+                                        <th id="SOBOR1Adrs2H">Address Line 2</th>
+                                        <th id="SOBOR1Adrs3H">Address Line 3</th>
+                                        <th id="SOBOR1BEH">Buyer Email</th>
+                                        <th id="SOBOR1BFH">Buyer First Name</th>
+                                        <th id="SOBOR1BLH">Buyer Last Name</th>
+                                        <th id="SOBOR1BPH">Buyer Phone</th>
+                                        <th id="SOBOR1CityH">City</th>
+                                        <th id="SOBOR1CFH">Cod Fee</th>
+                                        <th id="SOBOR1CFDH">COD Fee Discount</th>
+                                        <th id="SOBOR1DateH">Date</th>
+                                        <th id="SOBOR1DscntH">Discount</th>
+                                        <th id="SOBOR1DstrctH">District</th>
+                                        <th id="SOBOR1GMTH">Gift Message Text</th>
+                                        <th id="SOBOR1GWLH">Gift Wrap Level</th>
+                                        <th id="SOBOR1GWPH">Gift Wrap Price</th>
+                                        <th id="SOBOR1GWTH">Gift Wrap Tax</th>
+                                        <th id="SOBOR1ITH">Item Tax</th>
+                                        <th id="SOBOR1MRPH">MRP</th>
+                                        <th id="SOBOR1IdH">OrderId</th>
+                                        <th id="SOBOR1IIdH">Order Item Id</th>
+                                        <th id="SOBOR1PTH">Payment Type</th>
+                                        <th id="SOBOR1PinH">Pincode</th>
+                                        <th id="SOBOR1PPIH">Price Per Item</th>
+                                        <th id="SOBOR1QtyH">Quantity</th>
+                                        <th id="SOBOR1RFH">Recipient First Name</th>
+                                        <th id="SOBOR1RLH">Recipient Last Name</th>
+                                        <th id="SOBOR1SAH">Shipping Amount</th>
+                                        <th id="SOBOR1STH">Shipping Tax</th>
+                                        <th id="SOBOR1SIdH">Sku Id</th>
+                                        <th id="SOBOR1StateH">State</th>
+                                    </tr>
+                                    <tr ng-repeat="data in duplicateDatatable">
+                                        <td id="SOBOR1Adrs1{{$index}}">{{data.addressLine1}}</td>
+                                        <td id="SOBOR1Adrs2{{$index}}">{{data.addressLine2}}</td>
+                                        <td id="SOBOR1Adrs3{{$index}}">{{data.addressLine3}}</td>
+                                        <td id="SOBOR1BE{{$index}}">{{data.buyerEmail}}</td>
+                                        <td id="SOBOR1BF{{$index}}">{{data.buyerFirstName}}</td>
+                                        <td id="SOBOR1BL{{$index}}">{{data.buyerLastName}}</td>
+                                        <td id="SOBOR1BP{{$index}}">{{data.buyerPhone}}</td>
+                                        <td id="SOBOR1City{{$index}}">{{data.city}}</td>
+                                        <td id="SOBOR1CF{{$index}}">{{data.codFee}}</td>
+                                        <td id="SOBOR1CFD{{$index}}">{{data.codFeeDiscount}}</td>
+                                        <td id="SOBOR1Date{{$index}}">{{data.creationDate.millis | date:'MM/dd/yyyy'}}</td>
+                                        <td id="SOBOR1Dscnt{{$index}}">{{data.Discount}}</td>
+                                        <td id="SOBOR1Dstrct{{$index}}">{{data.district}}</td>
+                                        <td id="SOBOR1GMT{{$index}}">{{data.giftMessageText}}</td>
+                                        <td id="SOBOR1GWL{{$index}}">{{data.giftWrapLevel}}</td>
+                                        <td id="SOBOR1GWP{{$index}}">{{data.giftWrapPrice | priceOrHyphen}}</td>
+                                        <td id="SOBOR1GWT{{$index}}">{{data.giftWrapTax}}</td>
+                                        <td id="SOBOR1IT{{$index}}">{{data.itemTax}}</td>
+                                        <td id="SOBOR1MRP{{$index}}">{{data.mRP}}</td>
+                                        <td id="SOBOR1Id{{$index}}">{{data.orderId}}</td>
+                                        <td id="SOBOR1IId{{$index}}">{{data.orderItemId}}</td>
+                                        <td id="SOBOR1PT{{$index}}">{{data.paymentType}}</td>
+                                        <td id="SOBOR1Pin{{$index}}">{{data.pincode}}</td>
+                                        <td id="SOBOR1PPI{{$index}}">{{data.pricePerItem}}</td>
+                                        <td id="SOBOR1Qty{{$index}}">{{data.quantity}}</td>
+                                        <td id="SOBOR1RF{{$index}}">{{data.recipientFirstName}}</td>
+                                        <td id="SOBOR1RL{{$index}}">{{data.recipientLastName}}</td>
+                                        <td id="SOBOR1SA{{$index}}">{{data.shippingAmount}}</td>
+                                        <td id="SOBOR1ST{{$index}}">{{data.shippingTax}}</td>
+                                        <td id="SOBOR1SId{{$index}}">{{data.skuId}}</td>
+                                        <td id="SOBOR1State{{$index}}">{{data.state}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane container-fluid" id="table3">
+                            <div class="container-fluid" ng-if="existingDatatable.length == 0">
+                                <h2 class="text-center">No Existing Order Placed</h2>
+                            </div>
+                            <div class="container-fluid " ng-if="existingDatatable.length != 0">
+                                <table class="table table-stripped">
+                                    <tr>
+                                        <th id="SOBOR2Adrs1H">Address Line 1</th>
+                                        <th id="SOBOR2Adrs2H">Address Line 2</th>
+                                        <th id="SOBOR2Adrs3H">Address Line 3</th>
+                                        <th id="SOBOR2BEH">Buyer Email</th>
+                                        <th id="SOBOR2BFH">Buyer First Name</th>
+                                        <th id="SOBOR2BLH">Buyer Last Name</th>
+                                        <th id="SOBOR2BPH">Buyer Phone</th>
+                                        <th id="SOBOR2CityH">City</th>
+                                        <th id="SOBOR2CFH">Cod Fee</th>
+                                        <th id="SOBOR2CFDH">COD Fee Discount</th>
+                                        <th id="SOBOR2DateH">Date</th>
+                                        <th id="SOBOR2DscntH">Discount</th>
+                                        <th id="SOBOR2DstrctH">District</th>
+                                        <th id="SOBOR2GMTH">Gift Message Text</th>
+                                        <th id="SOBOR2GWLH">Gift Wrap Level</th>
+                                        <th id="SOBOR2GWPH">Gift Wrap Price</th>
+                                        <th id="SOBOR2GWTH">Gift Wrap Tax</th>
+                                        <th id="SOBOR2ITH">Item Tax</th>
+                                        <th id="SOBOR2MRPH">MRP</th>
+                                        <th id="SOBOR2IdH">OrderId</th>
+                                        <th id="SOBOR2IIdH">Order Item Id</th>
+                                        <th id="SOBOR2PTH">Payment Type</th>
+                                        <th id="SOBOR2PinH">Pincode</th>
+                                        <th id="SOBOR2PPIH">Price Per Item</th>
+                                        <th id="SOBOR2QtyH">Quantity</th>
+                                        <th id="SOBOR2RFH">Recipient First Name</th>
+                                        <th id="SOBOR2RLH">Recipient Last Name</th>
+                                        <th id="SOBOR2SAH">Shipping Amount</th>
+                                        <th id="SOBOR2STH">Shipping Tax</th>
+                                        <th id="SOBOR2SId1H">Sku Id</th>
+                                        <th id="SOBOR2StateH">State</th>
+                                    </tr>
+                                    <tr ng-repeat="data in existingDatatable">
+
+                                        <td id="SOBOR2Adrs1{{$index}}">{{data.addressLine1}}</td>
+                                        <td id="SOBOR2Adrs2{{$index}}">{{data.addressLine2}}</td>
+                                        <td id="SOBOR2Adrs3{{$index}}">{{data.addressLine3}}</td>
+                                        <td id="SOBOR2BE{{$index}}">{{data.buyerEmail}}</td>
+                                        <td id="SOBOR2BF{{$index}}">{{data.buyerFirstName}}</td>
+                                        <td id="SOBOR2BL{{$index}}">{{data.buyerLastName}}</td>
+                                        <td id="SOBOR2BP{{$index}}">{{data.buyerPhone}}</td>
+                                        <td id="SOBOR2City{{$index}}">{{data.city}}</td>
+                                        <td id="SOBOR2CF{{$index}}">{{data.codFee}}</td>
+                                        <td id="SOBOR2CFD{{$index}}">{{data.codFeeDiscount}}</td>
+                                        <td id="SOBOR2Date{{$index}}">{{data.creationDate.millis | date:'MM/dd/yyyy'}}</td>
+                                        <td id="SOBOR2Dscnt{{$index}}">{{data.Discount}}</td>
+                                        <td id="SOBOR2Dstrct{{$index}}">{{data.district}}</td>
+                                        <td id="SOBOR2GMT{{$index}}">{{data.giftMessageText}}</td>
+                                        <td id="SOBOR2GWL{{$index}}">{{data.giftWrapLevel}}</td>
+                                        <td id="SOBOR2GWP{{$index}}">{{data.giftWrapPrice | priceOrHyphen}}</td>
+                                        <td id="SOBOR2GWT{{$index}}">{{data.giftWrapTax}}</td>
+                                        <td id="SOBOR2IT{{$index}}">{{data.itemTax}}</td>
+                                        <td id="SOBOR2MRP{{$index}}">{{data.mRP}}</td>
+                                        <td id="SOBOR2Id{{$index}}">{{data.orderId}}</td>
+                                        <td id="SOBOR2IId{{$index}}">{{data.orderItemId}}</td>
+                                        <td id="SOBOR2PT{{$index}}">{{data.paymentType}}</td>
+                                        <td id="SOBOR2Pin{{$index}}">{{data.pincode}}</td>
+                                        <td id="SOBOR2PPI{{$index}}">{{data.pricePerItem}}</td>
+                                        <td id="SOBOR2Qty{{$index}}">{{data.quantity}}</td>
+                                        <td id="SOBOR2RF{{$index}}">{{data.recipientFirstName}}</td>
+                                        <td id="SOBOR2RL{{$index}}">{{data.recipientLastName}}</td>
+                                        <td id="SOBOR2SA{{$index}}">{{data.shippingAmount}}</td>
+                                        <td id="SOBOR2ST{{$index}}">{{data.shippingTax}}</td>
+                                        <td id="SOBOR2SId1{{$index}}">{{data.skuId}}</td>
+                                        <td id="SOBOR2State{{$index}}">{{data.state}}</td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane container-fluid" id="table4">
+                            <div class="container-fluid" ng-if="errorDatatable.length == 0">
+                                <h2 class="text-center">Error in Order Placed</h2>
+                            </div>
+                            <div class="container-fluid " ng-if="errorDatatable.length != 0">
+                                <table class="table table-stripped">
+                                    <tr>
+                                        <th id="SOBOR3Adrs1H">Address Line 1</th>
+                                        <th id="SOBOR3Adrs2H">Address Line 2</th>
+                                        <th id="SOBOR3Adrs3H">Address Line 3</th>
+                                        <th id="SOBOR3BEH">Buyer Email</th>
+                                        <th id="SOBOR3BFH">Buyer First Name</th>
+                                        <th id="SOBOR3BLH">Buyer Last Name</th>
+                                        <th id="SOBOR3BPH">Buyer Phone</th>
+                                        <th id="SOBOR3CityH">City</th>
+                                        <th id="SOBOR3CFH">Cod Fee</th>
+                                        <th id="SOBOR3CFDH">COD Fee Discount</th>
+                                        <th id="SOBOR3DateH">Date</th>
+                                        <th id="SOBOR3DscntH">Discount</th>
+                                        <th id="SOBOR3DstrctH">District</th>
+                                        <th id="SOBOR3GMTH">Gift Message Text</th>
+                                        <th id="SOBOR3GWLH">Gift Wrap Level</th>
+                                        <th id="SOBOR3GWPH">Gift Wrap Price</th>
+                                        <th id="SOBOR3GWTH">Gift Wrap Tax</th>
+                                        <th id="SOBOR3ITH">Item Tax</th>
+                                        <th id="SOBOR3MRPH">MRP</th>
+                                        <th id="SOBOR3IdH">OrderId</th>
+                                        <th id="SOBOR3IIdH">Order Item Id</th>
+                                        <th id="SOBOR3PTH">Payment Type</th>
+                                        <th id="SOBOR3PinH">Pincode</th>
+                                        <th id="SOBOR3PPIH">Price Per Item</th>
+                                        <th id="SOBOR3QtyH">Quantity</th>
+                                        <th id="SOBOR3RFH">Recipient First Name</th>
+                                        <th id="SOBOR3RLH">Recipient Last Name</th>
+                                        <th id="SOBOR3SAH">Shipping Amount</th>
+                                        <th id="SOBOR3STH">Shipping Tax</th>
+                                        <th id="SOBOR3SIdH">Sku Id</th>
+                                        <th id="SOBOR3StateH">State</th>
+                                        <th id="SOBOR3EMH">Error Message</th>
+                                    </tr>
+                                    <tr ng-repeat="data in errorDatatable">
+                                        <td id="SOBOR3Adrs1{{$index}}">{{data.addressLine1}}</td>
+                                        <td id="SOBOR3Adrs2{{$index}}">{{data.addressLine2}}</td>
+                                        <td id="SOBOR3Adrs3{{$index}}">{{data.addressLine3}}</td>
+                                        <td id="SOBOR3BE{{$index}}">{{data.buyerEmail}}</td>
+                                        <td id="SOBOR3BF{{$index}}">{{data.buyerFirstName}}</td>
+                                        <td id="SOBOR3BL{{$index}}">{{data.buyerLastName}}</td>
+                                        <td id="SOBOR3BP{{$index}}">{{data.buyerPhone}}</td>
+                                        <td id="SOBOR3City{{$index}}">{{data.city}}</td>
+                                        <td id="SOBOR3CF{{$index}}">{{data.codFee}}</td>
+                                        <td id="SOBOR3CFD{{$index}}">{{data.codFeeDiscount}}</td>
+                                        <td id="SOBOR3Date{{$index}}">{{data.creationDate.millis | date:'MM/dd/yyyy'}}</td>
+                                        <td id="SOBOR3Dscnt{{$index}}">{{data.Discount}}</td>
+                                        <td id="SOBOR3Dstrct{{$index}}">{{data.district}}</td>
+                                        <td id="SOBOR3GMT{{$index}}">{{data.giftMessageText}}</td>
+                                        <td id="SOBOR3GWL{{$index}}">{{data.giftWrapLevel}}</td>
+                                        <td id="SOBOR3GWP{{$index}}">{{data.giftWrapPrice | priceOrHyphen}}</td>
+                                        <td id="SOBOR3GWT{{$index}}">{{data.giftWrapTax}}</td>
+                                        <td id="SOBOR3IT{{$index}}">{{data.itemTax}}</td>
+                                        <td id="SOBOR3MRP{{$index}}">{{data.mRP}}</td>
+                                        <td id="SOBOR3Id{{$index}}">{{data.orderId}}</td>
+                                        <td id="SOBOR3IId{{$index}}">{{data.orderItemId}}</td>
+                                        <td id="SOBOR3PT{{$index}}">{{data.paymentType}}</td>
+                                        <td id="SOBOR3Pin{{$index}}">{{data.pincode}}</td>
+                                        <td id="SOBOR3PPI{{$index}}">{{data.pricePerItem}}</td>
+                                        <td id="SOBOR3Qty{{$index}}">{{data.quantity}}</td>
+                                        <td id="SOBOR3RF{{$index}}">{{data.recipientFirstName}}</td>
+                                        <td id="SOBOR3RL{{$index}}">{{data.recipientLastName}}</td>
+                                        <td id="SOBOR3SA{{$index}}">{{data.shippingAmount}}</td>
+                                        <td id="SOBOR3ST{{$index}}">{{data.shippingTax}}</td>
+                                        <td id="SOBOR3SId{{$index}}">{{data.skuId}}</td>
+                                        <td id="SOBOR3State{{$index}}">{{data.state}}</td>
+                                        <td id="SOBOR3EM{{$index}}" colspan="2">{{data.errorMessage}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="SOBORCancel2" type="button" class="cancel-btn" data-dismiss="modal">Cancel</button>
+                    <a id="SOBORSccss" ng-href="{{successLink}}" class="btn btn-danger btn-download" target="_blank"
+                       ng-if="ViewDownloadBtn == 'success'">Download File</a>
+                    <a id="SOBORDup" ng-href="{{duplicateLink}}" class="btn btn-danger btn-download" target="_blank"
+                       ng-if="ViewDownloadBtn == 'duplicate'">Download File</a>
+                    <a id="SOBORExs" ng-href="{{existingLink}}" class="btn btn-danger btn-download" target="_blank"
+                       ng-if="ViewDownloadBtn == 'existing'">Download File</a>
+                    <a id="SOBORErr" ng-href="{{errorLink}}" class="btn btn-danger btn-download" target="_blank"
+                       ng-if="ViewDownloadBtn == 'error'">Download File</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        .md-datepicker-calendar-pane {
+            z-index: 9999 !important;
+        }
+    </style>
+</div>
+<div class="modal fade" data-backdrop="static" id="helpWRModal" role="dialog" aria-labelledby="helpWRModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="SOHWCancel1" type="button" class="close" ng-click="clearHelpDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="uploadAppDocLabel">Help</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <br><br>
+                    <b>Error Message :</b> {{warehouseError.errorMessage}}
+                    <br><br>
+                    <b>Instructions :</b>
+                    <richtext class="text" body-text="warehouseError.documentation">
+                    </richtext>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="SOHWCancel2" type="button" class="cancel-btn" ng-click="clearHelpDialog()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-include src="'order/editRemarksModal.html?version=1.0.0'"></div>
+<div ng-include src="'order/bulkOrderMapSettingsDialog.html?version=1.0.0'"></div>
+<div ng-include src="'order/bulkOrderUploadCsv.html?version=1.0.0'"></div>
+<div ng-include src="'order/wareHouseSelectionDialog.html?version=1.0.0'"></div>
+<div ng-include src="'order/infoBoxDialog.html?version=1.0.0'"></div>
+<div ng-include src="'order/shippingCarriersSelectionDialog.html?version=1.0.0'"></div>
+<div ng-include src="'order/cancelOrderDialog.html?version=1.0.0'"></div>
+<div ng-include src="'order/exportFileDialog.html?version=1.0.0'"></div>
+<div ng-include src="'order/addOrderDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterCustomerDialog.html?version=1.0.0'"></div>
+
+<div ng-include src="'order/confirmOrderEdit.html?version=1.0.0'"></div>
+<!-- Add New Customer Dialog -->
+<div ng-include src="'customer/addNewCustomerDialog.html?version=1.0.0'"></div>
+<div ng-include src="'customer/addNewShippingAddressDialog.html?version=1.0.0'"></div>
+<div ng-include src="'customer/addNewBillingAddressDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonDeleteConfirmationDialog.html?version=1.0.0'"></div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script type="text/javascript">
+    $('#addOrderModal').on('hidden.bs.modal', function (e) {
+        $(this)
+            .find("input,textarea,select")
+            .val('')
+            .end()
+            .find("input[type=checkbox], input[type=radio]")
+            .prop("checked", "")
+            .end();
+        $("#productTable td").parent().remove();
+    });
+    $('#addOrderModal').on('shown.bs.modal', function (e) {
+        var addOrderBody = $('#addOrderModal .modal-body');
+        if (addOrderBody.scrollTop() != 0) {
+            addOrderBody.animate({
+                scrollTop: 0
+            }, 800);
+        }
+    });
+</script>
+<style>
+    .mybut1 {
+        margin-left: 10px;
+        color: #F0592B;
+        font-weight: 600;
+        width: 100%;
+        min-height: 25px;
+        max-width: 85px;
+        float: right;
+        margin-bottom: 10px;
+    }
+
+    .order-table-tab-bar button{
+        padding:6px 10px;min-width:85px !important;
+    }
+    .sharp{
+        width:119px;
+    }
+</style>
+

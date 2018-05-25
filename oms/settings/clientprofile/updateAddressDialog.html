@@ -1,0 +1,259 @@
+<div class="modal fade" data-backdrop="static" id="addressModal" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" >
+        <form name="updateAddressForm" accessible-form novalidate ng-submit="updateAddressForm.$valid && updateClientAddress(updateAddressForm)">
+            <div class="modal-content">
+            <!-- Modal Header -->
+            <div  class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="clientprofileAddAddressModalCancelButton1" type="button" class="close" ng-click="cancelUpdateAddress(updateAddressForm)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p ng-if="addressMode=='add'" class="dialog-heading-p" id="addressModalLabel1">Add New Address</p>
+                <p ng-if="aAddressMode=='edit'" class="dialog-heading-p" id="addressModalLabel2">Edit Address</p>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- Information Area -->
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Contact Person Name <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text" name="contactPersonName"
+                                           required
+                                           id="clientprofileAddAddressModalName"
+                                           ng-maxlength="90" ng-minlength="2"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Full Name"
+                                           ng-model="tableAddress.tableAddressContactPerson1">
+                                </div>
+                                <div class="col-md-offset-5 col-md-7">
+                                    <span ng-if="updateAddressForm.$submitted && updateAddressForm.contactPersonName.$error.required" class="error-message">
+                                        Please enter the Contact Person Name.
+                                    </span>
+                                    <span ng-if="updateAddressForm.contactPersonName.$dirty && updateAddressForm.contactPersonName.$error.maxlength" class="error-message">
+                                        Contact Person Name should not exceed 90 characters.
+                                    </span>
+                                    <span ng-if="updateAddressForm.contactPersonName.$dirty && updateAddressForm.contactPersonName.$error.minlength" class="error-message">
+                                        Contact Person Name too small.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Email Id <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="email" name="custEmail"
+                                           id="clientprofileAddAddressModalEmail"  required
+                                           class="form-control text-lowercase emailInput darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Email ID"
+                                           ng-model="tableAddress.tableAddressEmail1"
+                                           ng-blur="validateEmail(myForm.custEmail.$valid);">
+                                </div>
+                                <div  class="col-md-offset-5 col-md-7">
+                                    <span ng-if="updateAddressForm.$submitted && updateAddressForm.custEmail.$error.required" class="error-message">
+                                        Please enter the Email Id
+                                    </span>
+                                    <span ng-if="updateAddressForm.custEmail.$dirty && updateAddressForm.custEmail.$error.email" class="error-message">
+                                        Please enter a valid Email Id
+                                    </span>
+
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Phone Number <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text" numbers-only
+                                           name="phoneNumber"
+                                           required
+                                           id="clientprofileAddAddressModalNumber"
+                                           ng-maxlength="10"
+                                           ng-minlength="10"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Enter phone number"
+                                           ng-model="tableAddress.tableAddressPhone1">
+                                </div>
+                                <div class="col-md-offset-5 col-md-7">
+                                     <span ng-if="updateAddressForm.$submitted && updateAddressForm.phoneNumber.$error.required"  class="error-message">
+                                         Please enter the Phone Number
+                                     </span>
+                                     <span ng-if="updateAddressForm.phoneNumber.$dirty && (updateAddressForm.phoneNumber.$error.maxlength || updateAddressForm.phoneNumber.$error.minlength)"  class="error-message">
+                                         Please enter a valid 10 digit Phone Number
+                                     </span>
+
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 1 <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text"
+                                           name="address" required
+                                           id="clientprofileAddAddressModalAddress1"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Enter address"
+                                           ng-maxlength="256"
+                                           ng-minlength="2"
+                                           ng-model="tableAddress.tableAddress1">
+                                </div>
+                                <div class="col-md-offset-5 col-md-7">
+                                        <span ng-if="updateAddressForm.$submitted && updateAddressForm.address.$error.required"  class="error-message">
+                                            Please enter the Address
+                                        </span>
+                                        <span ng-if="updateAddressForm.address.$dirty && updateAddressForm.address.$error.maxlength"  class="error-message">
+                                            Address Line 1 should not exceed 256 characters.
+                                        </span>
+                                        <span ng-if="updateAddressForm.address.$dirty && updateAddressForm.address.$error.minlength"  class="error-message">
+                                            Address Line 1 too small.
+                                        </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 2</span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text"
+                                           name="address2"
+                                           id="clientprofileAddAddressModalAddress2"
+                                           ng-maxlength="256"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Enter address"
+                                           ng-model="tableAddress.tableAddress2">
+                                </div>
+                                <div class="col-md-offset-5 col-md-7">
+                                        <span ng-if="updateAddressForm.address2.$dirty && updateAddressForm.address2.$error.maxlength"  class="error-message">
+                                            Address Line 2 should not exceed 256 characters.
+                                        </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 3</span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text" name="address3" ng-maxlength="256" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Enter address" ng-model="tableAddress.tableAddress3">
+                                </div>
+                                <div class="col-md-offset-5 col-md-7">
+                                        <span ng-if="updateAddressForm.address3.$dirty && updateAddressForm.address3.$error.maxlength"  class="error-message">
+                                            Address Line 3 should not exceed 256 characters.
+                                        </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">State <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <select  ng-model="genericData.stateData"
+                                             name="state" required
+                                             class="form-control"
+                                             id="clientprofileAddAddressModalState"
+                                             ng-options="option as option.tableStateLongName for option in regionsStatesArray track by option.idtableStateId" ng-change="regionsStatesDistrictData(genericData.stateData);">
+                                            <option value="">Select State</option>
+                                    </select>
+                                </div>
+                                <div ng-if="updateAddressForm.$submitted && updateAddressForm.state.$error.required" class="col-md-offset-5 col-md-7">
+                                    <span class="error-message">
+                                        Please select the State
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">District <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <select ng-model="genericData.districtData"
+                                            name="district" required
+                                            class="form-control"
+                                            id="clientprofileAddAddressModalDistrict"
+                                            ng-options="option as option.tableDistrictLongName for option in regionsStatesDistrictArray track by option.idtableDistrictId"
+                                            ng-change="regionsStatesDistrictsCityData(genericData.stateData,genericData.districtData);">
+                                            <option value="">Select District</option>
+                                    </select>
+                                </div>
+                                <div ng-if="updateAddressForm.$submitted && updateAddressForm.district.$error.required" class="col-md-offset-5 col-md-7">
+                                    <span class="error-message">
+                                        Please select the District
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">City <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <select name="city" id="clientprofileAddAddressModalCity" required ng-model="tableAddress.tableCity" class="form-control" ng-options="option as option.tableCityLongName for option in regionsStatesDistrictsCityArray track by option.idtableCityId">
+                                        <option value="">Select City</option>
+                                    </select>
+                                </div>
+                                <div ng-if="updateAddressForm.$submitted && updateAddressForm.city.$error.required" class="col-md-offset-5 col-md-7">
+                                    <span class="error-message">
+                                        Please select the city
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">PIN Code <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text"
+                                           ng-pattern-restrict="^[0-9]*$"
+                                           min="0"
+                                           name="pincode1"
+                                           required
+                                           id="clientprofileAddAddressModalPin"
+                                           numbers-only
+                                           ng-maxlength="6"
+                                           ng-minlength="6"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Enter postal code"
+                                           ng-model="tableAddress.tableAddressPin">
+                                </div>
+                                <div class="col-md-offset-5 col-md-7">
+                                    <span ng-if="updateAddressForm.$submitted && updateAddressForm.pincode1.$error.required"  class="error-message">
+                                        Please enter the PIN Code
+                                    </span>
+                                    <span ng-if="updateAddressForm.pincode1.$dirty && updateAddressForm.pincode1.$error.maxlength"  class="error-message">
+                                        Please enter a valid PIN Code
+                                    </span>
+                                    <span ng-if="updateAddressForm.pincode1.$dirty && updateAddressForm.pincode1.$error.minlength"  class="error-message">
+                                        Please enter a valid PIN Code
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button id="clientprofileAddAddressModalCancelButton2" type="button" class="cancel-btn" ng-click="cancelUpdateAddress(updateAddressForm)">Cancel</button>
+                <button id="clientprofileAddAddressModalSubmitButton1" ng-if="addressMode=='add'" type="submit" class="action-btn">
+                  Add
+                </button>
+                <button id="clientprofileAddAddressModalSubmitButton2" ng-if="addressMode=='edit'" type="submit" class="action-btn">
+                  Update
+                </button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>

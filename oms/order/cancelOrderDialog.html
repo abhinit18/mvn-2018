@@ -1,0 +1,189 @@
+<!-- <div class="modal fade" id="cancelOrder" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="cancelOrderForm" accessible-form novalidate ng-submit="cancelOrderForm.$valid && selectCancelAction(orderId,tableSaleOrderId,remarks,LoadNewRason.reasonData);">
+            <div class="modal-content">
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="SOCnclCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelWarehouseSelection(cancelOrderForm)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Cancel Order Item</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row row-margin-top-small">
+                        <div class="col-md-3">
+                            <span class="font">Order No.</span>
+                        </div>
+                        <div class="col-md-5">
+                            <input id="SOCnclNo" type="text" style="color: #F0592B;font-size: 16px; font-weight: 700; padding-top: 0px;" ng-model="orderNo" ng-readonly="true"></input>
+                        </div>
+                    </div>
+                    <div class="row row-margin-top-medium">
+                        <div class="col-md-3">
+                            <span class="font">Cancel Reason</span>
+                        </div>
+                        <div class="col-md-5">
+                            <select id="SOCnclReason"
+                                    required
+                                    name="cancelReasonSelect"
+                                    ng-model="remarks"
+                                    class="form-control">
+                                <option value="">
+                                    Select Reason
+                                </option>
+                                <option ng-repeat="option in cancelReasonArray"
+                                        value={{option.tableSaleOrderCancelReasonString}}>
+                                    {{option.tableSaleOrderCancelReasonString}}
+                                </option>
+                                <option selected value="other">Other Reason </option>
+                            </select>
+                            <div ng-if="cancelOrderForm.$submitted && cancelOrderForm.cancelReasonSelect.$error.required" class="full-width">
+                                <span class="error-msg">
+                                    Please select a valid reason
+                                </span>
+                            </div>
+                            <div class="full-width" ng-if = "remarks == 'other'">
+                                <textarea caps
+                                          id="SOCnclOReason"
+                                          required
+                                          name="cancelreason"
+                                          class="form-control"
+                                          style="margin-top: 15px;"
+                                          ng-maxlength="128"
+                                          ng-model="LoadNewRason.reasonData" ></textarea>
+                                <div ng-if="cancelOrderForm.$submitted && cancelOrderForm.cancelreason.$error.required" class="full-width">
+                                    <span class="error-msg">
+                                        Please enter the reason
+                                    </span>
+                                </div>
+                                <div ng-if="cancelOrderForm.$submitted && cancelOrderForm.cancelreason.$error.maxlength" class="full-width">
+                                    <span class="error-msg">
+                                        Entered Reason should be less than or equal to 128 characters
+                                    </span>
+                                </div>
+
+                                <md-checkbox id="SOCnclCheckbox" role="checkbox" ng-model="LoadNewRason.ReasonCheckBox" style="margin-top:10px;font-size: 13px;">Add this reason to the cancel reason list</md-checkbox>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="submit" id="SOCnclConfirm" class="action-btn" >
+                    Confirm
+                </button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+ -->
+
+
+
+
+
+
+
+<div class="modal fade"  id="cancelOrderDlog" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="SOSCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelWarehouseSelection()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Cancel Order</p>
+            </div>
+
+            
+
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="row row-margin-top-medium col-md-12">
+                        <div class="col-md-2">
+                            <span class="font">Cancel Reason</span>
+                        </div>
+                        <div class="col-md-5">
+                            <select id="SOCnclReason"
+                                    required
+                                    name="cancelReasonSelect"
+                                    ng-model="cancelOrderRemarks"
+                                    class="form-control">
+                                <option value="">
+                                    Select Reason
+                                </option>
+                                <option ng-repeat="option in cancelReasonArray"
+                                        value={{option.tableSaleOrderCancelReasonString}}>
+                                    {{option.tableSaleOrderCancelReasonString}}
+                                </option>
+                                <option selected value="other">Other Reason </option>
+                            </select>
+                            <div class="full-width" ng-if = "cancelOrderRemarks == 'other'">
+                                <textarea
+                                        type="text"
+                                          required
+                                          name="cancelreason"
+                                          class="form-control"
+                                          style="margin-top: 15px;"
+                                          ng-maxlength="128"
+                                          ng-model="customeRemarks" ng-change="addCustomeRemarks(customeRemarks)"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                <div class="full-width" style="margin-top: 10px;">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                            <thead class="main-list-header-order">
+
+                            <tr>
+                                <th id="SOSSelectH">
+                                    <md-checkbox ng-change="selectAllOrderToCancel(selectObj.selectAll)" ng-model="selectObj.selectAll" style="min-height:0px;"></md-checkbox>Select all
+                                </th>
+                                <th id="SOSCodeH">
+                                    Seller SKU ID
+                                </th>
+                                <th id="SOSNameH">
+                                    SKU Name
+                                </th>
+                                <th id="SOSStateH">
+                                    SKU State
+                                </th>
+                                <th id="SOStotalQnty">
+                                    Total Quantity
+                                </th>
+                                <th id="SOSQnty">
+                                    Quantity
+                                </th>
+
+                            </tr>
+                            </thead>
+                            <tbody data-ng-repeat="sku in orderListing" data-ng-switch on="dayDataCollapse[$index]">
+                            <tr class="clickable-row-order">
+                                <td><md-checkbox id="SOSSelect{{$index}}Check" ng-model="sku.selected" ng-change="SelectedWithMaxQnt(sku.selected, $index)"></md-checkbox></td>
+                                <td><span class="font">{{sku.tableSku.tableSkuClientSkuCode}}</span></td>
+                                <td class="short-sku-name" title="{{sku.tableSku.tableSkuDescription}}" id="SOSName{{$index}}"><span class="font">{{sku.tableSku.tableSkuName}}</span></td>
+                                <td class="short-sku-status" title="{{sku.tableSaleOrderSkuStateType.tableSaleOrderSkuStateTypeString}}"><span class="font">{{sku.tableSaleOrderSkuStateType.tableSaleOrderSkuStateTypeString}}</span></td>
+                                <td class="text-center"><span class="font">{{sku.tableSaleOrderSkusSkuQuantity}}</span></td>
+                                <td><input class="form-control" oninput="this.value = Math.abs(this.value)" ng-change="checkMaxQnt(sku.tableSaleOrderSkusSkuQuantity, $index)" type="number" min=0 ng-model="sku.saleOrderSkuQuantity" style="width:80px;border: 1px solid #b4b4b4;border-radius: 5px!important;font-weight: bold;"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="SOSCS" ng-disabled="isSubmit" class="action-btn" ng-click="cancelOrderConfirm(cancelOrderRemarks);">
+                    Cancel Orders
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

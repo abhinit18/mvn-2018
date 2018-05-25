@@ -1,0 +1,26 @@
+<div class="modal fade" id="infoDialog" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:100vw;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="SRJrnyCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelInfoBox()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Order Journey</p>
+            </div>
+            <div class="modal-body" style="max-height: none!important;" >
+                <div class="horizontal-slide">
+                    <ng-stepwise ng-steps="steps"></ng-stepwise>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="SRJrnyCancel2" class="action-btn" ng-click="cancelInfoBox()">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

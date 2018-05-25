@@ -1,0 +1,327 @@
+        <div class="container-fluid" style="padding-right: 0px;">
+            <div class="row row-margin-top-small">
+                <div class="col-md-11 order-table-tab-bar" style="padding-left: 0px;">
+                    <div class="full-width">
+                        <ul class="nav nav-tabs" id="taxtabs" style="padding-top: 0px;">
+                            <!--<li class="active"><a data-target="#tab1" data-toggle="tab" class="btn sharp"
+                                                  ng-click="GstScopeTabMode()">Gst</a></li>-->
+
+                           <!-- <li ><a data-target="#tab2" data-toggle="tab" class="btn sharp"
+                                                  ng-click="StateScopeTabMode()">State</a></li>
+                            <li><a data-target="#tab3" data-toggle="tab" class="btn sharp"
+                                   ng-click="CountryScopeTabMode()">Country</a></li>-->
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-1 order-table-tab-bar pull-right">
+                    <button id="taxClassAdd" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px;" ng-if="access.createAccess"
+                            ng-click="showAddTaxClassModal()"><img src="images/svg/add.svg" style="height:20px;">
+                        &nbsp;&nbsp;Add Tax Class
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid" style="padding: 0px;">
+            <div class="tab-content">
+                <div class="tab-pane active container-fluid" id="tab1">
+                    <div class="row main-list" style="margin-top: 10px;">
+                        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                            <thead class="main-list-header-order">
+                            <!-- table header -->
+                            <tr>
+                                <th id="taxClassNameH" class="text-left">
+                                    <a href="">
+                                        Tax Class Name&nbsp;
+                                    </a>
+                                </th>
+                                <th id="taxClassTypeH" class="text-left">
+                                    <a href="">
+                                        Tax Type&nbsp;
+                                    </a>
+                                </th>
+                                <th id="taxClassPercH" class="text-left">
+                                    <a href="">
+                                        Tax %&nbsp;
+                                    </a>
+                                </th>
+                                <th id="taxClassCessH" class="text-left">
+                                    <a href="">
+                                        Cess&nbsp;
+                                    </a>
+                                </th>
+                                <th id="taxClassActionH" class="text-left"><a>Action</a></th>
+                            </tr>
+                            </thead>
+                            <tbody ng-if="showLoader">
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tbody data-ng-repeat="gstTaxClass in gstTaxClasses">
+                            <tr class="clickable-row-order">
+                                <td id="taxClassName{{$index}}" align="left">
+                                    {{gstTaxClass.tableTaxClassName}}
+                                </td>
+                                <td id="taxClassType{{$index}}" align="left">
+                                    {{gstTaxClass.tableTaxClassTaxType}}
+                                </td>
+                                <td id="taxClassPerc{{$index}}" align="left">
+                                    {{gstTaxClass.tableTaxClassTaxValue}}
+                                </td>
+                                <td id="taxClassCess{{$index}}" align="left">
+                                    {{gstTaxClass.tableTaxClassSurcharge}}
+                                </td>
+                                <td id="taxClassAction{{$index}}" align="left">
+                                    <img ng-src="{{imgsrc1}}" title="Edit" width="20px" height="20px"
+                                         id="taxClassActionEdit{{$index}}"
+                                         ng-click="access.editAccess && showEditTaxClassModal(gstTaxClass)"
+                                         ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                                         ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                        <!-- END TABLE -->
+                    </div>
+                </div>
+                <div class="tab-pane container-fluid" id="tab2">
+                <div class="row main-list" style="margin-top: 10px;">
+                    <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                        <thead class="main-list-header-order">
+                        <!-- table header -->
+                        <tr>
+                            <th id="taxClass1NameH" class="text-left">
+                                    Tax Class Name&nbsp;
+                            </th>
+                            <th id="taxClass1StateH" class="text-left">
+                                    State&nbsp;
+                            </th>
+                            <th id="taxClass1TypeH" class="text-left">
+                                    Intrastate Tax Type&nbsp;
+                            </th>
+                            <th id="taxClass1PercH" class="text-left">
+                                    Intrastate Tax %&nbsp;
+                            </th>
+                            <th id="taxClass1SurH" class="text-left">
+                                    Intrastate Surcharge&nbsp;%
+                            </th>
+                            <th id="taxClass1ITypeH" class="text-left">
+                                    Interstate Tax Type&nbsp;
+                            </th>
+                            <th id="taxClass1IPercH" class="text-left">
+                                <a href="">
+                                    Interstate Tax %&nbsp;
+                                </a>
+                            </th>
+                            <th id="taxClass1ISurH" class="text-left">
+                                <a href="">
+                                    Interstate Surcharge&nbsp;%
+                                </a>
+                            </th>
+                            <th id="taxClass1IActionH" class="text-left">
+                                <a>Action</a>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody ng-if="showLoader">
+                        <tr>
+                            <td colspan="9" class="text-center">
+                                <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tbody data-ng-repeat="stateTaxClass in stateTaxClasses">
+                        <tr class="clickable-row-order">
+                            <td id="taxClass1Name{{$index}}" align="left">
+                                <span class="truncate" title="{{stateTaxClass.tableTaxClassName}}">{{stateTaxClass.tableTaxClassName}}</span>
+                            </td>
+                            <td id="taxClass1State{{$index}}" align="left">
+                                {{stateTaxClass.tableState.tableStateLongName}}
+                            </td>
+                            <td id="taxClass1Type{{$index}}" align="left">
+                                {{stateTaxClass.tableTaxClassTaxType}}
+                            </td>
+                            <td id="taxClass1Perc{{$index}}" align="left">
+                                {{stateTaxClass.tableTaxClassTaxValue}}
+                            </td>
+                            <td id="taxClass1Sur{{$index}}" align="left">
+                                {{stateTaxClass.tableTaxClassSurcharge}}
+                            </td>
+                            <td id="taxClass1IType{{$index}}" align="left">
+                                {{stateTaxClass.tableTaxClassInterstateTaxType}}
+                            </td>
+                            <td id="taxClass1IPerc{{$index}}" align="left">
+                                {{stateTaxClass.tableTaxClassInterstateTaxValue}}
+                            </td>
+                            <td id="taxClass1ISur{{$index}}" align="left">
+                                {{stateTaxClass.tableTaxClassInterstateSurcharge}}
+                            </td>
+                            <td id="taxClass1IAction{{$index}}" align="left">
+                                <img ng-src="{{imgsrc1}}"  width="20px" height="20px"
+                                     id="taxClass1IActionEdit{{$index}}"
+                                     ng-click="access.editAccess && showEditTaxClassModal(stateTaxClass)"
+                                     ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                                     ng-attr-title="{{!access.editAccess || stateTaxClass.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}"
+                                     ng-class="{disableAccess: !access.editAccess || stateTaxClass.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                                     ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+                    </table>
+                    <!-- END TABLE -->
+                    </div>
+                </div>
+                <div class="tab-pane container-fluid" id="tab3">
+                    <div class="row main-list" style="margin-top: 10px;">
+                        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                            <thead class="main-list-header-order">
+                            <!-- table header -->
+                            <tr>
+                                <th id="taxClass2NameH" class="text-left">
+                                    <a href="">
+                                        Tax Class Name&nbsp;
+                                    </a>
+                                </th>
+                                <th id="taxClass2TypeH" class="text-left">
+                                    <a href="">
+                                        Tax Type&nbsp;
+                                    </a>
+                                </th>
+                                <th id="taxClass2PercH" class="text-left">
+                                    <a href="">
+                                        Tax %&nbsp;
+                                    </a>
+                                </th>
+                                <th id="taxClass2SurH" class="text-left">
+                                    <a href="">
+                                        Surcharge&nbsp;
+                                    </a>
+                                </th>
+                                <th id="taxClass2ActionH" class="text-left"><a>Action</a></th>
+                            </tr>
+                            </thead>
+                            <tbody ng-if="showLoader">
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tbody data-ng-repeat="countryTaxClass in countryTaxClasses">
+                            <tr class="clickable-row-order">
+                                <td id="taxClass2Name{{$index}}" align="left">
+                                    {{countryTaxClass.tableTaxClassName}}
+                                </td>
+                                <td id="taxClass2Type{{$index}}" align="left">
+                                    {{countryTaxClass.tableTaxClassTaxType}}
+                                </td>
+                                <td id="taxClass2Perc{{$index}}" align="left">
+                                    {{countryTaxClass.tableTaxClassTaxValue}}
+                                </td>
+                                <td id="taxClass2Sur{{$index}}" align="left">
+                                    {{countryTaxClass.tableTaxClassSurcharge}}
+                                </td>
+                                <td id="taxClass2Action{{$index}}" align="left">
+                                    <img ng-src="{{imgsrc1}}" title="Edit" width="20px" height="20px"
+                                         id="taxClass2ActionEdit{{$index}}"
+                                         ng-click="access.editAccess && showEditTaxClassModal(countryTaxClass)"
+                                         ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                                         ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                        <!-- END TABLE -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 0px;">
+            <div class="col-md-6" ng-show="taxClassTabValue == 'gst'">
+                <p class="showingTaxClassLabel" ng-show="taxClassbyScopeSize<gstCount">Showing Tax Class {{taxClassStart + 1}} to {{gstTaxClassEnd}} of {{gstCount}}
+                </p>
+
+                <p class="showingTaxClassLabel" ng-show="taxClassbyScopeSize>=gstCount && gstCount!=0">Showing Tax Class {{taxClassStart + 1}}
+                    to {{gstCount}} of {{gstCount}}
+                </p>
+
+                <p class="showingTaxClassLabel" ng-show="gstCount==0">No Tax Class Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="taxClassTabValue == 'state'">
+                <p class="showingTaxClassLabel" ng-show="taxClassbyScopeSize<stateCount">Showing Tax Class {{taxClassStart + 1}} to {{stateTaxClassEnd}} of {{stateCount}}
+                </p>
+
+                <p class="showingTaxClassLabel" ng-show="taxClassbyScopeSize>=stateCount && stateCount!=0">Showing Tax Class {{taxClassStart + 1}}
+                    to {{stateCount}} of {{stateCount}}
+                </p>
+
+                <p class="showingTaxClassLabel" ng-show="stateCount==0">No Tax Class Available
+                </p>
+            </div>
+            <div class="col-md-6" ng-show="taxClassTabValue == 'country'">
+                <p class="showingOrderLabel" ng-show="taxClassbyScopeSize<countryCount">Showing Tax Class {{taxClassStart + 1}} to {{countryTaxClassEnd}} of {{countryCount}}
+                </p>
+
+                <p class="showingTaxClassLabel" ng-show="taxClassbyScopeSize>=countryCount && countryCount!=0">Showing Tax Class {{taxClassStart + 1}}
+                    to {{countryCount}} of {{countryCount}}
+                </p>
+
+                <p class="showingTaxClassLabel" ng-show="countryCount==0">No Tax Class Available
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPager.pages.length" class="pagination">
+                            <li>
+                                <a><span style="padding-right: 5px;">Showing</span>
+                                    <select id="pagesize" ng-change="onRecordsPerPageChange(allTaxClassPageSize)"  ng-model="allTaxClassPageSize" name="recordsPerPage"
+                                            ng-options="option for option in recordsPerPage"
+                                            required>
+                                    </select>
+                                    <span style="padding-left: 5px;">records per page</span>
+                                </a>
+                            </li>
+                            <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a ng-click="listOfTaxCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li id="previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="listOfTaxCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="listOfTaxCount(page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="listOfTaxCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="listOfTaxCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+            </div>
+        </div>

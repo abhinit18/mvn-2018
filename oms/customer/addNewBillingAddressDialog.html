@@ -1,0 +1,276 @@
+<div class="modal fade"  id="billingAddressModal" role="dialog" aria-labelledby="billingAddressModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg" >
+        <form name="billingAddressForm" accessible-form novalidate ng-submit="billingAddressForm.$valid && submitBillingAddressForm(billingAddressForm)">
+            <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="customerBACancel1" type="button" class="close" ng-click="cancelBillingAddress(billingAddressForm)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p ng-if="billAddressMode=='add'" class="dialog-heading-p" id="billingAddressModalLabel1">Add New Billing Address</p>
+                <p ng-if="billAddressMode=='edit'" class="dialog-heading-p" id="billingAddressModalLabel2">Edit Billing Address</p>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- Information Area -->
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Contact Person Name <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text" name="contactPersonName"
+                                           required
+                                           id="customerBAPerson" ng-maxlength="91" ng-minlength="2"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="First Name"
+                                           ng-model="billingAddress.tableAddressContactPerson1">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                     <span ng-if="billingAddressForm.$submitted && billingAddressForm.contactPersonName.$error.required" class="error-message">
+                                         Please enter the Contact Person Name
+                                     </span>
+                                     <span ng-if="billingAddressForm.contactPersonName.$dirty && billingAddressForm.contactPersonName.$error.minlength" class="error-message">
+                                         Contact Person Name should have at least 2 characters.
+                                     </span>
+                                     <span ng-if="billingAddressForm.contactPersonName.$dirty && billingAddressForm.contactPersonName.$error.maxlength" class="error-message">
+                                         Contact Person Name should not exceed 90 characters.
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Email Id <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="email" name="custEmail" required
+                                           id="customerBAEmail" ng-maxlength="45"
+                                           class="form-control text-lowercase emailInput darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Email ID"
+                                           ng-model="billingAddress.tableAddressEmail1"
+                                           ng-blur="validateEmail(myForm.custEmail.$valid);">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                     <span ng-if="billingAddressForm.$submitted && billingAddressForm.custEmail.$error.required"  class="error-message">
+                                         Please enter the Email Id
+                                     </span>
+                                     <span ng-if="billingAddressForm.$submitted && billingAddressForm.custEmail.$error.email"  class="error-message">
+                                         Please enter a valid Email Id
+                                     </span>
+                                     <span ng-if="billingAddressForm.custEmail.$dirty && billingAddressForm.custEmail.$error.maxlength"  class="error-message">
+                                         Email Id should not exceed 45 characters.
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Phone Number <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text"
+                                           name="phoneNumber" required
+                                           id="customerBAPhone"
+                                           numbers-only class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Enter phone number"
+                                           ng-model="billingAddress.tableAddressPhone1">
+                                </div>
+                                <div ng-if="billingAddressForm.$submitted && billingAddressForm.phoneNumber.$error.required" class="col-md-offset-6 col-md-6">
+                                     <span class="error-message">
+                                         Please enter the Phone Number
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 1 <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text" name="addressLine" required
+                                           id="customerBAAddress1" ng-maxlength="256" ng-minlength="2"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Enter address"
+                                           ng-model="billingAddress.tableAddress1">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                     <span ng-if="billingAddressForm.$submitted && billingAddressForm.addressLine.$error.required"  class="error-message">
+                                         Please enter the Address
+                                     </span>
+                                     <span ng-if="billingAddressForm.addressLine.$dirty && billingAddressForm.addressLine.$error.maxlength"  class="error-message">
+                                         Address Line 1 should not exceed 256 characters.
+                                     </span>
+                                     <span ng-if="billingAddressForm.addressLine.$dirty && billingAddressForm.addressLine.$error.maxlength"  class="error-message">
+                                         Address Line 1 should have at least 2 characters.
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 2</span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input id="customerBAAddress2" name="addressLine2" ng-maxlength="256" type="text" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Enter address" ng-model="billingAddress.tableAddress2">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                     <span ng-if="billingAddressForm.addressLine2.$dirty && billingAddressForm.addressLine2.$error.maxlength"  class="error-message">
+                                         Address Line 1 should not exceed 256 characters.
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 3</span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input id="customerBAAddress3" name="addressLine3" ng-maxlength="256" type="text" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Enter address" ng-model="billingAddress.tableAddress3">
+                                </div>
+                                <div class="col-md-offset-6 col-md-6">
+                                     <span ng-if="billingAddressForm.addressLine3.$dirty && billingAddressForm.addressLine3.$error.maxlength"  class="error-message">
+                                         Address Line 1 should not exceed 256 characters.
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">State <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select id="customerBAState"  ng-model="customerBillingAddress.stateData"
+                                             name="state" required
+                                             class="form-control"
+                                             ng-options="option as option.tableStateLongName for option in regionsStatesArray track by option.idtableStateId" ng-change="regionsStatesDistrictDataForBilling(customerBillingAddress.stateData);checkVat(customerBillingAddress.stateData);onStateChangedBilling();">
+                                            <option value="">Select State</option>
+                                    </select>
+                                </div>
+                                <div ng-if="billingAddressForm.$submitted && billingAddressForm.state.$error.required" class="col-md-offset-6 col-md-6">
+                                     <span class="error-message">
+                                         Please select the State
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">District <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="customerBADistrict" ng-model="customerBillingAddress.districtData"
+                                            class="form-control" name="district" required
+                                            ng-options="option as option.tableDistrictLongName for option in regionsStatesDistrictArrayForBilling track by option.idtableDistrictId"
+                                            ng-change="regionsStatesDistrictsCityDataForBilling(customerBillingAddress.stateData,customerBillingAddress.districtData);">
+                                        <option value="">Select District</option>
+                                    </select>
+                                </div>
+                                <div ng-if="billingAddressForm.$submitted && billingAddressForm.state.$error.required" class="col-md-offset-6 col-md-6">
+                                     <span class="error-message">
+                                         Please select the District
+                                     </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">City <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select id="customerBACity" ng-model="billingAddress.tableCity"
+                                            class="form-control" name="city" required
+                                            ng-options="option as option.tableCityLongName for option in regionsStatesDistrictsCityArrayForBilling track by option.idtableCityId"
+                                            ng-change="changeCityForBilling(billingAddress.tableCity);">
+                                           <option value="">Select City</option>
+                                    </select>
+                                </div>
+                                <div ng-if="billingAddressForm.$submitted && billingAddressForm.city.$error.required" class="col-md-offset-6 col-md-6">
+                                     <span class="error-message">
+                                         Please select the City
+                                     </span>
+                                </div>
+                            </div>
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">PIN Code <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input id="customerBAPIN" type="text" ng-pattern-restrict="^[0-9]*$"
+                                           min="0" name="pinCode" required
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           placeholder="Enter postal code"
+                                           ng-model="billingAddress.tableAddressPin">
+                                </div>
+                                <div ng-if="billingAddressForm.$submitted && billingAddressForm.pinCode.$error.required" class="col-md-offset-6 col-md-6">
+                                     <span class="error-message">
+                                         Please select the PIN Code
+                                     </span>
+                                </div>
+                            </div>
+                            <div class="row padding-top-15">
+                                <div class="col-md-9 form-row-height">
+                                    <span> <md-checkbox id="SOAddBASame"
+                                                        ng-model="billingAddress.tableCustomerBillingAddressListIsPrimary"
+                                                        aria-label="Enable"> </md-checkbox> &nbsp;Set as primary billing address
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row padding-top-15" >
+                                <div class="col-md-6 form-row-height" >
+                                    <span class="form-label-height semi-bold-text">GSTIN
+                                    </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input id="customerBAGSTIN" type="text" name="gstin"
+                                           placeholder="{{genericData.customerVatTinBillingPlaceholder}}"
+                                           gstinvalidator="{{customerBillingAddress.stateData}}"
+                                           ng-pattern="/^[0-3][0-9][A-Z]{5}[0-9]{4}[A-Z][0-9]Z[A-Z0-9]/"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           ng-model="genericData.customerVatTinBilling">
+                                </div>
+                                <div  class="col-md-offset-6 col-md-6">
+                                    <span ng-if="billingAddressForm.$submitted && billingAddressForm.gstin.$error.pattern"  class="error-message">
+                                        Please enter a valid GSTIN.
+                                    </span>
+                                    <span ng-if="billingAddressForm.$submitted && billingAddressForm.gstin.$error.gstin"  class="error-message">
+                                        State code provided in GSTIN does not match the state code of selected state.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row padding-top-15" ng-if="genericData.customerVatTinBilling != null && genericData.customerVatTinBilling.length > 0">
+                                <div class="col-md-6 form-row-height">
+                                    <span class="form-label-height semi-bold-text">GST Status Of Customer</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <md-radio-group name="natureOfCustomer" ng-model="tableGstTypeBilling.tableGstType.tableGstTypeName" >
+                                        <md-radio-button id="customerBANature{{$index}}" ng-value="gst.tableGstTypeName" ng-repeat="gst in gstTypes""  class="md-primary">{{gst.tableGstTypeName}}</md-radio-button>
+                                    </md-radio-group>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<div class="col-md-6 padding-top-15">
+                            &lt;!&ndash; Map Area &ndash;&gt;
+                            <demo-map ng-if="searchLocationBilling" ng-model="searchLocationBilling" class="demo-map"></demo-map>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button id="customerBACancel2" type="button" class="cancel-btn" ng-click="cancelBillingAddress(billingAddressForm)">Cancel</button>
+                <input id="customerBASubmit" ng-if="billAddressMode=='add'" type="submit"
+                       class="action-btn" ng-click="setFormButtonValue('add');"
+                       value="Add" >
+                <input id="customerBAUpdate" ng-if="billAddressMode=='edit'" type="submit"
+                       class="action-btn" ng-click="setFormButtonValue('edit');"
+                       value="Update" >
+            </div>
+        </div>
+        </form>
+    </div>
+</div>

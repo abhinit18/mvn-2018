@@ -1,0 +1,157 @@
+.template-tab-btn {
+    border-radius: 0 !important;
+    border: none !important;
+    margin-right: 0px !important;
+    height: 40px;
+    width: 190px;
+    background-color: #D0DEE0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #30373B;
+    box-shadow: none !important;
+}
+
+.template-tab-btn:focus, .template-tab-btn:hover, .template-tab-btn.active {
+    background-color: #E9EEEF;
+    outline: none;
+    cursor: pointer;
+}
+
+.add-template-btn {
+    height: 40px;
+    color: #ffffff;
+    background-color: #F0592B;
+    font-weight: 600;
+    min-width: 250px;
+}
+
+.add-template-btn:hover, .add-template-btn:active, .add-template-btn.active, .add-template-btn:focus {
+    color: #ffffff !important;
+    background-color: #EA512D !important;
+    outline: none !important;
+}
+
+.invoice-heading-2 {
+    padding: 30px 0px 20px 0px;
+    font-weight: 600;
+    color: #30373B;
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: -15px !important;
+}
+
+.main-list-header-template {
+    background: #30373B;
+    color: #f5fafd;
+}
+
+.main-list-header-template>tr {
+    border: 1px solid #C0C0C0;
+    height: 45px;
+}
+
+.main-list-header-template>tr>td {
+    padding-top: 10px !important;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.main-list-header-template>tr>td:first-child {
+    padding-left: 30px !important;
+    width: 90%;
+}
+
+.main-list-header-template>tr>td:nth-child(2) {
+    text-align: center;
+}
+
+.clickable-row-template {
+    height: 60px;
+    border: 1px solid #C0C0C0;
+}
+
+.clickable-row-template:hover {
+    background: #D3DDDF;
+}
+
+.clickable-row-template>td {
+    padding-top: 15px !important;
+    font-size: 14px;
+    color: #30373B;
+}
+
+.clickable-row-template>td:first-child {
+    padding-left: 30px !important;
+    width: 90%;
+}
+
+.clickable-row-template>td:nth-child(2) {
+    text-align: center;
+}
+
+.input-template {
+    padding-top: 5px !important;
+    padding-bottom: 7px !important;
+    padding-left: 0px !important;
+}
+
+.additional-component {
+    height: 45px;
+    cursor: pointer;
+    margin-bottom: 7px;
+    border: 1px solid #D9DADB;
+    font-size: 14px;
+    font-weight: 600;
+    color: #30373B;
+    padding: 10px 10px 0px 10px;
+}
+
+.additional-component .add-component-img {
+    background: url(../../images/svg/add_grey.svg);
+    width: 20px;
+    height: 20px;
+}
+
+.additional-component:hover {
+    border: 1px solid #F0592B;
+    color: #F0592B;
+}
+
+.additional-component:hover .add-component-img {
+    background: url(../../images/svg/add_orange.svg);
+    width: 20px;
+    height: 20px;
+}
+
+.component {
+    margin-bottom: 7px;
+}
+
+.component-accordion {
+    background-color: #F2F7F8;
+    padding: 10px 10px 0px 10px;
+    height: 45px;
+}
+
+.component-header {
+    background-color: #F0592B;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    height: 45px;
+    padding: 10px 10px 0px 10px;
+}
+
+.copyButton {
+    background: url(../../images/svg/copy_active.svg);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.copyButton:hover {
+    background: url(../../images/svg/copy_hover.svg);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}

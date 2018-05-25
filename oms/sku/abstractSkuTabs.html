@@ -1,0 +1,148 @@
+        <div class="row search-row-heading">
+
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row search-row search-row-content search-row-top-border" ng-if="false">
+            <div class="row row-margin-top-x-medium-sku">
+                <div class="col-md-2 col-md-offset-1 margin-top-5">
+                    <span class="total-count-heading">Search Master SKU</span>
+                </div>
+                <div class="col-md-4" style="left: -40px;">
+                    <input type="text" id="abstarctSKUId" name="sellerabstarctSkuId" ng-model="skuAbstarctString" class="form-control darkgrey-bottom-border font input-less-padding" />
+                </div>
+                <div class="col-md-1" style="left: -50px; top: -2px;">
+                    <button id="abstarctSKUSearch" type="button" class="btn btn-default mybut"  ng-click="submitAbstractSkuAction(skuAbstarctString)">Search</button>
+                </div>
+                <div class="col-md-1" style="margin-top: 4px;">
+                    <button id="abstarctSKUClear" title="Clear Applied Filters"  style="margin-left:0px;" class="btn clearFilter" ng-click="skuAbstarctString=null;">
+                    </button>
+                </div>
+            </div>
+
+        </div>
+		<div class="row search-row search-row-content search-row-top-border">
+			<div class="row row-margin-top-x-medium-sku">
+				<div class="col-xs-3" style="padding-top: 5px; padding-left: 128px;">
+					<span class="total-count-heading">Total Master SKUs</span>
+				</div>
+				<div class="col-xs-3">
+					<div class="circle-oval circle-orange" style="margin-left: -45px;">
+						<span>{{abstractSkusCount}}</span>
+					</div>
+				</div>
+			</div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <button id="abstractSKUAddNew" type="button" ng-if="access.createAccess" class="btn addsharpbutton font pull-right" ng-click="showAbstractSkuAddBox($event)" style="margin-top:10px;"><img src="images/svg/add.svg" style="height:20px;">&nbsp;Add New Master SKU</button>
+            </div>
+        </div>
+        <div class="row main-list">
+            <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                <thead class="main-list-header-sku">
+                    <!-- table header -->
+                    <tr>
+                        <th id="abstractSKUIdH" class="text-left">
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingAbstractSkus('abstractSkuName',sortReverseAbstractSkus)">
+                                Master SKU Name
+                                <span ng-if="sortTypeAbstractSkus == 'abstractSkuName' && !sortReverseAbstractSkus"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeAbstractSkus == 'abstractSkuName' && sortReverseAbstractSkus"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                Abstract SKU Name
+                            </a>
+                        </th>
+                        <th id="abstarctSKUNumberOfskusH" class="text-left">
+                                Total SKUs
+                        </th>
+                        <th id="vkitSKUCategoryH" class="text-left">
+                                Category
+                        </th>
+                        <th id="vkitSKUBrandH" class="text-left">
+                                Brand
+                        </th>
+                        <th id="vkitSKUActionH" class="text-left action-col">Action</th>
+                    </tr>
+                </thead>
+                <tbody ng-if="showLoader">
+                <tr>
+                    <td colspan="9" class="text-center">
+                        <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody data-ng-repeat="data in abstractSkus" data-ng-switch on="dayDataCollapse[$index]">
+                    <tr class="clickable-row-sku">
+                        <td id="abstarctSKUName{{$index}}" class="short-sku-name " title="{{data.abstractSkuName}}" align="left">{{data.abstractSkuName}}</td>
+                        <td id="abstarctSKUNumberOfSkus{{$index}}" align="left" class="short-sku-name" title="{{data.tableSkus.length}}">{{data.tableSkus.length}}</td>
+                        <td id="abstractSKUCategory{{$index}}" align="left">{{data.tableSkuNode.skuNodeName}}</td>
+                        <td id="abstarctSKUbrancd{{$index}}" align="left">{{data.tableSkuBrandCode.tableSkuBrandCodeString}}</td>
+                        <td id="abstractSKUAction{{$index}}" align="left">
+                            <img ng-src="{{imgsrc1}}" ng-attr-title="{{!access.editAccess ? 'You do not have permission' : 'Edit'}}" width="20px" height="20px" data-ng-click="access.editAccess && editAbstractSku(data)" ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                                 ng-class="{disableAccess: !access.editAccess }"
+                                 ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- END TABLE -->
+            <div class="row" style="margin-top: 0px;">
+                <div class="col-md-6">
+                    <p class="showingOrderLabel" ng-show="abstractSkusSize<abstractSkusCount">Showing Abstract SKUs {{abstractSkusStart + 1}} to {{abstarctSkusEnd}} of {{abstractSkusCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="abstractSkusSize>=abstractSkusCount && abstractSkusCount!=0">Showing Abstract SKUs {{abstractSkusStart + 1}} to {{abstarctSkusEnd}} of {{abstractSkusCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="abstractSkusCount==0">No Abstract SKUs Available
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPagerVKit.pages.length" class="pagination">
+                            <li>
+                                <a><span style="padding-right: 5px;">Showing</span>
+                                    <select ng-change="onRecordsPerPageChangeForAbstarctSku(abstractSkusSize)"  ng-model="abstractSkusSize" name="recordsPerPage"
+                                            ng-options="option for option in recordsPerPage"
+                                            required>
+                                    </select>
+                                    <span style="padding-left: 5px;">records per page</span>
+                                </a>
+                            </li>
+                            <li id="first1" ng-show="vmPagerVKit.currentPage == 1" ng-class="{disabled:vmPagerVKit.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li id="first2" ng-show="vmPagerVKit.currentPage > 1" ng-class="{disabled:vmPagerVKit.currentPage == 1}">
+                                <a ng-click="listOfAbstractSkusCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li id="previous1" ng-show="vmPagerVKit.currentPage == 1" ng-class="{disabled:vmPagerVKit.currentPage == 1}">
+                                <a> &lt; Previous</a>
+                            </li>
+                            <li id="previous2" ng-show="vmPagerVKit.currentPage > 1" ng-class="{enabled:vmPagerVKit.currentPage > 1}">
+                                <a ng-click="listOfAbstractSkusCount(vmPagerVKit.currentPage - 1)"> &lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPagerVKit.pages" ng-class="{active:vmPagerVKit.currentPage == page}">
+                                <a ng-click="listOfAbstractSkusCount(page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPagerVKit.currentPage < vmPagerVKit.totalPages" ng-class="{enabled:vmPagerVKit.currentPage > vmPagerVKit.totalPages}">
+                            <a ng-click="listOfAbstractSkusCount(vmPagerVKit.currentPage + 1)">Next &gt; </a>
+                            </li>
+                            <li id="next2" ng-show="vmPagerVKit.currentPage == vmPagerVKit.totalPages" ng-class="{disabled:vmPagerVKit.currentPage == vmPagerVKit.totalPages}">
+                                <a>Next &gt; </a>
+                            </li>
+                            <li id="last1" ng-show="vmPagerVKit.currentPage < vmPagerVKit.totalPages" ng-class="{disabled:vmPagerVKit.currentPage == vmPagerVKit.totalPages}">
+                                <a ng-click="listOfAbstractSkusCount(vmPagerVKit.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPagerVKit.currentPage == vmPagerVKit.totalPages" ng-class="{disabled:vmPagerVKit.currentPage == vmPagerVKit.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+
+                    </span>
+                </div>
+            </div>
+        </div>
+
+<div ng-include src="'sku/addAbstractSkuDialog.html?version=1.0.0'"></div>

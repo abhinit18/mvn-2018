@@ -1,0 +1,118 @@
+<div class="modal fade" data-backdrop="static" id="addVendorSkuModal" role="dialog" aria-labelledby="vendorAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <form name="addVendorSkuForm" accessible-form novalidate ng-submit="addVendorSkuForm.$valid && mapList.length > 0 && makeSkusMapWithVendor2(genericData.vendorId, mapList, genericData.index,addVendorSkuForm)">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                    <button id="vendorSkuModalCancel1" type="button" class="close" ng-click="cancelvendorData(addVendorSkuForm);">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" ng-if="vendorMode == 'add'">Map SKUs</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                            <div class="row row-margin-top">
+                                        <div class="col-md-2 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Map SKU <span style="color:red">*</span></span>
+                                        </div>
+                                        <div class="col-md-4 form-row-height">
+                                            <angucomplete-alt id="products"
+                                                              placeholder="Search product" pause="400"
+                                                              selected-object="productObject" remote-url="{{baseSkuUrl}}"
+                                                              title-field="tableSkuClientSkuCode"
+                                                              description-field="tableSkuName"
+                                                              input-class="form-control darkgrey-bottom-border"
+                                                              image-field="tableSkuImageUrl"
+                                                              input-name="tableSkuName"
+                                                              field-required="mapList.length == 0"
+                                            ></angucomplete-alt>
+                                        </div>
+                                        <div class="col-md-1 form-row-height">
+                                            <button id="vendorSkuModalSkuMore" type="button" title="Click here to see all SKUs."
+                                                    style="position: absolute; top: 10px; left:1px;"
+                                                    class="btn btn-sm truncate-text"
+                                                    ng-click="masterSkuDialog($event, true);">. . .</button>
+                                        </div>
+                                        <div class="col-md-4 form-row-height">
+                                            <input ng-required="mapList.length == 0"
+                                                   name="vendorSkuCode"
+                                                   type="text"
+                                                   ng-model="genericData.vendorSkuCode" name="vendorSkuCode" placeholder="Vendor SKU Code"
+                                                   id="vendorSkuModalSkuCode"
+                                                   class="form-control darkgrey-bottom-border"
+                                                   style="text-align: left;"/></span>
+                                        </div>
+                                        <div class="col-md-1 form-row-height">
+                                            <!--<button type="button" class="btn small-actn-btn"-->
+                                                    <!--ng-click="createMap(productObject,genericData.vendorSkuCode)">Add to List</button>-->
+                                            <span title="Add to List"
+                                                  class="form-label-height add-to-list-icon"
+                                                  style="color: #f0592b;"
+                                                  id="vendorSkuModalSkuMap"
+                                                  ng-click="createMap(productObject,genericData.vendorSkuCode)"></span>
+                                        </div>
+                                        <div class="col-md-offset-2 col-md-4">
+                                             <span ng-if="addVendorSkuForm.$submitted && addVendorSkuForm.tableSkuName.$error['autocomplete-required']" class="error-message">
+                                                 Please select a product
+                                             </span>
+                                        </div>
+                                        <div class="col-md-offset-1 col-md-4">
+                                             <span ng-if="addVendorSkuForm.$submitted && addVendorSkuForm.vendorSkuCode.$error.required" class="error-message">
+                                                 Please enter the Vendor SKU Code
+                                             </span>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                             <span ng-if="addVendorSkuForm.$submitted && mapList.length==0 && addVendorSkuForm.vendorSkuCode.$valid" class="error-message">
+                                                 Please add the product to the list
+                                             </span>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row" ng-if="mapList.length > 0">
+                                        <table id="productTable"
+                                               class="table boldtable table-responsive table-bordered table-hover">
+                                            <thead class="data-grid-header">
+                                            <tr>
+                                                <th id="vendorMaplistNameH"><span class="fa fa-barcode fa-md"></span>&nbsp;&nbsp;Product Name
+                                                </th>
+                                                <th id="vendorMaplistCodeH" style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Vendor SKU Code
+                                                </th>
+                                                <th id="vendorMaplistActionH" style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="data-grid-data">
+                                            <tr ng-repeat="product in mapList">
+                                                <td id="vendorMaplistName{{$index}}" >{{product.tableSku.tableSkuName}}</td>
+                                                <td id="vendorMaplistCode{{$index}}" style="text-align: right;">
+                                                    {{product.tableVendorSystemSkuMapVendorSkuCode}}
+                                                </td>
+                                                <td id="vendorMaplistAction{{$index}}" style="text-align: center; padding: 0;">
+                                                    <md-button id="vendorMaplistDelete{{$index}}" class="md-icon-button" md-no-ink="true"
+                                                               ng-click="removeMap($index)" placeholder="Delete"
+                                                               style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                        <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                                 ng-init="imgsrc1='images/svg/delete.svg'"
+                                                                 ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                                 ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                                 style="width: 20px;"></md-icon>
+                                                    </md-button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                    </div>
+                </div>
+                <div ng-if="singleVendorTab==true && bulkVendorTab==false && vendorMode == 'add'" class="modal-footer modal-dialog-footer">
+                    <button id="vendorSkuModalCancel2" type="button" class="cancel-btn" ng-click="cancelvendorData(addVendorSkuForm);">Cancel</button>
+                    <button id="vendorSkuModalSubmit" type="submit" class="action-btn">
+                        Add
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

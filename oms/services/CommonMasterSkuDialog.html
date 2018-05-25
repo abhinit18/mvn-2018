@@ -1,0 +1,71 @@
+
+<!--=============================================== bootstrap dialog box for master sku list details==================-->
+
+<div class="modal fade" id="dialogmastersku" role="dialog"
+    tabindex="-1" aria-labelledby="myModalLabelleded" aria-hidden="true">
+    <div class="modal-dialog modal-lg" >
+        <form
+                name="QuickGRN">
+            <div class="modal-content" >
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="cancelmastersDialog()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">List of SKUs</p>
+
+                </div>
+                <div class="modal-body" id="masterSKUModal"  style="overflow: auto;height:350px;padding-top: 10px">
+                    <!--<div class="full-width" infinite-scroll-distance="0" infinite-scroll-container="'#masterSKUModal'"-->
+                         <!--infinite-scroll="skuPagingFunction()" infinite-scroll-disabled='skuLoadBusy' infinite-scroll-parent="true" infinite-scroll-immediate-check="false"  style = "padding-top: 20px">-->
+                            <!--<div class="tab-content" >-->
+                                <div  class="clearfix"  infinite-scroll-parent infinite-scroll-container="'#masterSKUModal'" infinite-scroll="skuPagingFunction()" infinite-scroll-disabled='skuLoadBusy' infinite-scroll-immediate-check="false" style="width: 100%;" id="tab1">
+                                    <table id="productTable"
+                                           class="table boldtable table-responsive table-bordered table-hover">
+                                        <thead class="data-grid-header">
+                                        <tr>
+                                            <th class="text-left"><span class="fa fa-barcode fa-md"></span>&nbsp;&nbsp;SKU Name
+                                            </th>
+                                            <th class="text-left"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Seller SKU ID
+                                            </th>
+                                            <th class="text-left"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="data-grid-data" data-ng-repeat="sku in genericData.skusListFiltered">
+                                        <tr>
+                                            <td align="left">{{sku.tableSkuName}}</td>
+                                            <td align="left">
+                                                {{sku.tableSkuClientSkuCode}}
+                                            </td>
+                                            <td align="left">
+                                                <button type="button" style="margin-top:7px;" class="btn btn-sm btn-search-all" md-no-ink="false"
+                                                        ng-click="selectSku(sku.idtableSkuId, $event)" placeholder="Select"
+                                                        >
+                                                    Select
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="clearfix"></div>
+                            <!--</div>-->
+                        <!--</div>-->
+
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button type="button" class="cancel-btn" ng-click="cancelmastersDialog()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--========================================= ends here =======================================-->

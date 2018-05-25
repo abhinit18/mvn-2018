@@ -1,0 +1,171 @@
+<link href="wops/inbound/inbound.css" rel="stylesheet">
+<style>
+    .tabsdemoDynamicHeight md-content .md-fab.visible {
+        transform: scale(1);
+        transition: transform 0.3s linear;
+    }
+
+    .tabsdemoDynamicHeight md-content .md-fab {
+        transform: scale(0);
+        transition: transform 0.3s linear;
+    }
+
+    .tabsdemoDynamicHeight md-content {
+        background-color: transparent !important;
+    }
+
+    .tabsdemoDynamicHeight md-content md-tabs {
+        background: #f6f6f6;
+        border: 1px solid #e1e1e1;
+    }
+
+    .tabsdemoDynamicHeight md-content md-tabs md-tabs-canvas {
+        background: white;
+    }
+
+    .tabsdemoDynamicHeight md-content h1:first-child {
+        margin-top: 0;
+    }
+
+    .md-button.md-fab.md-fab-bottom-right {
+        top: -4px;
+        right: 20px;
+        /* bottom: 20px; */
+        left: auto;
+        position: absolute;
+    }
+
+    .md-button.md-fab {
+        z-index: 10;
+        line-height: 56px;
+        min-width: 0;
+        width: 185px;
+        height: 45px;
+        vertical-align: middle;
+        text-align: center;
+        border-radius: 1%;
+        background-clip: padding-box;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+        transition-property: background-color, box-shadow, -webkit-transform;
+        transition-property: background-color, box-shadow, transform;
+        color: #F4511E; background-color: #F4511E;
+    }
+</style>
+
+<div class="container-fluid" ng-init="bt1 = true;bt2 = false;">
+    <div class="row">
+        <div class="col-lg-10 col-md-10 col-xs-10">
+            <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;"><h4 class="screen-heading">Inbound Operations</h4></div>
+        </div>
+        <div class="col-lg-2 text-right">
+            <span class="fa fa-external-link-square newTabIcon" ng-click="newTab()" title="New Tab"></span>
+        </div>
+        <!--<div class="col-md-2">-->
+            <!--<button type="button" class="btn btn-default addsharpbutton row-margin-top-medium pull-right "-->
+                    <!--ng-click="activateTab('tab1');newTab()">-->
+                <!--<span class="fa fa-external-link-square"></span>-->
+                <!--<span style="color: #fff !important; font-weight: 400 !important;">&nbsp;New Tab</span>-->
+            <!--</button>-->
+        <!--</div>-->
+    </div>
+    <!--<div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;"><h4 class="screen-heading">Inbound Operations</h4></div>-->
+    <div class="row" style="padding-left: 30px;padding-right: 15px;">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
+            <div class="full-width">
+                <ul class="nav nav-tabs" id="ordertabs">
+                    <li ng-class="{'active':activeTab == 'tab1'}">
+                        <a ng-click="setActiveTab('tab1')" data-target="#table1" id="tab1" data-toggle="tab" class="btn sharp">PO</a>
+                    </li>
+                    <li ng-class="{'active':activeTab == 'tab2'}">
+                        <a ng-click="setActiveTab('tab2')" data-target="#table2" id="tab2" data-toggle="tab" class="btn sharp">Stock Transfer In</a>
+                    </li>
+                    <li ng-class="{'active':activeTab == 'tab3'}">
+                        <a ng-click="setActiveTab('tab3')" data-target="#table3" id="tab3" data-toggle="tab" class="btn sharp">Sale Return</a>
+                    </li>
+                    <li ng-class="{'active':activeTab == 'tab4'}">
+                        <a ng-click="setActiveTab('tab4')" data-target="#table4" id="tab4" data-toggle="tab" class="btn sharp">Returnable Goods Order</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row " style="margin-left: auto; margin-right: auto;">
+        <div class="tab-content">
+            <div ng-class="{'active':activeTab == 'tab1'}" class="tab-pane  container-fluid" id="table1">
+                <div ng-if="activeTab == 'tab1'"   ng-controller="poController" >
+                    <div ng-include src="'wops/inbound/poinbound.html?version=1.0.0'"></div>
+                    <div ng-include src="'po/infoBoxDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/GRNallData.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterVendorDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'sku/barcodeprinting.html?version=1.0.0'"></div>
+                </div>
+            </div>
+            <div  ng-class="{'active':activeTab == 'tab2'}" class="tab-pane  container-fluid" id="table2">
+                <div ng-if="activeTab == 'tab2'" ng-controller="stockTransfer" >
+                    <div ng-include src="'wops/inbound/stockxferinbound.html?version=1.0.0'"></div>
+                    <div ng-include src="'stockTransfer/infoBoxDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/STinGRNDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'sku/barcodeprinting.html?version=1.0.0'"></div>
+                </div>
+            </div>
+            <div  ng-class="{'active':activeTab == 'tab3'}" class="tab-pane  container-fluid" id="table3">
+                <div ng-if="activeTab == 'tab3'"  ng-controller="salereturnController" >
+                    <div ng-include src="'wops/inbound/saleorderreturninbound.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/SaleReturnGRNdialogBox.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/ClaimGrnDataDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterCustomerDialog.html?version=1.0.0'"></div>
+
+                </div>
+            </div>
+            <div  ng-class="{'active':activeTab == 'tab4'}" class="tab-pane  container-fluid" id="table4">
+                <div ng-if="activeTab == 'tab4'"   ng-controller="returnableGoodsOrderController">
+                    <div ng-include src="'wops/inbound/returnableGoodsOrderInbound.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/returnableGoodsOrderGrnDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/returnableGoodsOrderClaimDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterVendorDialog.html?version=1.0.0'"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="PreviewPrintLabel" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                    Preview Template
+                    <button type="button" class="close" ng-click="cancelSingleOrder()" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;overflow-y:hidden;height:90vh;">
+                    {{content}}
+                    <!--<object data="{{content}}" type="application/pdf" target="_blank" style="width:100%;height:100vh;">view</object>-->
+                    <iframe ng-src="{{content}}" style="width:100%;height:100vh;"></iframe>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Add New Inventory Dialog -->
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,126 @@
+<section class="login-signup">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="logo">
+                    <!-- LOGO -->
+                    <img src="images/logo-big.png" alt="">
+                    <span style="position: relative;">
+                            <span style="position: absolute;top:-17px;">Beta</span>
+                        </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="signup-success-form">
+
+                    <!-- Heading -->
+                    <h1>You have successfully registered<br>Thank you!</h1>
+
+                    <!-- Giant Tick -->
+                    <div class="giant-tick">
+                        <img src="images/svg/confirmation_big.svg" />
+                    </div>
+
+                    <!-- Instructions -->
+                    <p>
+                        You will receive a confirmation email shortly.
+                    </p>
+
+                    <!-- Back to Login Button -->
+                    <div class="row">
+                        <div class="signup-success-login col-xs-12">
+                            Take me to
+                            <a id="signupSuccessLogin" href="#login">
+                            Login screen
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p class="questions-p">
+                                <span class="semi-bold-text">
+                                    Questions? Connect with us.
+                                </span>
+                                <br> Email Support:
+                                <a id="signupSuccessSupport" href="mailto:support@gscmaven.com">support@gscmaven.com</a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="hr-area">
+            <div class="row">
+                <div class="col-xs-12">
+                    <hr class="green-hr">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <hr class="black-hr">
+                </div>
+            </div>
+        </div>
+
+        <div class="info-area">
+            <div class="row">
+                <div class="left-info col-xs-4">
+                    <a tabindex="9" class="terms-link" ng-click="OpenTnC()">Terms of Service</a>
+                    | <a tabindex="10" ng-click="PrivacyModal()" class="terms-link">Privacy Policy</a>
+
+                </div>
+                <div class="right-info col-xs-8">
+                    Copyright<i class="fa fa-copyright fa-fw" aria-hidden="true"></i>2017 Glaucus Logistics Private Limited
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" data-backdrop="static" id="TnC" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                Terms and Conditions
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;overflow-y:hidden;height:90vh;">
+                <!--<object data="{{content}}" type="application/pdf" target="_blank" style="width:100%;height:100vh;">view</object>-->
+                <iframe ng-src="{{TnC}}" style="width:100%;height:100vh;"></iframe>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" data-backdrop="static" id="privacy" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                Privacy Policy
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;overflow-y:hidden;height:90vh;">
+                <iframe ng-src="{{privacyPolicy}}" style="width:100%;height:100vh;"></iframe>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+            </div>
+        </div>
+    </div>
+</div>

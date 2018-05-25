@@ -1,0 +1,81 @@
+<link href="workOrderVas/inventory.css" rel="stylesheet">
+<link href="vendor/vendor.css" rel="stylesheet">
+<div class="container-fluid" ng-init="onLoad()">
+    <div class="row row-margin-top-medium" style="margin-left: auto; margin-right: auto;">
+        <md-content>
+            <md-tabs md-selected="selectedTab1" md-no-ink-bar md-no-ink md-border-bottom md-dynamic-height="">
+                <md-tab label="List Of Work Order" ng-click="listOfWorkOrderCount(defaultTab)">
+                    <div ng-include src="'workOrderVas/workOrders/listwrkOrders2.html?version=1.0.0'"></div>
+                </md-tab>
+                <md-tab label="Kit" ng-click="listOfWorkOrderKitCount(defaultTabKit)">
+                    <div ng-include src="'workOrderVas/workOrders/kitTabWorkOrder.html?version=1.0.0'"></div>
+                </md-tab>
+                <md-tab label="Split" ng-click="listOfWorkOrderSplitCount(defaultTabSplit)">
+                    <div ng-include src="'workOrderVas/workOrders/spliteTabWorkOrder.html?version=1.0.0'"></div>
+                </md-tab>
+                <md-tab label="Free Mailer Sample" ng-click="listOfWorkOrderMailerCount(defaultTabMailer)">
+                    <div ng-include src="'workOrderVas/workOrders/mailerTabWorkOrder.html?version=1.0.0'"></div>
+                </md-tab>
+                <md-tab label="QC" ng-click="listOfWorkOrderQcCount(defaultTabQc)">
+                    <div ng-include src="'workOrderVas/workOrders/qcTabWorkOrder.html?version=1.0.0'"></div>
+                </md-tab>
+                <md-tab label="Stock Audit" ng-click="listOfWorkOrderStockCount(defaultTabStock)">
+                    <div ng-include src="'workOrderVas/workOrders/stokeTabWorkOrder.html?version=1.0.0'"></div>
+                </md-tab>
+                <md-tab label="Sticker Tag" ng-click="listOfWorkOrderStickerCount(defaultTabSticker)">
+                    <div ng-include src="'workOrderVas/workOrders/stickerTabWorkOrder.html?version=1.0.0'"></div>
+                </md-tab>
+            </md-tabs>
+        </md-content>
+    </div>
+</div>
+<div class="modal fade" id="confirmEditWorkOrder" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <p class="dialog-heading-p">Confirm Update Work Order</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row row-margin-top row-margin-bottom text-center">
+                        <div class="col-md-12">
+                            <span class="font">Your existing work order will be cancelled and a new work order will be created. <br/>Do you want to continue?</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="action-btn" ng-show="editWorkOrderMode=='kit'"
+                        ng-click="updateKitData(kitData,kitId)">
+                    Yes
+                </button>
+                <button type="button" class="action-btn" ng-show="editWorkOrderMode=='split'"
+                        ng-click="updateSplitData(kitData,kitId)">
+                    Yes
+                </button>
+                <button type="button" class="action-btn" ng-show="editWorkOrderMode=='mailer'"
+                        ng-click="updatefreeMailerData(kitData,selectedList,kitId)">
+                    Yes
+                </button>
+                <button type="button" class="action-btn" ng-show="editWorkOrderMode=='qc'"
+                        ng-click="updateQcData(kitData,selectedList,kitId)">
+                    Yes
+                </button>
+                <button type="button" class="action-btn" ng-show="editWorkOrderMode=='stock'"
+                        ng-click="updateStockData(kitData,kitId)">
+                    Yes
+                </button>
+                <button type="button" class="action-btn" ng-show="editWorkOrderMode=='sticker'"
+                        ng-click="updateStickerData(kitData,selectedList,kitId)">
+                    Yes
+                </button>
+                <button type="button" class="cancel-btn" data-dismiss="modal">
+                    No
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

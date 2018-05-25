@@ -1,0 +1,30 @@
+<script type="text/ng-template" id="inTransitDialog.tmpl.html" >
+    <md-dialog aria-label="Cancel Order Item" style="width: 800px; position: relative;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">In transit</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelSingleOrders()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <h2 class="text-center">Do you want move it to In Transit ?</h2>
+                </div>
+            </md-dialog-content>
+            <!-- {{customersData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button type="button" class="cancel-btn"  ng-click="cancelSingleOrders()">Cancel
+                </button>
+                <button ng-disabled="disableInTransit" class="action-btn" ng-click="inTransit(poData)">
+                    Yes
+                </button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

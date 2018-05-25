@@ -1,0 +1,57 @@
+<div class="modal fade" id="dialog1" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="SOWACancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelWarehouseSelection()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Warehouse Allocation</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div layout="row">
+                    <b style="width: 15%;font-weight:600;">Order No.</b>
+                    <input id="SOWANo" type="text" style="color: #F0592B;font-size: 16px; font-weight: 700; padding-top: 0px;" ng-model="orderNo" ng-readonly="true"></input>
+                </div>
+                <!-- {{wareHousesArray}} -->
+                <br>
+                <div layout="row">
+                    <b style="width: 35%; font-weight: 600; font-size: 16px;">Please Select the Warehouse</b>
+                </div>
+                <div class="row main-list">
+                    <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                        <thead class="warehouse-selection-header">
+                        <tr>
+                            <td id="SOWASelectH">Select</td>
+                            <td id="SOWANameH">WareHouse Name</td>
+                            <td id="SOWAAvailQtyH">Available Quantity</td>
+                            <td id="SOWABQtyH" title="Blocked Quantity for customer">Blocked Quantity</td>
+                            <td id="SOWADFCH">Distance From Customers</td>
+                        </tr>
+                        </thead>
+                        <tbody data-ng-repeat="option in wareHousesArray">
+                        <tr class="warehouse-selection-row">
+                            <td id="SOWASelectH">
+                                <input type="radio" name="choice" ng-model="radio" value="{{option.tableWarehouseDetails}}" ng-change="onvalue(radio)" />
+                            </td>
+                            <td id="SOWAName{{$index}}">{{option.tableWarehouseDetails.tableWarehouseDetailsShortname}}</td>
+                            <td id="SOWAAvailQty{{$index}}">{{option.availableQuantity}}</td>
+                            <td id="SOWABQty{{$index}}">{{option.blockedQuantity}}</td>
+                            <td id="SOWADFC{{$index}}">{{option.distanceFromCustomer}} Kms</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="SOWACancel2" class="cancel-btn" ng-click="cancelWarehouseSelection()">
+                    Cancel
+                </button>
+                <button id="SOWASubmit" type="button" class="action-btn" ng-click="selectWareHouseAction(orderId,tableSaleOrderId,wareHouseObject);">Select</button>
+            </div>
+        </div>
+    </div>
+</div>

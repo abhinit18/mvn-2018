@@ -1,0 +1,147 @@
+<div class="modal fade" id="addAbstractSkuDialog" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <form name="addAbstractSkuForm" accessible-form novalidate ng-submit="addAbstractSkuForm.$valid && addAbstractSKU(abstractSku,addAbstractSkuForm)">
+
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="newSkuAttrCancel1" type="button" class="close" ng-click="newAttribute=null; closeAbstractSkuDialog();">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p ng-if="dialogBoxAbstractSkuMode == 'add'" class="dialog-heading-p">Add New Master SKU</p>
+                <p ng-if="dialogBoxAbstractSkuMode == 'edit'" class="dialog-heading-p">Edit Master SKU</p>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="col-md-4">
+                            <span class="font">Master SKU Name</span><span style="color:red">*</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input id="newAbstractSkuName"
+                                   type="text"
+                                   required
+                                   ng-maxlength="45" ng-minlength="2"
+                                   name="abstractskuname"
+                                   placeholder="Enter Master SKU Name"
+                                   ng-class="{submitted: isNewAttributeNameEntered}"
+                                   ng-model="abstractSku.abstractSkuName"
+                                   class="form-control darkgrey-bottom-border font input-less-padding">
+                        </div>
+                    </div>
+                    <div class="col-md-offset-4 col-md-8">
+                                     <span ng-if="addAbstractSkuForm.$submitted && addAbstractSkuForm.abstractskuname.$error.required"  class="error-message">
+                                         Please enter the Master SKU Name
+                                     </span>
+                        <span ng-if="addAbstractSkuForm.sellerSkuId.$dirty && addAbstractSkuForm.abstractskuname.$error.maxlength"  class="error-message">
+                                         Master SKU ID should not exceed 45 characters.
+                                     </span>
+                        <span ng-if="addAbstractSkuForm.sellerSkuId.$dirty && addAbstractSkuForm.abstractskuname.$error.minlength"  class="error-message">
+                                         Master SKU ID should have at least 2 characters.
+                                     </span>
+                    </div>
+                    <div class="row row-margin-top">
+                        <div class="col-md-4">
+                            <span class="font">Select Category</span><span style="color:red">*</span>
+                        </div>
+                        <div class="col-md-6">
+                            <select
+                                    title="{{abstractSku.genericData.skuNodeName}}"
+                                    ng-change="onCategorySelected()"
+                                    ng-model="genericData.searchedCategory"
+                                    id="newSkuCategory"
+                                    name="abstractcategory"
+                                    required
+                                    class="form-control add-single-order-select"
+                                    ng-options="option as option.skuNodeName for option in categoryTypeLists track by option.idskuNodeId">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-offset-4 col-md-6">
+                         <span ng-if="!addAbstractSkuForm.abstractcategory.$pristine && genericData.searchedCategory.tableSkuNodeIsVariantDefined == false" class="error-message">
+                             Selected category has no attribute defined as basis of variant
+                         </span>
+                    </div>
+
+                    <div class="col-md-offset-4 col-md-4">
+                         <span ng-if="addAbstractSkuForm.$submitted && addAbstractSkuForm.abstractcategory.$error.required" class="error-message">
+                             Please select the Category
+                         </span>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-4">
+                            <span class="form-label-height semi-bold-text">Select Brand <span style="color:red">*</span></span>
+                        </div>
+                        <div class="col-md-6">
+                            <select ng-change="onAbstractSkuBrandSelected()"
+                                    ng-model="genericData.abstractSkuBrand"
+                                    name="brand" required
+                                    id="newSkuBrand"
+                                    class="form-control add-single-order-select"
+                                    ng-options="option as option.tableSkuBrandCodeString for option in brandTypeLists track by option.idtableSkuBrandCodeId">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-offset-4 col-md-4">
+                             <span ng-if="addAbstractSkuForm.$submitted && addAbstractSkuForm.brand.$error.required" class="error-message">
+                                 Please select the Brand
+                             </span>
+                    </div>
+
+                    <div class="row row-margin-top row-margin-bottom-small"
+                         ng-if="listOfSkusSearchedByCategory.length > 0">
+                        <div class="col-md-10 col-md-offset-1">
+                            <span class="semi-bold-text">List of SKUs</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="listOfSkusSearchedByCategory.length > 0">
+                        <div class="col-md-10 col-md-offset-1">
+                            <table id="productTable"
+                                   class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="data-grid-header">
+                                <tr>
+                                    <th id="selectsku">Select
+                                    </th>
+                                    <th id="sellerskuid">Seller SKU ID
+                                    </th>
+                                    <th id="sku_name">SKU Name
+                                    </th>
+                                    <th id="viewskudetails">
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="data-grid-data">
+                                <tr ng-repeat="product in listOfSkusSearchedByCategory">
+                                    <td style="text-align: center">
+                                        <md-checkbox ng-model="product.selected" id="checksku{{$index}}" ng-change="onCheckBoxClicked(product, $index)">
+                                        </md-checkbox>
+                                    </td>
+                                    <td id="SellerSkuCode{{$index}}">{{product.tableSkuClientSkuCode}}</td>
+                                    <td id="Skuname{{$index}}">{{product.tableSkuName}}</td>
+                                    <td style="color:#f0592b;" title="Click to view SKU Details" ng-click="onSkuViewClicked(product)" id="Skuview{{$index}}">View</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button id="newAbstractSkuCancel2" type="button" class="cancel-btn" ng-click="closeAbstractSkuDialog(addAbstractSkuForm)">
+                    Cancel
+                </button>
+                <button id="newAbstractSkuSubmit" type="submit" ng-show="dialogBoxAbstractSkuMode=='add' && showAbstractSkuTab" class="action-btn" >
+                    Add
+                </button>
+                <button id="newAbstractSkuUpdate" type="submit" ng-show="dialogBoxAbstractSkuMode=='edit' && showAbstractSkuTab" class="action-btn" >
+                    Update
+                </button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+

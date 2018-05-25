@@ -1,0 +1,59 @@
+<div class="modal fade" id="intransit" role="dialog" data-backdrop="static" aria-labelledby="myModalLabelled" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="POSSCancel1" type="button" class="close" ng-click="cancelSelectAllModal('intransit')">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="myModalLabelled">Select SKUs</p>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+
+                <div class="col-md-12 margin-top-5" ng-if="skusForTransit.length > 0">
+                    <table id="table table-striped-custom table-condensed table-responsive table-hover"
+                           class="table boldtable table-responsive table-bordered table-hover">
+                        <thead class="main-list-header-order">
+                        <tr>
+                            <th id="POSSCheckH" style="background-color: #00000; ">
+                                <md-checkbox ng-model="intransit.selectall" ng-change="selectAllSkus('intransit')">
+                                    <span style="color : #fffff">Select All</span>
+                            </md-checkbox></th>
+                            <th id="POSSNameH">SKU Name</th>
+                            <th id="POSSSCodeH">System Code
+                            </th>
+                            <th id="POSSCCodeH">Client Code
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="data-grid-data">
+                        <tr class="clickable-row-order" ng-repeat="skuForTransit in skusForTransit">
+                            <td id="POSSCheck{{$index}}">
+                                <md-checkbox ng-model="skuForTransit.selected">
+
+                                </md-checkbox>
+                            </td>
+                            <td id="POSSName{{$index}}">{{skuForTransit.posskuname}}</td>
+                            <td id="POSSSCode{{$index}}">
+                                {{skuForTransit.poskusystemcode}}
+                            </td>
+                            <td id="POSSCCode{{$index}}">
+                                {{skuForTransit.posskuclientcode}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="POSSCancel2" type="button" class="cancel-btn" ng-click="cancelSelectAllModal('intransit')">Cancel
+                </button>
+                <button id="POSSSubmit" type="submit" ng-disabled="disableInTransit" class="action-btn" ng-click="inTransit()">In Transit</button>
+            </div>
+        </div>
+
+    </div>
+</div>

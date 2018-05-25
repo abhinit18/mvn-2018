@@ -1,0 +1,88 @@
+<div  ng-init="onLoad()">
+    <div ng-if="!hidePageHeader" class="container-fluid no-padding">
+        <div class="row navbar-padding">
+            <div class="col-xs-5 pull-left">
+                <div class="navbar-hamburg-img">
+                    <!-- <img src="images/svg/hamburger_menu.svg" height="30"> -->
+                    <img src="images/svg/glaucus_logo.svg" class="orderscreen-logo">
+                    <span style="position: relative;">
+                            <span style="position: absolute;top: 33%;font-size: 11px;">Beta</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-4 screen-heading pull-left">
+                    <div >{{clientprofile.tableClientProfileCompanyName}}</div>
+                </div>
+                <div class="col-xs-3 pull-right">
+                    <div class="logout pull-right" ng-click="logout()">Logout</div>
+                    <div class="pull-right profile-name">
+                        <img src="images/svg/header_user_icon.svg" height="24"> Hi {{userNavData}}&nbsp;&nbsp;|&nbsp;&nbsp;
+                    </div>
+                </div>
+            </div>
+            <div class="masthead">
+                <nav>
+                    <ul class="nav nav-justified" >
+                        <li ng-repeat="data in menu track by $index" ng-if="(data.name != 'Analytics' || createanalyticsmenu) && (createinventorypassbookmenu || data.name != 'Inventory Passbook')">
+                            <div ng-if="!data.subMenu">
+                                <div class="data-list">
+                                    <a ng-class="{active: isActive(data)}" href="javascript:void(0)" ng-click="goTo(data.href,$event)">
+                                        {{ data.name }}
+                                    </a>
+                                </div>
+                                <div class="data-icons">
+                                    <a href="javascript:void(0)" ng-click="goTo(data.href,$event)">
+                                        <md-icon ng-class="{active: isActive(data)}" md-svg-src="{{ data.imageUrl }}">
+                                        </md-icon>
+                                    </a>
+                                </div>
+                            </div>
+                            <div ng-if="data.subMenu" class="dropdown" off-click="hideDropdown($index)" off-click-if="isClicked[$index]">
+                                    <div class="data-list" ng-click="showHideDropdown($index)">
+                                        <a ng-class="{active: isActive(data)}" href="" class="dropdown-toggle disabled" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            {{ data.name }}<i ng-class="{'fa fa-caret-down':!isClicked[$index], 'fa fa-caret-up':isClicked[$index]}"></i>
+                                        </a>
+                                    </div>
+                                    <div class="data-icons" ng-click="showHideDropdown($index)">
+                                        <a href="" class="dropdown-toggle disabled" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <md-icon md-svg-src="{{ data.imageUrl }}">
+                                            </md-icon>
+                                        </a>
+                                    </div>
+                                    <ul class="dropdown-menu" ng-class="{visible: isClicked[$index], 'not-visible': !isClicked[$index]}" ng-click="hideDropdown($index)">
+                                        <li  ng-repeat="subMenu in data.subMenu">
+                                            <a ng-class="{active: isActive(subMenu)}" title="CTRL+click to open in new tab"  href="javascript:void(0)" ng-click="goTo(subMenu.href,$event)">
+                                                <span ng-if="!(isPricing && subMenu.name == 'Discount')">{{subMenu.name}}</span>
+                                                <span ng-if="isPricing && subMenu.name == 'Discount'">Pricing</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    <div id="loading-bar-container"></div>
+    <div ng-if="!hidePageHeader" class="col-lg-4 col-md-4 col-sm-12 col-xs-12 pull-right ng-hide">
+        <div class="full-width">
+            <div class="widgets">
+                <div class=""></div>
+                <div class="full-width">
+                    <div id="my_calendar"></div>
+                </div>
+                <div class="full-width text-center">
+                    <embed src="http://100widgets.com/js-files/30003412.swf"
+                           pluginspage="http://www.macromedia.com/go/getflashplayer"
+                           type="application/x-shockwave-flash" name="30003412" quality="High" wmode="transparent"
+                           height="216" width="160">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('.masthead ul.nav li.dropdown').hover(function () {
+        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+    });
+</script>

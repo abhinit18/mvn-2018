@@ -1,0 +1,198 @@
+<section class="login-signup">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="logo">
+                    <!-- LOGO -->
+                    <img src="images/logo-big.png" alt="">
+                    <span style="position: relative;">
+                            <span style="position: absolute;top:-17px;">Beta</span>
+                        </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <form class="login-form" ng-show="verifiedsuccess">
+
+                    <!-- Heading -->
+                    <h1 ng-show="loading">Your account has been activated <br>Reset Password Link has been sent to your Email Id</h1>
+                    <h1 ng-hide="loading">Your account verification is processing</h1>
+
+                    <!-- Giant Tick -->
+                    <div class="giant-tick" ng-show="loading">
+                        <img src="images/svg/confirmation_big.svg" />
+                    </div>
+
+
+                    <!-- Back to Login Button -->
+                    <!--<div class="row" ng-show="loading">
+                        <div class="signup-success-login col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            Take me to
+                            <a href="#login">
+                            Login screen
+                            </a>
+                        </div>
+                    </div>-->
+
+                    <h1 ng-show="loading"></h1>
+
+                    <div class="questions-text row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <p>
+                                <span class="semi-bold-text">
+                                    Questions? Connect with us.
+                                </span>
+                                <br> Email Support:
+                                <a href="mailto:support@gscmaven.com">support@gscmaven.com</a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+
+                <form class="login-form" ng-show="verifiedfailed">
+
+                    <!-- Heading -->
+                    <h1>Verification Failed</h1>
+
+                    <!-- Giant Tick -->
+                    <div class="giant-tick">
+                        <img src="images/svg/validation_wrong.svg" />
+                    </div>
+
+                    <!-- Instructions -->
+                    <p ng-if="errorMessage">
+                        <!--The url is either invalid or you already have activated your account. Please use the link that has been send to your email-->
+                        {{ errorMessage}}
+                    </p>
+                    <p ng-if="documentation">
+                        <!--The url is either invalid or you already have activated your account. Please use the link that has been send to your email-->
+                        {{ documentation}}
+                    </p>
+
+                    <!-- Back to Login Button -->
+                    <div class="row">
+                        <div class="signup-success-login col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <a href="javascript:void(0);" ng-click="ResendLink()">
+                                Resend Activation Link
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="questions-text row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <p>
+                                <span class="semi-bold-text">
+                                    Questions? Connect with us.
+                                </span>
+                                <br> Email Support:
+                                <a href="mailto:support@gscmaven.com">support@gscmaven.com</a> | Call: 011 25712345
+                            </p>
+                        </div>
+                    </div>
+                </form>
+                <form class="login-form" ng-show="resendlink">
+
+                    <!-- Heading -->
+                    <h1>Resent Verification link</h1>
+
+                    <p>Verification link has been resent to your email Id</p>
+
+                    <!-- Back to Login Button -->
+                    <div class="row">
+                        <div class="signup-success-login col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <a href="javascript:void(0);" ng-click="ResendLink()">
+                                Resend Activation Link
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="questions-text row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <p>
+                                <span class="semi-bold-text">
+                                    Questions? Connect with us.
+                                </span>
+                                <br> Email Support:
+                                <a href="mailto:support@gscmaven.com">support@gscmaven.com</a> | Call: 011 25712345
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="hr-area">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <hr class="green-hr">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <hr class="black-hr">
+                </div>
+            </div>
+        </div>
+
+        <div class="info-area">
+            <div class="row">
+                <div class="left-info col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <a href="javascript:void(0);" tabindex="9" class="terms-link" ng-click="OpenTnC()">Terms of Service</a>
+                    | <a href="javascript:void(0);" tabindex="10" ng-click="PrivacyModal()" class="terms-link">Privacy Policy</a>
+
+
+                </div>
+                <div class="right-info col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                    Copyright<i class="fa fa-copyright fa-fw" aria-hidden="true"></i>2017 Glaucus Logistics Private Limited
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="TnC" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                Terms and Conditions
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;overflow-y:hidden;height:90vh;">
+                <!--<object data="{{content}}" type="application/pdf" target="_blank" style="width:100%;height:100vh;">view</object>-->
+                <iframe ng-src="{{TnC}}" style="width:100%;height:100vh;"></iframe>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="privacy" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                Privacy Policy
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;overflow-y:hidden;height:90vh;">
+                <iframe ng-src="{{privacyPolicy}}" style="width:100%;height:100vh;"></iframe>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+            </div>
+        </div>
+    </div>
+</div>

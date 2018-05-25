@@ -1,0 +1,79 @@
+
+        <div class="full-width">
+
+            <div class="main-list no-left-right-padding">
+
+                <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                    <thead class="main-list-header-bulkupload">
+                        <tr>
+                            <td>Upload ID</td>
+                            <td>Date</td>
+                            <td>Download Link</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="clickable-row-bulkupload" ng-repeat="data in errordata" ng-if="errordata.length != 0">
+                            <td>
+                                {{data.idtableBulkUploadReportsId}}
+                            </td>
+                        <td>
+                            {{data.tableBulkUploadReportsDatetime | utcToLocalTimeOrHyphen}}
+                        </td>
+                        <td>
+                        <a style="color:#F0592B;" 
+                          href="{{filePathUrl}}{{data.tableBulkUploadReportsPath}}"
+                          download><span class=" glyphicon glyphicon-download-alt"></span> Download Report </a>
+                        </td>
+                      </tr>
+                    <tr ng-if="errordata.length == 0">
+                        <td colspan="2">
+                            <h3 class="text-center">No Reports Available</h3>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+<!--             <div class="row" style="margin-top: 0px;">
+                <div class="col-md-6">
+                    <p class="showingOrderLabel" ng-show="sizeError<errorCount">Showing Orders {{startError + 1}} to {{orderSize}} of {{errorCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="sizeError>=errorCount && errorCount!=0">Showing Orders {{startError + 1}} to {{errorCount}} of {{errorCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="errorCount==0">No ERR Available
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <span class="pull-right">
+                      <ul class="pagination">
+                          <li ng-show="vmPagerError.currentPage == 1" ng-class="{disabled:vmPagerError.currentPage == 1}">
+                              <a>&lt;&lt; First</a>
+                          </li>
+                          <li ng-show="vmPagerError.currentPage > 1" ng-class="{disabled:vmPagerError.currentPage == 1}">
+                              <a ng-click="listOfStatesCount(defaultTab,1)">&lt;&lt; First</a>
+                          </li>
+                          <li ng-show="vmPagerError.currentPage == 1" ng-class="{disabled:vmPagerError.currentPage == 1}">
+                              <a>&lt; Previous</a>
+                          </li>
+                          <li ng-show="vmPagerError.currentPage > 1" ng-class="{enabled:vmPagerError.currentPage > 1}">
+                              <a ng-click="listOfStatesCount(defaultTab,vmPagerError.currentPage - 1)">&lt; Previous</a>
+                          </li>
+                          <li ng-repeat="page in vmPagerError.pages" ng-class="{active:vmPagerError.currentPage == page}">
+                              <a ng-click="listOfStatesCount(defaultTab,page)">{{page}}</a>
+                          </li>
+                          <li ng-show="vmPagerError.currentPage < vmPagerError.totalPages" ng-class="{enabled:vmPagerError.currentPage > vmPagerError.totalPages}">
+                          <a ng-click="listOfStatesCount(defaultTab,vmPagerError.currentPage + 1)">Next &gt;</a>
+                          </li>
+                          <li ng-show="vmPagerError.currentPage == vmPagerError.totalPages" ng-class="{disabled:vmPagerError.currentPage == vmPagerError.totalPages}">
+                              <a>Next &gt;</a>
+                          </li>
+                          <li ng-show="vmPagerError.currentPage < vmPagerError.totalPages" ng-class="{disabled:vmPagerError.currentPage == vmPagerError.totalPages}">
+                              <a ng-click="listOfStatesCount(defaultTab,vmPagerError.totalPages)">Last &gt;&gt;</a>
+                          </li>
+                          <li ng-show="vmPagerError.currentPage == vmPagerError.totalPages" ng-class="{disabled:vmPagerError.currentPage == vmPagerError.totalPages}">
+                              <a>Last &gt;&gt;</a>
+                          </li>
+                      </ul>
+                  </span>
+                </div>
+            </div> -->
+        </div>

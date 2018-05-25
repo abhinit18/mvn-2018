@@ -1,0 +1,97 @@
+.stepwise-frame {
+    font-weight: 100;
+    width: 100%;
+    display: block;
+    margin-top: 2.5em;
+}
+
+.stepwise {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+}
+
+.stepwise>li {
+    display: inline-table;
+    margin: 0 30px 0 0;
+    z-index: 1;
+    width: auto;
+}
+
+.stepwise>li>label {
+    color: #313639;
+    font-size: 16px;
+    white-space: normal;
+    text-align: center;
+    font-weight: 400;
+    width: 220px;
+    height: 44px;
+    position: relative;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.stepwise>li:last-child>label {
+    font-weight: 600;
+}
+
+.stepwise>li>a {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    overflow: hidden;
+    display: block;
+    text-decoration: none;
+}
+
+.stepwise>li>hr {
+    border: 1.5px solid #82BE42;
+    position: relative;
+    top: -35px;
+    left: 35px;
+    width: 202px;
+    display: block;
+    z-index: 0;
+    color: #82BE42;
+}
+
+.stepwise>li:last-child>hr {
+    visibility: hidden;
+}
+
+.stepwise>li.active-step>a {
+    background-image: url('../images/svg/done_icon.svg');
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    margin-left: 85px;
+}
+
+.stepwise>li.after-active-step>a {
+    background-image: url('../images/svg/current_icon.svg');
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    margin-left: 85px;
+}
+
+.stepwise>li.active-step>hr, .stepwise>li.after-active-step>hr {
+    top: -45px;
+    left: 125px;
+}
+
+.horizontal-slide {
+    white-space: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.order-journey-dtls-tbl {
+    width: 100%;
+}
+
+.order-journey-dtls-tbl>tbody>tr>td:first-child {
+    vertical-align: top;
+}

@@ -1,0 +1,797 @@
+<div class="modal fade" id="addNewVendorDialog" role="dialog"
+     aria-labelledby="addOrderDialog" aria-hidden="true">
+    <form name="addNewVendorForm" accessible-form novalidate ng-submit="addNewVendorForm.$valid  && savevendorData(vendorsData,addNewVendorForm)">
+
+        <div class="modal-dialog modal-lg" >
+
+            <div class="modal-content">
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+
+                    <button id="vendorAddNewCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelvendorData()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+
+                    <p class="dialog-heading-p" ng-if="vendorMode == 'add'">Add New Vendor</p>
+                    <p class="dialog-heading-p" ng-if="vendorMode == 'edit'">Edit Vendor</p>
+
+
+
+                </div>
+
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="full-width" style="margin-bottom: 15px;">
+                        <ul class="nav nav-tabs">
+                            <li id="singlevendortab" class="active"><a class="btn sharp"
+                                                                       ng-click="singleVendorTabMode()">Single Vendor</a></li>
+                            <li id="bulkvendortab" ng-if="singleVendorMode == 'add' && vendorMode=='add'"><a class="btn sharp"
+                                                                                                             ng-click="bulkVendorTabMode()">Bulk Vendor</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-content">
+                        <div class="active container-fluid vendorTabHeight" id="vendortab1" ng-if="singleVendorTab && !bulkVendorTab">
+                            <form name="addVendorForm">
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Vendor Ref. code</span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input id="vendorCodeField" ng-maxlength="45"
+                                               name="vendorCodeField" type="text"
+                                               class="darkgrey-bottom-border" placeholder="Vendor Ref. code"
+                                               ng-model="vendorsData.tableVendorClientVendorCode">
+                                    </div>
+                                    <div ng-if="addNewVendorForm.vendorCodeField.$dirty && addNewVendorForm.vendorCodeField.$error.maxlength" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Vendor Ref. code should not exceed 45 characters.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Company Name <span style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input capitalize-first
+                                               required
+                                               ng-pattern-restrict="^[A-Za-z0-9. ]*$" ng-maxlength="45" ng-minlength="2"
+                                               ng-change="companyNameChanged(vendorsData.tableVendorName)"
+                                               id="vendorCompanyField" name="vendorCompanyField" type="text" class="darkgrey-bottom-border" placeholder="Vendor company"
+                                               ng-model="vendorsData.tableVendorName" ng-pattern="/^[a-zA-Z0-9 ._&()/-]{1,135}$/">
+                                        <span class="error-message">
+                                            <span ng-show="addNewVendorForm.vendorCompanyField.$error.pattern">Invalid company name, only '.', '_', '&', '(', ')', '/', '-' are allowed.</span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-offset-3 col-md-6">
+                                        <span ng-if="addNewVendorForm.$submitted && addNewVendorForm.vendorCompanyField.$error.required"  class="error-message">
+                                            Please enter the Company Name.
+                                        </span>
+                                        <span ng-if="addNewVendorForm.vendorCompanyField.$dirty && addNewVendorForm.vendorCompanyField.$error.maxlength"  class="error-message">
+                                            Company Name should not exceed 45 characters.
+                                        </span>
+                                        <span ng-if="addNewVendorForm.vendorCompanyField.$dirty && addNewVendorForm.vendorCompanyField.$error.minlength"  class="error-message">
+                                            Company Name should have at least 2 characters.
+                                        </span>
+                                    </div>
+                                </div>
+                                <!--<div class="row row-margin-top">-->
+                                    <!--<div class="col-md-3 form-row-height">-->
+                                        <!--<span class="form-label-height semi-bold-text">Nature Of Vendor<span style="color:red">*</span></span>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-9 form-row-height">-->
+                                        <!--<md-radio-group name="vendorNature" ng-required="true" ng-model="vendorsData.tableGstType.tableGstTypeName" style="display: inline-flex;">-->
+                                            <!--<md-radio-button-->
+                                                    <!--id="gsttype{{$index}}"-->
+                                                    <!--ng-value="gst.tableGstTypeName"-->
+                                                    <!--ng-repeat="gst in gstTypes track by $index"  class="md-primary">{{gst.tableGstTypeName}}&nbsp;&nbsp;</md-radio-button>-->
+                                        <!--</md-radio-group>-->
+                                    <!--</div>-->
+                                    <!--<div ng-if="addNewVendorForm.$submitted && addNewVendorForm.vendorNature.$error.required" class="col-md-offset-3 col-md-9">-->
+                                        <!--<span class="error-message">-->
+                                            <!--Please choose the Nature Of Vendor-->
+                                        <!--</span>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Vendor Type <span style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <select
+                                                id="vendortype{{option.idtableVendorTypeId}}"
+                                                ng-model="vendorsData.tableVendorType"
+                                                tabindex="4"
+                                                required
+                                                name="vendorType"
+                                                ng-options="option.tableVendorTypeString for option in vendorsTypes track by option.idtableVendorTypeId"
+                                                class="form-control selectClass" ng-change="vendorTypeChanged(vendorsData.tableVendorType)">
+                                            <option value="">Select Vendor Type</option>
+                                        </select>
+                                    </div>
+                                    <div ng-if="addNewVendorForm.$submitted && addNewVendorForm.vendorType.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select a Vendor Type
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Contact Person Name <span style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input capitalize-first ng-pattern-restrict="^[A-Za-z ]*$"
+                                               required ng-maxlength="45" ng-minlength="2"
+                                               ng-change="personNameChanged(vendorsData.tableVendorContactPerson)"
+                                               type="text"
+                                               id="vendorPersonField" name="vendorPersonField" class="darkgrey-bottom-border" placeholder="Contact person"
+                                               ng-model="vendorsData.tableVendorContactPerson" ng-pattern="/^[A-Za-z .]{1,90}$/">
+                                        <span class="error-message">
+                                            <span ng-show="addNewVendorForm.vendorPersonField.$error.pattern">Only '.' and alphabets are allowed.</span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-offset-3 col-md-6">
+                                        <span ng-if="addNewVendorForm.$submitted && addNewVendorForm.vendorPersonField.$error.required" class="error-message">
+                                            Please enter the Contact Person Name
+                                        </span>
+                                        <span ng-if="addNewVendorForm.vendorPersonField.$dirty && addNewVendorForm.vendorPersonField.$error.maxlength" class="error-message">
+                                            Contact Person Name should not exceed 45 characters.
+                                        </span>
+                                        <span ng-if="addNewVendorForm.vendorPersonField.$dirty && addNewVendorForm.vendorPersonField.$error.minlength" class="error-message">
+                                            Contact Person Name should have at least 2 characters.
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Email Id <span style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input  id="vendorEmailField"
+                                                required ng-maxlength="45"
+                                                ng-change="emailChanged(vendorsData.tableVendorEmailId)"
+                                                type="email" name="vendEmail"
+                                                id="vendEmail" class="emailInput text-lowercase darkgrey-bottom-border" placeholder="Email ID"
+                                                ng-model="vendorsData.tableVendorEmailId">
+                                    </div>
+                                    <div  class="col-md-offset-3 col-md-6">
+                                        <span ng-if="addNewVendorForm.$submitted && addNewVendorForm.vendEmail.$error.required" class="error-message">
+                                            Please enter the Email Id
+                                        </span>
+                                        <span ng-if="addNewVendorForm.vendEmail.$dirty && addNewVendorForm.vendEmail.$error.required" class="error-message">
+                                            Email Id should have at least 2 characters.
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Phone Number<span style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input ng-change="phoneNumberChanged(vendorsData.tableVendorPhoneNumber)"
+                                               id="vendorPhoneField"
+                                               required
+                                               ng-maxlength="12"
+                                               ng-minlength="10"
+                                               name="vendorPhoneField" type="text" only-integer
+                                               class="darkgrey-bottom-border" placeholder="Phone no."
+                                               ng-model="vendorsData.tableVendorPhoneNumber">
+                                    </div>
+                                    <div  class="col-md-offset-3 col-md-6">
+                                        <span ng-if="addNewVendorForm.$submitted && addNewVendorForm.vendorPhoneField.$error.required" class="error-message">
+                                            Please enter Phone Number
+                                        </span>
+                                        <span ng-if="addNewVendorForm.vendorPhoneField.$dirty && addNewVendorForm.vendorPhoneField.$error.maxlength || addNewVendorForm.vendorPhoneField.$error.minlength" class="error-message">
+                                            Please enter a valid 10-12 digit Phone Number!
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Lead Time(In Days)</span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input
+                                                ng-class="{submitted:leadTimeEntered}"
+                                                ng-change="leadTimeChanged(vendorsData.tableVendorDefaultLeadTimeDays)"
+                                                id="leadTimeField" name="leadTimeField"
+                                                type="text" only-integer
+                                                prevent-typing-greater
+                                                max = "999999999"
+                                                class="darkgrey-bottom-border textRightOnFocus"
+                                                placeholder="Lead time in days" ng-model="vendorsData.tableVendorDefaultLeadTimeDays">
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top-x-small" ng-if="vendorMode == 'add'">
+                                    <md-toolbar class="md-small accordion-color">
+                                        <div class="md-toolbar-tools" style="width:100% ">
+                                            <span class="font-big">Add Address</span>
+                                            <span flex=""></span>
+                                            <md-button class="md-icon-button" aria-label="Favorite"
+                                                       id="addaddressaccordion" ng-click="shipAddrClickedRow()">
+                                                <md-icon id="addaddressexpandicon1" ng-show="shipAddrClicked==false"
+                                                         md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                                <md-icon id="addaddresscollapseicon2" ng-show="shipAddrClicked==true"
+                                                         md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                            </md-button>
+                                        </div>
+                                    </md-toolbar>
+                                </div>
+                                <div ng-if="shipAddrClicked==true && vendorMode == 'add'" >
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-6">
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 form-row-height">
+                                                        <span class="form-label-height semi-bold-text">Address Line 1 <span style="color:red">*</span></span>
+                                                    </div>
+                                                    <div class="col-md-7 form-row-height">
+                                                        <input  required ng-maxlength="256" ng-minlength="2"
+                                                                id="addvendoraddressline1"
+                                                                type="text" name="addvendoraddressline1"
+                                                                ng-change="addressLineChanged(vendorAddress.adLine1)"
+                                                                class="form-control darkgrey-bottom-border"
+                                                                placeholder="Address Line 1" ng-model="vendorAddress.adLine1"
+                                                                ng-blur="callGetLatLong(showResult)">
+                                                    </div>
+                                                    <div class="col-md-offset-5 col-md-7">
+                                                        <span ng-if="addNewVendorForm.$submitted && addNewVendorForm.addvendoraddressline1.$error.required"  class="error-message">
+                                                            Please enter the Address Line 1
+                                                        </span>
+                                                        <span ng-if="addNewVendorForm.addvendoraddressline1.$dirty && addNewVendorForm.addvendoraddressline1.$error.maxlength"  class="error-message">
+                                                            Address Line 1 should not exceed 256 characters.
+                                                        </span>
+                                                        <span ng-if="addNewVendorForm.addvendoraddressline1.$dirty && addNewVendorForm.addvendoraddressline1.$error.minlength"  class="error-message">
+                                                            Address Line 1 should have at least 2 characters.
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 form-row-height">
+                                                        <span class="form-label-height semi-bold-text">Address Line 2</span></div>
+                                                    <div class="col-md-7 form-row-height">
+                                                        <input
+                                                                id="addvendoraddressline2" ng-maxlength="256" name="addvendoraddressline2"
+                                                                type="text" class="form-control darkgrey-bottom-border"
+                                                                placeholder="Address Line 2" ng-model="vendorAddress.adLine2"
+                                                                ng-blur="callGetLatLong(showResult)">
+                                                    </div>
+                                                    <div class="col-md-offset-5 col-md-7">
+                                                        <span ng-if="addNewVendorForm.addvendoraddressline2.$dirty && addNewVendorForm.addvendoraddressline2.$error.maxlength"  class="error-message">
+                                                            Address Line 2 should not exceed 256 characters.
+                                                        </span>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 form-row-height">
+                                                        <span class="form-label-height semi-bold-text">Address Line 3</span></div>
+                                                    <div class="col-md-7 form-row-height">
+                                                        <input
+                                                                id="addvendoraddressline3" name="addvendoraddressline3" ng-maxlength="256"
+                                                                type="text" class="form-control darkgrey-bottom-border"
+                                                                placeholder="Address Line 3" ng-model="vendorAddress.adLine3"
+                                                                ng-blur="callGetLatLong(showResult)">
+                                                    </div>
+                                                    <div class="col-md-offset-5 col-md-7">
+                                                        <span ng-if="addNewVendorForm.addvendoraddressline3.$dirty && addNewVendorForm.addvendoraddressline3.$error.maxlength"  class="error-message">
+                                                            Address Line 2 should not exceed 256 characters.
+                                                        </span>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 form-row-height">
+                                                        <span class="form-label-height semi-bold-text">Country <span style="color:red">*</span></span>
+                                                    </div>
+                                                    <div class="col-md-6 form-row-height">
+                                                        <select required name="addvendorcountry"
+                                                                id="addvendorcountry"
+                                                                ng-model="vendorAddress.countryData"
+                                                                class="form-control selectClass"
+                                                                ng-options="option as option.tableCountryLongName for option in countriesArray"
+                                                                ng-change="countriesStatesData(vendorAddress.countryData)">
+                                                            <option value="">Select Country</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-1 form-row-height">
+                                                        <button id="addvendoraddcountry"
+                                                                class="addButton"
+                                                                type="button"
+                                                                ng-click="showVendorAddressEntityDialog($event, 'Country');">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div ng-if="addNewVendorForm.$submitted && addNewVendorForm.addvendorcountry.$error.required" class="col-md-offset-5 col-md-6">
+                                                        <span class="error-message">
+                                                            Please select the Country
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 form-row-height">
+                                                        <span class="form-label-height semi-bold-text">State <span style="color:red">*</span></span>
+                                                    </div>
+                                                    <div class="col-md-6 form-row-height">
+                                                        <select required name="addvendorstate"
+                                                                id="addvendorstate"
+                                                                ng-model="vendorAddress.stateData"
+                                                                class="form-control selectClass"
+                                                                ng-options="option as option.tableStateLongName for option in regionsStatesArray"
+                                                                ng-change="regionsStatesDistrictData(vendorAddress.stateData,vendorId)">
+                                                            <option value="">Select State</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-1 form-row-height">
+                                                        <button type="button" id="addvendoraddstate" class="addButton" ng-click="showVendorAddressEntityDialog($event, 'State');">
+                                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div ng-if="addNewVendorForm.$submitted && addNewVendorForm.addvendorstate.$error.required" class="col-md-offset-5 col-md-6">
+                                                        <span class="error-message">
+                                                            Please select the State
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 form-row-height">
+                                                        <span class="form-label-height semi-bold-text">District <span style="color:red">*</span></span>
+                                                    </div>
+                                                    <div class="col-md-6 form-row-height">
+                                                        <select name="addvendordistrict" required id="addvendordistrict" ng-model="vendorAddress.districtData"
+                                                                class="form-control selectClass"
+                                                                ng-options="option as option.tableDistrictLongName for option in regionsStatesDistrictArray"
+                                                                ng-change="regionsStatesDistrictsCityData(vendorAddress.stateData,vendorAddress.districtData);">
+                                                            <option value="">Select District</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-1 form-row-height">
+                                                        <button id="addvendoradddistrict"
+                                                                class="addButton"
+                                                                type="button"
+                                                                ng-click="showVendorAddressEntityDialog($event, 'District');">
+                                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div ng-if="addNewVendorForm.$submitted && addNewVendorForm.addvendordistrict.$error.required" class="col-md-offset-5 col-md-6">
+                                                        <span class="error-message">
+                                                            Please select the District
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 form-row-height">
+                                                        <span class="form-label-height semi-bold-text">City <span style="color:red">*</span></span>
+                                                    </div>
+                                                    <div class="col-md-6 form-row-height">
+                                                        <select id="addvendorcity" ng-model="vendorAddress.city"
+                                                                name="addvendorcity" required class="form-control selectClass"
+                                                                ng-options="option as option.tableCityLongName for option in regionsStatesDistrictsCityArray"
+                                                                ng-change="changeCity(vendorAddress.city);">
+                                                                <option value="">Select City</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <button id="addvendoraddcityButton"
+                                                                class="addButton"
+                                                                type="button"
+                                                                ng-click="showVendorAddressEntityDialog($event, 'City');">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div ng-if="addNewVendorForm.$submitted && addNewVendorForm.addvendorcity.$error.required" class="col-md-offset-5 col-md-6">
+                                                        <span class="error-message">
+                                                            Please select the City
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 form-row-height">
+                                                        <span class="form-label-height semi-bold-text">PIN Code <span style="color:red">*</span></span>
+                                                    </div>
+                                                    <div class="col-md-7 form-row-height">
+                                                        <input name="pincode" required id="vendorAddpincode" type="text"
+                                                               ng-change="pincodeChanged(vendorAddress.pincode)"
+                                                               ng-pattern-restrict="^[0-9]*$"
+                                                               pattern="[0-9A-Za-z\\-]+"
+                                                               maxlength="15"
+                                                               minlength="6"
+                                                               class="form-control darkgrey-bottom-border"
+                                                               ng-blur="callGetLatLong(showResult)" placeholder="Postal code" ng-model="vendorAddress.pincode">
+                                                    </div>
+                                                    <div ng-if="addNewVendorForm.$submitted && addNewVendorForm.pincode.$error.required" class="col-md-offset-5 col-md-7">
+                                                        <span class="error-message">
+                                                            Please enter the Pin Code
+                                                        </span>
+                                                    </div>
+                                                    <div ng-if="addNewVendorForm.pincode.$error.pattern" class="col-md-offset-5 col-md-7">
+                                                        <span class="error-message">
+                                                            Please enter a valid Pin Code
+                                                        </span>
+                                                    </div>
+                                                    <div ng-if="addNewVendorForm.pincode.$error.minlength" class="col-md-offset-5 col-md-7">
+                                                        <span class="error-message">
+                                                            Please enter atleast 6 digit Pin Code
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="row padding-top-15" >
+                                                    <div class="col-md-5 form-row-height">
+                                                        <span class="form-label-height semi-bold-text">GSTIN
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-md-7 form-row-height">
+                                                        <input type="text" name="tinArray"
+                                                               ng-change="tinnoChanged(vendorAddress.tinNo)"
+                                                               ng-pattern-restrict="^[a-z A-Z 0-9]*$"
+                                                               gstinvalidator="{{vendorAddress.stateData}}"
+                                                               ng-pattern="/^[0-3][0-9][A-Z]{5}[0-9]{4}[A-Z][0-9]Z[A-Z0-9]/" name="tin"
+                                                               id="vendorAddtinArray"
+                                                               placeholder="{{vendorAddress.tinNoPlaceholder}}"
+                                                               class="form-control darkgrey-bottom-border"  ng-model="vendorAddress.tinNo">
+                                                    </div>
+                                                    <div  class="col-md-offset-5 col-md-7">
+                                                        <span ng-if="addNewVendorForm.$submitted && addNewVendorForm.tinArray.$error.pattern" class="error-message">
+                                                            Please enter a valid GSTIN.
+                                                        </span>
+                                                        <span ng-if="addNewVendorForm.$submitted && addNewVendorForm.tinArray.$error.gstin" class="error-message">
+                                                            State code provided in GSTIN does not match the state code of selected state.
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="row padding-top-15" ng-if="vendorAddress.tinNo != null && vendorAddress.tinNo.length > 0">
+                                                    <div class="col-md-5 form-row-height">
+                                                        <span class="form-label-height semi-bold-text">GST Status Of Vendor
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-md-7 " >
+                                                        <md-radio-group name="vendorNature" ng-required="false" ng-model="genericData.tableGstType.tableGstTypeName">
+                                                            <md-radio-button
+                                                                    id="gsttype{{$index}}"
+                                                                    ng-value="gst.tableGstTypeName"
+                                                                    ng-repeat="gst in gstTypes track by $index"  class="md-primary">{{gst.tableGstTypeName}}&nbsp;&nbsp;</md-radio-button>
+                                                        </md-radio-group>
+                                                    </div>
+                                                    <div ng-if="addNewVendorForm.$submitted && addNewVendorForm.vendorNature.$error.required" class="col-md-offset-5 col-md-7">
+                                                        <span class="error-message">
+                                                            Please choose GST Status of Vendor
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 padding-top-15">
+                                                <!-- Map Area -->
+                                                <demo-map ng-if="searchLocation!=null" ng-model="searchLocation" class="demo-map">
+                                                </demo-map>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top-x-small">
+                                    <md-toolbar class="md-small accordion-color">
+                                        <div class="md-toolbar-tools" style="width:100% ">
+                                            <span class="font-big">Configure order return parameters</span>
+                                            <span flex=""></span>
+                                            <md-button class="md-icon-button" aria-label="Favorite"
+                                                       id="addvendorreturnparam"   ng-click="returnParamsClickedRow()">
+                                                <md-icon
+                                                        id="addvendorreturnparamexpandicon"
+                                                        ng-show="returnParamsClicked==false"
+                                                        md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                                <md-icon
+                                                        id="addvendorreturnparamcollapseicon"
+                                                        ng-show="returnParamsClicked==true"
+                                                        md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                            </md-button>
+                                        </div>
+                                    </md-toolbar>
+                                </div>
+                                <div ng-if="returnParamsClicked==true">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="col-md-12 form-row-height" style="padding-left: 0px;">
+                                                    <span class="form-label-height semi-bold-text">
+                                                        <md-checkbox
+                                                                id="returnexpiredgoods"
+                                                                ng-model="vendorsData.tableVendorReturnOnlyExpiredGoods" aria-label="Enable">
+                                                        </md-checkbox> Return only expired
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-12 form-row-height">
+                                                    <div class="col-md-6 form-row-height">
+                                                        <span class="form-label-height semi-bold-text">
+                                                           Return window
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-md-6 form-row-height">
+                                                        <input type="text" id="returnwindow" maxlength="3"
+                                                               only-integer
+                                                               ng-model="vendorsData.tableVendorReturnWindowInDays"
+                                                               placeholder="Return window in days"
+                                                               class="form-control darkgrey-bottom-border input-less-padding">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 ">
+                                                    <div class="full-width" style="margin-bottom:20px;">
+                                                        <div class="col-md-6 form-row-height">
+                                                            <span class="form-label-height semi-bold-text">
+                                                               Return threshold basis
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-md-6 ">
+                                                            <div class="full-width form-row-height">
+                                                                <md-radio-group ng-model="genericData.returnType"
+                                                                                ng-change="changeReturnType()">
+                                                                    <md-radio-button required
+                                                                                     id="returntype{{$index}}"
+                                                                                     ng-repeat="returnType in returnTypes track by $index"
+                                                                                     ng-value="returnType.returnTypeString"
+                                                                                     class="md-primary" ng-style="{'display':'inline'}">
+                                                                        {{returnType.returnTypeDisplayString}}&nbsp;&nbsp;
+                                                                    </md-radio-button>
+                                                                </md-radio-group>
+                                                            </div>
+                                                            <div class="full-width" >
+                                                                <span class=" form-row-height" ng-if="genericData.returnType == 'valuebased'">
+                                                                    <input type="text" id="returntype1"
+                                                                           percentage
+                                                                           name="returntype1"
+
+                                                                           ng-model="vendorsData.tableVendorReturnValuePercentage" placeholder="% Value"
+                                                                           class="form-control darkgrey-bottom-border input-less-padding">
+                                                                </span>
+                                                                <span class="form-row-height" ng-if="genericData.returnType == 'quantitybased'">
+                                                                    <input type="text" id="returntype2"
+                                                                           percentage
+                                                                           name="returntype2"
+
+                                                                           ng-model="vendorsData.tableVendorReturnQuantity" placeholder="% Quantity"
+                                                                           class="form-control darkgrey-bottom-border input-less-padding">
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top-x-small">
+                                    <md-toolbar class="md-small accordion-color">
+                                        <div class="md-toolbar-tools" style="width:100% ">
+                                            <span class="font-big">Configure SKU Mapping</span>
+                                            <span flex=""></span>
+                                            <md-button class="md-icon-button" aria-label="Favorite"
+                                                       id="addvendorskumapaccordion" ng-click="skuMapClickedRow()">
+                                                <md-icon ng-show="skuMapClicked==false"
+                                                         id="addvendorskumapexpand"   md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                                <md-icon id="addvendorskumapcollapse" ng-show="skuMapClicked==true"
+                                                         md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                            </md-button>
+                                        </div>
+                                    </md-toolbar>
+                                </div>
+
+                                <div ng-if="skuMapClicked==true">
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Map SKU</span>
+                                        </div>
+                                        <div class="col-md-4 form-row-height">
+                                            <angucomplete-alt  id="products"
+                                                              placeholder="Search product" pause="400"
+                                                              selected-object="productObject"
+                                                              remote-url="{{baseSkuUrl}}"
+                                                               title-field="tableSkuClientSkuCode"
+                                                               description-field="tableSkuName"
+                                                              input-class="form-control darkgrey-bottom-border"
+                                                              image-field="tableSkuImageUrl"
+                                                              input-name="tableSkuName"
+                                                              field-required="false">
+
+                                            </angucomplete-alt>
+                                        </div>
+                                        <div class="col-md-1 form-row-height">
+                                            <button id="addvendorskumapallskubut" type="button" title="Click here to see all SKUs."
+                                                    class="btn btn-sm truncate-text"
+                                                    ng-click="masterSkuDialog($event, true);">. . .</button>
+                                        </div>
+                                        <div class="col-md-3 form-row-height">
+                                            <input  id="addvendorskucode"
+                                                    type="text" ng-maxlength="45" name="vendorSKUCode"
+                                                    ng-model="genericData.vendorSkuCode" name="vendorSkuCode" placeholder="Vendor SKU Code"
+                                                    class="form-control darkgrey-bottom-border"
+                                                    style="text-align: left;"/>
+                                        </div>
+                                        <div class="col-md-1 form-row-height">
+                                            <span title="Add to List" class="form-label-height add-to-list-icon"
+                                                  style="color: #f0592b;"
+                                                  ng-click="createMap(productObject,genericData.vendorSkuCode)"></span>
+                                        </div>
+                                        <!--<div class="col-md-offset-3 col-md-4">-->
+                                            <!--<span ng-if="addNewVendorForm.$submitted && addNewVendorForm.tableSkuName.$error['autocomplete-required']" class="error-message">-->
+                                                <!--Please select a product-->
+                                            <!--</span>-->
+                                        <!--</div>-->
+                                        <div class="col-md-offset-8 col-md-4">
+                                             <span ng-if="addNewVendorForm.vendorSKUCode.$dirty &&  addNewVendorForm.vendorSkuCode.$error.maxlength" class="error-message">
+                                                 Vendor SKU Code should not exceed 45 characters.
+                                             </span>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row" ng-if="mapList.length > 0">
+                                        <table id="productTable"
+                                               class="table boldtable table-responsive table-bordered table-hover">
+                                            <thead class="data-grid-header">
+                                            <tr>
+                                                <th id="vendorMapListName"><span class="fa fa-barcode fa-md"></span>&nbsp;&nbsp;Product Name
+                                                </th>
+                                                <th id="vendorMapListCode" style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Vendor SKU Code
+                                                </th>
+                                                <th id="vendorMapListAction" style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="data-grid-data">
+                                            <tr ng-repeat="product in mapList track by $index">
+                                                <td>{{product.tableSku.tableSkuName}}</td>
+                                                <td style="text-align: right;">
+                                                    {{product.tableVendorSystemSkuMapVendorSkuCode}}
+                                                </td>
+                                                <td style="text-align: center; padding: 0;">
+                                                    <md-button id="deletemap{{$index}}"
+                                                               class="md-icon-button" md-no-ink="true"
+                                                               ng-click="removeMap($index)" placeholder="Delete"
+                                                               style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                        <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                                 ng-init="imgsrc1='images/svg/delete.svg'"
+                                                                 ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                                 ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                                 style="width: 20px;"></md-icon>
+                                                    </md-button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!--<br>	<br>	<br>	<br>	<br>-->
+                            </form>
+                        </div>
+
+
+                        <!--===================================== add vendor for bulk upload =======================-->
+
+                        <div class="container-fluid vendorTabHeight" id="vendortab2"  ng-if="!singleVendorTab && bulkVendorTab">
+                            <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                                <div class="col-md-6 light-grey-right-border">
+                                    <div id="uploadFileButton" class="uploadFileBulkOrder"
+                                         data-toggle="modal" data-target="#vendorsBulkUpload" data-dismiss="modal"></div>
+                                    <br>
+                                    <span id="uploadFileText" class="uploadFileLabel"
+                                          data-toggle="modal" data-target="#vendorsBulkUpload" data-dismiss="modal">Upload File</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <a >
+                                        <div id="downloadtemplate" class="downloadFileBulkOrder" data-ng-click="VendorTemplateDownload()"></div>
+                                    </a>
+                                    <br>
+                                    <span id="downloadtemplate1" class="downloadFileLabel">
+                                                <a data-ng-click="VendorTemplateDownload()">
+                                                    Download File Template
+                                                </a>
+                                            </span>
+                                </div>
+                            </div>
+                            <div class="row upload-file-dialog-row">
+                                <div style="text-align: center;">
+                                    <a id="vendorclosebulkupload" ng-click="closeBulkUploadDialog()" style="color: #00ACE4; font-weight: 600;cursor: pointer;">Go to "Bulk upload reports" for more details.</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="singleVendorTab==true && bulkVendorTab==false">
+                    <button id="vendorAddCancel2" type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelvendorData(addNewVendorForm)">Cancel
+                    </button>
+                    <button id="vendorAddSubmit" ng-disabled="disableSaveButton" type="submit" ng-if="vendorMode == 'add'" id="addbutton" class="action-btn">
+                        Add
+                    </button>
+                    <button id="vendorAddUpdate" ng-disabled="disableSaveButton" type="submit" ng-if="vendorMode == 'edit'" id="update" class="action-btn">
+                        Update
+                    </button>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="singleVendorTab==false && bulkVendorTab==true">
+                    <button id="vendorAddCancel3" type="button" class="cancel-btn" ng-click="cancelvendorData(addNewVendorForm)">Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Bulk Upload vendors File Dialog -->
+<div class="modal fade" data-backdrop="static" data-backdrop="static" id="vendorsBulkUpload" role="dialog"
+     aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <form name="vendorsBulkUploadForm" novalidate
+              ng-submit="vendorsBulkUploadForm.$valid && uploadBulkOrderFile(uploadedFile.bulkOrderUploadfile,vendorsBulkUploadForm);">
+            <div class="modal-content">
+                <div class="modal-header modal-dialog-header">
+                    <button id="bulkuploadcrossbutton" type="button" class="close"
+                            ng-click="cancelVendorBulkUpload(vendorsBulkUploadForm)" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">Upload File</p>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row upload-file-dialog-row">
+                            <div class="col-md-3 bulkFile-heading-col font">Select a File</div>
+                            <div class="col-md-8">
+                                <div ng-required="true" name="files" ngf-drop ngf-select class="drop-box cursorPointer"
+                                     id="uploadvendor"
+                                     ng-model="uploadedFile.bulkOrderUploadfile" ngf-drag-over-class="'dragover'"
+                                     accept=".xls,.xlsx"
+                                     ngf-pattern="'.xls,.xlsx'">
+                                    <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag
+                                    file to upload or click to select
+                                </div>
+                                <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+
+                            </div>
+                        </div>
+                        <div class="row upload-file-dialog-row">
+                            <div class="col-md-3 bulkFile-heading-col"></div>
+                            <div class="col-md-8 font">File:&nbsp;&nbsp;{{uploadedFile.bulkOrderUploadfile.name}}</div>
+                        </div>
+                        <div class="row upload-file-dialog-row">
+                            <div class="col-md-3 bulkFile-heading-col"></div>
+                            <div class="col-md-8">
+                                <b class="fileFormat">* File Format should be .xls,.xlsx</b>
+                                <br>
+                                <span style="background-color: #FFFFFF;padding:0;"
+                                      ng-if="vendorsBulkUploadForm.$submitted && vendorsBulkUploadForm.files.$error.required"
+                                      class="error-msg">Please upload file</span><br>
+                                <span style="background-color: #FFFFFF;padding:0;"
+                                      ng-if="vendorsBulkUploadForm.$submitted && vendorsBulkUploadForm.files.$error.pattern"
+                                      class="error-msg">Please upload a valid file</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modal-dialog-footer">
+                    <button id="cancelbulkupload" type="button" class="cancel-btn"
+                            ng-click="cancelVendorBulkUpload(vendorsBulkUploadForm)">Cancel
+                    </button>
+                    <button ng-disabled="disableBulkUpload" id="bulkuploadactionbutton" type="submit"
+                            class="action-btn">Upload
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

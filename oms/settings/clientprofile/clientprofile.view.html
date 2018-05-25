@@ -1,0 +1,777 @@
+<link href="settings/clientprofile/clientprofile.css" rel="stylesheet">
+<div class="container-fluid" ng-init="onLoad()">
+
+    <div class="row">
+        <div class="col-lg-10 col-md-12 col-xs-12">
+            <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;"><h4 class="screen-heading">Client Profile</h4></div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row row-margin-top-x-small">
+        <div class="col-md-12">
+            <md-toolbar class="md-small accordion-color">
+                <div class="md-toolbar-tools">
+                    <span class="font-big">Registered Address</span>
+                    <span flex=""></span>
+                    <md-button class="md-icon-button" aria-label="Favorite"
+                               id="clientprofileAddressConfig" ng-click="openSection('address')">
+                        <md-icon ng-show="!addressconfig"
+                                 md-svg-icon="images/svg/expand_icon.svg">
+                        </md-icon>
+                        <md-icon ng-show="addressconfig"
+                                 md-svg-icon="images/svg/collaps_icon.svg">
+                        </md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+        </div>
+    </div>
+    <hr/>
+    <div ng-show="addressconfig" class="row row-margin-top">
+        <div class="col-md-12 padding-top-20">
+            <div class="col-md-12 padding-top-20">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="client-label" >
+                                Registered Address
+                            </span><span style="color:red">*</span>
+                        </div>
+                        <div class="col-md-8">
+                            <span class="client-value" ng-if="!editAddress && tableAddress.tableAddressFull!=null">
+                                {{tableAddress.tableAddressFull}}
+                            </span>
+                            <span class="client-value" ng-if="!editAddress && tableAddress.tableAddressFull==null">
+                                No address provided
+                            </span>
+                            <md-icon id="clientprofileRegisteredAddressEdit" class="pull-right editIcon" ng-click="editAddress = !editAddress;onUpdateClientAddressClicked()" ng-show="!editAddress && access.editAccess" md-svg-icon="images/svg/edit_button.svg">
+                            </md-icon>
+                            <!--<div class="font col-md-2 pull-right">-->
+                            <!--<button class="btn addsharpbutton font" ng-click="onUpdateClientAddressClicked()" ng-if="access.editAccess">Update Address</button>-->
+                            <!--</div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-margin-top-x-small">
+        <div class="col-md-12">
+            <md-toolbar class="md-small accordion-color">
+                <div class="md-toolbar-tools">
+                    <span class="font-big">Invoice Configuration</span>
+                    <span flex=""></span>
+                    <md-button class="md-icon-button" aria-label="Favorite"
+                               id="clientprofileInvoiceConfig" ng-click="openSection('invoice')">
+                        <md-icon ng-show="!invoiceconfig"
+                                 md-svg-icon="images/svg/expand_icon.svg">
+                        </md-icon>
+                        <md-icon ng-show="invoiceconfig"
+                                 md-svg-icon="images/svg/collaps_icon.svg">
+                        </md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+        </div>
+    </div>
+    <div ng-show="invoiceconfig" class="row row-margin-top">
+        <div class="col-md-12 padding-top-20">
+            <div class="col-md-12 padding-top-20">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="client-label" >
+                                Enable Invoice Generation<span style="color:red">*</span>
+                            </span>
+                        </div>
+                        <div class="col-md-8">
+                            <span ng-show="!editInvGen" class="client-value">
+                                {{clientprofile.tableClientProfileEnableInvoice ? 'Enabled' : 'Disabled'}}
+                            </span>
+                            <div ng-show="editInvGen" class="col-md-4">
+                                <md-checkbox id="clientprofileEIG" ng-model="clientprofile.tableClientProfileEnableInvoice"
+                                             ng-change="updateClientProfile()"
+                                             aria-label="Enable" ng-disabled="!access.editAccess" >
+                                </md-checkbox>Enable
+                            </div>
+                            <md-icon id="clientprofileEIGEdit" class="pull-right editIcon" ng-click="editInvGen = !editInvGen" ng-show="!editInvGen" md-svg-icon="images/svg/edit_button.svg">
+                            </md-icon>
+                            <md-icon id="clientprofileEIGEditClose" class="pull-right editIcon" ng-click="editInvGen = !editInvGen" ng-show="editInvGen" md-svg-icon="images/svg/cancel.svg">
+                            </md-icon>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 padding-top-20" ng-show="clientprofile.tableClientProfileEnableInvoice!= null && clientprofile.tableClientProfileEnableInvoice == true">
+            <div class="col-md-12 padding-top-20">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="client-label" >
+                                Sale Order Invoice Number Format
+                            </span>
+                        </div>
+                        <div class="col-md-8">
+                            <span ng-show="!editInvFor" class="client-value">
+                                <b  style="margin-right: 20px;">Included Client Code</b>
+                                <b ng-if="invoicedetails.tableSaleOrderInvoiceRulesIsLocationSelected" style="margin-right: 20px;" >Included Location</b>
+                                <b ng-if="invoicedetails.tableSaleOrderInvoiceRulesIsMonthSelected" style="margin-right: 20px;">Included Month</b>
+                                <b ng-if="invoicedetails.tableSaleOrderInvoiceRulesIsFySelected" style="margin-right: 20px;">Included FY</b>
+                            </span>
+                            <div ng-show="editInvFor" class="col-md-3">
+                                <md-checkbox ng-model="clientprofile.tableClientProfileClientNo"
+                                             class="inputCheckedGrey"
+                                             id="clientprofileCC"
+                                             ng-disabled="true"
+                                             aria-label="Enable" ng-disabled="!access.editAccess">
+                                </md-checkbox>
+                                &nbsp;Include Client Code
+                            </div>
+                            <div ng-show="editInvFor" class="col-md-3">
+                                <md-checkbox id="clientprofileSOINF" ng-model="invoicedetails.tableSaleOrderInvoiceRulesIsLocationSelected"
+                                             aria-label="Enable" ng-disabled="!access.editAccess">
+                                </md-checkbox>
+                                &nbsp;Include Location
+                            </div>
+                            <div ng-show="editInvFor" class="col-md-3">
+                                <md-checkbox id="clientprofileIL" ng-model="invoicedetails.tableSaleOrderInvoiceRulesIsMonthSelected"
+                                             aria-label="Enable" ng-disabled="!access.editAccess">
+                                </md-checkbox>
+                                &nbsp;Include Month
+                            </div>
+                            <div ng-show="editInvFor" class="col-md-3">
+                                <md-checkbox ng-model="invoicedetails.tableSaleOrderInvoiceRulesIsFySelected"
+                                             ng-change="checkFinancialyear()"
+                                             class="inputCheckedGrey"
+                                             id="clientprofileIM"
+                                             ng-disabled="true"
+                                             aria-label="Enable" ng-disabled="!access.editAccess">
+                                </md-checkbox>
+                                &nbsp;Include FY
+                            </div>
+                            <div ng-show="editInvFor" class="col-md-2">
+                                <button id="clientprofileInvoiceUpdateButton" class="btn addsharpbutton font" ng-click="updateInvoiceDetails()" ng-if="access.editAccess">Update</button>
+                            </div>
+                            <md-icon id="clientprofileInvoiceEdit" class="pull-right editIcon" ng-click="editInvFor = !editInvFor" ng-show="!editInvFor" md-svg-icon="images/svg/edit_button.svg">
+                            </md-icon>
+                            <md-icon id="clientprofileInvoiceEditClose" class="pull-right editIcon" ng-click="resetInvDetail()" ng-show="editInvFor" md-svg-icon="images/svg/cancel.svg">
+                            </md-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 padding-top-20">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="client-label" >
+                                Example Invoice Number:
+                            </span>
+                        </div>
+                        <div class="col-md-4">
+                            <span>{{clientprofile.tableClientProfileClientNo}}/</span>
+                            <span ng-if="invoicedetails.tableSaleOrderInvoiceRulesIsLocationSelected">01/</span>
+                            <span>FY18</span>
+                            <span ng-if="invoicedetails.tableSaleOrderInvoiceRulesIsMonthSelected">/06</span>
+                            <span>/00001</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 padding-top-20">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                        <span class="client-label" >
+                            Signature Image
+                        </span><span style="color:red">*</span>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="col-md-8 padding-top-20">
+                                <div ngf-drop ngf-select class="drop-box cursorPointer" id="clientprofileSignatureImageDrop"
+                                     ng-model="genericData.signImageFile" ngf-drag-over-class="'dragover'"
+                                     accept=".jpg,.jpeg,.png,.svg" ngf-pattern="'.jpg,.jpeg,.png,.svg'">
+                                    <img src="images/svg/upload_icon_1.svg"
+                                         style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag file to
+                                    upload or click to select. (Only jpg, jpeg, png and svg. Size 200 x 70)
+                                </div>
+                            </div>
+                            <div class="col-md-4 padding-top-20">
+                                <p>Preview:</p>
+                                <i ng-if="genericData.signImageFile == null && genericData.signImageReceivedFile == null">No image available or selected</i>
+                                <img ng-if="genericData.signImageFile != null" style="width: 100px;height: 70px;" ngf-src="genericData.signImageFile" /><br/>
+                                <img ng-if="genericData.signImageReceivedFile != null" style="width: 100px;height: 70px;" ng-src="{{genericData.signImageReceivedFile}}" />
+                            </div>
+
+                            <div ngf-no-file-drop class="cursorPointer">File Drag/Drop is not supported for this browser</div>
+                            <br/>
+                            <div class="col-md-12 padding-top-20">
+                                <span><b>Selected File:</b></span>
+                                <span class="client-value" ng-if="genericData.signImageFile.name != null" style="width:100%;word-wrap:break-word;">{{genericData.signImageFile.name}}</span>
+                                <span class="client-value" ng-if="genericData.signImageFile.name == null">No file selected</span>
+                                <button id="clientprofileSignatureUpdateButton" class="btn addsharpbutton " ng-click="uploadSignImage()" ng-if="access.editAccess">Upload Image</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 padding-top-20">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                        <span class="client-label" >
+                            GST Status<span style="color:red">*</span>
+                        </span>
+                        </div>
+                        <div class="col-md-8">
+                        <span ng-show="!editNature" class="client-value">
+                            {{clientprofile.tableGstType.tableGstTypeName}}
+                        </span>
+                            <md-radio-group id="clientprofileNatureOfGSTINCheckbox" ng-show="editNature" ng-change="updateClientProfileGst()"
+                                            ng-model="clientprofile.tableGstType.tableGstTypeName" style="display: inline-flex;">
+                                <md-radio-button ng-value="gst.tableGstTypeName" ng-repeat="gst in gstTypes""  class="md-primary">{{gst.tableGstTypeName}}&nbsp;&nbsp;</md-radio-button>
+                            </md-radio-group>
+                            <md-icon id="clientprofileNatureOfGSTINEdit" class="pull-right editIcon" ng-click="editNature = !editNature" ng-show="!editNature" md-svg-icon="images/svg/edit_button.svg">
+                            </md-icon>
+                            <md-icon id="clientprofileNatureOfGSTINEditClose" class="pull-right editIcon" ng-click="editNature = !editNature" ng-show="editNature" md-svg-icon="images/svg/cancel.svg">
+                            </md-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 padding-top-20" ng-if="clientprofile.tableGstType.tableGstTypeName != 'Non Registered'
+                                      && clientprofile.tableGstType.tableGstTypeName != 'GST Exempt'">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                        <span class="client-label" >
+                            State Wise GSTIN
+                        </span>
+                        </div>
+                        <div class="col-md-8">
+                            <table id="gsttable"
+                                   class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="data-grid-header">
+                                <tr>
+                                    <th id="gsttableState" >State</th>
+                                    <th id="gsttableGSTIN">GSTIN</th>
+                                    <th id="gsttableAction">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody class="data-grid-data">
+                                <tr ng-repeat="vat in allVats">
+                                    <td id="gsttableState{{$index}}">{{vat.tableState.tableStateLongName}}</td>
+                                    <td id="gsttableGSTIN{{$index}}">
+                                        {{vat.tableClientStateWiseVatNo}}</td>
+                                    <td id="gsttableAction{{$index}}">
+                                        <a id="edit{{$index}}" title = "Edit GSTIN" href="javascript:void(0)" class="btn btn-default btn-sm" ng-if="access.editAccess"
+                                           ng-click="onEditGSTClicked(vat)">
+                                            <span class="fa fa-edit"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="col-md-12" >
+                                <button id="clientprofileGstAddButton" class="btn pull-right addsharpbutton" ng-click="onAddNewGstClicked()" ng-if="access.editAccess">Add GST</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <hr/>
+    <div class="row row-margin-top-x-small">
+        <div class="col-md-12">
+            <md-toolbar class="md-small accordion-color">
+                <div class="md-toolbar-tools">
+                    <span class="font-big">Feature Configuration</span>
+                    <span flex=""></span>
+                    <md-button class="md-icon-button" aria-label="Favorite"
+                               id="clientprofileFeatureConfig" ng-click="openSection('feature')">
+                        <md-icon ng-show="!featureConfig"
+                                 md-svg-icon="images/svg/expand_icon.svg">
+                        </md-icon>
+                        <md-icon ng-show="featureConfig"
+                                 md-svg-icon="images/svg/collaps_icon.svg">
+                        </md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+        </div>
+    </div>
+    <div ng-show="featureConfig" class="row row-margin-top">
+        <div class="col-md-12 padding-top-20" ng-hide="true" >
+           <form name="daysOfInventoryForm" novalidate >
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <span class="client-label" >
+                            Days of Inventory Configuration
+                        </span>
+                    </div>
+                    <div class="col-md-8">
+                    <span ng-if="!editInvConfig" class="client-value">
+                                {{clientprofile.tableClientProfileDaysOfInventoryInterval}}
+                            </span>
+                        <div ng-if="editInvConfig" class="col-md-4">
+                            <input id="clientprofileDOIC"  type="text"
+                                    title="Number of days to calculate the per day average"
+                                    only-integer
+                                    name="daysOfInventory"
+                                    prevent-typing-greater
+                                    ng-maxlength="9"
+                                   required
+                                    ng-model="clientprofile.tableClientProfileDaysOfInventoryInterval" id="number1" name="daysofinventory"
+                                    placeholder="Interval in days"
+                                    class="form-control darkgrey-bottom-border textRightOnFocus"/>
+
+                        </div>
+                        <div ng-if="editInvConfig" class="col-md-2">
+                            <small class="error-msg text-danger"
+                                   ng-show="daysOfInventoryForm.daysOfInventory.$error.required">
+                                Days of Inventory is required
+                            </small>
+                        </div>
+                        <div ng-if="editInvConfig" class="col-md-2">
+                            <button id="clientprofileDOICButton" class="btn addsharpbutton font" ng-click="daysOfInventoryForm.$valid && updateClientProfile()" ng-if="access.editAccess">Update</button>
+                        </div>
+                        <md-icon id="clientprofileDOICEdit" class="pull-right editIcon" ng-click="editInvConfig = !editInvConfig" ng-show="!editInvConfig" md-svg-icon="images/svg/edit_button.svg">
+                        </md-icon>
+                        <md-icon id="clientprofileDOICEditClose" class="pull-right editIcon" ng-click="editInvConfig = !editInvConfig" ng-show="editInvConfig" md-svg-icon="images/svg/cancel.svg">
+                        </md-icon>
+                    </div>
+                    <div class="col-md-offset-4 col-md-8">
+                        <span ng-if="daysOfInventoryForm.daysOfInventory.$dirty && daysOfInventoryForm.daysOfInventory.$error.maxlength" class="error-msg">
+                            Days of Inventory Configuration cannot exceed 999999999 days.
+                        </span>
+                    </div>
+                </div>
+            </div>
+           </form>
+        </div>
+        <div class="col-md-12 padding-top-20" ng-if="clientprofile.tableClientProfileCategoryMaster == 'Amazon' || clientprofile.tableClientProfileCategoryMaster == 'All'">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <span class="client-label" >
+                            Category Master Configuration<span style="color:red">*</span>
+                        </span>
+                    </div>
+                    <div class="col-md-8">
+                        <md-radio-group id="clientprofileCMC" ng-change="onCategoryMasterSelected()"
+                                        ng-model="categoryMaster.tableClientProfileCategoryMaster" style="display: inline-flex;">
+                            <md-radio-button value="Standard" class="md-primary">Restore Default&nbsp</md-radio-button>
+                            <md-radio-button value="All" class="md-primary" ng-if="clientprofile.tableClientProfileCategoryMaster == 'Amazon'" checked>Append to Standard Categories&nbsp</md-radio-button>
+                        </md-radio-group>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 padding-top-20">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <span class="client-label" >
+                            Pricing Configuration
+                        </span>
+                    </div>
+                    <div class="col-md-8">
+                        <md-radio-group id="clientprofilePricing" ng-change="onChangePricingConfig(clientprofile)"
+                                        ng-model="clientprofile.tableClientProfilePricingModel" style="display: inline-flex;">
+                            <md-radio-button value=1 class="md-primary">Fixed Price Based&nbsp</md-radio-button>
+                            <md-radio-button value=2 class="md-primary">Discount Based&nbsp</md-radio-button>
+                        </md-radio-group>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 padding-top-20">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <span class="client-label" >
+                            Enable Tally Integration<span style="color:red">*</span>
+                        </span>
+                    </div>
+                    <div class="col-md-8">
+                        <span ng-show="!editTllyInt" class="client-value">
+                            {{clientprofile.tableClientProfileTallyIntegrated ? 'Enabled' : 'Disabled'}}
+                        </span>
+                        <div ng-show="editTllyInt" class="col-md-4">
+                            <md-checkbox id="clientprofileETI" ng-model="clientprofile.tableClientProfileTallyIntegrated"
+                                         ng-change="updateClientProfile()"
+                                         aria-label="Enable" ng-disabled="!access.editAccess" >
+                            </md-checkbox>Enable
+                        </div>
+                        <md-icon id="clientprofileETIEdit" class="pull-right editIcon" ng-click="editTllyInt = !editTllyInt" ng-show="!editTllyInt" md-svg-icon="images/svg/edit_button.svg">
+                        </md-icon>
+                        <md-icon id="clientprofileETIEditClose" class="pull-right editIcon" ng-click="editTllyInt = !editTllyInt" ng-show="editTllyInt" md-svg-icon="images/svg/cancel.svg">
+                        </md-icon>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 padding-top-20">
+            <form name="skuBarcodePriorityForm" novalidate>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <span class="client-label" >
+                            SKU Barcode Priority Configuration
+                        </span>
+                    </div>
+                    <div class="col-md-8">
+                            <div ng-if="!editSkuBarocodeConfig">
+                                <div class="col-md-3"> <b> {{ clientbarcodesettings.tableClientSettingsSkuUpcPriority}} </b> ) UPC EAN</div>
+                                <div class="col-md-3">  <b>{{clientbarcodesettings.tableClientSettingsSkuAlternateCodePriority}} </b> ) Alternate Code</div>
+                                <div class="col-md-2">  <b> {{clientbarcodesettings.tableClientSettingsSkuClientSkuCode }} </b> ) Client Code </div>
+                                <div class="col-md-3">  <b>{{clientbarcodesettings.tableClientSettingsSkuSystemNo}}</b> ) System Code</div>
+                            </div>
+                            <div ng-if="editSkuBarocodeConfig">
+                                <div class="col-md-2"> <input type="text" required name="SkuUpcEan" only-integer
+                                                              class="form-control darkgrey-bottom-border textRightOnFocus"
+                                                              placeholder="Enter 1-4" ng-model="clientbarcodesettings.tableClientSettingsSkuUpcPriority" pattern= "[1-4]"> UPC EAN
+                                    <span class="error-msg text-danger"
+                                           ng-if="skuBarcodePriorityForm.SkuUpcEan.$error.required">
+                                        is required
+                                    </span>
+                                    <span ng-if="skuBarcodePriorityForm.SkuUpcEan.$dirty && skuBarcodePriorityForm.SkuUpcEan.$error.pattern" class="error-msg">
+                                        Priority can only be from 1 to 4.
+                                    </span>
+                                </div>
+                                <div class="col-md-2"> <input type="text" required name="SkuAlternateCode" only-integer
+                                                              class="form-control darkgrey-bottom-border textRightOnFocus"
+                                                              placeholder="Enter 1-4" ng-model="clientbarcodesettings.tableClientSettingsSkuAlternateCodePriority" pattern= "[1-4]"> Alternate Code
+                                    <span class="error-msg text-danger"
+                                           ng-if="skuBarcodePriorityForm.SkuAlternateCode.$error.required">
+                                        is required
+                                    </span>
+                                    <span ng-if="skuBarcodePriorityForm.SkuAlternateCode.$dirty && skuBarcodePriorityForm.SkuAlternateCode.$error.pattern" class="error-msg">
+                                        Priority can only be from 1 to 4.
+                                    </span>
+                                </div>
+                                <div class="col-md-2"> <input type="text" required name="SkuClientSkuCode" ng-maxlength="4" only-integer
+                                                              class="form-control darkgrey-bottom-border textRightOnFocus"
+                                                              placeholder="Enter 1-4" ng-model="clientbarcodesettings.tableClientSettingsSkuClientSkuCode" pattern= "[1-4]">Client Code
+                                    <span class="error-msg text-danger"
+                                           ng-if="skuBarcodePriorityForm.SkuClientSkuCode.$error.required">
+                                        is required
+                                    </span>
+                                    <span ng-if="skuBarcodePriorityForm.SkuClientSkuCode.$dirty && skuBarcodePriorityForm.SkuClientSkuCode.$error.pattern" class="error-msg">
+                                        Priority can only be from 1 to 4.
+                                    </span>
+                                </div>
+                                <div class="col-md-2"> <input type="text" required name="SkuSystemNo" ng-maxlength="4" only-integer
+                                                              class="form-control darkgrey-bottom-border textRightOnFocus"
+                                                              placeholder="Enter 1-4" ng-model="clientbarcodesettings.tableClientSettingsSkuSystemNo" pattern= "[1-4]"> System Code
+                                    <span class="error-msg text-danger"
+                                           ng-if="skuBarcodePriorityForm.SkuSystemNo.$error.required">
+                                        is required
+                                    </span>
+                                    <span ng-if="skuBarcodePriorityForm.SkuSystemNo.$dirty && skuBarcodePriorityForm.SkuSystemNo.$error.pattern" class="error-msg">
+                                        Priority can only be from 1 to 4.
+                                    </span>
+                                </div>
+                                <button class="btn addsharpbutton font col-md-2" ng-click="skuBarcodePriorityForm.SkuSystemNo.$valid && skuBarcodePriorityForm.SkuSystemNo.$modelValue <= 4
+                                    && skuBarcodePriorityForm.SkuClientSkuCode.$modelValue <= 4 &&  skuBarcodePriorityForm.SkuAlternateCode.$modelValue <= 4 && skuBarcodePriorityForm.SkuUpcEan.$modelValue <= 4 && updateclientbarcodesetting(skuBarcodePriorityForm)">Update</button>
+                            </div>
+                            <div class="row">
+                                <md-icon id="clientprofileSkuBarcodeEdit" class="pull-right editIcon" ng-click="setDefaultskuBarCodesettings()" ng-show="!editSkuBarocodeConfig" md-svg-icon="images/svg/edit_button.svg">
+                                </md-icon>
+                                <md-icon id="clientprofileSkuBarcodeEditClose" class="pull-right editIcon" ng-click="editSkuBarocodeConfig = !editSkuBarocodeConfig" ng-show="editSkuBarocodeConfig" md-svg-icon="images/svg/cancel.svg">
+                                </md-icon>
+                            </div>
+                    </div>
+
+
+                </div>
+            </div>
+            </form>
+        </div>
+
+        <div class="col-md-12">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 padding-top-20">
+                        <span class="client-label" >
+                            Validate Sale Return
+                        </span>
+                    </div>
+                    <div>
+                        <div class="col-md-8 padding-top-20">
+                            <md-checkbox ng-model="clientprofile.tableClientProfileValidateSaleReturn"
+                                         aria-label="Enable" ng-disabled="!access.editAccess" ng-change="updateClientProfile()">
+                            </md-checkbox>Enable
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12" ng-if="false">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 padding-top-20">
+                        <span class="client-label" >
+                            Enable FMS Integration
+                        </span>
+                    </div>
+                    <div>
+                        <div class="col-md-8 padding-top-20">
+                            <md-checkbox ng-model="clientprofile.tableClientProfileFmsIntegrated"
+                                         aria-label="Enable" ng-disabled="!access.editAccess" ng-change="updateClientProfile()">
+                            </md-checkbox>Enable
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 margin-top-5 text-left">
+                                <div class="row main-list">
+                                    <table class="table table-condensed table-responsive table-hover wh-allocation">
+                                        <thead class="main-list-header-inv">
+                                        <!-- table header -->
+                                        <tr>
+                                            <th id="discountRuleNameH" class="text-left">
+                                                <a href="">
+                                                    Warehouse Allocation &nbsp;
+                                                </a>
+                                            </th>
+                                            <th id="discountCDateH" class="text-left">
+
+                                                <a href="">
+                                                    System &nbsp;
+                                                </a>
+                                            </th>
+                                            <th id="discountSDateH" class="text-left">
+
+                                                <a href="">
+                                                    Manual &nbsp;
+                                                </a>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <!--data-ng-repeat="Data in inventoryLists"-->
+                                        <tbody>
+                                            <tr class="clickable-row-inv">
+                                                <td id="discountRuleName{{$index}}" align="left">
+                                                    New Order
+                                                </td>
+                                                <td id="discountCDate{{$index}}" align="left" class="round-checkbox">
+                                                    <md-checkbox ng-model="aaa" ng-checked="clientprofile.tableClientProfileAutoAllocateWh" ng-click="clientprofile.tableClientProfileAutoAllocateWh = true;updateClientProfile()"> </md-checkbox>
+                                                </td>
+                                                <td id="discountSDate{{$index}}" align="left" class="round-checkbox">
+                                                    <md-checkbox ng-model="bbb" ng-checked="!clientprofile.tableClientProfileAutoAllocateWh" ng-click="clientprofile.tableClientProfileAutoAllocateWh = false;updateClientProfile()"> </md-checkbox>
+                                                </td>
+                                            </tr>
+                                            <tr class="clickable-row-inv">
+                                                <td id="discountRuleName{{$index}}" align="left">
+                                                    Order on hold due to stock unavailable
+                                                </td>
+                                                <td id="discountCDate{{$index}}" align="left" class="round-checkbox">
+                                                    <md-checkbox ng-model="ccc"  ng-checked="clientprofile.tableClientProfileAutoAllocateWhHoldNotAllocated" ng-click="clientprofile.tableClientProfileAutoAllocateWhHoldNotAllocated = true;updateClientProfile()"> </md-checkbox>
+                                                </td>
+                                                <td id="discountSDate{{$index}}" align="left" class="round-checkbox">
+                                                    <md-checkbox ng-model="ddd"  ng-checked="!clientprofile.tableClientProfileAutoAllocateWhHoldNotAllocated" ng-click="clientprofile.tableClientProfileAutoAllocateWhHoldNotAllocated = false;updateClientProfile()"> </md-checkbox>
+                                                </td>
+                                            </tr>
+                                            <tr class="clickable-row-inv">
+                                                <td id="discountRuleName{{$index}}" align="left">
+                                                    Order on hold due to WH stock not found
+                                                </td>
+                                                <td id="discountCDate{{$index}}" align="left" class="round-checkbox">
+                                                    <md-checkbox ng-model="eee"  ng-checked="clientprofile.tableClientProfileAutoAllocateWhHoldNotAvailable" ng-click="clientprofile.tableClientProfileAutoAllocateWhHoldNotAvailable = true;updateClientProfile()"> </md-checkbox>
+                                                </td>
+                                                <td id="discountSDate{{$index}}" align="left" class="round-checkbox">
+                                                    <md-checkbox ng-model="fff"  ng-checked="!clientprofile.tableClientProfileAutoAllocateWhHoldNotAvailable" ng-click="clientprofile.tableClientProfileAutoAllocateWhHoldNotAvailable = false;updateClientProfile()"> </md-checkbox>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </div>
+    <hr/>
+
+    <div class="row row-margin-top-x-small">
+        <div class="col-md-12">
+            <md-toolbar class="md-small accordion-color">
+                <div class="md-toolbar-tools">
+                    <span class="font-big">WMS Configuration</span>
+                    <span flex=""></span>
+                    <md-button id="wmsconfig" class="md-icon-button" aria-label="Favorite" ng-click="openSection('wms')">
+                        <md-icon ng-show="!wmsconfiguration" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                        <md-icon ng-show="wmsconfiguration" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+        </div>
+    </div>
+
+    <div ng-if="wmsconfiguration" class="row row-margin-top">
+        <div class="col-md-12">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 padding-top-20">
+                    <span class="client-label" >
+                        USN
+                    </span>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="col-md-8 padding-top-20">
+                            <md-checkbox id="clientprofileEUSN" ng-model="clientprofile.tableClientProfileUsnEnabled"
+                                         ng-change="updateClientProfile()"
+                                         aria-label="Enable" ng-disabled="!access.editAccess" >
+                            </md-checkbox>Enable
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-if="clientprofile.tableClientProfileUsnEnabled==true">
+                    <div class="col-md-4 padding-top-20">
+                    <span class="client-label" >
+                        USN System Generated
+                    </span>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="col-md-8 padding-top-20 round-checkbox">
+                            <md-checkbox id="clientprofileUSNSGEN" ng-checked="clientprofile.tableClientProfileUsnSystemGenerated"
+                                         ng-click="clientprofile.tableClientProfileUsnSystemGenerated = true;clientprofile.tableClientProfileUsnContainsSkuCode = false;updateClientProfile()"
+                                         aria-label="Enable" ng-disabled="!access.editAccess" >
+                            </md-checkbox>Enable
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-if="clientprofile.tableClientProfileUsnEnabled==true">
+                    <div class="col-md-4 padding-top-20">
+                    <span class="client-label" >
+                        Sku Code Embedded in USN
+                    </span>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="col-md-8 padding-top-20 round-checkbox">
+                            <md-checkbox ng-checked="clientprofile.tableClientProfileUsnContainsSkuCode" ng-click="clientprofile.tableClientProfileUsnSystemGenerated = false; clientprofile.tableClientProfileUsnContainsSkuCode = true;updateClientProfile()"
+                                         aria-label="Enable" ng-disabled="!access.editAccess" >
+                            </md-checkbox>Enable
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-if="clientprofile.tableClientProfileUsnContainsSkuCode && clientprofile.tableClientProfileUsnEnabled">
+                    <div class="col-md-4 padding-top-20">
+                    <span class="client-label" >
+                        Sku Code Character Indexes
+                    </span>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="col-md-12 padding-top-20">
+                            <table class="char-table">
+                                <tr>
+                                    <th class="text-center" ng-repeat="char in characterString">{{$index+1}}</th>
+                                </tr>
+                                <tr>
+                                    <td class="text-center" ng-repeat="char in characterString"><md-checkbox class="col-lg-12 col-md-12 text-center mdCheck" ng-model="char.check" ng-change="updateSkuCharArray($index, char.check)"
+                                             aria-label="Enable" ng-disabled="!access.editAccess" style="">
+                                </md-checkbox></td>
+                                </tr>
+                            </table>
+                            <input class="char-update-btn" type="button" value="Update Sku Character" ng-click="updateSkuChar()">
+                        </div>
+                    </div>
+                </div>
+                <!-- Shall be shown when purchase accouting is enabled throughout the system-->
+                <div class="row" ng-hide="true">
+                    <div class="col-md-4 padding-top-20">
+                    <span class="client-label" >
+                        Purchase Accounting
+                    </span>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="col-md-8 padding-top-20">
+                            <md-checkbox id="clientprofilePACC" ng-model="clientprofile.tableClientProfilePurchaseAccounting"
+                                         ng-change="updateClientProfile()"
+                                         aria-label="Enable" ng-disabled="!access.editAccess" >
+                            </md-checkbox>Enable
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 padding-top-20">
+                    <span class="client-label" >
+                        Direct Inward
+                    </span>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="col-md-8 padding-top-20">
+                            <md-checkbox id="clientprofileDI" ng-model="clientprofile.tableClientProfileDirectInward"
+                                         ng-change="updateClientProfile()"
+                                         aria-label="Enable" ng-disabled="!access.editAccess" >
+                            </md-checkbox>Enable
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 padding-top-20">
+                    <span class="client-label" >
+                        More than PO
+                    </span>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="col-md-8 padding-top-20">
+                            <md-checkbox id="clientprofileMTPO" ng-model="clientprofile.tableClientProfileMoreThanPo"
+                                         ng-change="updateClientProfile()"
+                                         aria-label="Enable" ng-disabled="!access.editAccess" >
+                            </md-checkbox>Enable
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-if="clientprofile.tableClientProfileMoreThanPo==true">
+                    <div class="col-md-4 padding-top-20">
+                    <span class="client-label" >
+                        More than PO percentage
+                    </span>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="col-md-4 padding-top-20">
+                            <input type="text" id="clientprofileMTPOP" name="SkuAlternateCode" percentage
+                                   class="form-control darkgrey-bottom-border textRightOnFocus"
+                                   placeholder="Enter 1-100" ng-model="clientprofile.tableClientProfileMoreThanPoPercent">
+                        </div>
+                        <div class="col-md-4" ng-disabled="!access.editAccess">
+                            <div class="padding-top-20">
+                                <button class="btn addsharpbutton font" ng-click="updateClientProfile()">Update</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+
+
+<div ng-include src="'settings/clientprofile/addnewgst.html?version=1.0.0'"></div>
+<div ng-include src="'settings/clientprofile/deleteconfirmation.html?version=1.0.0'"></div>
+<div ng-include src="'settings/clientprofile/updateAddressDialog.html?version=1.0.0'"></div>
+<div ng-include src="'settings/clientprofile/categoryMasterConfirmationModal.html?version=1.0.0'"></div>
+

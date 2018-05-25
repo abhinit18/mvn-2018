@@ -1,0 +1,1547 @@
+<link href="purchaseReturn/purchaseReturn.css" rel="stylesheet">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-10 col-md-10 col-xs-12">
+            <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;"><h4 class="screen-heading">Purchase Return</h4></div>
+        </div>
+        <div class="col-md-2 text-right">
+            <span class="fa fa-external-link-square newTabIcon" ng-click="newTab()" title="New Tab"></span>
+        </div>
+    </div>
+
+    <div class="row orderscreen-channel">
+        <div class="col-md-3" style="margin-top:7px;">
+            <span class="font">Order No.</span>
+            <input id="PRNo" type="text" class=" main-bottom-border" placeholder="Order No." trim-space
+                   ng-model="filterObj.tablePurchaseReturnSystemOrderNo" ng-keypress="$event.keyCode == 13 && searchPurchaseReturnOrders()" style="margin-left:10px;width:170px;">
+        </div>
+        <div class="col-md-3">
+            <span class="font">Warehouse</span>
+            <select style="width:113px;" id="PRWh" ng-model="filterObj.tableWarehouseDetails" name="filterwarehouse"
+                    ng-options="option.tableWarehouseDetailsShortname for option in wareHousesData track by option.idtableWarehouseDetailsId"
+                    required
+                    class="orderscreen-dropdown mainDropDownOrder">
+                <option value="">Select warehouse</option>
+            </select>
+        </div>
+        <div class="col-md-3" style="margin-top:4px;margin-left:-40px;">
+            <div class="col-md-6" style="margin-top:3px;">
+                <span class="font">Search Vendors</span>
+            </div>
+            <div class="col-md-6" style="padding-left:0px;">
+                <angucomplete-alt id="vendorsMain" placeholder="Search Vendor" pause="400"
+                                  selected-object="searchedVendor" remote-url="{{baseVendorUrl}}"
+                                  title-field="tableVendorName"
+                                  initial-value="filterObj.tableVendor"
+                                  description-field="tableVendorClientVendorCode"
+                                  input-class="form-control main-bottom-border"></angucomplete-alt>
+				<button id="PRVMore" type="button" title="Click to see all vendors." style="position: absolute;top: 0px; right: -40px;" class="btn btn-sm truncate-text" ng-click="masterVendorDialog($event);">. . .</button>
+            </div>
+		
+			
+			
+        </div>
+        <div class="col-md-3" style="margin-top:6px; margin-left:40px;">
+            <div class="col-md-5" >
+                <span class="font">Search SKU</span>
+            </div>
+            <div class="col-md-6" style="margin-left:0px;">
+                <angucomplete-alt id="productsfilter" initial-value="filterObj.tableSku" placeholder="Search product" pause="400" selected-object="searchedProductForFilter" remote-url="{{baseSkuUrl}}"
+                                  title-field="tableSkuClientSkuCode"
+                                  description-field="tableSkuName"
+                                  image-field="tableSkuImageUrl"
+                                  initial-value="filterObj.tableSku" input-class="main-bottom-border font form-control"></angucomplete-alt>
+				<button id="PRSMore" type="button" title="Click to see all SKUs." style="position: absolute;top: 0px; right: -40px;" class="btn btn-sm truncate-text" ng-click="showCommonMasterSkuDialog(false);">. . .</button>
+            </div>
+			
+			
+			
+        </div>
+
+        <div class="col-md-12 row-margin-top-small" style="padding:0px;">
+            <!-- {{startDate | date : "yyyy-MM-dd" }}{{endDate | date : "yyyy-MM-dd"}} -->
+            <div class="col-md-2 margin-top-7">
+                <span class="font">Date</span>
+            </div>
+            <div class="col-md-2" style="margin-left: -106px;">
+                <md-datepicker id="PRSDate" timezoned-date ng-model="filterObj.start1Date" md-min-date="startminDate" md-max-date="startmaxDate"
+                               onkeydown="return false" ng-change="sendStartDate(filterObj.start1Date);"
+                               md-placeholder="Start Date"
+                               style="background-color: inherit;margin-top:3px;"></md-datepicker>
+                <button id="PRSDateClear" ng-if="filterObj.start1Date != null || filterObj.start1Date != undefined"  title="Deselect Start Date" style="position:absolute;top:8px;"
+                        class="btn dateClear" ng-click="clearStartDate();">
+                </button>
+
+            </div>
+            <div class="col-md-3">
+                <md-datepicker id="PREDate" timezoned-date ng-model="filterObj.end1Date" md-min-date="endminDate" md-max-date="endmaxDate"
+                               onkeydown="return false" ng-change="sendEndDate(filterObj.end1Date);" md-placeholder="End Date"
+                               style="background-color: inherit;margin-top:3px;"></md-datepicker>
+                <button id="PREDateClear" ng-if="filterObj.end1Date != null || filterObj.end1Date != undefined" title="Deselect End Date" style="position:absolute;top:8px;"
+                        class="btn dateClear" ng-click="clearEndDate()">
+                </button>
+            </div>
+            <button id="PRSearch" type="button" class="btn btn-default mybut" style="margin-left:0px;"
+                    ng-click="submitAction()">Search
+            </button>
+            <button id="PRClear" type="button" title="Clear Applied Filters"  style="margin-top:6px;"  class="btn clearFilter" ng-click="clearAction();">
+            </button>
+            <!--<md-icon style="margin-top:6px;" ng-click="newTab()" md-svg-src="images/svg/new_tab.svg"-->
+            <!--&gt;</md-icon>-->
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12">
+            <p class="screen-heading"></p>
+        </div>
+    </div>
+    <div class="row row-margin-top-small">
+        <div class="col-md-11">
+            <ul class="nav navbar-nav screen-tabs">
+                <li title="{{'All '+ allCount}}">
+                    <button ng-class="{'activeTab' : defaultTab == 'all'}" type="button" class="btn sharp font"
+                            ng-click="listOfPurchaseReturnStatesCount('all',1)"><span>All</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{allCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'New '+ newCount}}">
+                    <button ng-class="{'activeTab' : defaultTab == 'new'}" type="button" class="btn sharp font"
+                            ng-click="listOfPurchaseReturnStatesCount('new',1)"><span>New</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{newCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'In Process '+ inProcessCount}}">
+                    <button ng-class="{'activeTab' : defaultTab == 'inprocess'}" type="button" class="btn sharp"
+                            ng-click="listOfPurchaseReturnStatesCount('inprocess',1)"><span>In Process</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{inProcessCount}})</span>
+                    </button>
+                </li>
+                <li title="{{'Shipped '+ shippedCount}}">
+                    <button ng-class="{'activeTab' : defaultTab == 'shipped'}" type="button" class="btn sharp font"
+                            ng-click="listOfPurchaseReturnStatesCount('shipped',1)"><span>Shipped</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;width:auto !important;">&nbsp;({{shippedCount}})</span>
+                    </button>
+                </li>
+
+                <li title="{{'Cancelled '+ cancelledCount}}">
+                    <button ng-class="{'activeTab' : defaultTab == 'cancelled'}" type="button" class="btn sharp"
+                            ng-click="listOfPurchaseReturnStatesCount('cancelled',1)"><span>Cancelled</span><span
+                            style="color: #737373 !important; font-weight: 400 !important;">&nbsp;({{cancelledCount}})</span>
+                    </button>
+                </li>
+
+            </ul>
+        </div>
+        <div class="col-md-1 order-table-tab-bar" ng-if="access.createAccess">
+            <button type="button" class="btn addsharpbutton font pull-right" style="min-width: 120px;"
+                    ng-click="showaAskPurchaseRefKnownModal()"><img src="images/svg/add.svg" style="height:20px;">
+                &nbsp;&nbsp;Add Purchase Return
+            </button>
+        </div>
+    </div>
+    <div class="row main-list">
+        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+            <thead class="main-list-header-order">
+            <!-- table header -->
+            <tr>
+                <th id="PRNoH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tablePurchaseReturnSystemOrderNo',sortReverse,defaultTab)">
+                        Order No.&nbsp;
+                        <span ng-if="sortType == 'tablePurchaseReturnSystemOrderNo' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tablePurchaseReturnSystemOrderNo' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="PRRefH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tablePurchaseReturnRefNo',sortReverse,defaultTab)">
+                        Ref No.&nbsp;
+                        <span ng-if="sortType == 'tablePurchaseReturnRefNo' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tablePurchaseReturnRefNo' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="PRWhH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tableWarehouseDetails.tableWarehouseDetailsShortname',sortReverse,defaultTab)">
+                        Warehouse Name&nbsp;
+                        <span ng-if="sortType == 'tableWarehouseDetails.tableWarehouseDetailsShortname' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableWarehouseDetails.tableWarehouseDetailsShortname' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="PRVendorH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tableVendor.tableVendorName',sortReverse,defaultTab)">
+                        Vendor Name&nbsp;
+                        <span ng-if="sortType == 'tableVendor.tableVendorName' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableVendor.tableVendorName' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="PRCDateH" class="text-left">
+                    <a href=""
+                       ng-click="tableSorting('tablePurchaseReturnCreationDate',sortReverse,defaultTab)">
+                        Creation Date&nbsp;
+                        <span ng-if="sortType == 'tablePurchaseReturnCreationDate' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tablePurchaseReturnCreationDate' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="PRPDateH" class="text-left">
+                    <a href="" ng-click="tableSorting('tablePurchaseReturnPickupDate',sortReverse,defaultTab)">
+                        Pickup Date&nbsp;
+                        <span ng-if="sortType == 'tablePurchaseReturnPickupDate' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tablePurchaseReturnPickupDate' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="PRDDateH" class="text-left">
+                    <a href="" ng-click="tableSorting('tablePurchaseReturnDropDate',sortReverse,defaultTab)">
+                        Drop Date&nbsp;
+                        <span ng-if="sortType == 'tablePurchaseReturnDropDate' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tablePurchaseReturnDropDate' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="PRQtyH" class="text-left">
+                    <a href="" ng-click="tableSorting('skuQuantity',sortReverse,defaultTab)">
+                        Quantity&nbsp;
+                        <span ng-if="sortType == 'skuQuantity' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'skuQuantity' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="PRValueH" class="text-left">
+                    <a href="" ng-click="tableSorting('skuValue',sortReverse,defaultTab)">
+                        Value&nbsp;
+                        <span ng-if="sortType == 'skuValue' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'skuValue' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th id="PRActionH" class="text-left"><a>Action</a></th>
+                <th id="PRDropH" class="text-left"></th>
+
+            </tr>
+            </thead>
+            <tbody ng-if="showLoader">
+            <tr>
+                <td align="center" colspan="11" class="text-center">
+                    <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                </td>
+            </tr>
+            </tbody>
+            <tbody data-ng-repeat="orderData in PurchaseOrderReturnDataLists" data-ng-switch on="dayDataCollapse[$index]">
+            <tr class="clickable-row-order">
+                <td id="PRNo{{$index}}" align="left">
+                    {{orderData.tablePurchaseReturnSystemOrderNo}}
+                </td>
+                <td id="PRRef{{$index}}" class="short-sku-name" align="left">{{orderData.tablePurchaseReturnRefNo}}</td>
+                <td id="PRWh{{$index}}" align="left">{{orderData.tableWarehouseDetails.tableWarehouseDetailsShortname}}</td>
+                <td id="PRVendor{{$index}}" align="left">{{orderData.tableVendor.tableVendorName}}</td>
+                <td id="PRCDate{{$index}}" align="left">
+                    {{orderData.tablePurchaseReturnCreationDate | utcToLocalOrHyphen}}
+                </td>
+                <td id="PRPDate{{$index}}" align="left">
+                    {{orderData.tablePurchaseReturnPickupDate | utcToLocalOrHyphen}}
+                </td>
+                <td id="PRDDate{{$index}}" align="left">
+                    {{orderData.tablePurchaseReturnDropDate | utcToLocalOrHyphen}}
+                </td>
+
+                <td id="PRQty{{$index}}" align="left">{{ totalQuantity(orderData.tablePurchaseReturnSkus) }}</td>
+                <td id="PRValue{{$index}}" align="left">{{ totalCostAmount(orderData.tablePurchaseReturnSkus)  | priceOrHyphen}}</td>
+
+                <td id="PRAction{{$index}}" align="left">
+                    <div class="tool-tip">
+                        <img src="images/svg/remarks.svg" style="height:20px; width: 20px;"
+                             ng-click="openEditRemarkModal(orderData);"/>
+
+                                <span class="tool-tip-text">
+                                    <div class="popover fade left custom-pop-left in" role="tooltip" id="popover743808"
+                                         style="width:400px; display: block;">
+                                        <div class="arrow pop-left" style="left: 50%;"></div>
+                                        <h3 class="popover-title">Remarks</h3>
+
+                                        <div class="popover-content" style="word-wrap: break-word;float:left;width:100%;height:auto;max-height:100px;overflow-x: hidden;overflow-y:auto;">
+                                            <richtext class="text" body-text="orderData.tablePurchaseReturnRemarksFormatted">
+                                            </richtext>
+                                        </div>
+                                    </div>
+                                </span>
+                    </div>
+                    <span ng-if="!hideeditbutton(orderData)">|</span>
+                    <img ng-src="{{imgsrc1}}" ng-attr-title="{{!access.editAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}" width="20px" height="20px"
+                         ng-if="!DeleteAndConfimData && !hideeditbutton(orderData)"
+                         ng-class="{disableAccess: !access.editAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                         ng-click="access.editAccess && editOrder(orderData,'edit')"
+                         ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                         ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                    <span>|</span>
+
+
+                    <img ng-src="{{imgsrc2}}" ng-attr-title="{{!access.createAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Copy'}}" width="20px" height="20px"
+                         ng-if="!DeleteAndConfimData"
+                         ng-class="{disableAccess: !access.createAccess || orderData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                         ng-click="access.createAccess && copyOrder(orderData)"
+                         ng-init="imgsrc2='images/svg/copy_active.svg'"
+                         ng-mouseover="access.createAccess && (imgsrc2='images/svg/copy_hover.svg')"
+                         ng-mouseout="imgsrc2='images/svg/copy_active.svg'">
+                </td>
+                <td id="PRDrop1{{$index}}" align="left" ng-if="dayDataCollapse == null || dayDataCollapse == undefined || dayDataCollapse == []"><img
+                        src="images/svg/expand_icon.svg" height="20"
+                        data-ng-click="selectTableRow($index);stateTrials(PurchaseOrderReturnDataLists[$index].tablePurchaseReturnSkus);"/>
+                </td>
+                <td id="PRDrop2{{$index}}" align="left" data-ng-switch-when="false"
+                    data-ng-click="selectTableRow($index);stateTrials(PurchaseOrderReturnDataLists[$index].tablePurchaseReturnSkus);">
+                    <img src="images/svg/expand_icon.svg" height="20"/></td>
+                <td id="PRDrop3{{$index}}" align="left" data-ng-switch-when="true"
+                    data-ng-click="selectTableRow($index);stateTrials(PurchaseOrderReturnDataLists[$index].tablePurchaseReturnSkus);">
+                    <img src="images/svg/collaps_icon.svg" height="20"/></td>
+            </tr>
+            <tr data-ng-switch-when="true"
+                style="border: 1px solid #C0C0C0; background-color: #FEFFFF !important; padding-bottom: 20px !important;"
+                data-ng-repeat="tableSkuData in PurchaseOrderReturnDataLists[$index].tablePurchaseReturnSkus">
+                <td colspan="11">
+                    <div class="col-md-4 text-center" style="border-right: 1px solid #dedede;">
+                        <span ng-if="orderData.tablePurchaseReturnSystemOrderNo" style="display: block;padding:15px 0 15px 0;font-size: 14px;color: #F0592B;font-weight: bold ;">
+                               {{orderData.tablePurchaseReturnSystemOrderNo}} ({{$index + 1}} of {{orderData.tablePurchaseReturnSkus.length}})
+                        </span>
+                        <div class="box-table">
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Seller SKU ID :
+                                </div>
+                                <div class="box box2 short-sku-name" style="max-width:200px">
+                                    {{tableSkuData.tableSku.tableSkuClientSkuCode}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    SKU Name :
+                                </div>
+                                <div class="box box2 short-sku-name" title="{{tableSkuData.tableSku.tableSkuDescription}}" style="max-width:200px">
+                                    {{tableSkuData.tableSku.tableSkuName}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Qty :
+                                </div>
+                                <div class="box box2">
+                                    {{tableSkuData.tablePurchaseReturnSkuQuantity}}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Cost Per SKU :
+                                </div>
+                                <div class="box box2">
+                                    Rs {{ totalCostPerProduct(tableSkuData)   | priceOrHyphen }}
+                                </div>
+                            </div>
+                            <div class="boxes">
+                                <div class="box box1">
+                                    Total Cost :
+                                </div>
+                                <div class="box box2">
+                                    Rs {{ getTotal(tableSkuData) | priceOrHyphen }}
+                                </div>
+                            </div>
+                            <div ng-if="tableSkuData.tablePurchaseReturnSkuStateType.idtablePurchaseReturnSkuStateTypeId == 1 && access.editAccess" class="boxes">
+                                <div class="box box1"></div>
+                                <div ng-if="defaultTab != 'cancelled'" class="box box2">
+                                    <button id="PRCancel{{$index}}"
+                                            ng-click="showCancelPurchaseOrderItem(orderData,tableSkuData);"
+                                            class="btn btn-default mybut1">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <ul ng-if="trialsLength[$index]>= 4" class="progress-indicator nocenter stacked"
+                            style="list-style: none;">
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][1]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][2]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble1"><img src="images/svg/current_icon.svg"
+                                                                             style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;color:black">{{fullTrialsArray[$index][3]}}</label></span>
+                            </li>
+                        </ul>
+                        <ul ng-if="trialsLength[$index] == 1" class="progress-indicator nocenter stacked"
+                            style="list-style: none;">
+                            <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                        </ul>
+                        <ul ng-if="trialsLength[$index] == 2" class="progress-indicator nocenter stacked"
+                            style="list-style: none;">
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                            <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][1]}}</label></span>
+                            </li>
+                        </ul>
+                        <ul ng-if="trialsLength[$index] == 3" class="progress-indicator nocenter stacked"
+                            style="list-style: none; padding-top: 30px !important;">
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][0]}}</label></span>
+                            </li>
+                            <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                            style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][1]}}</label></span>
+                            </li>
+                            <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                    style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][2]}}</label></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <span id="PRInfo{{$index}}" class="pull-right infoimgBox"
+                              ng-click="openInfoBox($event,tableSkuData.tablePurchaseReturnSkuStateTrails)"></span>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- END TABLE -->
+        <div class="row" style="margin-top: 0px;">
+        <div class="col-md-6" ng-show="defaultTab == 'all'">
+        <p class="showingOrderLabel" ng-show="orderSize<allCount">Showing Orders {{start + 1}} to {{end}}
+        of {{allCount}}
+        </p>
+
+        <p class="showingOrderLabel" ng-show="orderSize>=allCount && allCount!=0">Showing Orders {{start + 1}}
+        to {{allCount}} of {{allCount}}
+        </p>
+
+        <p class="showingOrderLabel" ng-show="allCount==0">No Orders Available
+        </p>
+        </div>
+        <div class="col-md-6" ng-show="defaultTab == 'new'">
+        <p class="showingOrderLabel" ng-show="orderSize<newCount">Showing Orders {{start + 1}} to {{end}}
+        of {{newCount}}
+        </p>
+
+        <p class="showingOrderLabel" ng-show="orderSize>=newCount && newCount!=0">Showing Orders {{start + 1}}
+        to {{newCount}} of {{newCount}}
+        </p>
+
+        <p class="showingOrderLabel" ng-show="newCount==0">No Orders Available
+        </p>
+        </div>
+        <div class="col-md-6" ng-show="defaultTab == 'inprocess'">
+        <p class="showingOrderLabel" ng-show="orderSize<inProcessCount">Showing Orders {{start + 1}} to
+        {{end}} of {{inProcessCount}}
+        </p>
+
+        <p class="showingOrderLabel" ng-show="orderSize>=inProcessCount && inProcessCount!=0">Showing Orders {{start
+        + 1}} to {{inProcessCount}} of {{inProcessCount}}
+        </p>
+
+        <p class="showingOrderLabel" ng-show="inProcessCount==0">No Orders Available
+        </p>
+        </div>
+        <div class="col-md-6" ng-show="defaultTab == 'shipped'">
+        <p class="showingOrderLabel" ng-show="orderSize<shippedCount">Showing Orders {{start + 1}} to
+        {{end}} of {{shippedCount}}
+        </p>
+
+        <p class="showingOrderLabel" ng-show="orderSize>=shippedCount && shippedCount!=0">Showing Orders
+        {{start + 1}} to {{shippedCount}} of {{shippedCount}}
+        </p>
+
+        <p class="showingOrderLabel" ng-show="shippedCount==0">No Orders Available
+        </p>
+        </div>
+        <div class="col-md-6" ng-show="defaultTab == 'cancelled'">
+        <p class="showingOrderLabel" ng-show="orderSize<cancelledCount">Showing Orders {{start + 1}} to
+        {{end}} of {{cancelledCount}}
+        </p>
+
+        <p class="showingOrderLabel" ng-show="orderSize>=cancelledCount && cancelledCount!=0">Showing Orders {{start +
+        1}} to {{cancelledCount}} of {{cancelledCount}}
+        </p>
+            <p class="showingOrderLabel" ng-show="cancelledCount==0">No Orders Available
+            </p>
+
+        </div>
+        <div class="col-md-6">
+        <span class="pull-right">
+        <!-- pager -->
+        <ul ng-if="vmPager.pages.length" class="pagination">
+        <li>
+                        <a><span style="padding-right: 5px;">Showing</span>
+                            <select ng-change="onRecordsPerPageChange(orderSize)"  ng-model="orderSize" name="recordsPerPage"
+                                    ng-options="option for option in recordsPerPage"
+                                    required>
+                            </select>
+                            <span style="padding-left: 5px;">records per page</span>
+                        </a>
+                    </li>
+        <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+        <a>&lt;&lt; First</a>
+        </li>
+        <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+        <a ng-click="listOfPurchaseReturnStatesCount(defaultTab,1)">&lt;&lt; First</a>
+        </li>
+        <li id="previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+        <a>&lt; Previous</a>
+        </li>
+        <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+        <a ng-click="listOfPurchaseReturnStatesCount(defaultTab,vmPager.currentPage - 1)">&lt; Previous</a>
+        </li>
+        <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+        <a ng-click="listOfPurchaseReturnStatesCount(defaultTab,page)">{{page}}</a>
+        </li>
+        <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages"
+        ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+        <a ng-click="listOfPurchaseReturnStatesCount(defaultTab,vmPager.currentPage + 1)">Next &gt;</a>
+        </li>
+        <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages"
+        ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+        <a>Next &gt;</a>
+        </li>
+        <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages"
+        ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+        <a ng-click="listOfPurchaseReturnStatesCount(defaultTab,vmPager.totalPages)">Last &gt;&gt;</a>
+        </li>
+        <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages"
+        ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+        <a>Last &gt;&gt;</a>
+        </li>
+        </ul>
+        </span>
+        </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addPurchaseOrderReturnModal" role="dialog" data-backdrop="static" data-keyboard="false"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+           <form name="addPurchaseOrderReturnModal" accessible-form novalidate ng-submit="addPurchaseOrderReturnModal.$valid && singleorderReturnData.tablePurchaseReturnSkus.length && submitAddPurchaseReturnOrderForm(addPurchaseOrderReturnModal)">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="PRAddCancel1" type="button" class="close" ng-click="cancelSinglePurchaseOrderReturn(addPurchaseOrderReturnModal)">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" ng-if="genericData.singlePurchaseOrderReturnMode == 'add' && access.createAccess">Add Purchase Return</p>
+
+                    <p class="dialog-heading-p" ng-if="genericData.singlePurchaseOrderReturnMode == 'edit' && access.editAccess">Edit Purchase Return</p>
+
+                    <p class="dialog-heading-p" ng-if="genericData.singlePurchaseOrderReturnMode == 'copy' && access.createAccess" >Copy Purchase Return</p>
+
+
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <ul class="nav nav-tabs" id="ordertabs">
+                        <li class="active"><a data-target="#tab1" data-toggle="tab" class="btn sharp"
+                                              ng-click="singlePurchaseOrderReturnTabMode()" style="width:auto;">Single Purchase
+                            Return</a></li>
+                        <li ng-if="genericData.singlePurchaseOrderReturnMode == 'add'"><a data-target="#tab2" data-toggle="tab"
+                                                                                          class="btn sharp"
+                                                                                          ng-click="bulkPurchaseOrderReturnTabMode()" style="width:auto;">Bulk
+                            Purchase Return</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active container-fluid" id="tab1">
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Purchase Return No. </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input ng-if="genericData.singlePurchaseOrderReturnMode != 'edit'"
+                                           uniquepr  name="orderNumberId"
+                                           type="text" id="PRAddNo1"
+                                           class="form-control darkgrey-bottom-border"
+                                           ng-model="singleorderReturnData.tablePurchaseReturnRefNo"
+                                           placeholder="Purchase Return No.">
+                                    <input ng-if="genericData.singlePurchaseOrderReturnMode   == 'edit'"
+                                           uniquepr  name="orderNumberId"
+                                           type="text" id="PRAddNo2"
+                                           class="form-control darkgrey-bottom-border"
+                                           ng-model="singleorderReturnData.tablePurchaseReturnRefNo">
+                                    <i class="fa fa-question-circle-o date-help"
+                                       ng-if="genericData.singlePurchaseOrderReturnMode != 'edit'"
+                                       data-container="body" data-toggle="popover" data-trigger="focus" tabindex="0"
+                                       title="Ref. No." data-html="true" data-content="Reference number can be a reference number of any other system"
+                                       aria-hidden="true"></i>
+
+                                </div>
+                                <div ng-if="addPurchaseOrderReturnModal.orderNumberId.$error.uniquepr" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Order ref. no. already exists!
+                                        </span>
+                                </div>
+                                </div>
+                                <div class="row row-margin-top" ng-if = "singleorderReturnData.tablePurchaseOrder == null || singleorderReturnData.tablePurchaseOrder == undefined">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">PO No. <span  style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input ng-if="genericData.singlePurchaseOrderReturnMode != 'edit'"
+                                               required
+                                               name="poNumberId"
+                                               type="text" id="PRAddPONo"
+                                               autofocus
+                                               class="form-control darkgrey-bottom-border"
+                                               ng-model="genericData.poRefNo"
+                                               placeholder="PO Ref. No.">
+                                        <i ng-if="genericData.singlePurchaseOrderReturnMode != 'edit'"
+                                           class="fa fa-question-circle-o date-help"
+                                           data-container="body" data-toggle="popover" data-trigger="focus" tabindex="0"
+                                           title="Ref. No." data-html="true" data-content="Reference number can be any of the following :  <br/><br/> 1. Purchase order ref. number
+                                                                                                                                                                                    <br/> 2. Purchase order reference number of any other system"
+                                           aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-md-2 form-row-height">
+                                        <button id="PRAddGInfo" ng-disabled="addPurchaseOrderReturnModal.poNumberId.$invalid" type="button" class="btn small-actn-btn" ng-if="access.createAccess"
+                                                ng-click="getPurchaseOrderInfo(poRefNo)">
+                                            Get Info
+                                        </button>
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModal.$submitted && addPurchaseOrderReturnModal.poNumberId.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please enter the PO number
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <div ng-show = "singleorderReturnData.tablePurchaseOrder!=null && singleorderReturnData.tablePurchaseOrder!=undefined">
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Purchase Order Ref. No. <span  style="color:red">*</span></span>
+                                        </div>
+
+                                        <div class="col-md-6 form-row-height">
+                                            <input ng-readonly="true"
+                                                   name="orderNumberId"
+                                                   type="text" id="PRAddRef"
+                                                   class="form-control darkgrey-bottom-border"
+                                                   ng-model="singleorderReturnData.tablePurchaseOrder.tablePurchaseOrderSystemOrderNo"
+                                                   title = "singleorderReturnData.tablePurchaseOrder.tablePurchaseOrderClientOrderNo"
+                                                   style="border: none !important; color: #786eff; font-weight: 600;">
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Warehouse <span  style="color:red">*</span></span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <select  required id="PRAddWh"
+                                                     name="warehouse" ng-model="singleorderReturnData.tableWarehouseDetails"
+                                                     class="form-control add-single-order-select"
+                                                     ng-change="getAvailableQuantitys();"
+                                                     ng-options="option.tableWarehouseDetailsShortname for option in wareHousesData track by option.idtableWarehouseDetailsId">
+                                                <option value="" disabled selected style="display: none;">Choose Warehouse
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div ng-if="addPurchaseOrderReturnModal.$submitted && addPurchaseOrderReturnModal.warehouse.$error.required" class="col-md-offset-3 col-md-6">
+                                            <span class="error-message">
+                                                Please select the warehouse
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Vendor </span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <input  id="PRAddVendor"
+                                                    type="text"
+                                                    disabled = "disabled"
+                                                    class="form-control darkgrey-bottom-border"
+                                                    ng-model="singleorderReturnData.tableVendor.tableVendorName"
+                                                    style="border: none !important; color: #786eff; font-weight: 600;">
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height add-single-order-da-heading">
+                                            <span class="form-label-height semi-bold-text">Drop Address <span  style="color:red">*</span></span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <select id="PRAddDAddress"
+                                                    ng-model="singleorderReturnData.tableAddress"
+                                                    name="vendorDropAddress"
+                                                    ng-required="true"
+                                                    ng-options="option as option.tableAddressFull for option in deliveryAddressArray track by option.idtableAddressId"
+                                                    class="form-control add-single-order-select">
+                                                <option value="" disabled selected style="display: none;">Select Vendor
+                                                    Address
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div ng-if="addPurchaseOrderReturnModal.$submitted && addPurchaseOrderReturnModal.vendorDropAddress.$error.required" class="col-md-offset-2 col-md-8">
+                                            <span class="error-message">
+                                                Please select the drop Address
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Quantity Type <span style="color:red">*</span> </span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <select id="PRAddQtyT"
+                                                    class="form-control add-single-order-select" required
+                                                    ng-options="option for option in quantityTypes track by option"
+                                                    ng-change = "getAvailableQuantitys();"
+                                                    ng-model="singleorderReturnData.tablePurchaseReturnQuantityType" name="quantityType">
+                                            </select>
+
+                                        </div>
+                                        <div ng-if="addPurchaseOrderReturnModal.$submitted && addPurchaseOrderReturnModal.quantityType.$error.required" class="col-md-offset-3 col-md-6">
+                                            <span class="error-message">
+                                                Please select the Quantity Type
+                                            </span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row row-margin-top row-margin-bottom-small" ng-if="singleorderReturnData.tablePurchaseReturnSkus.length > 0">
+                                        <div class="col-md-12">
+                                            <span class="semi-bold-text">List of Products</span>
+                                        </div>
+                                    </div>
+                                    <div class="row" ng-if="singleorderReturnData.tablePurchaseReturnSkus.length > 0">
+                                        <div class="col-md-12">
+                                            <table id="productTable"
+                                                   class="table boldtable table-responsive table-bordered table-hover">
+                                                <thead class="itemlist-grid-header">
+                                                <tr>
+                                                    <th id="PRAddPIdH">Seller SKU ID
+                                                    </th>
+                                                    <th id="PRAddPNameH">SKU Name
+                                                    </th>
+                                                    <th id="PRAddPQtyH" style="text-align: right;">PO Quantity
+                                                    </th>
+                                                    <th id="PRAddRetH" style="text-align: right;">Returnable
+                                                    </th>
+                                                    <th id="PRAddQtyH" style="text-align: right;">Quantity
+                                                    </th>
+                                                    <th id="PRAddPActionH" style="text-align: center;">Action
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="tablePurchaseReturnSku in singleorderReturnData.tablePurchaseReturnSkus track by $index">
+                                                    <td id="PRAddPId{{$index}}">{{tablePurchaseReturnSku.tableSku.tableSkuClientSkuCode}}</td>
+                                                    <td title="tablePurchaseReturnSku.tableSku.tableSkuDescription" id="PRAddPName{{$index}}">{{tablePurchaseReturnSku.tableSku.tableSkuName}}</td>
+                                                    <td id="PRAddPQty{{$index}}">{{genericData.OrderedQuantitys[$index].tablePurchaseReturnSkuQuantity}}</td>
+                                                    <td id="PRAddRet{{$index}}">{{genericData.availableQuantitys[$index].tablePurchaseReturnSkuQuantity}}</td>
+                                                    <td id="PRAddQty{{$index}}">
+                                                        <input class="darkgrey-bottom-border-number"
+                                                                type="text"
+                                                                only-integer
+                                                                prevent-typing-greater
+                                                                max = "{{genericData.availableQuantitys[$index].tablePurchaseReturnSkuQuantity}}"
+                                                                ng-model = "tablePurchaseReturnSku.tablePurchaseReturnSkuQuantity"
+                                                        >
+                                                    </td>
+                                                    <td id="PRAddPAction{{$index}}" style="text-align: center; padding: 0;">
+                                                        <md-button class="md-icon-button" md-no-ink="true"
+                                                                   ng-click="removeProduct($index)" placeholder="Delete"
+                                                                   style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                            <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                                     ng-init="imgsrc1='images/svg/delete.svg'"
+                                                                     ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                                     ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                                     style="width: 20px;"></md-icon>
+                                                        </md-button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height" style="padding-right: 1px">
+                                            <span class="form-label-height semi-bold-text">Shipping Owner <span style="color:red">*</span> </span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <select id="PRAddSO" ng-model="singleorderReturnData.tableShippingOwnership" name="owner"
+                                                    ng-options="option.tableShippingOwnershipString for option in shippingOwnersData track by option.idtableShippingOwnershipId"
+                                                    required
+                                                    class="form-control add-single-order-select">
+                                                <option value="" disabled selected style="display: none;">Select Shipping Owner</option>
+                                            </select>
+                                        </div>
+                                        <div ng-if="addPurchaseOrderReturnModal.$submitted && addPurchaseOrderReturnModal.owner.$error.required" class="col-md-offset-3 col-md-6">
+                                            <span class="error-message">
+                                                Please select the Shipping Owner
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!--If warehouse is glaucus and shipping owner is receiver pick date is mandatory -->
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Pickup Date
+                                            <span ng-if = "singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                                  style="color:red"> *</span></span>
+                                        </div>
+
+                                        <div class="col-md-3 form-row-height">
+                                            <md-datepicker timezoned-date
+                                                           name="pickUpDate"
+                                                           id="PRAddPDate"
+                                                           ng-model="singleorderReturnData.tablePurchaseReturnPickupDate"
+                                                           ng-required="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                                           md-min-date="minDateShipping" md-max-date="maxDateShipping" md-placeholder="Enter date"
+                                                    name="endDate"
+                                                    ng-change="onPickUpDateChange()"></md-datepicker>
+                                        </div>
+                                        <!--If warehouse is glaucus and shipping owner is sender drop date is mandatory -->
+                                        <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Drop Date
+                                        <span ng-if = "singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                              style="color:red"> *</span></span>
+                                        </div>
+                                        <div class="col-md-3 form-row-height">
+                                            <md-datepicker timezoned-date
+                                                           name="dropDate"
+                                                           id="PRAddDDate"
+                                                           ng-model="singleorderReturnData.tablePurchaseReturnDropDate"
+                                                           ng-required="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                                           md-min-date="minDateDelivery" md-max-date="maxDateDelivery" md-placeholder="Enter date"
+                                                           ng-change="onDropDateChange()"></md-datepicker>
+                                        </div>
+                                        <div ng-if="addPurchaseOrderReturnModal.$submitted && addPurchaseOrderReturnModal.pickUpDate.$error.required" class="col-md-offset-3 col-md-3">
+                                        <span class="error-message">
+                                            Please choose a Pickup Date
+                                        </span>
+                                        </div>
+                                        <div ng-if="addPurchaseOrderReturnModal.$submitted && addPurchaseOrderReturnModal.dropDate.$error.required" class="col-md-offset-9 col-md-3">
+                                        <span class="error-message">
+                                            Please choose a Drop Date
+                                        </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height add-single-order-da-heading">
+                                            <span class="form-label-height semi-bold-text">Return reason <span
+                                                    style="color:red">*</span></span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height">
+                                            <select required id="PRAddRReason"
+                                                    ng-model="singleorderReturnData.tablePurchaseReturnReason" name="tablePurchaseReturnReason"
+                                                    class="form-control add-single-order-select"
+                                                    ng-options="option as option.tablePurchaseReturnReasonString for option in returnReasonArray track by option.idtablePurchaseReturnReasonId">
+                                                <option value="" disabled selected style="display: none;">Select return reason
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div ng-if="addPurchaseOrderReturnModal.$submitted && addPurchaseOrderReturnModal.tablePurchaseReturnReason.$error.required" class="col-md-offset-3 col-md-6">
+                                            <span class="error-message">
+                                                Please select the return reason
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-margin-top row-margin-bottom-small"
+                                         ng-if="singleorderReturnData.tablePurchaseReturnRemarkses.length > 0">
+                                        <div class="col-md-10 col-md-offset-1">
+                                            <span class="semi-bold-text">Remarks History</span>
+                                        </div>
+                                    </div>
+                                    <div class="row" ng-if="singleorderReturnData.tablePurchaseReturnRemarkses.length > 0">
+                                        <div class="col-md-10 col-md-offset-1">
+                                            <table id="remarkstable"
+                                                   class="table boldtable table-responsive table-bordered table-hover">
+                                                <thead class="data-grid-header">
+                                                <tr>
+                                                    <th id="PRAddRhDateH" style="width:20%;">Date-Time</th>
+                                                    <th id="PRAddRhUserH" style="text-align: right;">User
+                                                    </th>
+                                                    <th id="PRAddRhRemarksH" style="text-align: right;">Remarks
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="data-grid-data">
+                                                <tr ng-repeat="remarks in singleorderReturnData.tablePurchaseReturnRemarkses">
+                                                    <td id="PRAddRhDate{{$index}}">{{remarks.tablePurchaseReturnRemarksDateTime | utcToLocalTimeOrHyphen}}</td>
+                                                    <td id="PRAddRhUser{{$index}}" style="text-align: right;">
+                                                        {{remarks.tablePurchaseReturnRemarksUser}}
+                                                    </td>
+                                                    <td id="PRAddRhRemarks{{$index}}" style="text-align: right;">
+                                                        {{remarks.tablePurchaseReturnRemarksString}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-3 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Remarks</span>
+                                        </div>
+                                        <div class="col-md-6 ">
+
+                                    <textarea caps class="form-control"
+                                              ng-trim="false" id="PRAddRemarks"
+                                              ng-maxlength="2000"
+                                              ng-model="singleorderReturnData.tablePurchaseReturnRemarks"
+                                              placeholder="Enter remarks"></textarea>
+                                            <h6 style="color:gray;">Maximum character limit:{{2000-modalRemarks.length}}, Limit Left: {{2000-newModalRemarks.length-modalRemarks.length}}</h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+                        </div>
+                        <div class="tab-pane container-fluid" id="tab2">
+                            <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                                <div class="col-md-6 light-grey-right-border">
+                                    <div ng-required="bulkPurchaseOrderReturnTab" name="files" ngf-drop ngf-select class="drop-box cursorPointer"
+                                         ng-change="uploadBulkPurchaseReturnFile(genericData.bulkOrderUploadfile);"
+                                         ng-model="genericData.bulkOrderUploadfile" ngf-drag-over-class="'dragover'"
+                                         accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                                        <img src="images/svg/upload_icon_1.svg"
+                                             style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag file to
+                                        upload or click to select
+                                    </div>
+                                    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                                    <br>
+                                    <span id="uploadFileText" class="uploadFileLabel cursorPointer">Upload File</span>
+                                    <br>
+                                    <h5>
+
+                                    </h5>
+                                    <span>
+                                        <span><b>Selected File:</b></span>
+                                        <span ng-if="fileName != null" style="width:100%;word-wrap:break-word;">{{fileName}}</span>
+                                        <span ng-if="fileName == null">No file selected</span>
+                                    </span>
+                                    <br>
+                                    <span ng-if="addPurchaseOrderReturnModal.files.$error.required" class="error-msg">Please upload file</span><br>
+                                    <span ng-if="addPurchaseOrderReturnModal.files.$error.pattern" class="error-msg">Please upload a valid file</span>
+                                    <br>
+                                    <span ng-if="progressOfUpload">
+                                        <span><b>Uploading</b></span>
+                                        <span>{{progressOfUpload}}</span>
+                                    </span>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="javascript:void(0);" ng-click="downloadPurchaseReturnTemplateWithID()">
+                                        <div class="downloadFileBulkOrder"></div>
+                                    </a>
+                                    <br>
+                                    <span class="downloadFileLabel">
+                                                <a href="javascript:void(0);" ng-click="downloadPurchaseReturnTemplateWithID()">
+                                                    Download File Template
+                                                </a>
+                                            </span>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <a ng-click="closeBulkUploadDialogWithoutId()"
+                                   style="color: #00ACE4; font-weight: 600;cursor: pointer;">Go to "Bulk upload reports"
+                                    for more details.</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="PurchaseOrderReturnTab==true && bulkPurchaseOrderReturnTab==false">
+                    <button id="PRAddCancel2" type="button" class="cancel-btn" data-dismiss="modal" ng-click="cancelSinglePurchaseOrderReturn(addPurchaseOrderReturnModal)">
+                        Cancel
+                    </button>
+                    <input id="PRAddSubmit" type="submit" class="action-btn"
+                           ng-if="genericData.singlePurchaseOrderReturnMode != 'edit'"
+                           ng-click="setFormButtonValue('save')" value="Save"/>
+                    <input id="PRAddUpdate" type="submit" class="action-btn"
+                           ng-if="genericData.singlePurchaseOrderReturnMode == 'edit'"
+                           ng-click="setFormButtonValue('update')" value="Update"/>
+                </div>
+
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="PurchaseOrderReturnTab==false && bulkPurchaseOrderReturnTab==true">
+                    <button id="PRAddCancel3" type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelBulkUpload(addPurchaseOrderReturnModal);singleOrderReturnTabMode()">Cancel
+                    </button>
+                    <button ng-disabled="disableBulkUpload" id="PRAddUpload" type="button" class="action-btn"  ng-click="addPurchaseOrderReturnModal.files.$valid && uploadPurchaseReturnBulkUpload(addPurchaseOrderReturnModal)">Upload
+                    </button>
+                </div>
+            </div>
+           </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addPurchaseOrderReturnModalRefUnknown" role="dialog" data-backdrop="static" data-keyboard="false"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form name="addPurchaseOrderReturnModalRefUnknown" accessible-form novalidate ng-submit="addPurchaseOrderReturnModalRefUnknown.$valid && singleorderReturnData.tablePurchaseReturnSkus.length && submitAddPurchaseReturnOrderForm(addPurchaseOrderReturnModalRefUnknown)">
+                <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="PRAddWCancel1" type="button" class="close" ng-click="cancelSinglePurchaseOrderReturn(addPurchaseOrderReturnModalRefUnknown)">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" ng-if="genericData.singlePurchaseOrderReturnMode == 'add'">Add Purchase Return</p>
+
+                    <p class="dialog-heading-p" ng-if="genericData.singlePurchaseOrderReturnMode == 'edit'">Edit Purchase Return</p>
+
+                    <p class="dialog-heading-p" ng-if="genericData.singlePurchaseOrderReturnMode == 'copy'">Copy Purchase Return</p>
+
+
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <ul class="nav nav-tabs" id="ordertabswithoutref">
+                        <li class="active"><a data-target="#tab3" data-toggle="tab" class="btn sharp"
+                                              ng-click="singlePurchaseOrderReturnTabMode()" style="width:auto;">Single Purchase
+                            Return</a></li>
+                        <li ng-if="genericData.singlePurchaseOrderReturnMode == 'add'" ><a data-target="#tab4" data-toggle="tab"
+                                                                                           class="btn sharp"
+                                                                                           ng-click="bulkPurchaseOrderReturnTabMode()" style="width:auto;">Bulk
+                            Purchase Return</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active container-fluid" id="tab3">
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Purchase Return No. </span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input ng-if="genericData.singlePurchaseOrderReturnMode != 'edit'"
+                                               uniquepr  name="orderNumberId"
+                                               type="text" id="PRAddWNo1"
+                                               class="form-control darkgrey-bottom-border"
+                                               ng-model="singleorderReturnData.tablePurchaseReturnRefNo"
+                                               placeholder="Purchase Return No.">
+                                        <input ng-if="genericData.singlePurchaseOrderReturnMode   == 'edit'"
+                                               name="orderNumberId"
+                                               uniquepr
+                                               type="text" id="PRAddWNo2"
+                                               class="form-control darkgrey-bottom-border"
+                                               ng-model="singleorderReturnData.tablePurchaseReturnRefNo">
+                                        <i class="fa fa-question-circle-o date-help"
+                                           ng-if="genericData.singlePurchaseOrderReturnMode != 'edit'"
+                                           data-container="body" data-toggle="popover" data-trigger="focus" tabindex="0"
+                                           title="Ref. No." data-html="true" data-content="Reference number can be a reference number of any other system"
+                                           aria-hidden="true"></i>
+
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.orderNumberId.$error.uniquepr" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Order ref. no. already exists!
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Warehouse <span style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <select  required id="PRAddWWh"
+                                                 name="warehouse" ng-model="singleorderReturnData.tableWarehouseDetails"
+                                                 class="form-control add-single-order-select"
+                                                 ng-options="option.tableWarehouseDetailsShortname for option in wareHousesData track by option.idtableWarehouseDetailsId">
+                                            <option value="" disabled selected style="display: none;">Choose Warehouse
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.$submitted && addPurchaseOrderReturnModalRefUnknown.warehouse.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select a warehouse
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Vendor <span style="color:red">*</span> </span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <select id="PRAddWVendor" class="form-control add-single-order-select"
+                                                name="vendor" required
+                                                skufound
+                                                ng-options="option.tableVendorName for option in vendorsData track by option.idtableVendorId"
+                                                ng-model="singleorderReturnData.tableVendor">
+                                            <option value="" disabled selected style="display: none;">Select
+                                                Vendor
+                                            </option>
+
+                                        </select>
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.$submitted && addPurchaseOrderReturnModalRefUnknown.vendor.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select a vendor
+                                        </span>
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.vendor.$error.skufound" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            No sku's found for this vendor
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height  semi-bold-text">Quantity Type <span style="color:red">*</span> </span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <select id="PRAddWQtyT"
+                                                class="form-control add-single-order-select" required
+                                                ng-options="option for option in quantityTypes track by option"
+                                                ng-change="clearProductList()"
+                                                ng-model="singleorderReturnData.tablePurchaseReturnQuantityType" name="quantityType">
+                                            <option value="" disabled selected style="display: none;">Select Quantity Type
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.$submitted && addPurchaseOrderReturnModalRefUnknown.quantityType.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select a quantity type
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top" ng-if = "singleorderReturnData.tableVendor.idtableVendorId != null && vendorSkus.length > 0">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height  semi-bold-text">Add Product <span style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-3 form-row-height">
+                                        <angucomplete-alt  id="products" placeholder="Search product" pause="400" selected-object="searchedProduct"
+                                                           local-data="vendorSkus"
+                                                           search-fields="tableSkuClientSkuCode,tableSkuName,tableSkuDescription,tableSkuPrimaryUpcEan"
+                                                           title-field="tableSkuClientSkuCode"
+                                                           description-field="tableSkuName"
+                                                           image-field="tableSkuImageUrl"
+                                                           input-name="tableSkuName"
+                                                           field-required="singleorderReturnData.tablePurchaseReturnSkus.length == 0 && (singleorderReturnData.tableVendor.idtableVendorId != null && vendorSkus.length > 0)"
+                                                           input-class="form-control darkgrey-bottom-border"></angucomplete-alt>
+                                    </div>
+                                    <div class="col-md-1 form-row-height">
+                                        <button  id="PRAddWSMore" type="button" title="Click to see all SKUs."
+                                                style="position: absolute; top: 8px;"
+                                                class="btn btn-sm truncate-text"
+                                                ng-click="showCommonMasterSkuDialog(true);">. . .</button>
+                                    </div>
+
+                                    <div class="col-md-2 form-row-height no-padding">
+                                        <span  class="form-label-height  col-md-8  no-padding semi-bold-text">(Avl. Qty.)</span>
+                                        <span  class="form-label-height  col-md-4 no-padding" >
+                                            <input id="PRAddWSAvail" disabled type="text" ng-value="availableQuantityOfSkuAndVendor" />
+                                        </span>
+                                    </div>
+
+                                    <div class="col-md-2 form-row-height">
+                                        <input
+                                                type="text" min="1"
+                                                ng-model="genericData.returnQuantity" id="PRAddWQty"
+                                                name="returnqtrywithoutref"
+                                                ng-required="searchedSku && singleorderReturnData.tablePurchaseReturnSkus.length == 0"
+                                                only-integer
+                                                prevent-typing-greater
+                                                max = "{{availableQuantityOfSkuAndVendor}}"
+                                                greater-than-one
+                                                placeholder="Quantity"
+                                                class="form-control darkgrey-bottom-border textRightOnFocus"/>
+                                    </div>
+                                    <div class="col-md-1 form-row-height">
+                                        <span id="PRAddWSAdd" title="Add to List" class="form-label-height add-to-list-icon"
+                                              style="color: #f0592b;"
+                                              ng-click="addProduct()"
+                                              ng-disabled="addPurchaseOrderReturnModalRefUnknown.returnqtrywithoutref.$invalid"></span>
+
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.$submitted && addPurchaseOrderReturnModalRefUnknown.tableSkuName.$error['autocomplete-required']" class="col-md-offset-3 col-md-3">
+                                        <span class="error-message">
+                                            Please select a product
+                                        </span>
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.tableSkuName.$valid  && addPurchaseOrderReturnModalRefUnknown.$submitted && addPurchaseOrderReturnModalRefUnknown.returnqtrywithoutref.$error.required" class="col-md-offset-9 col-md-2">
+                                        <span class="error-message">
+                                            Please enter the quantity
+                                        </span>
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.tableSkuName.$valid  && addPurchaseOrderReturnModalRefUnknown.$submitted && addPurchaseOrderReturnModalRefUnknown.returnqtrywithoutref.$error['greater-than-one']" class="col-md-offset-9 col-md-2">
+                                        <span class="error-message">
+                                            Add at least 1 item
+                                        </span>
+                                    </div>
+                                    <div ng-if="searchedSku && genericData.returnQuantity && addPurchaseOrderReturnModalRefUnknown.$submitted && singleorderReturnData.tablePurchaseReturnSkus.length == 0" class="col-md-12 text-center">
+                                        <span class="error-message">
+                                            Please add product(s) to the list.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top row-margin-bottom-small" ng-if="singleorderReturnData.tablePurchaseReturnSkus.length > 0">
+                                    <div class="col-md-12">
+                                        <span class="form-label-height semi-bold-text">List of Selected Products</span>
+                                    </div>
+                                </div>
+                                <div class="row" ng-if="singleorderReturnData.tablePurchaseReturnSkus.length  > 0">
+                                    <div class="col-md-12">
+                                        <table id="productTablewithoutref"
+                                               class="table boldtable table-responsive table-bordered table-hover">
+                                            <thead class="itemlistwithoutid-grid-header">
+                                            <tr>
+                                                <th id="PRAddWPIdH">Seller SKU ID
+                                                </th>
+                                                <th id="PRAddWPNameH">SKU Name
+                                                </th>
+                                                <th id="PRAddWPQtyH" style="text-align: right;">Quantity
+                                                </th>
+                                                <th id="PRAddWPActionH" style="text-align: center;">Action
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="tablePurchaseReturnSku in singleorderReturnData.tablePurchaseReturnSkus">
+                                                <td id="PRAddWPId{{$index}}">{{tablePurchaseReturnSku.tableSku.tableSkuClientSkuCode}}</td>
+                                                <td title="{{tablePurchaseReturnSku.tableSku.tableSkuDescription}}" id="PRAddWPName{{$index}}">{{tablePurchaseReturnSku.tableSku.tableSkuName}}</td>
+                                                <td id="PRAddWPQty{{$index}}" style="text-align: right;">
+                                                    {{tablePurchaseReturnSku.tablePurchaseReturnSkuQuantity}}
+                                                </td>
+                                                <td id="PRAddWPAction{{$index}}" style="text-align: center; padding: 0;">
+                                                    <md-button class="md-icon-button" md-no-ink="true"
+                                                               ng-click="removeProduct($index)" placeholder="Delete"
+                                                               style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                        <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                                 ng-init="imgsrc1='images/svg/delete.svg'"
+                                                                 ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                                 ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                                 style="width: 20px;"></md-icon>
+                                                    </md-button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height" style="padding-right: 1px">
+                                        <span class="form-label-height semi-bold-text">Shipping Owner <span style="color:red">*</span> </span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <select id="PRAddWSO" ng-model="singleorderReturnData.tableShippingOwnership" name="owner"
+                                                ng-options="option.tableShippingOwnershipString for option in shippingOwnersData track by option.idtableShippingOwnershipId"
+                                                required
+                                                class="form-control add-single-order-select">
+                                            <option value="" disabled selected style="display: none;">Select Shipping Owner</option>
+                                        </select>
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.$submitted && addPurchaseOrderReturnModalRefUnknown.owner.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select Shipping Owner type
+                                        </span>
+                                    </div>
+                                </div>
+                                <!--If warehouse is glaucus and shipping owner is sender drop address is mandatory -->
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height add-single-order-da-heading">
+                                            <span class="form-label-height semi-bold-text">Drop Address
+                                                <span ng-if = "singleorderReturnData.tableWarehouseDetails.tableWarehouseType.idtableWarehouseTypeId == 1 && singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                                    style="color:red"> *</span></span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <select id="PRAddWDAddress" ng-model="singleorderReturnData.tableAddress"
+                                                name="pickupLocation" ng-required="singleorderReturnData.tableWarehouseDetails.tableWarehouseType.idtableWarehouseTypeId == 1 && singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                                ng-options="option as option.tableAddressFull for option in deliveryAddressArray track by option.idtableAddressId"
+                                                class="form-control add-single-order-select">
+                                            <option value="" disabled selected style="display: none;">Select Vendor
+                                                Address
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+
+                                <!--If warehouse is glaucus and shipping owner is receiver pick date is mandatory -->
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Pickup Date
+                                            <span ng-if="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                                  style="color: red">*</span></span></span>
+                                    </div>
+
+                                    <div class="col-md-3 form-row-height">
+                                        <md-datepicker id="PRAddWPDate"
+                                                timezoned-date
+                                                ng-model="singleorderReturnData.tablePurchaseReturnPickupDate"
+                                                ng-required="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 2"
+                                                md-min-date="minDateShipping" md-max-date="maxDateShipping" md-placeholder="Enter date"
+                                                name="pickUpDate"
+                                                ng-change="onPickUpDateChange()"></md-datepicker>
+                                    </div>
+                                    <!--If warehouse is glaucus and shipping owner is sender drop date is mandatory -->
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Drop Date
+                                        <span ng-if="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                              style="color: red">*</span></span></span>
+                                    </div>
+                                    <div class="col-md-3 form-row-height">
+                                        <md-datepicker id="PRAddWDDate"
+                                                timezoned-date
+                                                ng-model="singleorderReturnData.tablePurchaseReturnDropDate"
+                                                ng-required="singleorderReturnData.tableShippingOwnership.idtableShippingOwnershipId == 1"
+                                                required
+                                                md-min-date="minDateDelivery" md-max-date="maxDateDelivery" md-placeholder="Enter date"
+                                                name="dropDate"
+                                                ng-change="onDropDateChange()"></md-datepicker>
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.$submitted && addPurchaseOrderReturnModalRefUnknown.pickUpDate.$error.required" class="col-md-offset-3 col-md-3">
+                                        <span class="error-message">
+                                            Please choose a Pickup Date
+                                        </span>
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.$submitted && addPurchaseOrderReturnModalRefUnknown.dropDate.$error.required" class="col-md-offset-9 col-md-3">
+                                        <span class="error-message">
+                                            Please choose a Drop Date
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height add-single-order-da-heading">
+                                            <span class="form-label-height semi-bold-text">Return reason <span
+                                                    style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <select required id="PRAddWRReason"
+                                                ng-model="singleorderReturnData.tablePurchaseReturnReason" name="tablePurchaseReturnReason"
+                                                class="form-control add-single-order-select"
+                                                ng-options="option as option.tablePurchaseReturnReasonString for option in returnReasonArray track by option.idtablePurchaseReturnReasonId">
+                                            <option value="" disabled selected style="display: none;">Select return reason
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div ng-if="addPurchaseOrderReturnModalRefUnknown.$submitted && addPurchaseOrderReturnModalRefUnknown.tablePurchaseReturnReason.$error.required" class="col-md-offset-3 col-md-6">
+                                        <span class="error-message">
+                                            Please select a return reason
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top row-margin-bottom-small"
+                                     ng-if="singleorderReturnData.tablePurchaseReturnRemarkses.length > 0">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <span class="semi-bold-text">Remarks History</span>
+                                    </div>
+                                </div>
+                                <div class="row" ng-if="singleorderReturnData.tablePurchaseReturnRemarkses.length > 0">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <table id="remarkstable1"
+                                               class="table boldtable table-responsive table-bordered table-hover">
+                                            <thead class="data-grid-header">
+                                            <tr>
+                                                <th id="PRAddWRhDateH" style="width:20%;">Date-Time</th>
+                                                <th id="PRAddWRhUserH" style="text-align: right;">User
+                                                </th>
+                                                <th id="PRAddWRhRemarksH" style="text-align: right;">Remarks
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="data-grid-data">
+                                            <tr ng-repeat="remarks in singleorderReturnData.tablePurchaseReturnRemarkses">
+                                                <td id="PRAddWRhDate{{$index}}">{{remarks.tablePurchaseReturnRemarksDateTime | utcToLocalTimeOrHyphen}}</td>
+                                                <td id="PRAddWRhUser{{$index}}" style="text-align: right;">
+                                                    {{remarks.tablePurchaseReturnRemarksUser}}
+                                                </td>
+                                                <td id="PRAddWRhRemarks{{$index}}" style="text-align: right;">
+                                                    {{remarks.tablePurchaseReturnRemarksString}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Remarks</span>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                    <textarea class="form-control"
+                                              maxlength="2000"
+                                              id="PRAddWRemarks"
+                                              ng-model="singleorderReturnData.tablePurchaseReturnRemarks"
+                                              placeholder="Enter remarks"></textarea>
+                                        <h6 style="color:gray;">Maximum character limit:2000, Limit Left: {{2000-singleorderReturnData.tablePurchaseReturnRemarks.length}}</h6>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="tab-pane container-fluid" id="tab4">
+                            <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                                <div class="col-md-6 light-grey-right-border">
+                                    <div ng-required="bulkPurchaseOrderReturnTab" name="files" ngf-drop ngf-select class="drop-box cursorPointer"
+                                         ng-change="uploadBulkPurchaseReturnFile(genericData.bulkOrderUploadfile);"
+                                         ng-model="genericData.bulkOrderUploadfile" ngf-drag-over-class="'dragover'"
+                                         accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                                        <img src="images/svg/upload_icon_1.svg"
+                                             style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag file to
+                                        upload or click to select
+                                    </div>
+                                    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                                    <br>
+                                    <span id="uploadFileText1" class="uploadFileLabel cursorPointer">Upload File</span>
+                                    <br>
+                                    <h5>
+
+                                    </h5>
+                                    <span>
+                                        <span><b>Selected File:</b></span>
+                                        <span ng-if="fileName != null" style="width:100%;word-wrap:break-word;">{{fileName}}</span>
+                                        <span ng-if="fileName == null">No file selected</span>
+                                    </span>
+                                    <br>
+                                    <span ng-if="addPurchaseOrderReturnModalRefUnknown.files.$error.required" class="error-msg">Please upload file</span><br>
+                                    <span ng-if="addPurchaseOrderReturnModalRefUnknown.files.$error.pattern" class="error-msg">Please upload a valid file</span>
+                                    <br>
+
+                                    <span ng-if="progressOfUpload">
+                                        <span><b>Uploading</b></span>
+                                        <span>{{progressOfUpload}}</span>
+                                    </span>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="javascript:void(0);" ng-click="downloadPurchaseReturnTemplateWithID()">
+                                        <div class="downloadFileBulkOrder"></div>
+                                    </a>
+                                    <br>
+                                    <span class="downloadFileLabel">
+                                                <a href="javascript:void(0);" ng-click="downloadPurchaseReturnTemplateWithID()">
+                                                    Download File Template
+                                                </a>
+                                            </span>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <a ng-click="closeBulkUploadDialogWithId()"
+                                   style="color: #00ACE4; font-weight: 600;cursor: pointer;">Go to "Bulk upload reports"
+                                    for more details.</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="PurchaseOrderReturnTab==true && bulkPurchaseOrderReturnTab==false">
+                    <button id="PRAddWCancel2" type="button" class="cancel-btn" data-dismiss="modal" ng-click="cancelSinglePurchaseOrderReturn(addPurchaseOrderReturnModalRefUnknown)">
+                        Cancel
+                    </button>
+                    <input id="PRAddWSubmit" type="submit" class="action-btn"
+                            ng-if="genericData.singlePurchaseOrderReturnMode != 'edit'"
+                            ng-click="setFormButtonValue('save')" value="Save"/>
+                    <input id="PRAddWUpdate" type="submit" class="action-btn"
+                            ng-if="genericData.singlePurchaseOrderReturnMode == 'edit'"
+                            ng-click="setFormButtonValue('update')" value="Update"/>
+                </div>
+
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="PurchaseOrderReturnTab==false && bulkPurchaseOrderReturnTab==true">
+                    <button id="PRAddWCancel3"  type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelBulkUpload(addPurchaseOrderReturnModalRefUnknown);singleOrderReturnTabMode()">Cancel
+                    </button>
+                    <button ng-disabled="disableBulkUpload" id="PRAddWUpload" type="button" class="action-btn"  ng-click="addPurchaseOrderReturnModalRefUnknown.files.$valid && uploadPurchaseReturnBulkUpload(addPurchaseOrderReturnModalRefUnknown)">Upload
+                    </button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="askPurchaseRefKnownModal" role="dialog" data-backdrop="static" data-keyboard="false"
+         aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <p class="dialog-heading-p">PO Reference Check</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top row-margin-bottom text-center">
+                            <div class="col-md-12">
+                                <span class="font">Do you have PO No. ?</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button type="button" class="action-btn" ng-click="onPOReferenceNumberOptionChanged(true)">
+                        Yes
+                    </button>
+                    <button type="button" class="cancel-btn" ng-click="onPOReferenceNumberOptionChanged(false)">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-include src="'purchaseReturn/editRemarksModal.html?version=1.0.0'"></div>
+
+    <style>
+        .md-datepicker-calendar-pane {
+            z-index: 9999 !important;
+        }
+    </style>
+</div>
+
+<div ng-include src="'purchaseReturn/infoBoxDialog.html?version=1.0.0'"></div>
+<div ng-include src="'purchaseReturn/cancelOrderDialog.html?version=1.0.0'"></div>
+<div ng-include src="'purchaseReturn/cancelOrderItemDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterVendorDialog.html?version=1.0.0'"></div>
+<!--<div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>-->
+<!--<div ng-include src="'services/CommonMasterVendorDialog.html?version=1.0.0'"></div>-->
+<div ng-include src="'services/CommonDeleteConfirmationDialog.html?version=1.0.0'"></div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+<style>
+    .mybut1 {
+        margin-left: 10px;
+        color: #F0592B;
+        font-weight: 600;
+        width: 100%;
+        min-height: 25px;
+        max-width: 85px;
+        float: right;
+        margin-bottom: 10px;
+    }
+
+    .order-table-tab-bar button {
+        padding: 6px 10px;
+        min-width: 85px !important;
+    }
+
+    .sharp {
+        width: 119px;
+    }
+</style>
+<script>
+//    $(document.body).on('hide.bs.modal', function () {
+//        $('body').css('padding-right','');
+//    });
+//    $(document.body).on('hidden.bs.modal', function () {
+//        $('body').css('padding-right','');
+//    });
+</script>

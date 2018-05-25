@@ -1,0 +1,866 @@
+<div class="modal fade" id="addVirtualKitDialog"  data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <form name="addVirtualKitSkuForm" accessible-form novalidate ng-submit="addVirtualKitSkuForm.$valid && savevirtualKitData(virtualkitData,addVirtualKitSkuForm)">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                    <button type="button" class="close" ng-click="cancelSkuData(addVirtualKitSkuForm);">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p ng-show="dialogBoxVirtualKitMode=='add'" style="font-size: 20px;font-weight: bolder;color: #30373B;">Add New Virtual Kit</p>
+                    <p ng-show="dialogBoxVirtualKitMode=='edit'" style="font-size: 20px;font-weight: bolder;color: #30373B;">Update Virtual Kit</p>
+                    <span flex></span>
+                </div>
+
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="virtualkitSkuTab">
+                        <li class="active" ><a data-target="#virtualkitSkuTab1" data-toggle="tab" class="btn sharp" ng-click="showVirtualkitSkuTab=true;">Single SKU</a></li>
+                        <li ><a data-target="#virtualkitSkuTab2" data-toggle="tab" class="btn sharp" ng-click="showVirtualkitSkuTab=false;">Bulk SKU</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="virtualkitSkuTab1" class="tab-pane active container-fluid">
+                            <div class="row row-margin-top">
+                                <div class="col-md-6">
+                                    <div class="row" ng-show="dialogBoxVirtualKitMode=='edit'">
+                                        <!-- SKU ID -->
+                                        <div class="col-md-4 form-row-height">
+                                            <span class="form-label-height semi-bold-text">System SKU ID</span>
+                                        </div>
+                                        <div class="col-md-8 form-row-height">
+                                            <input type="text" id="skuid" ng-model="virtualkitData.tableSkuSystemNo" ng-readonly="true" class="form-control darkgrey-bottom-border font input-less-padding" style="border: none !important; margin-top: 3px; color: #F0592B; font-weight: 600;">
+                                        </div>
+                                    </div>
+                                    <div class="row" ng-show="dialogBoxVirtualKitMode=='add'">
+                                        <!-- SKU ID -->
+                                        <div class="col-md-12 form-row-height">
+                                            <span class="form-label-height semi-bold-text" style="color: #737373;">NOTE: System SKU ID will be auto generated</span>
+                                        </div>
+                                    </div>
+                                    <div class="row padding-top-15">
+                                        <!-- Seller SKU ID -->
+                                        <div class="col-md-4 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Seller SKU ID <span style="color:red">*</span></span>
+                                        </div>
+                                        <div class="col-md-8 form-row-height">
+                                            <input placeholder="Enter Seller SKU ID"
+                                                   type="text" id="sellerSkuId"
+                                                   name="sellerSkuId" required ng-maxlength="45" ng-minlength="2"
+                                                   ng-model="virtualkitData.tableSkuClientSkuCode"
+                                                   ng-change="skuClientCodeChanged(virtualkitData.tableSkuClientSkuCode)"
+                                                   class="form-control darkgrey-bottom-border font input-less-padding">
+                                        </div>
+                                        <div  class="col-md-offset-4 col-md-8">
+                                     <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.sellerSkuId.$error.required" class="error-message">
+                                         Please enter the Seller SKU ID
+                                     </span>
+                                            <span ng-if="addVirtualKitSkuForm.sellerSkuId.$dirty && addVirtualKitSkuForm.sellerSkuId.$error.maxlength" class="error-message">
+                                         Seller SKU ID should not exceed 45 characters.
+                                     </span>
+                                            <span ng-if="addVirtualKitSkuForm.sellerSkuId.$dirty && addVirtualKitSkuForm.sellerSkuId.$error.minlength" class="error-message">
+                                         Seller SKU ID should have at least 2 characters.
+                                     </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-3 no-padding sku-drop-box-container">
+                                            <div ngf-drop="changeSkuImgUrl1($file)" ngf-select="changeSkuImgUrl1($file)" ngf-select-disabled="isFile1SelectDisabled()" ng-model="skuImgFile1" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                                <div ng-class="{'img-holder': isImg1Present()}">
+                                                    <img ng-src="{{skuImgUrl1}}" ng-mouseover="skuImageHover1()" ng-mouseleave="skuImageHover1()" ng-class="{darken: isImg1Present()}">
+                                                    <div class="skuOverlay"></div>
+                                                </div>
+                                                <div class="del-img-btn text-center" ng-if="isImg1Present()">
+                                                    <md-button class="md-icon-button" md-no-ink="true" ng-click="confirmDeleteSkuImage('1')" placeholder="Delete">
+                                                        <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                                <div class="view-img-btn text-center" ng-if="isImg1Present()">
+                                                    <md-button class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl1)" placeholder="Delete">
+                                                        <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 no-padding sku-drop-box-container">
+                                            <div ngf-drop="changeSkuImgUrl2($file)" ngf-select="changeSkuImgUrl2($file)" ngf-select-disabled="isFile2SelectDisabled()" ng-model="skuImgFile2" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                                <div ng-class="{'img-holder': isImg2Present()}">
+                                                    <img ng-src="{{skuImgUrl2}}" ng-mouseover="skuImageHover2()" ng-mouseleave="skuImageHover2()" ng-class="{darken: isImg2Present()}">
+                                                    <div class="skuOverlay"></div>
+                                                </div>
+                                                <div class="del-img-btn text-center" ng-if="isImg2Present()">
+                                                    <md-button class="md-icon-button" md-no-ink="true" ng-click="confirmDeleteSkuImage('2')">
+                                                        <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                                <div class="view-img-btn text-center" ng-if="isImg2Present()">
+                                                    <md-button class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl2)" placeholder="Delete">
+                                                        <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 no-padding sku-drop-box-container">
+                                            <div ngf-drop="changeSkuImgUrl3($file)" ngf-select="changeSkuImgUrl3($file)" ngf-select-disabled="isFile3SelectDisabled()" ng-model="skuImgFile3" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                                <div ng-class="{'img-holder': isImg3Present()}">
+                                                    <img ng-src="{{skuImgUrl3}}" ng-mouseover="skuImageHover3()" ng-mouseleave="skuImageHover3()" ng-class="{darken: isImg3Present()}">
+                                                    <div class="skuOverlay"></div>
+                                                </div>
+                                                <div class="del-img-btn text-center" ng-if="isImg3Present()">
+                                                    <md-button class="md-icon-button" md-no-ink="true" ng-click="confirmDeleteSkuImage('3')">
+                                                        <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                                <div class="view-img-btn text-center" ng-if="isImg3Present()">
+                                                    <md-button class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl3)" placeholder="Delete">
+                                                        <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 no-padding sku-drop-box-container">
+                                            <div ngf-drop="changeSkuImgUrl4($file)" ngf-select="changeSkuImgUrl4($file)" ngf-select-disabled="isFile4SelectDisabled()" ng-model="skuImgFile4" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                                <div ng-class="{'img-holder': isImg4Present()}">
+                                                    <img ng-src="{{skuImgUrl4}}" ng-mouseover="skuImageHover4()" ng-mouseleave="skuImageHover4()" ng-class="{darken: isImg4Present()}">
+                                                    <div class="skuOverlay"></div>
+                                                </div>
+                                                <div class="del-img-btn text-center" ng-if="isImg4Present()">
+                                                    <md-button class="md-icon-button" md-no-ink="true" ng-click="confirmDeleteSkuImage('4')">
+                                                        <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                                <div class="view-img-btn text-center" ng-if="isImg4Present()">
+                                                    <md-button class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl4)" placeholder="Delete">
+                                                        <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row margin-top-9">
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Name <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-4 form-row-height">
+                                    <input capitalize-first placeholder="Enter Name"
+                                           type="text" id="skuName"
+                                           name="skuName" required ng-maxlength="512" ng-minlength="2"
+                                           ng-model="virtualkitData.tableSkuName"
+                                           ng-change="skuNameChanged(virtualkitData.tableSkuName)"
+                                           class="form-control darkgrey-bottom-border font input-less-padding">
+                                </div>
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">ISBN/UPC/EAN</span>
+                                </div>
+                                <div class="col-md-4 form-row-height">
+                                    <input placeholder="Enter ISBN/UPC/EAN" name="isbn" ng-maxlength="45" type="text" id="upc" ng-model="virtualkitData.tableSkuPrimaryUpcEan" ng-change="upcCodeChanged(virtualkitData.tableSkuPrimaryUpcEan)" class="form-control darkgrey-bottom-border font input-less-padding">
+                                </div>
+                                <div  class="col-md-offset-2 col-md-4">
+                                 <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.skuName.$error.required" class="error-message">
+                                     Please enter the name
+                                 </span>
+                                    <span ng-if="addVirtualKitSkuForm.skuName.$dirty && addVirtualKitSkuForm.skuName.$error.maxlength" class="error-message">
+                                     Name should not exceed 512 characters.
+                                 </span>
+                                    <span ng-if="addVirtualKitSkuForm.skuName.$dirty && addVirtualKitSkuForm.skuName.$error.minlength" class="error-message">
+                                     Name should have at least 2 characters.
+                                 </span>
+                                </div>
+                                <div  class="col-md-offset-2 col-md-4">
+                                 <span ng-if="addVirtualKitSkuForm.isbn.$dirty && addVirtualKitSkuForm.isbn.$error.maxlength" class="error-message">
+                                     ISBN/UPC/EAN should not exceed 45 characters.
+                                 </span>
+                                </div>
+                            </div>
+                            <div class="row margin-top-9">
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Alternate code </span>
+                                </div>
+                                <div class="col-md-4 form-row-height">
+                                    <input placeholder="Enter alternate code" name="alternateCode" ng-maxlength="45" type="text" id="alternatecode" ng-model="virtualkitData.tableSkuAlternateCode" class="form-control darkgrey-bottom-border font input-less-padding">
+                                </div>
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Shelf Life Type <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-4 form-row-height">
+                                    <select id="tableSkuShelfLifeType"
+                                            name="tableSkuShelfLifeType" required
+                                            style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                            ng-change="shelfTypeChanged(virtualkitData.tableSkuShelfLifeType)"
+                                            ng-model="virtualkitData.tableSkuShelfLifeType"
+                                            ng-options="option as option.tableSkuShelfLifeTypeString for option in shelfTypeLists">
+                                        <option value="">Select</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-offset-2 col-md-4">
+                             <span ng-if="addVirtualKitSkuForm.alternateCode.$dirty && addVirtualKitSkuForm.alternateCode.$error.maxlength"  class="error-message">
+                                 Alternate code should not exceed 45 characters.
+                             </span>
+                                </div>
+                                <div ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.skuName.$error.required" class="col-md-offset-2 col-md-4">
+                             <span class="error-message">
+                                 Please select the Shelf Life Type
+                             </span>
+                                </div>
+                            </div>
+                            <div class="row margin-top-9">
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Category <span style="color:red">*</span></span>
+                                </div>
+
+                                <div class="col-md-4 form-row-height">
+                                    <select ng-change="skuCategoryChanged(virtualkitData.tableSkuNode)"
+                                            title="{{virtualkitData.tableSkuNode.skuNodeName}}"
+                                            ng-model="virtualkitData.tableSkuNode"
+                                            name="category" required
+                                            style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                            ng-options="option as option.skuNodeName for option in categoryTypeLists">
+                                        <option value="">Select</option>
+                                    </select>
+
+                                </div>
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Brand <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-3 form-row-height">
+                                    <select ng-change="skuBrandChanged(virtualkitData.tableSkuBrandCode)"
+                                            ng-model="virtualkitData.tableSkuBrandCode"
+                                            name="brand" required
+                                            style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                            ng-options="option as option.tableSkuBrandCodeString for option in brandTypeLists">
+                                        <option value="">Select</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1 form-row-height" style="padding-left: 0px !important;">
+                                    <img src="images/svg/blue_add.svg" style="width: 20px; height: 20px; cursor: pointer;" ng-click="openBrandBox();">
+                                </div>
+                                <div class="col-md-offset-2 col-md-4">
+                             <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.category.$error.required" class="error-message">
+                                 Please select the Category
+                             </span>
+                                </div>
+                                <div class="col-md-offset-2 col-md-4">
+                             <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.brand.$error.required"  class="error-message">
+                                 Please select the Brand
+                             </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top-small">
+                                <div class="col-md-2 form-row-height" ng-hide="true">
+                                    <span class="form-label-height semi-bold-text">Classification</span>
+                                </div>
+                                <div class="col-md-4 form-row-height" ng-hide="true">
+                                    <select ng-model="virtualkitData.tableSkuAbcClassification"
+                                            style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                            ng-options="option as option for option in skuClassificationArray">
+                                        <option value="">Select</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">HSN <span ng-if="clientInvoiceEnabled && (clientGstType =='Regular GST' || clientGstType =='Composition GST')" style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-4 form-row-height">
+                                    <input ng-change="skuHSNChanged(virtualkitData.tableHsn.tableHsnCode)"
+                                           only-integer placeholder="Enter HSN number"
+                                           type="text" id="hsnnumber" ng-maxlength="9"
+                                           name="hsnnumber" ng-required="clientInvoiceEnabled && (clientGstType =='Regular GST' || clientGstType =='Composition GST')"
+                                           ng-model="virtualkitData.tableHsn.tableHsnCode"
+                                           class="form-control darkgrey-bottom-border font input-less-padding">
+                                </div>
+                                <div class="col-md-offset-8 col-md-4">
+                                         <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.hsnnumber.$error.required"  class="error-message">
+                                             Please enter the HSN
+                                         </span>
+                                    <span ng-if="addVirtualKitSkuForm.hsnnumber.$dirty && addVirtualKitSkuForm.hsnnumber.$error.maxlength"  class="error-message">
+                                             HSN should not exceed 9 characters.
+                                         </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top-small">
+                                <div class="col-md-2 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Description <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-10">
+                                <textarea type="text"
+                                          ng-change="skuDescChanged(virtualkitData.tableSkuDescription)"
+                                          placeholder="Enter Description"
+                                          name="descr" required ng-maxlength="2048" ng-minlength="2"
+                                          ng-model="virtualkitData.tableSkuDescription"
+                                          class="form-control darkgrey-bottom-border font input-less-padding"></textarea>
+                                </div>
+                                <div class="col-md-offset-2 col-md-10">
+                                 <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.descr.$error.required"  class="error-message">
+                                     Please enter the Description
+                                 </span>
+                                    <span ng-if="addVirtualKitSkuForm.descr.$dirty && addVirtualKitSkuForm.descr.$error.maxlength"  class="error-message">
+                                     Description should not exceed 2048 characters.
+                                 </span>
+                                    <span ng-if="addVirtualKitSkuForm.descr.$dirty && addVirtualKitSkuForm.descr.$error.minlength"  class="error-message">
+                                     Description should have at least 2 characters.
+                                 </span>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <md-toolbar class="md-small accordion-color">
+                                    <div class="md-toolbar-tools">
+                                        <span class="font-big">Product Dimension</span>
+                                        <span flex=""></span>
+                                        <md-button class="md-icon-button" aria-label="Favorite" ng-click="productDiminvRow()">
+                                            <md-icon ng-if="productDimClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                            <md-icon ng-if="productDimClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                        </md-button>
+                                    </div>
+                                </md-toolbar>
+                            </div>
+                            <div ng-show="productDimClicked==true" class="row">
+                                <div class="col-md-12 row-margin-top-small">
+                                    <div class="col-md-2 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Dimension Unit</span>
+                                    </div>
+                                    <div class="col-md-4 form-row-height" >
+                                        <select style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                                id="tableSkuUodmType"
+                                                ng-change="dimUnitChanged(virtualkitData.tableSkuUodmType)"
+                                                ng-model="virtualkitData.tableSkuUodmType"
+                                                ng-options="option as option.tableSkuUodmTypeString for option in dimLists">
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Length</span>
+                                    </div>
+                                    <div class="col-md-4 form-row-height">
+                                        <input id="tableSkuLength"
+                                               name="length" ng-required="virtualkitData.tableSkuUodmType"
+                                               floating ="2" type="text"
+                                               min="0" ng-model="virtualkitData.tableSkuLength"
+                                               placeholder="Enter Length" ng-change="skuLengthChanged(virtualkitData.tableSkuLength)"
+                                               class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12 row-margin-top-small">
+                                    <div class="col-md-2 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Width</span>
+                                    </div>
+                                    <div class="col-md-4 form-row-height">
+                                        <input style="padding:0px !important;width:100%;" floating precision="2"
+                                               type="text" min="0"
+                                               name="width" ng-required="virtualkitData.tableSkuUodmType"
+                                               ng-model="virtualkitData.tableSkuWidth"
+                                               id="tableSkuWidth" placeholder="Enter Width"
+                                               ng-change="skuWidthChanged(virtualkitData.tableSkuWidth)"
+                                               class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                    </div>
+                                    <div class="col-md-2 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Height</span>
+                                    </div>
+                                    <div class="col-md-4 form-row-height">
+                                        <input floating="2" type="text"
+                                               min="0" id="tableSkuHeight"
+                                               placeholder="Enter Height"
+                                               name="height" ng-required="virtualkitData.tableSkuUodmType"
+                                               ng-change="skuHeightChanged(virtualkitData.tableSkuHeight)"
+                                               ng-model="virtualkitData.tableSkuHeight"
+                                               class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                    </div>
+                                    <div class="col-md-offset-2 col-md-4">
+                                 <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.width.$error.required"   class="error-message">
+                                     Please enter the Width
+                                 </span>
+                                    </div>
+                                    <div   class="col-md-offset-2 col-md-4">
+                                 <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.height.$error.required"  class="error-message">
+                                     Please enter the Height
+                                 </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 row-margin-top-small">
+                                    <div class="col-md-2 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Weight Unit</span>
+                                    </div>
+                                    <div class="col-md-4 form-row-height" >
+                                        <select style="padding: 0;padding-top: 7px;" class="full-width darkgrey-bottom-border"
+                                                id="tableSkuUowmType" ng-change="weightUnitChanged(virtualkitData.tableSkuUowmType)"
+                                                ng-model="virtualkitData.tableSkuUowmType"
+                                                ng-options="option as option.tableSkuUowmTypeString for option in weightLists">
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Weight</span>
+                                    </div>
+                                    <div class="col-md-4 form-row-height">
+                                        <input type="text" floating="3"
+                                               name="weight" ng-required="virtualkitData.tableSkuUowmType"
+                                               id="tableSkuWeight"
+                                               placeholder="Enter Weight"
+                                               ng-change="skuWeightChanged(virtualkitData.tableSkuWeight)"
+                                               ng-model="virtualkitData.tableSkuWeight"
+                                               class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                    </div>
+                                    <div  class="col-md-offset-8 col-md-4">
+                                      <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.weight.$error.required"  class="error-message">
+                                          Please enter the Weight
+                                      </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-show="attributeListArray.length > 0" class="row row-margin-top-x-small">
+                                <md-toolbar class="md-small accordion-color">
+                                    <div class="md-toolbar-tools">
+                                        <span class="font-big">Attributes Details</span>
+                                        <span flex=""></span>
+                                        <md-button class="md-icon-button" aria-label="Favorite" ng-click="attributesinvRow()">
+                                            <md-icon ng-if="attributesClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                            <md-icon ng-if="attributesClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                        </md-button>
+                                    </div>
+                                </md-toolbar>
+                            </div>
+                            <div ng-if="attributesClicked==true" class="row">
+                                <div class="col-md-12" style="margin-top: 25px;margin-bottom:25px;">
+                                    <div class="row" ng-repeat="key in attributeListArray track by $index">
+                                        <div class="col-md-6 form-row-height">
+                                            <span class="font" style="text-transform: capitalize;">{{key.attributeTypeString}}</span>
+                                        </div>
+                                        <div class="col-md-6 form-row-height" >
+                                            <select ng-if = "key.attributeType == 'select'"  ng-change="skuAttributeValueChanged(key, attributeListSelectedValuesArray[key.attributeTypeString])" ng-model="attributeListSelectedValuesArray[key.attributeTypeString]" ng-options="option as option.nodeAttributePossibleValuesValue for option in key.tableSkuNodeAttributePossibleValueses track by option.nodeAttributePossibleValuesValue">
+                                                <option value="">Select</option>
+                                            </select>
+                                            <input  class="form-control darkgrey-bottom-border font input-less-padding margin-top-9" ng-if = "key.attributeType == 'text'" ng-model="attributeListSelectedValuesArray[key.attributeTypeString]" ng-blur="skuAttributeValueAdded(key, attributeListSelectedValuesArray[key.attributeTypeString])">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top-x-small">
+                                <md-toolbar class="md-small accordion-color">
+                                    <div class="md-toolbar-tools">
+                                        <span class="font-big">Properties</span>
+                                        <span flex=""></span>
+                                        <md-button class="md-icon-button" aria-label="Favorite" ng-click="propinvRow()">
+                                            <md-icon ng-if="propertiesClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                            <md-icon ng-if="propertiesClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                        </md-button>
+                                    </div>
+                                </md-toolbar>
+                            </div>
+                            <div ng-if="propertiesClicked==true" class="row">
+                                <div class="col-md-12" style="padding-left: 25px !important;">
+                                    <div class="row row-margin-top-small row-margin-bottom-small">
+                                        <div class="col-md-6 font" ng-repeat="item in items">
+                                            <md-checkbox ng-checked="exists(item, selected)" ng-click="toggle(item, selected)">
+                                                {{ item }} <span ng-if="exists(item, selected)"></span>
+                                            </md-checkbox>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top-x-small">
+                                <md-toolbar class="md-small accordion-color">
+                                    <div class="md-toolbar-tools">
+                                        <span class="font-big">Virtual Kit Details</span>
+                                        <span flex=""></span>
+                                        <md-button class="md-icon-button" aria-label="Favorite" ng-click="virtualkitDetinvRow()">
+                                            <md-icon ng-if="virtualkitDetailsClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                            <md-icon ng-if="virtualkitDetailsClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                        </md-button>
+                                    </div>
+                                </md-toolbar>
+                            </div>
+                            <div ng-show="virtualkitDetailsClicked==true" class="row">
+                                <div class="col-md-12" style="padding-left: 25px !important;">
+
+                                    <div class="row row-margin-top-small" ng-show="dialogBoxVirtualKitMode=='add' || (virtualKitEditable == true && dialogBoxVirtualKitMode=='edit')">
+                                        <div class="col-md-3">
+                                            <angucomplete-alt ng-class="{submitted: isProductSelected}" id="virtualkits"
+                                                              placeholder="Search product" pause="400"
+                                                              selected-object="virtualkitData.productObj" remote-url="{{baseSkuUrl}}"
+                                                              title-field="tableSkuClientSkuCode"
+                                                              description-field="tableSkuName"
+                                                              input-class="form-control darkgrey-bottom-border font input-less-padding"
+                                                              image-field="tableSkuImageUrl"
+                                                              initial-value="skuSelected"></angucomplete-alt>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" title="Click to see all customers"
+                                                    style="position: absolute; top: 8px;"
+                                                    class="btn btn-sm truncate-text"
+                                                    ng-click="masterSkuDialog($event, false);">. . .
+                                            </button>
+                                        </div>
+                                        <div class="col-md-4 col-md-offset-1">
+                                            <input type="text" ng-class="{submitted: isQuantityEntered}"
+                                                   only-integer
+                                                   prevent-typing-greater
+                                                   max = "999999999"
+                                                   ng-model="quantityNo" placeholder="Quantity"
+                                                   class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                        </div>
+                                        <div class="col-md-2 col-md-offset-1">
+                                            <button type="button" class="btn small-actn-btn" ng-click="addVirtualKitDetails(virtualkitData.productObj,quantityNo,id);quantityNo=null;">
+                                                Add to Kit
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-12">
+                                            <span class="font">List of Selected Products</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-margin-top-small row-margin-bottom-small" ng-show="dialogBoxVirtualKitMode=='add' || (virtualKitEditable == true && dialogBoxVirtualKitMode=='edit')">
+                                        <div class="col-md-12">
+                                            <table class="table boldtable table-responsive table-bordered table-hover" style="width:100%;">
+                                                <thead class="data-grid-header">
+                                                <tr>
+                                                    <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;Product Name</th>
+                                                    <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;Quantity</th>
+                                                    <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp; Action
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="data-grid-data">
+                                                <tr ng-repeat="virtualkit in skuvirtualKitList">
+                                                    <td >{{virtualkit.skuname}}</td>
+                                                    <td>{{virtualkit.quantity}}</td>
+                                                    <td>
+                                                        <a class="table-btn" ng-click="removeVirtualKit($index)"><span class="fa fa-trash fa-lg"></span></a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-margin-top-small row-margin-bottom-small" ng-show="dialogBoxVirtualKitMode=='edit' && virtualKitEditable == false">
+                                        <div class="col-md-12">
+                                            <table class="table boldtable table-responsive table-bordered table-hover" style="width:100%;">
+                                                <thead class="data-grid-header">
+                                                <tr>
+                                                    <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;Product Name</th>
+                                                    <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;Quantity</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="data-grid-data">
+                                                <tr ng-repeat="virtualkit in skuvirtualKitList">
+                                                    <td>{{virtualkit.skuname}}</td>
+                                                    <td>{{virtualkit.quantity}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row row-margin-top-x-small">
+                                <md-toolbar class="md-small accordion-color">
+                                    <div class="md-toolbar-tools">
+                                        <span class="font-big">Inventory Details</span>
+                                        <span flex=""></span>
+                                        <md-button class="md-icon-button" aria-label="Favorite" ng-click="inventoryDetinvRow()">
+                                            <md-icon ng-if="inventoryDetailsClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                            <md-icon ng-if="inventoryDetailsClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                        </md-button>
+                                    </div>
+                                </md-toolbar>
+                            </div>
+                            <div ng-show="inventoryDetailsClicked==true" class="row">
+                                <div class="col-md-12" style="padding-left: 25px !important;">
+                                    <div class="row row-margin-top-small">
+                                        <div class="col-md-2 form-row-height">
+                                            <span class="form-label-height semi-bold-text">MRP <span style="color:red">*</span></span>
+                                        </div>
+                                        <div class="col-md-4 form-row-height">
+                                            <input id="tableSkuInventoryMaxRetailPrice"
+                                                   placeholder="Enter MRP"
+                                                   ng-change="skuMrpChanged(virtualkitData.tableSkuInventory.tableSkuInventoryMaxRetailPrice)"
+                                                   ng-show="dialogBoxVirtualKitMode=='add' || (virtualKitEditable == true && dialogBoxVirtualKitMode=='edit')"
+                                                   price
+                                                   type="text"
+                                                   name="mrp" required
+                                                   ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryMaxRetailPrice"
+                                                   class="form-control darkgrey-bottom-border font input-less-padding">
+                                            <input ng-show="dialogBoxVirtualKitMode=='edit' && virtualKitEditable == false"
+                                                   ng-readonly="true"
+                                                   type="text"
+                                                   price
+                                                   ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryMaxRetailPrice" class="form-control darkgrey-bottom-border font input-less-padding"
+                                            >
+                                        </div>
+                                        <div class="col-md-2 form-row-height">
+                                            <span class="form-label-height semi-bold-text">MSP <span style="color:red">*</span></span>
+                                        </div>
+                                        <div class="col-md-4 form-row-height">
+                                            <input id="tableSkuInventoryMinSalePrice" placeholder="Enter MSP" ng-class="{submitted: isSkuMspEntered}"
+                                                   ng-change="skuMspChanged(virtualkitData.tableSkuInventory.tableSkuInventoryMinSalePrice)"
+                                                   ng-show="dialogBoxVirtualKitMode=='add' || (virtualKitEditable == true && dialogBoxVirtualKitMode=='edit')"
+                                                   price
+                                                   type="text"
+                                                   name="msp" required
+                                                   ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryMinSalePrice"
+                                                   class="form-control darkgrey-bottom-border font input-less-padding">
+                                            <input ng-show="dialogBoxVirtualKitMode=='edit' && virtualKitEditable == false"
+                                                   ng-readonly="true"
+                                                   price
+                                                   type="text"
+                                                   ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryMinSalePrice"
+                                                   class="form-control darkgrey-bottom-border font input-less-padding"
+                                                   style="border-bottom: none !important;">
+                                        </div>
+                                        <div class="col-md-offset-2 col-md-4">
+                                     <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.mrp.$error.required"  class="error-message">
+                                         Please enter the MRP
+                                     </span>
+                                        </div>
+                                        <div class="col-md-offset-2 col-md-4">
+                                     <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.msp.$error.required"  class="error-message">
+                                         Please enter the MSP
+                                     </span>
+                                        </div>
+
+                                    </div>
+                                    <div class="row row-margin-top-medium">
+                                        <div class="col-md-2 form-row-height">
+                                            <span class="form-label-height semi-bold-text">Batch No. <span style="color:red">*</span></span>
+                                        </div>
+                                        <div class="col-md-4 form-row-height">
+                                            <input id="tableSkuInventoryBatchNo"
+                                                   placeholder="Enter Batch No."
+                                                   name="batchNo" ng-required="true"
+                                                   ng-change="batchNoChanged(virtualkitData.tableSkuInventory.tableSkuInventoryBatchNo)"
+                                                   ng-show="dialogBoxVirtualKitMode=='add' || (virtualKitEditable == true && dialogBoxVirtualKitMode=='edit')" type="text"
+                                                   ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryBatchNo"
+                                                   class="form-control darkgrey-bottom-border font input-less-padding">
+                                            <input ng-show="dialogBoxVirtualKitMode=='edit' && virtualKitEditable==false"
+                                                   ng-readonly="true" type="text"
+                                                   ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryBatchNo"
+                                                   class="form-control darkgrey-bottom-border font input-less-padding">
+                                        </div>
+                                        <div ng-if="(dialogBoxVirtualKitMode=='add' ||  (virtualKitEditable == true && dialogBoxVirtualKitMode=='edit')) && shelfTypeID==1">
+                                            <div class="col-md-2 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Mfg Date <span style="color:red;">*</span></span>
+                                            </div>
+                                            <div class="col-md-4 form-row-height">
+                                                <md-datepicker id="tableSkuInventoryMfgDate"
+                                                               md-max-date="mfgDateMax"
+                                                               name="mfgDate" ng-required="true"
+                                                               ng-change="mfgDateSelected(virtualkitData.tableSkuInventory.tableSkuInventoryMfgDate)"
+                                                               ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryMfgDate"
+                                                               md-placeholder="Enter date"
+                                                               style="background: transparent"></md-datepicker>
+                                            </div>
+                                        </div>
+                                        <div ng-if="dialogBoxVirtualKitMode=='edit' && virtualkitData.tableSkuShelfLifeType.tableSkuShelfLifeTypeString == 'Mfg Date' && virtualKitEditable == false">
+                                            <div class="col-md-2 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Mfg Date <span style="color:red;">*</span></span>
+                                            </div>
+                                            <div class="col-md-4 form-row-height">
+                                                <input type="text" ng-readonly="true"
+                                                       ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryMfgDate"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       style="border-bottom: none !important;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-offset-2 col-md-4">
+                                         <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.batchNo.$error.required"  class="error-message">
+                                             Please enter the Batch No.
+                                         </span>
+                                        </div>
+                                        <div class="col-md-offset-2 col-md-4">
+                                         <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.mfgDate.$error.required"  class="error-message">
+                                             Please select the Mfg Date
+                                         </span>
+                                        </div>
+                                        <div ng-if="(dialogBoxVirtualKitMode=='add' || (virtualKitEditable == true && dialogBoxVirtualKitMode=='edit')) && shelfTypeID==2">
+                                            <div class="col-md-2 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Exp Date <span style="color:red;">*</span></span>
+                                            </div>
+                                            <div class="col-md-4 form-row-height" >
+                                                <md-datepicker id="tableSkuInventoryExpiryDate"
+                                                               md-min-date="expDateMin"
+                                                               ng-change="expDateSelected(virtualkitData.tableSkuInventory.tableSkuInventoryExpiryDate)"
+                                                               ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryExpiryDate"
+                                                               md-placeholder="Enter date"
+                                                               style="background: transparent;">
+
+                                                </md-datepicker>
+                                            </div>
+                                        </div>
+                                        <div ng-if="dialogBoxVirtualKitMode=='edit' && virtualkitData.tableSkuShelfLifeType.tableSkuShelfLifeTypeString == 'Exp Date' && virtualKitEditable == false">
+                                            <div class="col-md-2 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Exp Date <span style="color:red;">*</span></span>
+                                            </div>
+                                            <div class="col-md-4 form-row-height">
+                                                <input type="text" ng-readonly="true"
+                                                       name="expDate" required
+                                                       ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryExpiryDate"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding"
+                                                       style="border-bottom: none !important;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-top-medium row-margin-bottom-small">
+                                        <div ng-if="(dialogBoxVirtualKitMode=='add' || (virtualKitEditable == true && dialogBoxVirtualKitMode=='edit')) && shelfTypeID==1">
+                                            <div class="col-md-2 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Shelf Life <span style="color:red;">*</span></span>
+                                            </div>
+                                            <div class="col-md-4 form-row-height">
+                                                <input id="tableSkuInventoryShelfLifeInDays"
+                                                       placeholder="Enter Shelf Life" ng-change="shelfLifeEntered(virtualkitData.tableSkuInventory.tableSkuInventoryShelfLifeInDays)"
+                                                       type="number" name="shlflf" required
+                                                       min="1" ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryShelfLifeInDays"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding">
+                                            </div>
+                                        </div>
+                                        <div ng-if="dialogBoxVirtualKitMode=='edit' && virtualkitData.tableSkuShelfLifeType.tableSkuShelfLifeTypeString == 'Mfg Date' && virtualKitEditable == false">
+                                            <div class="col-md-2 form-row-height">
+                                                <span class="form-label-height semi-bold-text">Shelf Life <span style="color:red;">*</span></span>
+                                            </div>
+                                            <div class="col-md-4 form-row-height">
+                                                <input ng-readonly="true" type="text"
+                                                       ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryShelfLifeInDays"
+                                                       class="form-control darkgrey-bottom-border font input-less-padding" style="border-bottom: none !important;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-offset-2 col-md-4">
+                                         <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.expDate.$error.required"  class="error-message">
+                                             Please enter the Exp Date
+                                         </span>
+                                        </div>
+                                        <div class="col-md-offset-2 col-md-4">
+                                         <span ng-if="addVirtualKitSkuForm.$submitted && addVirtualKitSkuForm.shlflf.$error.required"  class="error-message">
+                                             Please enter the Shelf Life
+                                         </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="virtualkitSkuTab2" class="tab-pane container-fluid">
+                            <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                                <div class="col-md-6 light-grey-right-border">
+                                    <div class="bulk-upload-sku-img" data-toggle="modal" data-target="#skuBulkUpload" data-dismiss="modal"></div>
+                                    <br>
+                                    <span class="bulk-upload-sku-text" data-toggle="modal" data-target="#skuBulkUpload" data-dismiss="modal">Upload File</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="javascript:void(0);" ng-click="generateSkuTemplate()">
+                                        <div class="download-template-sku-img"></div>
+                                    </a>
+                                    <br>
+                                    <span class="bulk-upload-sku-text">
+                                          <a href="javascript:void(0);" ng-click="generateSkuTemplate()">
+                                              Download File Template
+                                          </a>
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="row upload-file-dialog-row">
+                                <div style="text-align: center;">
+                                    <a ng-click="closeBulkUploadDialog()" style="color: #00ACE4; font-weight: 600;cursor: pointer;">Go to "Bulk upload reports" for more details.</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer modal-dialog-footer">
+                    <span flex></span>
+                    <button type="button" class="cancel-btn" ng-click="cancelSkuData(addVirtualKitSkuForm)">
+                        Cancel
+                    </button>
+                    <button type="submit" ng-show="showVirtualkitSkuTab && dialogBoxVirtualKitMode=='add'" class="action-btn" >
+                        Add
+                    </button>
+                    <button type="submit" ng-show="showVirtualkitSkuTab && dialogBoxVirtualKitMode=='edit'" class="action-btn">
+                        Update
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="addNewCatg" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="newCatg=null; closeCategoryBox();">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Add New Category</p>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="col-md-4">
+                            <span class="font">Category Name</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" onkeypress="if (event.keyCode == 13) {return false;}" placeholder="Enter Category Name" ng-class="{submitted: isNewCatgNameEntered}" ng-change="newCatgNameChanged(newCatg.categoryName)" ng-model="newCatg.categoryName" class="form-control darkgrey-bottom-border font input-less-padding">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button type="button" class="action-btn" ng-click="addCategory(newCatg.categoryName);">
+                    Save
+                </button>
+                <button type="button" class="cancel-btn" ng-click="newCatg=null; closeCategoryBox();">
+                    Close
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addNewAttribute" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="newAttribute=null; closeAttributeBox();">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Add New Attribute</p>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="col-md-4">
+                            <span class="font">Attribute Key</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" onkeypress="if (event.keyCode == 13) {return false;}" placeholder="Enter Attribute Name" ng-class="{submitted: isNewAttributeNameEntered}" ng-change="newAttributeNameChanged(newAttribute.attributeName)" ng-model="newAttribute.attributeName" class="form-control darkgrey-bottom-border font input-less-padding">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button type="button" class="action-btn" ng-click="addAttribute(newAttribute.attributeName);">Save</button>
+                <button type="button" class="cancel-btn" ng-click="newAttribute=null; closeAttributeBox();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .md-datepicker-calendar-pane {
+        z-index: 9999 !important;
+    }
+</style>

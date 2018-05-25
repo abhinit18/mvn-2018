@@ -1,0 +1,45 @@
+
+        <div class="full-width">
+            <div class="main-list no-left-right-padding">
+                <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                    <thead class="main-list-header-bulkupload">
+                        <tr>
+                            <td>Upload ID</td>
+                            <td>Date</td>
+                            <td>Type</td>
+                            <td>Status</td>
+                            <td>Download Link</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="clickable-row-bulkupload" ng-repeat="data in allreport"  ng-if="allreport.length != 0">
+                        <td>
+                          {{data.idtableBulkUploadReportsId}}
+                        </td>
+                        <td>
+                            {{data.tableBulkUploadReportsDatetime | utcToLocalTimeOrHyphen}}
+                        </td>
+                          <td>
+                              {{data.tableBulkUploadReportsEntity}}
+                          </td>
+                          <td>
+                              {{data.tableBulkUploadReportsStatus}}
+                          </td>
+                        <td>
+                        <a style="color:#F0592B;" 
+                          href="{{filePathUrl}}{{data.tableBulkUploadReportsPath}}"
+                          download> <span class=" glyphicon glyphicon-download-alt"></span> Download Report </a>
+                        </td>
+                      </tr>
+                    <tr ng-if="successdata.length == 0">
+                        <td colspan="2">
+                            <h3 class="text-center">
+                                No Reports Available
+                            </h3>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+

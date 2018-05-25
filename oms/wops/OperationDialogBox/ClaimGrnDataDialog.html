@@ -1,0 +1,83 @@
+<div class="modal fade" id="ClaimGrnDataDialog" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+       <form name="" novalidate >
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="claimGRNCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelSingleOrdersReturnClaimDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Claim GRN</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row row-margin-top row-margin-bottom text-center">
+                        <div class="col-md-12">
+                            <div class="full-width">
+                                <table id="productTable"
+                                       class="table boldtable table-responsive table-bordered table-hover claimGrnTable">
+                                    <thead class="data-grid-header">
+                                    <tr>
+                                        <th id="claimGRNCodeH">&nbsp;&nbsp;Seller SKU ID
+                                        </th>
+                                        <th id="claimGRNNameH">&nbsp;&nbsp;SKU Name
+                                        </th>
+                                        <th id="claimGRNBQtyH" style="text-align: right;">
+                                            &nbsp;&nbsp;Bad Quantity
+                                        </th>
+
+                                        <th id="claimGRNCQtyH" style="text-align: right;">
+                                            &nbsp;&nbsp;Claim Quantity
+                                        </th>
+                                        <th id="claimGRNCEH" style="text-align: center;">
+                                            &nbsp;&nbsp;Claim
+                                            Entity
+                                        </th>
+                                        <th id="claimGRNCRH">Claim Reason</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="data-grid-data">
+                                    <tr>
+                                        <td id="claimGRNCodeB">{{SkuDetails.GRnData.tableSku.tableSkuClientSkuCode}}</td>
+                                        <td title="{{SkuDetails.GRnData.tableSku.tableSkuDescription}}" id="claimGRNNameB">{{SkuDetails.GRnData.tableSku.tableSkuName}}</td>
+                                        <td id="claimGRNBQtyB">{{SaleReturnGrnInventory.tableSkuInventoryInwardQcFailedCount}}</td>
+                                        <td id="claimGRNCQtyB" style="text-align: right;">
+                                            <input type="text" only-integer
+                                                   prevent-typing-greater
+                                                   id="claimGRNCQtyBCQ"
+                                                   ng-model="claimObj.tableSaleReturnClaimQuantity"
+                                                   max="{{SaleReturnGrnInventory.tableSkuInventoryInwardQcFailedCount}}"
+                                                   class="darkgrey-bottom-border-number">
+                                        </td>
+                                        <td id="claimGRNCEB" style="text-align: center; padding: 0;">
+                                            <select id="claimGRNCEBCE" class="form-control add-single-order-select"
+                                                    ng-model="genericData.claimEntity">
+                                                <option value="" disabled="" selected="selected" style="display: none;"
+                                                        class="" >Select Claim Entity</option>
+                                                <option value="customer">Customer</option>
+                                                <option value="saleschannel">Sales Channel</option>
+                                            </select>
+                                        </td>
+                                        <td id="claimGRNCRB"><textarea id="claimGRNCRBText" ng-model="claimObj.tableSaleReturnClaimRemarks" class="form-control"></textarea></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="claimGRNCancel2" type="button" class="cancel-btn" ng-click="cancelSingleOrdersReturnClaimDialog()">Cancel
+                </button>
+                <button id="claimGRNClaim" type="button" ng-click="ClaimSku(SkuDetails.GRnData,SaleReturnGrnInventory,genericData.claimEntity)" class="action-btn">
+                    Claim
+                </button>
+            </div>
+        </div>
+       </form>
+    </div>
+</div>

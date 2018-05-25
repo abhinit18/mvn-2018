@@ -1,0 +1,53 @@
+<div class="modal fade" id="splitStockTransferSku" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="STSCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelWarehouseSelection()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Split Order</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="full-width" style="margin-top: 10px;">
+                    <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                        <thead class="main-list-header-order">
+
+                        <tr>
+                            <th id="STSSelectH">
+                                Select
+                            </th>
+                            <th id="STSCodeH">
+                                Seller SKU ID
+                            </th>
+                            <th id="STSNameH">
+                                SKU Name
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tbody data-ng-repeat="skusforsplit in skusListForOrderSplit" data-ng-switch on="dayDataCollapse[$index]">
+                        <tr class="clickable-row-order">
+                            <td id="STSSelect{{$index}}"><md-checkbox ng-click="updateSkuArray(skusforsplit.idtableStockXferOrderSkusId)"></md-checkbox></td>
+                            <td id="STSCode{{$index}}"><span class="font">{{skusforsplit.tableSku.tableSkuClientSkuCode}}</span></td>
+                            <td title="{{skusforsplit.tableSku.tableSkuDescription}}" id="STSName{{$index}}"><span class="font">{{skusforsplit.tableSku.tableSkuName}}</span></td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                    <span class="" style="font-size: 14px; margin-left: 40px">
+											<md-checkbox id="STSSC" ng-model="genericData.splitCost" aria-label="Enable"> </md-checkbox> Split cost</span>
+
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="STSCS" class="action-btn" ng-click="splitOrderBySkus();">
+                    Confirm Split
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

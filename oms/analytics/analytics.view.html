@@ -1,0 +1,383 @@
+<link href="analytics/analytics.css" rel="stylesheet">
+<div class="container-fluid">
+    <div class="row row-margin row-margin-top-small">
+        <div class="col-md-12">
+            <md-content>
+            <md-tabs class="analytics-tab" md-selected="activeTab"  md-dynamic-height md-border-bottom>
+                <md-tab  md-on-select="onTabChanges(0)" label="Orders">
+                    <md-content class="md-padding">
+                        <div ng-class="{'hideme':!showOrders}" class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <div class="col-md-3 totalOrders">
+                                        <div>
+                                            <h1>Total orders(<span id="totalOrdersPercent" class="totalPercentage"></span>) : <span id="totalOrders" class="totalValue"></span></h1>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 totalOrders">
+                                        <div>
+                                            <h1> Total Order Value(<span id="totalOrderValuePercent" class="totalPercentage"></span>)  : <span id="totalOrderValue" class="totalValue"></span></h1>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 totalOrders">
+                                        <div>
+                                            <h1>
+                                                <a class="resetAllFilters" ng-click="resetAllChart('orders');">Reset All</a>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 totalOrders">
+                                        <div>
+                                            <h1>
+                                                <a class="downloadAllData" ng-click="downloadData('orders')">Download</a>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 ">
+                                    <div class=" analytics-filter">
+                                        <h3 class="filterLable">Filter By Order Value</h3>
+                                        <rzslider rz-slider-model="orderValue.value" rz-slider-high="orderValue.maxValue"  rz-slider-options="orderValue.options"></rzslider>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 ">
+                                    <div class=" analytics-filter">
+                                        <h3 class="filterLable">Filter By Order Date</h3>
+                                        <rzslider rz-slider-model="orderDate.value" rz-slider-high="orderDate.maxValue"  rz-slider-options="orderDate.options"></rzslider>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class=" analytics-filter">
+                                        <h3 class="filterLable">Filter By Unit Price</h3>
+                                        <rzslider rz-slider-model="perUnitPrice.value" rz-slider-high="perUnitPrice.maxValue"  rz-slider-options="perUnitPrice.options"></rzslider>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12">
+                                    <wrap-owlcarousel class="owl-carousel owl-theme" data-options="{margin : 25 , mouseDrag : false ,touchDrag: false,pullDrag:false,autoWidth :false, dots : true, loop: false , nav: true , autoPlay: false , responsive:{0:{items:1},600:{items:2},1000:{items:3}} }">
+                                        <div class="item">
+                                            <div class="col-md-12 pieChart">
+                                                <div id="channelName" class="analytics-chart">
+                                                    <span class="chart-heading">Order Value By Channel <a class='reset' ng-click="resetChart('channel');" style='display:none;'><span class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                    <span class='reset' style='display: none;'>
+                                                    Current filter: <span class='filter'></span>
+                                                </span>
+                                                </div>
+                                                <div class="filter-select">
+                                                    <ui-select on-select="checkOrdersChartSearchFilter('channel','channelDim');"  on-remove="checkOrdersChartSearchFilter('channel','channelDim');" multiple ng-model="allFilters.channelSelected" theme="selectize"  close-on-select="true" style="width: 100%;margin-bottom: 10px;" title="Choose a channel">
+                                                        <ui-select-match placeholder="Select channel...">{{$item}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices position='up' repeat="channel in allFilters.channel | filter:$select.search">
+                                                            {{channel}}
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="col-md-12 pieChart">
+                                                <div id="state" class="analytics-chart">
+                                                    <span class="chart-heading">Order Value By State <a class='reset' ng-click="resetChart('state');" style='display:none;'><span class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                    <span class='reset' style='display: none;'>
+                                                    Current filter: <span class='filter'></span>
+                                                </span>
+                                                </div>
+                                                <div class="filter-select">
+                                                    <ui-select on-select="checkOrdersChartSearchFilter('state','stateDim');" on-remove="checkOrdersChartSearchFilter('state','stateDim');"  multiple ng-model="allFilters.stateSelected" theme="selectize"  close-on-select="true" style="width: 100%;margin-bottom: 10px;" title="Choose a state">
+                                                        <ui-select-match placeholder="Select states...">{{$item}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices position='up' repeat="state in allFilters.state | filter:$select.search">
+                                                            {{state}}
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="col-md-12 pieChart">
+                                                <div id="category" class="analytics-chart">
+                                                    <span class="chart-heading">Order Value By Category Item <a class='reset' ng-click="resetChart('category');" style='display:none;'><span class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                    <span class='reset' style='display: none;'>
+                                                    Current filter: <span class='filter'></span>
+                                                </span>
+                                                </div>
+                                                <div class="filter-select">
+                                                    <ui-select on-select="checkOrdersChartSearchFilter('category','categoryDim');" on-remove="checkOrdersChartSearchFilter('category','categoryDim');" multiple ng-model="allFilters.categorySelected" theme="selectize"  close-on-select="true" style="width: 100%;margin-bottom: 10px;" title="Choose a category">
+                                                        <ui-select-match placeholder="Select category...">{{$item}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices position='up' repeat="category in allFilters.category | filter:$select.search">
+                                                            {{category}}
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="col-md-12 pieChart">
+                                                <div id="skuName" class="analytics-chart">
+                                                    <span class="chart-heading">Order Value By Item <a class='reset' ng-click="resetChart('item');" style='display:none;'><span class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                    <span class='reset' style='display: none;'>
+                                                    Current filter: <span class='filter'></span>
+                                                </span>
+                                                </div>
+                                                <div class="filter-select">
+                                                    <ui-select on-select="checkOrdersChartSearchFilter('item','itemDim');" on-remove="checkOrdersChartSearchFilter('item','itemDim');" multiple ng-model="allFilters.itemSelected" theme="selectize"  close-on-select="true" style="width: 100%;margin-bottom: 10px;" title="Choose a item">
+                                                        <ui-select-match placeholder="Select item...">{{$item}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices position='up' repeat="item in allFilters.item | filter:$select.search">
+                                                            {{item}}
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="col-md-12 pieChart">
+                                                <div id="customer" class="analytics-chart">
+                                                    <span class="chart-heading">Order Value By Customer <a class='reset' ng-click="resetChart('customer');" style='display:none;'><span class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                    <span class='reset' style='display: none;'>
+                                                    Current filter: <span class='filter'></span>
+                                                </span>
+                                                </div>
+                                                <div class="filter-select">
+                                                    <ui-select on-select="checkOrdersChartSearchFilter('customer','customerDim');" on-remove="checkOrdersChartSearchFilter('customer','customerDim');" multiple ng-model="allFilters.customerSelected" theme="selectize"  close-on-select="true" style="width: 100%;margin-bottom: 10px;" title="Choose a customer">
+                                                        <ui-select-match placeholder="Select customer...">{{$item}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices position='up' repeat="customer in allFilters.customer | filter:$select.search">
+                                                            {{customer}}
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </wrap-owlcarousel>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12 no-padding">
+                                    <div class="col-md-6 col-xs-12 ">
+                                        <div id="value" class="analytics-chart barChart">
+                                            <span class="chart-heading">Order Value </span>
+                                            <span class="col-md-6 text-center chart-interval-label">
+                                                Show Charts for :
+                                            </span>
+                                            <span class="col-md-6 text-center chart-interval-select">
+                                                <select class="darkgrey-bottom-border form-control" ng-change="onIntervalChange()" ng-model="interval.current" ng-options="intervals.name for intervals in intervals track by intervals.name"></select>
+                                            </span>
+                                            <a class='reset' ng-click="resetChart('value');" style='display:none;'>RESET</a>
+                                            <span class='reset' style='display: none;'>
+                                        Current filter: <span class='filter'></span>
+                                        </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-xs-12 ">
+                                        <div id="volume" class="analytics-chart barChart">
+                                            <span class="chart-heading">Order Volume </span>
+                                            <span class="col-md-6 text-center chart-interval-label">
+                                                Show Charts for :
+                                            </span>
+                                            <span class="col-md-6 text-center chart-interval-select">
+                                                <select class="darkgrey-bottom-border form-control" ng-change="onIntervalChange()" ng-model="interval.current" ng-options="intervals.name for intervals in intervals track by intervals.name"></select>
+                                            </span>
+                                            <a class='reset' ng-click="resetChart('volume');" style='display:none;'>RESET</a>
+                                            <span class='reset' style='display: none;'>
+                                        Current filter: <span class='filter'></span>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-class="{'hideme':showOrders}" class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="charts-loader">
+                                        <h3  ng-if="!showOrdersLoader" class="charts-loader-text text-center">No data Found</h3>
+                                        <h3 ng-if="showOrdersLoader" class="charts-loader-text text-center">Loading...</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+                <md-tab  md-on-select="onTabChanges(1)" label="Inventories">
+                    <md-content class="md-padding">
+                        <div ng-class="{'hideme':!showInventory}" class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <div class="col-md-3 totalOrders">
+                                        <div >
+                                            <h1>Total SKUs(<span id="totalSkuPercentage" class="totalPercentage"></span>) : <span id="totalSku" class="totalValue"></span></h1>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 totalOrders">
+                                        <div >
+                                            <h1> Total SKU Value(<span id="totalSkuCostPercentage" class="totalPercentage"></span>) : <span id="totalSkuCost" class="totalValue"></span></h1>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 totalOrders">
+                                        <div >
+                                            <h1>
+                                                <a class="resetAllFilters" ng-click="resetAllChart('inventory');">Reset All</a>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 totalOrders">
+                                        <div>
+                                            <h1>
+                                                <a class="downloadAllData" ng-click="downloadData('inventory')">Download</a>
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 ">
+                                    <div class=" analytics-filter">
+                                        <h3 class="filterLable">Filter By SKU Cost</h3>
+                                        <rzslider rz-slider-model="inventoryItemCost.value" rz-slider-high="inventoryItemCost.maxValue"  rz-slider-options="inventoryItemCost.options"></rzslider>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 ">
+                                    <div class=" analytics-filter">
+                                        <h3 class="filterLable">Filter By SKU Date</h3>
+                                        <rzslider rz-slider-model="inventoryDate.value" rz-slider-high="inventoryDate.maxValue"  rz-slider-options="inventoryDate.options"></rzslider>
+                                    </div>
+                                </div>
+                                <!--<div class="col-md-4">-->
+                                <!--<div class=" analytics-filter">-->
+                                <!--&lt;!&ndash;<h3 class="filterLable">Filter By Unit Price</h3>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<rzslider rz-slider-model="perUnitPrice.value" rz-slider-high="perUnitPrice.maxValue"  rz-slider-options="perUnitPrice.options"></rzslider>&ndash;&gt;-->
+                                <!--</div>-->
+                                <!--</div>-->
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12">
+                                    <wrap-owlcarousel class="owl-carousel owl-theme" data-options="{margin : 25 , mouseDrag : false ,touchDrag: false,pullDrag:false,autoWidth :false, dots : true, loop: false , nav: true , autoPlay: false , responsive:{0:{items:1},600:{items:2},1000:{items:3}} }">
+                                        <div class="item">
+                                            <div class="col-md-12 pieChart">
+                                                <div id="warehouse" class="analytics-chart">
+                                                    <span class="chart-heading">SKU By Warehouse <a class='reset' ng-click="resetChart('warehouse');" style='display:none;'><span class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                    <span class='reset' style='display: none;'>
+                                                    Current filter: <span class='filter'></span>
+                                                </span>
+                                                </div>
+                                                <div class="filter-select">
+                                                    <ui-select on-select="checkInventoryChartSearchFilter('warehouse','warehouseDim');"  on-remove="checkInventoryChartSearchFilter('warehouse','warehouseDim');" multiple ng-model="allFilters.warehouseSelected" theme="selectize"  close-on-select="true" style="width: 100%;margin-bottom: 10px;" title="Choose a Warehouse">
+                                                        <ui-select-match placeholder="Select Warehouse...">{{$item}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices position='up' repeat="warehouse in allFilters.warehouse | filter:$select.search">
+                                                            {{warehouse}}
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="col-md-12 pieChart">
+                                                <div id="sku" class="analytics-chart">
+                                                    <span class="chart-heading">SKU <a class='reset' ng-click="resetChart('sku');" style='display:none;'><span class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                    <span class='reset' style='display: none;'>
+                                                    Current filter: <span class='filter'></span>
+                                                </span>
+                                                </div>
+                                                <div class="filter-select">
+                                                    <ui-select on-select="checkInventoryChartSearchFilter('sku','skuDim');" on-remove="checkInventoryChartSearchFilter('sku','skuDim');"  multiple ng-model="allFilters.skuSelected" theme="selectize"  close-on-select="true" style="width: 100%;margin-bottom: 10px;" title="Choose a sku">
+                                                        <ui-select-match placeholder="Select SKU...">{{$item}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices position='up' repeat="sku in allFilters.sku | filter:$select.search">
+                                                            {{sku}}
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="col-md-12 pieChart">
+                                                <div id="categoryName" class="analytics-chart">
+                                                    <span class="chart-heading">Category <a class='reset' ng-click="resetChart('categoryName');" style='display:none;'><span class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                    <span class='reset' style='display: none;'>
+                                                    Current filter: <span class='filter'></span>
+                                                </span>
+                                                </div>
+                                                <div class="filter-select">
+                                                    <ui-select on-select="checkInventoryChartSearchFilter('categoryName','categoryNameDim');" on-remove="checkInventoryChartSearchFilter('categoryName','categoryNameDim');"  multiple ng-model="allFilters.categoryNameSelected" theme="selectize"  close-on-select="true" style="width: 100%;margin-bottom: 10px;" title="Choose a category">
+                                                        <ui-select-match placeholder="Select Category...">{{$item}}
+                                                        </ui-select-match>
+                                                        <ui-select-choices position='up' repeat="categoryName in allFilters.categoryName | filter:$select.search">
+                                                            {{categoryName}}
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </wrap-owlcarousel>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <!--<div class="col-md-12">-->
+                                <div class="col-md-12 col-xs-12 ">
+                                    <div id="daysOfInventory" class="analytics-chart lineChart">
+                                        <span class="chart-heading">Days of Inventory </span>
+                                        <a class='reset' ng-click="resetChart('daysOfInventory');" style='display:none;'>RESET</a>
+                                        <span class='reset' style='display: none;'>
+                                            Current filter: <span class='filter'></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!--</div>-->
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 ">
+                                    <div id="sellthroughval" class="analytics-chart barChart">
+                                        <span class="chart-heading">Sell-Through By Value </span>
+                                        <span class="col-md-6 text-center chart-interval-label">
+                                                Show Charts for :
+                                            </span>
+                                        <span class="col-md-6 text-center chart-interval-select">
+                                                <select class="darkgrey-bottom-border form-control" ng-change="onIntervalChange()" ng-model="interval.current" ng-options="intervals.name for intervals in intervals track by intervals.name"></select>
+                                        </span>
+                                        <a class='reset' ng-click="resetChart('sellthroughval');" style='display:none;'>RESET</a>
+                                        <span class='reset' style='display: none;'>
+                                            Current filter: <span class='filter'></span>
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 ">
+                                    <div id="sellthroughvol" class="analytics-chart barChart">
+                                        <span class="chart-heading">Sell-Through By Volume </span>
+                                        <span class="col-md-6 text-center chart-interval-label">
+                                                Show Charts for :
+                                            </span>
+                                        <span class="col-md-6 text-center chart-interval-select">
+                                                <select class="darkgrey-bottom-border form-control" ng-change="onIntervalChange()" ng-model="interval.current" ng-options="intervals.name for intervals in intervals track by intervals.name"></select>
+                                        </span>
+                                        <a class='reset' ng-click="resetChart('sellthroughvol');" style='display:none;'>RESET</a>
+                                        <span class='reset' style='display: none;'>
+                                            Current filter: <span class='filter'></span>
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-class="{'hideme':showInventory}" class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="charts-loader">
+                                        <h3  ng-if="!showInventoryLoader" class="charts-loader-text text-center">No data Found</h3>
+                                        <h3 ng-if="showInventoryLoader" class="charts-loader-text text-center">Loading...</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+            </md-content>
+        </div>
+    </div>
+</div>

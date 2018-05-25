@@ -1,0 +1,465 @@
+<link href="wops/bulkuploads/bulkuploads.css" rel="stylesheet">
+        <div class="container-fluid" ng-init="onLoad()">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-xs-12">
+                        <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;">
+                            <div class="col-md-9">
+                                <h4 class="screen-heading">
+                                    Bulk Upload
+                                </h4>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="screen-heading ">
+                                    <button id="blkupldUpload" ng-if="hasUploadAccess()" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px;" ng-click="showBulkUploadDialog()" ng-show="activeTab!='cancelsaleorders'"><img src="images/svg/add.svg" style="height:20px;">&nbsp;Bulk Upload</button>
+                                    <button id="blkupldCancel" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px;" ng-click="showBulkUploadDialog()" ng-show="activeTab=='cancelsaleorders'"><img src="images/svg/add.svg" style="height:20px;">&nbsp;Bulk Cancel Orders</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="col-md-12">
+        <div  class="col-md-12 search-row-content search-row-top-border" style="padding-top: 20px !important;padding-bottom: 20px !important;">
+                <div class="col-md-1 margin-top-5 text-center">
+                    <span class="font">Select Date</span>
+                </div>
+                <div class="col-md-6 margin-top-5">
+                    <div class="col-md-5">
+                        <md-datepicker timezoned-date ng-model="start1Date" md-min-date="startminDate" md-max-date="startmaxDate"
+                                       onkeydown="return false" ng-change="sendStartDate();"
+                                       md-placeholder="Start Date" id="blkupldSDate"
+                                       style="background-color: inherit;margin-top:3px;"></md-datepicker>
+
+                    </div>
+                    <div class="col-md-1">
+                        <button id="blkupldSDateClear" ng-if="start1Date != null || start1Date != undefined"  title="Deselect Start Date"
+                                class="btn dateClear" ng-click="clearStartDate();">
+                        </button>
+                    </div>
+                    <div class="col-md-5">
+                        <md-datepicker timezoned-date ng-model="end1Date" md-min-date="endminDate" md-max-date="endmaxDate"
+                                       onkeydown="return false" ng-change="sendEndDate();" md-placeholder="End Date" id="blkupldEDate"
+                                       style="background-color: inherit;margin-top:3px;"></md-datepicker>
+
+                    </div>
+                    <div class="col-md-1">
+                        <button id="blkupldEDateClear" ng-if="end1Date != null || end1Date != undefined" title="Deselect End Date"
+                                class="btn dateClear"  ng-click="clearEndDate()">
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-2 margin-top-5" >
+                    <button id="blkupldSearchSubmit" type="button"  class="btn btn-default mybut" ng-click="loadBulkReporting(defaultState)">Submit</button>
+                </div>
+                <div class="col-md-1 margin-top-5">
+                    <button id="blkupldSearchClear" title="Clear Applied Filters"  class="btn clearFilter" ng-click="clearFilter();">
+                    </button>
+                </div>
+
+                <div class="col-md-2 margin-top-5 ">
+
+                    <select name="channelObject" ng-model="genericData.selectedState"
+                            id="blkupldSelectItem" ng-value="genericData.selectedState"
+                            ng-change="setSelectedState(genericData.selectedState)"
+                            class="orderscreen-dropdown mainDropDownOrder" >
+                        <option value="" selected >All
+                        </option>
+                        <!--<option value="master">Masters</option>-->
+                        <option value="sku">SKU</option>
+                        <option value="customer">Customers</option>
+                        <option value="orders">Orders</option>
+                        <option value="po">Purchase Order</option>
+                        <option value="skusaleschannelmap">SKU Map</option>
+                        <option value="cancelsaleorders">Cancel Order</option>
+                        <option value="stocktransfer">Stock Transfer</option>
+                        <option value="inventory">Inventory</option>
+                        <option value="salereturn">Sale Return</option>
+                        <option value="salereturnwithoutorderid">Sale Return Without Id</option>
+                        <option value="vendor">Vendor</option>
+                        <option value="vendorskumap">Vendor SKU Map</option>
+                        <option value="purchasereturnwithid">Purchase Return With ID</option>
+                        <option value="purchasereturnwitoutid">Purchase Return Without ID</option>
+                        <option value="returnablegoodsorder">Returnable Goods Order</option>
+                        <option value="cancelstocktransfer">Cancel Stock Transfer</option>
+                        <option value="rates">Rates</option>
+                    </select>
+                </div>
+        </div>
+        </div>
+        <div class="col-md-12">
+            <div class="row main-list">
+
+                <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                    <thead class="main-list-header-order">
+                    <tr>
+                        <th id="blkupldDateH" class="text-left">Date</th>
+                        <th id="blkupldTypeH" class="text-left">Type</th>
+                        <th id="blkupldStatusH" class="text-left">Status</th>
+                        <th id="blkupldDLH" class="text-left">Download Link</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="data in allreport" ng-if="allreport.length != 0">
+                    <tr class="clickable-row-bulkupload" >
+                        <td id="blkupldDate{{$index}}" align="left">
+                            {{data.tableBulkUploadReportsDatetime | utcToLocalTimeOrHyphen}}
+                        </td>
+                        <td id="blkupldType{{$index}}" align="left">
+                            {{data.tableBulkUploadReportsEntity | bulkUploadType }}
+                        </td>
+                        <td id="blkupldStatus{{$index}}" align="left">
+                            {{data.tableBulkUploadReportsStatus}}
+                        </td>
+                        <td id="blkupldDL{{$index}}" align="left">
+                            <a style="color:#F0592B;"
+                               href="{{filePathUrl}}{{data.tableBulkUploadReportsPath}}"
+                               download> <span class=" glyphicon glyphicon-download-alt"></span> Download Report </a>
+                        </td>
+
+
+                    </tr>
+                    </tbody>
+
+
+                </table>
+                <div class="col-md-12" style="align: center">
+                    <h3 ng-if="allreport.length == 0">
+                        No Reports Available
+                    </h3>
+                </div>
+                <div class="row" style="margin-top: 0px;">
+                <div class="col-md-6">
+                    <p class="showingOrderLabel" ng-if="allreport.length">Showing Orders {{start + 1}} to
+                        <span ng-if="(userSize+start)<=successdataCount">{{userSize+start}}</span><span ng-if="(userSize+start)>successdataCount">{{successdataCount}}</span>
+                        of {{successdataCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-if="!allreport.length">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-if="allreport.length">
+                    <span class="pull-right">
+                         <ul class="pagination">
+                             <li>
+                                 <a><span style="padding-right: 5px;">Showing</span>
+                                     <select ng-change="changePage(genericData.selectedState, 0, userSize,1);changepagecount(successdataCount, userSize)" ng-model="userSize" name="recordsPerPage"
+                                             ng-options="option for option in recordsPerPage"
+                                             required>
+                                     </select>
+                                     <span style="padding-left: 5px;">records per page</span>
+                                 </a>
+                             </li>
+                             <li ng-class="{disabled:currentPage == 1}" ng-click="changePage(genericData.selectedState, 0, userSize, 1)"><a>&lt;&lt; First</a></li>
+                             <li ng-class="{disabled:currentPage == 1}" ng-click="changePage(genericData.selectedState, userSize*(currentPage-2), userSize, currentPage-1)"><a>&lt; Previous</a></li>
+                                <li ng-repeat="page in pageArray | limitTo:4:pageshow" ng-class="{active:currentPage == page+1}" ng-click="changePage(genericData.selectedState, userSize*(page), userSize, page+1)"><a>{{page+1}}</a></li>
+                             <li ng-class="{disabled:currentPage == totalPages}" ng-click="changePage(genericData.selectedState, userSize*(currentPage), userSize, currentPage+1)"><a>Next &gt;</a></li>
+                             <li ng-class="{disabled:currentPage == totalPages}" ng-click="changePage(genericData.selectedState, userSize*(totalPages-1), userSize, totalPages)"><a>Last &gt;&gt;</a></li>
+                         </ul>
+                    </span>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    <!-- Bulk Upload Dialog -->
+    <div class="modal fade" id="bulkUploadDialog" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                    <button id="blkupldModalCancel1" type="button" class="close" ng-click="closeBulkUploadDialog()" data-dismiss="modal">
+                      <span aria-hidden="true">&times;</span>
+                      <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" id="myModalLabel">Bulk Upload</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                     <div class="container-fluid">
+                        <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                            <select name="channelObject" ng-model="genericData.selectedEntity"
+                                    id="blkupldModalType" ng-value="genericData.selectedEntity"
+                                    ng-change="setSelectedEntity(genericData.selectedEntity, false)"
+                                    class="form-control add-single-order-select" >
+                                <option value="" disabled selected style="display: none;">Choose
+                                    Upload Type
+                                </option>
+                                <!--<option value="master">Masters</option>-->
+                                <option value="sku">SKU</option>
+                                <option value="customer">Customers</option>
+                                <option value="orders">Orders</option>
+                                <option value="po">Purchase Order</option>
+                                <option value="skusaleschannelmap">SKU Map</option>
+                                <option value="cancelsaleorders">Cancel Order</option>
+                                <option value="stocktransfer">Stock Transfer</option>
+                                <option value="inventory">Inventory</option>
+                                <option value="salereturn">Sale Return With ID</option>
+                                <option value="salereturnwithoutorderid">Sale Return Without ID</option>
+                                <option value="vendor">Vendor</option>
+                                <option value="vendorskumap">Vendor SKU Map</option>
+                                <option value="purchasereturnwithid">Purchase Return With ID</option>
+                                <option value="purchasereturnwitoutid">Purchase Return Without ID</option>
+                                <option value="returnablegoodsorder">Returnable Goods Order</option>
+                                <option value="cancelstocktransfer">Cancel Stock Transfer</option>
+                                <option value="rates">Rates</option>
+                            </select>
+                            <br>
+                            <div class="col-md-6 light-grey-right-border">
+                                <div id="blkupldModalIShow"  class="bulk-upload-img" ng-click="showBulkUploadFileDialog(genericData.selectedEntity)"></div>
+                                <br>
+                                <span id="blkupldModalBShow" class="bulk-upload-text" ng-click="showBulkUploadFileDialog(genericData.selectedEntity)">Upload File</span>
+                            </div>
+                            <div class="col-md-6">
+
+                                <a id="blkupldModalMasters" href="javascript:void(0);" ng-click="generateMastersTemplate()" ng-show="activeTab=='master'" >
+                                        <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalSku" href="javascript:void(0);" ng-click="generateCategoryTemplate()" ng-show="activeTab=='sku'" >
+                                        <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalCustomers" href="javascript:void(0);" ng-click="downloadCustomerBulkUploadTemplate()" ng-show="activeTab=='customer'" >
+                                        <div class="downloadFileBulkOrder"></div>
+                                </a>
+
+                                <a id="blkupldModalSTCancel" href="javascript:void(0);" ng-click="downloadSTOCanceltemplate()" ng-show="activeTab=='cancelstocktransfer'" >
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalVendor" href="javascript:void(0);" ng-click="VendorTemplateDownload()" ng-show="activeTab=='vendor'">
+                                        <div class="downloadFileBulkOrder"></div>
+                                </a>                                
+                                <a id="blkupldModalOrders" href="javascript:void(0);" ng-show="activeTab=='orders'" ng-click="downloadOrdertemplate();">
+                                        <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalPO" href="javascript:void(0);" ng-click="downloadPOtemplate()" ng-show="activeTab=='po'">
+                                        <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalSCM" href="javascript:void(0);" ng-click="downloadSkuMaptemplate()" ng-show="activeTab=='skusaleschannelmap'">
+                                        <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalCancelSO" href="javascript:void(0);" ng-show="activeTab=='cancelsaleorders'" ng-click="downloadCancelOrdertemplate()">
+                                        <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalST" href="javascript:void(0);" ng-click="downloadSTOtemplate()" ng-show="activeTab=='stocktransfer'">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalInventory" href="javascript:void(0);" ng-show="activeTab=='inventory'" ng-click="DownloadInventoryBulkUploadTemp()">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalSR" href="javascript:void(0);" ng-show="activeTab=='salereturn'" ng-click="DownloadSaleReturnBulkUploadTemp(true)">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalSRW" href="javascript:void(0);" ng-show="activeTab=='salereturnwithoutorderid'" ng-click="DownloadSaleReturnBulkUploadTemp(false)">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalVSKU" href="javascript:void(0);" ng-show="activeTab=='vendorskumap'" ng-click="downloadVendorSkuMapTemplate()">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalPR" href="javascript:void(0);" ng-show="activeTab=='purchasereturnwithid'" ng-click="downloadPurchaseReturnTemplateWithID(true)">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalPRW" href="javascript:void(0);" ng-show="activeTab=='purchasereturnwitoutid'" ng-click="downloadPurchaseReturnTemplateWithID(false)">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalRG" href="javascript:void(0);" ng-show="activeTab=='returnablegoodsorder'" ng-click="downloadReturnableGoodsOrderTemplate()">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <a id="blkupldModalRates" href="javascript:void(0);" ng-show="activeTab=='rates'" ng-click="ratesTemplateDownload()">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <br>
+                                <span class="bulk-upload-text" ng-show="activeTab=='master'">
+                                      <a id="blkupldModalMaster" href="javascript:void(0);" ng-click="generateMastersTemplate()">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='sku'">
+                                      <a id="blkupldModalSkus" href="javascript:void(0);" ng-click="generateCategoryTemplate()">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='customer'">
+                                      <a id="blkupldModalCustomer" href="javascript:void(0);" ng-click="downloadCustomerBulkUploadTemplate()">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text"   ng-show="activeTab=='vendor'">
+                                      <a id="blkupldModalVendor" href="javascript:void(0);" ng-click="VendorTemplateDownload()" >
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='orders'">
+                                      <a id="blkupldModalSOrders" href="javascript:void(0);" ng-click="downloadOrdertemplate();">
+                                          Download File Template
+                                      </a>
+                                </span>                                                                      
+                                <span class="bulk-upload-text" ng-show="activeTab=='po'">
+                                      <a id="blkupldModalOrdersPo" href="javascript:void(0);" ng-click="downloadPOtemplate()">
+                                          Download File Template
+                                      </a>
+                                </span>
+
+                                 <span class="bulk-upload-text" ng-show="activeTab=='cancelsaleorders'">
+                                      <a id="blkupldModalCSO" href="javascript:void(0);" ng-click="downloadCancelOrdertemplate()">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='stocktransfer'">
+                                      <a id="blkupldModalST2" href="javascript:void(0);" ng-click="downloadSTOtemplate()">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='cancelstocktransfer'">
+                                    <a id="blkupldModalSTCancel" href="javascript:void(0);" ng-click="downloadSTOCanceltemplate()">
+                                        Download File Template
+                                    </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='inventory'">
+                                      <a id="blkupldModalInv" href="javascript:void(0);" ng-click="DownloadInventoryBulkUploadTemp()">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='salereturn'">
+                                      <a id="blkupldModalSR2" href="javascript:void(0);" ng-click="DownloadSaleReturnBulkUploadTemp(true)">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='salereturnwithoutorderid'">
+                                      <a id="blkupldModalSRW" href="javascript:void(0);" ng-click="DownloadSaleReturnBulkUploadTemp(false)">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                 <span  class="bulk-upload-text" ng-show="activeTab=='skusaleschannelmap'">
+                                      <a id="blkupldModalCSku" href="javascript:void(0);" ng-click="downloadSkuMaptemplate()">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='vendorskumap'">
+                                      <a id="blkupldModalVSku2" href="javascript:void(0);" ng-click="downloadVendorSkuMapTemplate()">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='purchasereturnwithid'">
+                                      <a id="blkupldModalPRI" href="javascript:void(0);" ng-click="downloadPurchaseReturnTemplateWithID(true)">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='purchasereturnwitoutid'">
+                                      <a id="blkupldModalPRWI" href="javascript:void(0);" ng-click="downloadPurchaseReturnTemplateWithID(false)">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='returnablegoodsorder'">
+                                      <a id="blkupldModalRG2" href="javascript:void(0);" ng-click="downloadReturnableGoodsOrderTemplate()">
+                                          Download File Template
+                                      </a>
+                                </span>
+                                <span class="bulk-upload-text" ng-show="activeTab=='rates'">
+                                      <a id="blkupldModalRates" href="javascript:void(0);" ng-click="ratesTemplateDownload()">
+                                          Download File Template
+                                      </a>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button type="button" id="blkupldModalCancel2" class="cancel-btn" ng-click="closeBulkUploadDialog()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Upload File Dialog -->
+    <div class="modal fade" id="bulkUploadFileDialog" role="dialog" aria-labelledby="modal-title" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form name="bulkUploadFileForm" novalidate ng-submit="bulkUploadFileForm.$valid && uploadBulkFile(bulkUploadfile,activeTab,bulkUploadFileForm);">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                    <button id="blkupldUploadCancel1" type="button" class="close" ng-click="closeBulkUploadFileDialog(bulkUploadFileForm)">
+                      <span aria-hidden="true">&times;</span>
+                      <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" id="modal-title">Upload File</p>
+                </div>
+                <div class="modal-body">
+                    <div class="row upload-file-dialog-row" ng-if="activeTab == 'orders'">
+                        <div class="col-md-3 bulkFile-heading-col font">Select the Channel</div>
+                        <div class="col-md-8">
+                            <select id="blkupldUploadChannel" class="form-control bulkFile-select" ng-model="bulkOrderSettingData.channelId">
+                                <option value="">Select the Channel</option>
+                                <option ng-repeat="option in channelNamesData"
+                                        value="{{option.idtableSalesChannelValueInfoId}}" ng-if="option.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId==2">
+                                    {{option.tableSalesChannelValueInfoName}}
+                                </option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="row upload-file-dialog-row">
+                        <div class="col-md-3 bulkFile-heading-col font">Select a File</div>
+                        <div class="col-md-8">
+                            <div ng-required="true" name="files" ngf-drop ngf-select class="drop-box cursorPointer" ng-model="bulkUploadfile" ngf-drag-over-class="'dragover'" accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                                <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;" /> &nbsp;&nbsp;Drag file to upload or click to select
+                            </div>
+                            <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+
+                        </div>
+                    </div>
+                    <div class="row upload-file-dialog-row">
+                        <div class="col-md-3 bulkFile-heading-col"></div>
+                        <div class="col-md-8 font">File:&nbsp;&nbsp;{{bulkUploadfile.name}}</div>
+                    </div>
+                    <div class="row upload-file-dialog-row">
+                        <div class="col-md-3 bulkFile-heading-col"></div>
+                        <div class="col-md-8">
+                            <b class="fileFormat">* File Format should be .xls,.xlsx</b>
+                            <br>
+                            <span ng-if="bulkUploadFileForm.$submitted && bulkUploadFileForm.files.$error.required" class="error-msg">Please upload file</span><br>
+                            <span  ng-if="bulkUploadFileForm.$submitted && bulkUploadFileForm.files.$error.pattern" class="error-msg">Please upload a valid file</span>
+                        </div>
+                    </div>               
+                </div>
+                <div class="modal-footer modal-dialog-footer">
+                    <button id="blkupldUploadCancel2" type="button" class="cancel-btn" ng-click="closeBulkUploadFileDialog(bulkUploadFileForm);">Cancel</button>
+                    <button ng-disabled="bulkuploaddisabled" id="blkupldUploadSubmit" type="submit" class="action-btn" >Upload</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="confirmSaleOrderReturnDialog" role="dialog" data-backdrop="static" data-keyboard="false"
+         aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <p class="dialog-heading-p">Confirm Sale Order Return</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top row-margin-bottom text-center">
+                            <div class="col-md-12">
+                                <span class="font">Do you have order reference no. ?</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button type="button" class="action-btn" ng-click="onSaleReferenceNumberOptionChanged(true)">
+                        Yes
+                    </button>
+                    <button type="button" class="cancel-btn" ng-click="onSaleReferenceNumberOptionChanged(false)">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript">
+    </script>
+    <div ng-include src="'generateCategoryTemplate/generateTemplateDialog.html?version=1.0.0'"></div>
+    <div ng-include src="'discount/uploadRatesDialog.html?version=1.0.0'"></div>
+

@@ -1,0 +1,911 @@
+<link href="dashboard/dashboard.css" rel="stylesheet">
+<div class="container-fluid">
+    <div class="container-fluid">
+        <!--<iframe width="219" height="302" src="http://www.calculator-1.com/outdoor/?f=666666&r=666666" scrolling="no" frameborder="0"></iframe>-->
+
+        <div class="col-md-12">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                <p ng-show="mainHeading == 'saleOrder'" class="screen-heading-list">Total Order Summary </p>
+                <p ng-show="mainHeading == 'inventory'" class="screen-heading-list">Total Inventory Summary </p>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 text-right screen-heading-list" ng-if="defineAccess('/analytics')">
+                <a href="javascript:void(0)" ng-click="goTo('/analytics',$event)" class="btn btn-default mybutton1 ">Analytics</a>
+            </div>
+        </div>
+        <div class="row row-margin-top">
+            <div class="full-width no-left-padding" ng-init="getCsvData('month');">
+                <div class="tabbable-panel">
+                    <div class="tabbable-line">
+                        <ul class="nav nav-tabs  ">
+                            <li class="active">
+                                <a data-target="#default_tab1" data-toggle="tab" ng-click="getCsvData(activeInterval);">
+                                    Sale Orders
+                                </a>
+                            </li>
+                            <!--<li>-->
+                            <!--<a data-target="#default_tab2" data-toggle="tab">-->
+                            <!--Cancelled Orders-->
+                            <!--</a>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                            <!--<a data-target="#default_tab3" data-toggle="tab">-->
+                            <!--Returned Orders-->
+                            <!--</a>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                            <!--<a data-target="#default_tab4" data-toggle="tab">-->
+                            <!--PO-->
+                            <!--</a>-->
+                            <!--</li>-->
+                            <li>
+                                <a data-target="#default_tab5" data-toggle="tab" ng-click="getInventoryCsvData();">
+                                    Inventory
+                                </a>
+                            </li>
+                        </ul>
+                        <!--<ul class="nav nav-pills">-->
+                        <!--<li ng-class="{'active':activeInterval=='day'}">-->
+                        <!--<a ng-click="getCsvData(endpoints.day);">Today</a>-->
+                        <!--</li>-->
+                        <!--<li ng-class="{'active':activeInterval=='week'}">-->
+                        <!--<a ng-click="getCsvData(endpoints.week);">This Week</a>-->
+                        <!--</li>-->
+                        <!--<li ng-class="{'active':activeInterval=='month'}">-->
+                        <!--<a ng-click="getCsvData(endpoints.month);">This Month</a>-->
+                        <!--</li>-->
+                        <!--<li ng-class="{'active':activeInterval=='quarter'}">-->
+                        <!--<a ng-click="getCsvData(endpoints.quarter);">This Quarter</a>-->
+                        <!--</li>-->
+                        <!--<li ng-class="{'active':activeInterval=='year'}">-->
+                        <!--<a ng-click="getCsvData(endpoints.year);">This Year</a>-->
+                        <!--</li>-->
+                        <!--</ul>-->
+                        <!--<div class="row row-margin-bottom">-->
+                        <!--<div class="col-md-12">-->
+                        <!--<div class="col-md-4">-->
+                        <!--<div class="total-widget text-center">-->
+                        <!--<h3>Total Value</h3>-->
+                        <!--<h4><i class="fa fa-inr"></i> {{totals.value.toFixed(2)}}</h4>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="col-md-4">-->
+                        <!--<div class="total-widget text-center">-->
+                        <!--<h3>Total Volume</h3>-->
+                        <!--<h4>{{totals.volume}}</h4>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="col-md-4">-->
+                        <!--<div class="total-widget text-center">-->
+                        <!--<h3>Trend</h3>-->
+                        <!--<h4>{{totals.trend.toFixed(2) + '%'}}</h4>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="default_tab1">
+                                <div class="tabbable-line">
+                                    <ul class="time-interval">
+                                        <li ng-class="{'active':activeInterval=='day'}">
+                                            <a ng-click="getCsvData('day');">Today</a>
+                                        </li>
+                                        <li ng-class="{'active':activeInterval=='week'}">
+                                            <a ng-click="getCsvData('week');">This Week</a>
+                                        </li>
+                                        <li ng-class="{'active':activeInterval=='month'}">
+                                            <a ng-click="getCsvData('month');">This Month</a>
+                                        </li>
+                                        <li ng-class="{'active':activeInterval=='quarter'}">
+                                            <a ng-click="getCsvData('quarter');">This Quarter</a>
+                                        </li>
+                                        <li ng-class="{'active':activeInterval=='year'}">
+                                            <a ng-click="getCsvData('year');">This Year</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="row row-margin-bottom">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <div class="total-widget text-center">
+                                                <h3>Total Value</h3>
+                                                <h4><i class="fa fa-inr"></i> {{totals.value}}</h4>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="total-widget text-center">
+                                                <h3>Total Volume</h3>
+                                                <h4>
+                                                    {{totals.volume}}
+
+                                                </h4>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="total-widget text-center">
+                                                <h3>Sales Trend</h3>
+                                                <h4>
+                                                    {{totals.trend.toFixed(2) + '%'}}
+                                                    <span ng-if="totals.trend > 0" style="color: lightgreen"
+                                                          class="glyphicon glyphicon-arrow-up"></span>
+                                                    <span ng-if="totals.trend < 0" style="color: red"
+                                                          class="glyphicon glyphicon-arrow-down"></span>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="collapse-group" id="collapse-parent">
+
+                                        <div ng-init="warehouseOpen = false;" class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingWarehouse">
+                                                <h4 class="panel-title">
+                                                    <a class="trigger" role="button" data-toggle="collapse"
+                                                       data-target="#warehouse" data-parent="#collapse-parent"
+                                                       aria-expanded="true" aria-controls="warehouse"
+                                                       class="trigger collapsed"
+                                                       ng-click="warehouseOpen=!warehouseOpen;showOrHideCharts('warehouse');">
+                                                        Warehouse
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="warehouse" class="panel-collapse collapse in" role="tabpanel"
+                                                 aria-labelledby="headingOne">
+                                                <div class="panel-body">
+                                                    <div ng-show="noWarehouseData" class="noWarehouseData">
+                                                        <p>No data found.</p>
+                                                    </div>
+                                                    <div ng-show="!noWarehouseData" class="row">
+
+                                                        <div class="row main-table">
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="warehouseChart"
+                                                                             class="analytics-chart">
+                                                                            <span class="chart-heading">Warehouses <a
+                                                                                    class='reset pull-right'
+                                                                                    ng-click="resetChart('warehouse');"
+                                                                                    style='display:none;cursor: pointer;'><span
+                                                                                    class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Current filter: <span class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                        <div class="filter-select">
+                                                                            <ui-select
+                                                                                    on-select="checkChartSearchFilter('warehouse','warehouseDim');"
+                                                                                    on-remove="checkChartSearchFilter('warehouse','warehouseDim');"
+                                                                                    multiple
+                                                                                    ng-model="allFilters.warehouseSelected"
+                                                                                    theme="selectize"
+                                                                                    close-on-select="true"
+                                                                                    style="width: 100%;margin-bottom: 10px;"
+                                                                                    title="Choose a warehouse">
+                                                                                <ui-select-match
+                                                                                        placeholder="Select warehouse...">
+                                                                                    {{$item}}
+                                                                                </ui-select-match>
+                                                                                <ui-select-choices position='up'
+                                                                                                   repeat="warehouse in allFilters.warehouse | filter:$select.search">
+                                                                                    {{warehouse}}
+                                                                                </ui-select-choices>
+                                                                            </ui-select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="warehouseGainOrLossChart"
+                                                                             class="analytics-chart">
+                                                                       <span class="chart-heading">
+                                                                           Warehouse Gain Or Loss
+                                                                           <a class='reset pull-right'
+                                                                              ng-click="resetChart('warehouseGainOrLoss');"
+                                                                              style='display:none;cursor: pointer;'><span
+                                                                                   class="glyphicon glyphicon glyphicon-repeat"></span></a>
+                                                                       </span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Current filter: <span class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 ">
+                                                                    <div class="col-md-12">
+                                                                        <div class="main-data-table warehouseTableContainer">
+                                                                            <table class="table table-striped-custom table-condensed table-responsive table-hover warehouseTable saleOrderTable">
+
+                                                                            </table>
+                                                                            <div ng-show="tableSize > 0" class="paging">
+                                                                                Showing <span
+                                                                                    id="warehouseBegin"></span>-<span
+                                                                                    id="warehouseEnd"></span> of <span
+                                                                                    id="warehouseSize"></span>.
+                                                                                <a id="warehouseNext"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="next(warehouseTable,tableSize,'warehouse')">Next</a>
+                                                                                <span class="pull-right"> | </span>
+                                                                                <a id="warehouseLast"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="last(warehouseTable,tableSize,'warehouse')">Previous</a>
+                                                                            </div>
+                                                                            <div ng-show="tableSize <= 0"
+                                                                                 class="paging">
+                                                                                No records.
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div ng-init="channelOpen = true;" class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingChannel">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-target="#channel"
+                                                       data-parent="#collapse-parent" aria-expanded="true"
+                                                       aria-controls="channel" class="trigger collapsed"
+                                                       ng-click="channelOpen=!channelOpen;showOrHideCharts('channel');">
+                                                        Channel
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="channel" class="panel-collapse collapse" role="tabpanel"
+                                                 aria-labelledby="headingTwo">
+                                                <div class="panel-body">
+                                                    <div ng-show="noChannelData" class="noChannelData">
+                                                        <p>No data found.</p>
+                                                    </div>
+                                                    <div ng-show="!noChannelData" class="row">
+                                                        <div class="row main-table">
+                                                            <!--<div class="col-md-12">-->
+                                                            <!--<div class="col-md-offset-6 text-right">-->
+                                                            <!--<span>Showing data for:</span>-->
+                                                            <!--<select ng-model="options.dataCount" ng-change="onDataCountChange('channel',options.dataCount)">-->
+                                                            <!--<option value="">All</option>-->
+                                                            <!--<option value="5">Top 5</option>-->
+                                                            <!--<option value="10">Top 10</option>-->
+                                                            <!--</select>-->
+                                                            <!--</div>-->
+                                                            <!--</div>-->
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="channelChart" class="analytics-chart">
+                                                                            <span class="chart-heading">Channel <a
+                                                                                    class='reset pull-right'
+                                                                                    ng-click="resetChart('channel');"
+                                                                                    style='display:none;cursor: pointer;'><span
+                                                                                    class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Current filter: <span class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                        <div class="filter-select">
+                                                                            <ui-select
+                                                                                    on-select="checkChartSearchFilter('channel','channelDim');"
+                                                                                    on-remove="checkChartSearchFilter('channel','channelDim');"
+                                                                                    multiple
+                                                                                    ng-model="allFilters.channelSelected"
+                                                                                    theme="selectize"
+                                                                                    close-on-select="true"
+                                                                                    style="width: 100%;margin-bottom: 10px;"
+                                                                                    title="Choose a channel">
+                                                                                <ui-select-match
+                                                                                        placeholder="Select channel...">
+                                                                                    {{$item}}
+                                                                                </ui-select-match>
+                                                                                <ui-select-choices position='up'
+                                                                                                   repeat="channel in allFilters.channel | filter:$select.search">
+                                                                                    {{channel}}
+                                                                                </ui-select-choices>
+                                                                            </ui-select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="channelGainOrLossChart"
+                                                                             class="analytics-chart">
+                                                                       <span class="chart-heading">
+                                                                           Channel Gain Or Loss
+                                                                           <a class='reset pull-right'
+                                                                              ng-click="resetChart('channelGainOrLoss');"
+                                                                              style='display:none;cursor: pointer;'><span
+                                                                                   class="glyphicon glyphicon glyphicon-repeat"></span></a>
+                                                                       </span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Current filter: <span class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 ">
+                                                                    <div class="col-md-12">
+                                                                        <div class="main-data-table channelTableContainer">
+                                                                            <table class="table table-striped-custom table-condensed table-responsive table-hover channelTable saleOrderTable">
+
+                                                                            </table>
+                                                                            <div ng-show="tableSize > 0" class="paging">
+                                                                                Showing <span id="channelBegin"></span>-<span
+                                                                                    id="channelEnd"></span> of <span
+                                                                                    id="channelSize"></span>.
+                                                                                <a id="channelNext"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="next(channelTable,tableSize,'channel')">Next</a>
+                                                                                <span class="pull-right"> | </span>
+                                                                                <a id="channellast"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="last(channelTable,tableSize,'channel')">Previous</a>
+                                                                            </div>
+                                                                            <div ng-show="tableSize <= 0"
+                                                                                 class="paging">
+                                                                                No records.
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div ng-init="categoryOpen = true;" class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingCategory">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-target="#category"
+                                                       data-parent="#collapse-parent" aria-expanded="true"
+                                                       aria-controls="category" class="trigger collapsed"
+                                                       ng-click="categoryOpen=!categoryOpen;showOrHideCharts('category');">
+                                                        Category
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="category" class="panel-collapse collapse" role="tabpanel"
+                                                 aria-labelledby="headingTwo">
+                                                <div class="panel-body">
+                                                    <div ng-show="noCategoryData" class="noCategoryData">
+                                                        <p>No data found.</p>
+                                                    </div>
+                                                    <div ng-show="!noCategoryData" class="row">
+                                                        <div class="row main-table">
+                                                            <!--<div class="col-md-12">-->
+                                                            <!--<div class="col-md-offset-6 text-right">-->
+                                                            <!--<span>Showing data for:</span>-->
+                                                            <!--<select ng-model="options.dataCount" ng-change="onDataCountChange('category',options.dataCount)">-->
+                                                            <!--<option value="">All</option>-->
+                                                            <!--<option value="5">Top 5</option>-->
+                                                            <!--<option value="10">Top 10</option>-->
+                                                            <!--</select>-->
+                                                            <!--</div>-->
+                                                            <!--</div>-->
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="categoryChart" class="analytics-chart">
+                                                                            <span class="chart-heading">Category <a
+                                                                                    class='reset pull-right'
+                                                                                    ng-click="resetChart('category');"
+                                                                                    style='display:none;cursor: pointer;'><span
+                                                                                    class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Current filter: <span class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                        <div class="filter-select">
+                                                                            <ui-select
+                                                                                    on-select="checkChartSearchFilter('category','categoryDim');"
+                                                                                    on-remove="checkChartSearchFilter('category','categoryDim');"
+                                                                                    multiple
+                                                                                    ng-model="allFilters.categorySelected"
+                                                                                    theme="selectize"
+                                                                                    close-on-select="true"
+                                                                                    style="width: 100%;margin-bottom: 10px;"
+                                                                                    title="Choose a category">
+                                                                                <ui-select-match
+                                                                                        placeholder="Select category...">
+                                                                                    {{$item}}
+                                                                                </ui-select-match>
+                                                                                <ui-select-choices position='up'
+                                                                                                   repeat="category in allFilters.category | filter:$select.search">
+                                                                                    {{category}}
+                                                                                </ui-select-choices>
+                                                                            </ui-select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="categoryGainOrLossChart"
+                                                                             class="analytics-chart">
+                                                                       <span class="chart-heading">
+                                                                           Category Gain Or Loss
+                                                                           <a class='reset pull-right'
+                                                                              ng-click="resetChart('categoryGainOrLoss');"
+                                                                              style='display:none;cursor: pointer;'><span
+                                                                                   class="glyphicon glyphicon glyphicon-repeat"></span></a>
+                                                                       </span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Category filter: <span
+                                                                                    class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 ">
+                                                                    <div class="col-md-12">
+                                                                        <div class="main-data-table categoryTableContainer">
+                                                                            <table class="table table-striped-custom table-condensed table-responsive table-hover categoryTable saleOrderTable">
+
+                                                                            </table>
+                                                                            <div ng-show="tableSize > 0" class="paging">
+                                                                                Showing <span id="categoryBegin"></span>-<span
+                                                                                    id="categoryEnd"></span> of <span
+                                                                                    id="categorySize"></span>.
+                                                                                <a id="categoryNext"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="next(categoryTable,tableSize,'category')">Next</a>
+                                                                                <span class="pull-right"> | </span>
+                                                                                <a id="categorylast"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="last(categoryTable,tableSize,'category')">Previous</a>
+                                                                            </div>
+                                                                            <div ng-show="tableSize <= 0"
+                                                                                 class="paging">
+                                                                                No records.
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div ng-init="skuOpen = true;" class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingSKU">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse"
+                                                       data-parent="#collapse-parent" data-target="#sku"
+                                                       aria-expanded="true" aria-controls="sku"
+                                                       class="trigger collapsed"
+                                                       ng-click="skuOpen=!skuOpen;showOrHideCharts('sku');">
+                                                        SKU
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="sku" class="panel-collapse collapse" role="tabpanel"
+                                                 aria-labelledby="headingTwo">
+                                                <div class="panel-body">
+                                                    <div ng-show="noSkuData" class="noSkuData">
+                                                        <p>No data found.</p>
+                                                    </div>
+                                                    <div ng-show="!noSkuData" class="row">
+                                                        <div class="row main-table">
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="skuChart" class="analytics-chart">
+                                                                        <span class="chart-heading">
+                                                                            SKU
+                                                                            <a class='reset pull-right'
+                                                                               ng-click="resetChart('sku');"
+                                                                               style='display:none;cursor: pointer;'><span
+                                                                                    class="glyphicon glyphicon glyphicon-repeat"></span></a>
+                                                                        </span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Current filter: <span class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                        <div class="filter-select">
+                                                                            <ui-select
+                                                                                    on-select="checkChartSearchFilter('sku','skuDim');"
+                                                                                    on-remove="checkChartSearchFilter('sku','skuDim');"
+                                                                                    multiple
+                                                                                    ng-model="allFilters.skuSelected"
+                                                                                    theme="selectize"
+                                                                                    close-on-select="true"
+                                                                                    style="width: 100%;margin-bottom: 10px;"
+                                                                                    title="Choose a sku">
+                                                                                <ui-select-match
+                                                                                        placeholder="Select sku...">
+                                                                                    {{$item}}
+                                                                                </ui-select-match>
+                                                                                <ui-select-choices position='up'
+                                                                                                   repeat="sku in allFilters.sku | filter:$select.search">
+                                                                                    {{sku}}
+                                                                                </ui-select-choices>
+                                                                            </ui-select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="skuGainOrLossChart"
+                                                                             class="analytics-chart">
+                                                                       <span class="chart-heading">
+                                                                           SKU Gain Or Loss
+                                                                           <a class='reset pull-right'
+                                                                              ng-click="resetChart('skuGainOrLoss');"
+                                                                              style='display:none;cursor: pointer;'><span
+                                                                                   class="glyphicon glyphicon glyphicon-repeat"></span></a>
+                                                                       </span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Current filter: <span class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 ">
+                                                                    <div class="col-md-12">
+                                                                        <div class="main-data-table skuTableContainer">
+                                                                            <table class="table table-striped-custom table-condensed table-responsive table-hover skuTable saleOrderTable">
+
+                                                                            </table>
+                                                                            <div ng-show="tableSize > 0" class="paging">
+                                                                                Showing <span
+                                                                                    id="skuBegin"></span>-<span
+                                                                                    id="skuEnd"></span> of <span
+                                                                                    id="skuSize"></span>.
+                                                                                <a id="skuNext"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="next(skuTable,tableSize,'sku')">Next</a>
+                                                                                <span class="pull-right"> | </span>
+                                                                                <a id="skulast"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="last(skuTable,tableSize,'sku')">Previous</a>
+                                                                            </div>
+                                                                            <div ng-show="tableSize <= 0"
+                                                                                 class="paging">
+                                                                                No records.
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div ng-init="customerOpen = true;" class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingCustomer">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-target="#customer"
+                                                       data-parent="#collapse-parent" aria-expanded="true"
+                                                       aria-controls="customer" class="trigger collapsed"
+                                                       ng-click="customerOpen=!customerOpen;showOrHideCharts('customer');">
+                                                        Customer
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="customer" class="panel-collapse collapse" role="tabpanel"
+                                                 aria-labelledby="headingTwo">
+                                                <div class="panel-body">
+                                                    <div ng-show="noCustomerData" class="noCustomerData">
+                                                        <p>No data found.</p>
+                                                    </div>
+                                                    <div ng-show="!noCustomerData" class="row">
+                                                        <div class="row main-table">
+                                                            <!--<div class="col-md-12">-->
+                                                            <!--<div class="col-md-offset-6 text-right">-->
+                                                            <!--<span>Showing data for:</span>-->
+                                                            <!--<select ng-model="options.dataCount" ng-change="onDataCountChange('customer',options.dataCount)">-->
+                                                            <!--<option value="">All</option>-->
+                                                            <!--<option value="5">Top 5</option>-->
+                                                            <!--<option value="10">Top 10</option>-->
+                                                            <!--</select>-->
+                                                            <!--</div>-->
+                                                            <!--</div>-->
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="customerChart" class="analytics-chart">
+                                                                            <span class="chart-heading">Customer <a
+                                                                                    class='reset pull-right'
+                                                                                    ng-click="resetChart('customer');"
+                                                                                    style='display:none;cursor: pointer;'><span
+                                                                                    class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Current filter: <span class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                        <div class="filter-select">
+                                                                            <ui-select
+                                                                                    on-select="checkChartSearchFilter('customer','customerDim');"
+                                                                                    on-remove="checkChartSearchFilter('customer','customerDim');"
+                                                                                    multiple
+                                                                                    ng-model="allFilters.customerSelected"
+                                                                                    theme="selectize"
+                                                                                    close-on-select="true"
+                                                                                    style="width: 100%;margin-bottom: 10px;"
+                                                                                    title="Choose a customer">
+                                                                                <ui-select-match
+                                                                                        placeholder="Select customer...">
+                                                                                    {{$item}}
+                                                                                </ui-select-match>
+                                                                                <ui-select-choices position='up'
+                                                                                                   repeat="customer in allFilters.customer | filter:$select.search">
+                                                                                    {{customer}}
+                                                                                </ui-select-choices>
+                                                                            </ui-select>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="customerGainOrLossChart"
+                                                                             class="analytics-chart">
+                                                                       <span class="chart-heading">
+                                                                           Customer Gain Or Loss
+                                                                           <a class='reset pull-right'
+                                                                              ng-click="resetChart('customerGainOrLoss');"
+                                                                              style='display:none;cursor: pointer;'><span
+                                                                                   class="glyphicon glyphicon glyphicon-repeat"></span></a>
+                                                                       </span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Customer filter: <span
+                                                                                    class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 ">
+                                                                    <div class="col-md-12">
+                                                                        <div class="main-data-table customerTableContainer">
+                                                                            <table class="table table-striped-custom table-condensed table-responsive table-hover customerTable saleOrderTable">
+
+                                                                            </table>
+                                                                            <div ng-show="tableSize > 0" class="paging">
+                                                                                Showing <span id="customerBegin"></span>-<span
+                                                                                    id="customerEnd"></span> of <span
+                                                                                    id="customerSize"></span>.
+                                                                                <a id="customerNext"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="next(customerTable,tableSize,'customer')">Next</a>
+                                                                                <span class="pull-right"> | </span>
+                                                                                <a id="customerlast"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="last(customerTable,tableSize,'customer')">Previous</a>
+                                                                            </div>
+                                                                            <div ng-show="tableSize <= 0"
+                                                                                 class="paging">
+                                                                                No records.
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div ng-init="geolocationOpen = true;" class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingGeolocation">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-target="#geolocation"
+                                                       data-parent="#collapse-parent" aria-expanded="true"
+                                                       aria-controls="geolocation" class="trigger collapsed"
+                                                       ng-click="geolocationOpen=!geolocationOpen;showOrHideCharts('geolocation');">
+                                                        State
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="geolocation" class="panel-collapse collapse" role="tabpanel"
+                                                 aria-labelledby="headingTwo">
+                                                <div class="panel-body">
+                                                    <div ng-show="noGeolocationData" class="noGeolocationData">
+                                                        <p>No data found.</p>
+                                                    </div>
+                                                    <div ng-show="!noGeolocationData" class="row">
+                                                        <div class="row main-table">
+                                                            <!--<div class="col-md-12">-->
+                                                            <!--<div class="col-md-offset-6 text-right">-->
+                                                            <!--<span>Showing data for:</span>-->
+                                                            <!--<select ng-model="options.dataCount" ng-change="onDataCountChange('customer',options.dataCount)">-->
+                                                            <!--<option value="">All</option>-->
+                                                            <!--<option value="5">Top 5</option>-->
+                                                            <!--<option value="10">Top 10</option>-->
+                                                            <!--</select>-->
+                                                            <!--</div>-->
+                                                            <!--</div>-->
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="geolocationChart"
+                                                                             class="analytics-chart">
+                                                                            <span class="chart-heading">Geolocation <a
+                                                                                    class='reset pull-right'
+                                                                                    ng-click="resetChart('geolocation');"
+                                                                                    style='display:none;cursor: pointer;'><span
+                                                                                    class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Current filter: <span class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                        <div class="filter-select">
+                                                                            <ui-select
+                                                                                    on-select="checkChartSearchFilter('geolocation','geolocationDim');"
+                                                                                    on-remove="checkChartSearchFilter('geolocation','geolocationDim');"
+                                                                                    multiple
+                                                                                    ng-model="allFilters.geolocationSelected"
+                                                                                    theme="selectize"
+                                                                                    close-on-select="true"
+                                                                                    style="width: 100%;margin-bottom: 10px;"
+                                                                                    title="Choose a State">
+                                                                                <ui-select-match
+                                                                                        placeholder="Select geolocation...">
+                                                                                    {{$item}}
+                                                                                </ui-select-match>
+                                                                                <ui-select-choices position='up'
+                                                                                                   repeat="geolocation in allFilters.geolocation | filter:$select.search">
+                                                                                    {{geolocation}}
+                                                                                </ui-select-choices>
+                                                                            </ui-select>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="col-md-12 pieChart">
+                                                                        <div id="geolocationGainOrLossChart"
+                                                                             class="analytics-chart">
+                                                                       <span class="chart-heading">
+                                                                           Geolocation Gain Or Loss
+                                                                           <a class='reset pull-right'
+                                                                              ng-click="resetChart('geolocationGainOrLoss');"
+                                                                              style='display:none;cursor: pointer;'><span
+                                                                                   class="glyphicon glyphicon glyphicon-repeat"></span></a>
+                                                                       </span>
+                                                                            <span class='reset pull-left'
+                                                                                  style='display: none;clear: right;'>
+                                                                            Geolocation filter: <span
+                                                                                    class='filter'></span>
+                                                                       </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 ">
+                                                                    <div class="col-md-12">
+                                                                        <div class="main-data-table geolocationTableContainer">
+                                                                            <table class="table table-striped-custom table-condensed table-responsive table-hover geolocationTable saleOrderTable">
+
+                                                                            </table>
+                                                                            <div ng-show="tableSize > 0" class="paging">
+                                                                                Showing <span
+                                                                                    id="geolocationBegin"></span>-<span
+                                                                                    id="geolocationEnd"></span> of <span
+                                                                                    id="geolocationSize"></span>.
+                                                                                <a id="geolocationNext"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="next(geolocationTable,tableSize,'geolocation')">Next</a>
+                                                                                <span class="pull-right"> | </span>
+                                                                                <a id="geolocationlast"
+                                                                                   class="pull-right paging_button"
+                                                                                   ng-click="last(geolocationTable,tableSize,'geolocation')">Previous</a>
+                                                                            </div>
+                                                                            <div ng-show="tableSize <= 0"
+                                                                                 class="paging">
+                                                                                No records.
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<div class="tab-pane active" id="default_tab2"></div>-->
+                            <!--<div class="tab-pane active" id="default_tab3"></div>-->
+                            <!--<div class="tab-pane active" id="default_tab4"></div>-->
+                            <div class="tab-pane " id="default_tab5">
+                                <div ng-show="noInventoryData" class="noInventoryData">
+                                    <p>No data found.</p>
+                                </div>
+                                <div ng-hide="noInventoryData"
+                                     class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row-margin-top">
+                                    <div class="col-md-3">
+                                        <div class="col-md-12 pieChartInventory">
+                                            <div id="daysOfInventory" class="analytics-chart">
+                                                <span class="chart-heading">Days Of Inventory <a
+                                                        class='reset pull-right'
+                                                        ng-click="resetChart('daysOfInventory');"
+                                                        style='display:none;cursor: pointer;'><span
+                                                        class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                <span class='reset pull-left' style='display: none;clear: right;'>
+                                                Current filter: <span class='filter'></span>
+                                            </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="col-md-12 pieChartInventory">
+                                            <div id="inventorySales" class="analytics-chart">
+                                                <span class="chart-heading">Monthly Inventory Sales<a
+                                                        class='reset pull-right'
+                                                        ng-click="resetChart('inventorySales');"
+                                                        style='display:none;cursor: pointer;'><span
+                                                        class="glyphicon glyphicon glyphicon-repeat"></span></a></span>
+                                                <span class='reset pull-left' style='display: none;clear: right;'>
+                                                Current filter: <span class='filter'></span>
+                                            </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+
+                                    </div>
+                                    <div class="col-md-12 row-margin-top row-margin-bottom">
+                                        <div class="col-md-12">
+                                            <div class="main-data-table inventoryTableContainer">
+                                                <table class="table table-striped-custom table-condensed table-responsive table-hover inventoryTable">
+
+                                                </table>
+                                                <div ng-show="tableSize > 0" class="paging">
+                                                    Showing <span id="inventoryBegin"></span>-<span
+                                                        id="inventoryEnd"></span> of <span id="inventorySize"></span>.
+                                                    <a id="inventoryNext" class="pull-right paging_button"
+                                                       ng-click="next(inventoryTable,tableSize,'inventory')">Next</a>
+                                                    <span class="pull-right"> | </span>
+                                                    <a id="inventorylast" class="pull-right paging_button"
+                                                       ng-click="last(inventoryTable,tableSize,'inventory')">Previous</a>
+                                                </div>
+                                                <div ng-show="tableSize <= 0" class="paging">
+                                                    No records.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div ng-include src="'inventory/ViewSkuDataDetails.html?version=1.0.0'"></div>

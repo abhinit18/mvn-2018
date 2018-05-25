@@ -1,0 +1,331 @@
+<!--<body ng-app="tableApp" onload="noBack(ew);" onpageshow="if (event.persisted) noBack();" onunload="">-->
+    <link href="dashboard/dashboard.css" rel="stylesheet">
+    <div class="container-fluid" style="padding: 0px;">
+        <div class="container-fluid">
+            <!--<iframe width="219" height="302" src="http://www.calculator-1.com/outdoor/?f=666666&r=666666" scrolling="no" frameborder="0"></iframe>-->
+
+        <div class="col-md-12">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                <p class="screen-heading-list">Total Order Summary </p>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 text-right screen-heading-list" ng-if="analytics">
+                <a href="#/analytics/" class="btn btn-default mybutton1 ">Analytics</a>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="full-width no-left-padding">
+            <div class="tabbable-panel">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs ">
+                        <li class="active">
+                            <a data-target="#tab_default_8" ng-click="getSaleOrderCount('today')" data-toggle="tab">
+                                Today
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" data-target="#tab_default_8" ng-click="getSaleOrderCount('yesterday');" data-toggle="tab">
+                                Yesterday
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" data-target="#tab_default_8" ng-click="getSaleOrderCount('lastweek');" data-toggle="tab">
+                                Last Week
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" data-target="#tab_default_8" ng-click="getSaleOrderCount('lastmonth');" data-toggle="tab">
+                                Last Month
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_default_8">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 tiled-ui" ng-click="switchToOrders('new')">
+                                    <div class="text-right col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                        <span class="grp-icon">
+                                            <span ><img src="images/svg/new_icon.svg"> </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                        <h5 style="margin-bottom: 5px;">New</h5>
+                                        <h2 style="margin-top:0px;">{{saleOrderCount.newCount}}</h2>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 tiled-ui" ng-click="switchToOrders('process')">
+                                    <div class="text-right col-lg-4 col-md-4 col-sm-12 col-xs-12" style="border-left:1px solid lightgray;">
+                                        <span class="grp-icon">
+                                            <span ><img src="images/svg/packed_icon.svg"> </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12" style="min-height:95px;">
+                                        <h5 style="margin-bottom: 5px;">In Process</h5>
+                                        <h2 style="margin-top:0px;">{{saleOrderCount.inProcessCount}}</h2>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 tiled-ui" ng-click="switchToOrders('shipping')">
+                                    <div class="text-right col-lg-4 col-md-4 col-sm-12 col-xs-12" style="border-left:1px solid lightgray;">
+                                        <span class="grp-icon">
+                                            <span ><img src="images/svg/shipped_icon.svg"> </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12" style="min-height:95px;">
+                                        <h5 style="margin-bottom: 5px;">Shipped</h5>
+                                        <h2 style="margin-top:0px;">{{saleOrderCount.shippedCount}}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--<div class="container-fluid">-->
+        <!--<div class="col-md-12">-->
+            <!--<p class="screen-heading">Dashboard</p>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="row orderscreen-channel" style="background: #fff;">
+        <div class="col-md-4">
+            <h4>On Hold Summary</h4>
+                <div class="tabbable-panel">
+                    <div class="tabbable-line">
+                        <ul class="nav nav-tabs ">
+                            <li class="active">
+                                <a href="javascript:void(0);" data-target="#tab_default_1" ng-click="getHoldOrderCount('today')" data-toggle="tab">
+                                    Today </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" data-target="#tab_default_1" ng-click="getHoldOrderCount('yesterday');" data-toggle="tab">
+                                    Yesterday </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" data-target="#tab_default_1" ng-click="getHoldOrderCount('lastweek');" data-toggle="tab">
+                                    Last Week </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" data-target="#tab_default_1" ng-click="getHoldOrderCount('lastmonth');" data-toggle="tab">
+                                    Last Month </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_default_1">
+                                <table class="table">
+                                    <tr class="tabbed">
+                                        <th>On hold reason</th>
+                                        <th class="text-center">No. of orders</th>
+                                    </tr>
+                                    <tr ng-repeat="data in reasonWiseHoldList " ng-click="switchToHoldOrders()">
+                                        <td>
+                                            <span>{{data.stateName}}</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span>{{data.ordercount}}</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="col-md-5">
+            <h4>Channel-wise Order Summary</h4>
+            <div class="tabbable-panel">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs ">
+                        <li class="active">
+                            <a href="javascript:void(0);" data-target="#tab_default_4" ng-click="getChannelWiseOrders('today')" data-toggle="tab">
+                                Today </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" data-target="#tab_default_4" ng-click="getChannelWiseOrders('yesterday');" data-toggle="tab">
+                                Yesterday </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" data-target="#tab_default_4" ng-click="getChannelWiseOrders('lastweeek');"data-toggle="tab">
+                                Last Week </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" data-target="#tab_default_4" ng-click="getChannelWiseOrders('lastmonth');" data-toggle="tab">
+                                Last Month </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+
+                        <div class="tab-pane active" id="tab_default_4">
+                            <table class="table">
+                                <tr class="tabbed">
+                                    <th>
+                                        <a  ng-click="sortType = 'channel'; sortReverse = !sortReverse" ng-class="{'ColorOrange':sortType == 'channel' && !sortReverse,'ColorWhite':sortType == 'channel' && sortReverse}">
+                                            Sales Channel
+                                        </a>
+                                    </th>
+                                    <th>
+
+                                        <a  ng-click="sortType = 'New'; sortReverse = !sortReverse" ng-class="{'ColorOrange':sortType == 'New' && !sortReverse,'ColorWhite':sortType == 'New' && sortReverse}">
+                                            New
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a  ng-click="sortType = 'InProcess'; sortReverse = !sortReverse" ng-class="{'ColorOrange':sortType == 'InProcess' && !sortReverse,'ColorWhite':sortType == 'InProcess' && sortReverse}">
+                                            In-Process
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a  ng-click="sortType = 'Shipped'; sortReverse = !sortReverse" ng-class="{'ColorOrange':sortType == 'Shipped' && !sortReverse,'ColorWhite':sortType == 'Shipped' && sortReverse}">
+                                            Shipped
+                                        </a>
+                                    </th>
+                                </tr>
+
+                                <tr ng-repeat="data in channelWiseOrdersList | orderBy:sortType:sortReverse">
+                                    <td colspan="1">
+                                        {{data.salechannel.tableSalesChannelValueInfoName}} </td>
+                                    <td colspan="1" class="text-center" ng-repeat="item in data.list">
+                                        <span ng-click="switchToChannelWiseOrders(data.salechannel,item.stateName)">{{item.ordercount}}</span>
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <h4>Inventory Summary</h4>
+            <div class="full-width right-mode">
+                <div class="full-width right-tab">
+                    <div class="col-lg-6 col-md-6 col-xs-12"><b>Total Value</b></div>
+                    <div class="col-lg-6 col-md-6 col-xs-12 text-right"><b><i class="fa fa-inr" style="color:#333;" aria-hidden="true"></i>
+                        <span>{{inventorySummary.totalValue}}</span>
+                    </b></div>
+
+                </div>
+                <div class="full-width right-tab">
+                    <div class="col-lg-6 col-md-6 col-xs-12"><b>Available Quantity</b></div>
+                    <div class="col-lg-6 col-md-6 col-xs-12 text-right"><b> {{inventorySummary.totalQuantity}}</b></div>
+
+                </div>
+                <div class="full-width right-tab">
+                    <div class="col-lg-6 col-md-6 col-xs-12"><b>Total SKU</b></div>
+                    <div class="col-lg-6 col-md-6 col-xs-12 text-right"><b> {{inventorySummary.totalSkus}}</b></div>
+
+                </div>
+            </div>
+            <br>
+            <div class="full-width">
+                <br>
+                <h4><br></h4>
+                <div class="full-width right-mode-inv">
+                    <div class="tabbable-panel">
+
+                        <div class="tabbable-line right-navtab">
+                            <ul class="nav nav-tabs nav-inv">
+                                <li class="active">
+                                    <a href="javascript:void(0);" data-target="#tab_defaulted" ng-click="getInventory('today')" data-toggle="tab">
+                                        Today </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" data-target="#tab_defaulted" ng-click="getInventory('lastweek');" data-toggle="tab">
+                                        Last Week </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" data-target="#tab_defaulted" ng-click="getInventory('lastmonth');" data-toggle="tab">
+                                        Last Month </a>
+                                </li>
+                            </ul>
+                            <div class="full-width">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="background: lightgray;">
+                                    <h5 class="text-center">In</h5>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="background: lightgray;">
+                                    <h5 class="text-center">Out</h5>
+                                </div>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane tab-paned active" id="tab_defaulted">
+                                    <div class="col-lg-6 text-center col-md-6 col-sm-12 col-xs-12 no-padding">
+                                        <div class="ui-light">
+                                            <h6>Value</h6>
+                                            <h3><i class="fa fa-inr"  style="color:orangered;" aria-hidden="true"></i>
+                                                <span>{{inwardInventory.totalValue}}</span>
+                                            </h3>
+                                        </div>
+                                        <div class="ui-light">
+                                            <h6>Quantity</h6>
+                                            <h3>
+                                                <span>
+                                                 {{inwardInventory.totalQuantity}}
+                                                </span>
+
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 text-center col-md-6 col-sm-12 col-xs-12 no-padding">
+                                        <div class="ui-light">
+                                            <h6>Value</h6>
+                                            <h3><i class="fa fa-inr"  style="color:orangered;" aria-hidden="true"></i>
+                                                <span>{{outwardInventory.totalValue}}</span>
+                                            </h3>
+                                        </div>
+                                        <div class="ui-light">
+                                            <h6>Quantity</h6>
+                                            <h3>
+                                                <span>
+                                                 {{outwardInventory.totalQuantity}}
+                                                </span>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <br>
+    <br>
+
+    <!--=========================================== ends here =======================================-->
+<style>
+    .ui-light h3{
+        font-size: 20px;
+    }
+</style>
+
+    <script>
+
+
+    </script>
+</div>
+<style>
+    .fa{
+        color:#fff;
+    }
+    .tabbed a{
+        color:#fff;
+        cursor: pointer;
+    }
+    .ColorOrange{
+        color:orangered !important;
+        cursor: pointer;
+    }
+    .ColorWhite{
+        color:#fff !important;
+        cursor: pointer;
+    }
+</style>

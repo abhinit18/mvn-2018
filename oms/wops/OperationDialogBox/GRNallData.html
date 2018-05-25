@@ -1,0 +1,228 @@
+<div class="modal fade" data-backdrop="static" id="grnallitemsid" role="dialog" aria-labelledby="grnallitems"
+     aria-hidden="true">
+    <form name="grnallitems" accessible-form novalidate
+          ng-submit="grnallitems.$valid && submitGrnAll(grnallitems)">
+
+        <div class="modal-dialog modal-lg" style="width:1200px;">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+
+                    <button id="grnallcancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelPurchaseOrderGrnModal(addstockTransferForm)">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" id="myModalLabellled">Quick GRN</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="row row-margin-top hide"
+                         ng-if="singleorderData.tablePurchaseInvoices != null && singleorderData.tablePurchaseInvoices.length > 1">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Select Invoice <span style="color: red">*</span></span>
+                        </div>
+                        <div class="col-md-6">
+                            <select required
+                                    name="invoice"
+                                    ng-model="grnInventory.tablePurchaseInvoiceNumber"
+                                    id="invoiceselect"
+                                    class="form-control add-single-order-select"
+                                    ng-options="option.tablePurchaseInvoiceNumber as option.tablePurchaseInvoiceNumber for option in singleorderData.tablePurchaseInvoices">
+
+                            </select>
+                        </div>
+                        <div ng-if="QuickGRN.$submitted && QuickGRN.invoice.$error.required"
+                             class="col-md-offset-3 col-md-9">
+                                <span class="error-message">
+                                Please select an invoice!
+                                </span>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top"
+                         ng-if="singleorderData.tablePurchaseInvoices != null && singleorderData.tablePurchaseInvoices.length == 1">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Invoice Number</span>
+                        </div>
+                        <div class="col-md-6"
+                             ng-init="grnInventory.tablePurchaseInvoiceNumber = singleorderData.tablePurchaseInvoices[0].tablePurchaseInvoiceNumber">
+                            <input type="text" id="invoice" ng-model="grnInventory.tablePurchaseInvoiceNumber"
+                                   name="skuid"
+                                   ng-disabled="SkuDisabled" class="darkgrey-bottom-border">
+                        </div>
+
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Warehouse</span>
+                        </div>
+                        <div class="col-md-6">
+                            <span>{{purchaseOrdersData.tableWarehouseDetails.tableWarehouseDetailsShortname}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Vendor</span>
+                        </div>
+                        <div class="col-md-6">
+                            <span>{{purchaseOrdersData.tableVendor.tableVendorName}}</span>
+                        </div>
+                    </div>
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Batch No.</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="skuCBatchCodeid" name="skuid"
+                                   ng-model="grnInventory.tableSkuInventoryBatchNo"
+                                   placeholer="Enter Batch No."
+                                   class="darkgrey-bottom-border">
+                        </div>
+                    </div>
+                   <br>
+
+                    <p class="dialog-heading-p" id="POGrnModelLabeled" style="text-align: left;">
+                        Total GRN Qty : {{totalPOGRNQuantity}}</p>
+
+                    <!--items table starts from here-->
+                    <br>
+                    <table class="table boldtable table-responsive table-bordered table-hover">
+                        <thead class="grn-data-grid-header">
+                        <!-- table header -->
+                        <tr>
+                            <th>
+                                <md-checkbox  white !important;" class="md-secondary" ng-model="genericData.selectAllGrnItems"
+                                             ng-change="onSelectAllGrnItemsClicked()"></md-checkbox>
+                            </th>
+                            <th id="inbndPoNoH" class="text-left">SKU Name
+                            </th>
+                            <th id="inbndPoCdateH" class="text-left">
+                                Seller SKU ID
+                            </th>
+                            <th id="inbndPoMRP" class="text-left">MRP <span style="color:red">*</span></th>
+                            <th id="inbndPoMsp" class="text-left" title="Minimum Sale Price">MSP</th>
+                            <th id="inbndPoTotalH" class="text-left">PO Qty
+                            </th>
+                            <th id="inbndPoActualQty" class="text-left">Actual Qty <span style="color:red">*</span>
+                            </th>
+                            <th id="inbndPoQCPassed" class="text-left">Good Quantity<span style="color:red">*</span>
+                            </th>
+                            <th id="inbndPoQcFailed" class="text-left">Bad Quantity
+                            </th>
+                            <th id="inbndPoMfgDate" class="text-left">Mfg. Date <span style="color:red">*</span>
+                            </th>
+                            <th id="inbndPoShelfLifeTime" class="text-left">Shelf Life Time<span
+                                    style="color:red">*</span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="clickable-row-order" ng-repeat="poskuwithgrn in poskuwithgrns">
+                            <td>
+                                <md-checkbox ng-change="onSelectGrnItemClicked()" ng-model="poskuwithgrn.selected" class="md-secondary"></md-checkbox>
+                            </td>
+                            <td>
+                                {{poskuwithgrn.grn.tableSku.tableSkuName}}
+                            </td>
+                            <td>
+                                {{poskuwithgrn.grn.tableSku.tableSkuClientSkuCode}}
+                            </td>
+                            <td>
+                                <input placeholder="M.R.P"
+                                       type="text"
+                                       price id="mrp"
+                                       name="mrp" ng-required="poskuwithgrn.selected"
+                                       ng-model="poskuwithgrn.grn.tableSkuInventoryMaxRetailPrice"
+                                       class="main-bottom-border"
+                                       ng-change="checkMspGrtMrp(poskuwithgrn.grn.tableSkuInventoryMaxRetailPrice,poskuwithgrn.grn.tableSkuInventoryMinSalePrice)"/>
+
+                            </td>
+                            <td>
+                                <input placeholder="MSP"
+                                       type="text"
+                                       price
+                                       title="Minimum Sale Price"
+                                       id="msp" name="msp"
+                                       class="main-bottom-border"
+                                       ng-model="poskuwithgrn.grn.tableSkuInventoryMinSalePrice"
+                                       ng-change="checkMspGrtMrp(poskuwithgrn.grn.tableSkuInventoryMaxRetailPrice,poskuwithgrn.grn.tableSkuInventoryMinSalePrice)"/>
+
+                            </td>
+                            <td>
+                                <input ng-disabled="SkuDisabled"
+                                       numbers-only type="text" min="0"
+                                       class="main-bottom-border"
+                                       ng-init="poskuwithgrn.grn.tableSkuInventoryExpectedInwardCount=poskuwithgrn.posku.tablePurchaseOrderSkusSkuQuantity"
+                                       ng-model="poskuwithgrn.grn.tableSkuInventoryExpectedInwardCount">
+                            </td>
+                            <td>
+                                <input name="availableGoods"
+                                       placeholder="Actual Qty" ng-required="poskuwithgrn.selected"
+                                       ng-blur="onPOActualInwardEntered()"
+                                       class="main-bottom-border"
+                                       only-integer
+                                       type="text"
+                                       name="badQuality" ng-model="poskuwithgrn.grn.tableSkuInventoryActualInwardCount"
+                                       ng-if="isActualQtyGreaterThanPOQty(poskuwithgrn.grn.tableSkuInventoryActualInwardCount,poskuwithgrn.posku.tablePurchaseOrderSkusSkuQuantity)==false">
+                            </td>
+                            <td style="border-right: none;">
+                                <input name="goodQuality" ng-required="poskuwithgrn.selected"
+                                       placeholder="QC Passed"
+                                       class="main-bottom-border"
+                                       type="text"
+                                       only-integer
+                                       ng-model="poskuwithgrn.grn.tableSkuInventoryAvailableCount"
+                                       ng-if="poskuwithgrn.grn.tableSkuInventoryActualInwardCount!=null && poskuwithgrn.grn.tableSkuInventoryActualInwardCount>0 && isQcPassedGreaterThanActualQty(poskuwithgrn.grn.tableSkuInventoryAvailableCount,poskuwithgrn.grn.tableSkuInventoryActualInwardCount)==false
+                                       &&
+                                       poskuwithgrn.grn.tableSkuInventoryActualInwardCount<=poskuwithgrn.grn.tableSkuInventoryExpectedInwardCount">
+                            </td>
+                            <td style="border-right: none;">
+                                <input placeholder="QC Failed"
+                                       ng-readonly="true"
+                                       type="number" min="0"
+                                       name="badQuality"
+                                       prevent-typing-greater
+                                       max="{{poskuwithgrn.posku.tableSkuInventoryActualInwardCount}}"
+                                       ng-value="poskuwithgrn.grn.tableSkuInventoryInwardQcFailedCount=poskuwithgrn.grn.tableSkuInventoryActualInwardCount-poskuwithgrn.grn.tableSkuInventoryAvailableCount"
+                                       ng-if="poskuwithgrn.grn.tableSkuInventoryActualInwardCount!=null && poskuwithgrn.grn.tableSkuInventoryActualInwardCount>0 && poskuwithgrn.grn.tableSkuInventoryAvailableCount!=null && poskuwithgrn.grn.tableSkuInventoryActualInwardCount-poskuwithgrn.grn.tableSkuInventoryAvailableCount>=0
+                                       &&
+                                       poskuwithgrn.grn.tableSkuInventoryActualInwardCount<=poskuwithgrn.grn.tableSkuInventoryExpectedInwardCount"
+                                       >
+                            </td>
+                            <td>
+                                <md-datepicker ng-model="poskuwithgrn.grn.tableSkuInventoryMfgDate"
+                                               ng-required="poskuwithgrn.selected"
+                                               md-max-date="endmaxDate"
+                                               md-placeholder="Enter date"
+                                               md-hide-icons="calendar"
+                                               name="StartDate"></md-datepicker>
+                            </td>
+                            <td>
+                                <input name="shelflife" ng-required="poskuwithgrn.selected"
+                                       placeholder="In Days"
+                                       type="text"
+                                       only-integer
+                                       prevent-typing-greater
+                                       max="999999999"
+                                       class="form-control main-bottom-border"
+                                       ng-model="poskuwithgrn.grn.tableSkuInventoryShelfLifeInDays">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+                    <button id="grnallitemscancel2" type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelPurchaseOrderGrnModal(addstockTransferForm)">Cancel
+                    </button>
+                    <input id="GrnallitemsSubmit" ng-disabled="disableSubmitGrnAll" type="submit" class="action-btn" value="Submit"/>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

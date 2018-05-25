@@ -1,0 +1,118 @@
+<script type="text/ng-template" id="vendorPoDialog.tmpl.html">
+    <md-dialog aria-label="Show POs for Vendor" style="width: 80%;" ng-cloak>
+        <form name="vendForm">
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p class="dialog-heading-p">List of POs</p>
+                <span flex></span>
+				<md-button class="md-icon-button" ng-click="cancelpoDialog()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+                </div>
+				
+            </md-toolbar>
+          
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="row main-list">
+							<table id="poTable"
+                                               class="table table-striped-custom table-condensed table-responsive table-hover">
+                                <thead class="main-list-header-order" style="background: black; color: white;">
+                                    <tr>
+                                        <th style="text-align: center;">PO No.
+                                        </th>
+										<th style="text-align: center;">Creation Date
+                                        </th>
+										<th style="text-align: center;">Exp. Delivery
+                                        </th>
+										<th style="text-align: center;">Item Quantity
+                                        </th>										
+										<th style="text-align: center;">Total Amount
+                                        </th>
+										<th style="text-align: center;">Destination Warehouse
+                                        </th>
+										<th style="text-align: center;">&nbsp;
+                                        </th>
+                                        </tr>
+                                </thead>
+								<tbody ng-if="genericData.poLength < 1">
+                                    <tr>
+                                        <td colspan="7">
+                                            <span style="margin-left:30%;"><h3 class="text-center">There are no PO for this vendor.</h3></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody id="vendorPOdialogtable" class="data-grid-data" data-ng-repeat="poData in genericData.poList" data-ng-switch on="dayDataCollapse1[$index]">
+                                   										
+										<tr class="clickable-row-order">
+                                        <td style="text-align: center;">
+										   {{poData.tablePurchaseOrderSystemOrderNo}}
+										</td>                                               
+                                        <td style="text-align: center;">
+                                            {{poData.tablePurchaseOrderDate | utcToLocalOrHyphen}}
+                                        </td>
+                                        <td style="text-align: center;">
+                                            {{poData.tablePurchaseOrderDropDate | utcToLocalOrHyphen}}
+                                        </td>
+										<td style="text-align: center;">
+                                           {{totalQuantity(poData.tablePurchaseOrderSkuses)}}
+                                        </td>										
+										<td style="text-align: center;">
+                                           {{ totalCostAmount(poData.tablePurchaseOrderSkuses)  | priceOrHyphen }}
+                                        </td>
+										<td style="text-align: center;">
+                                           {{poData.tableWarehouseDetails.tableWarehouseDetailsLongname}}
+                                        </td>
+										 <td ng-show="dayDataCollapse1 == null || dayDataCollapse1 == undefined || dayDataCollapse1 == []">
+                   							<img src="images/svg/expand_icon.svg" height="20"
+                        							data-ng-click="selectTableRow1($index, poData.tablePurchaseOrderClientOrderNo);stateTrials(genericData.poList[$index].tablePurchaseOrderSkuses);"/>
+               							 </td>
+                						 <td data-ng-switch-when="false"
+                    							data-ng-click="selectTableRow1($index, poData.tablePurchaseOrderClientOrderNo);stateTrials(genericData.poList[$index].tablePurchaseOrderSkuses);">
+                    						<img src="images/svg/expand_icon.svg" height="20"/></td>
+                						<td data-ng-switch-when="true"
+                    							data-ng-click="selectTableRow1($index, poData.tablePurchaseOrderClientOrderNo);stateTrials(genericData.poList[$index].tablePurchaseOrderSkuses);">
+                    						<img src="images/svg/collaps_icon.svg" height="20"/></td>
+                                    </tr>
+
+									<tr data-ng-switch-when="true" style="border: 1px solid #C0C0C0; background-color: #FEFFFF !important;"
+                						data-ng-repeat="tableSkuData in genericData.poList[$index].tablePurchaseOrderSkuses">
+               						<td colspan="3" style="border-right: 0px solid #ddd !important;padding: 20px;">
+                    				<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                		<span style=" padding-top:15px;font-size: 16px;color: #F0592B;font-weight: bold ">
+                                         {{poData.tablePurchaseOrderClientOrderNo}} ({{$index + 1}} of {{poData.tablePurchaseOrderSkuses.length}})
+                                    	</span>
+                        			<br>
+                        			<br> Product:
+                                		<span style="font-size: 14px;color: #30373B;font-weight: bold">
+                                        {{tableSkuData.tableSku.tableSkuClientSkuCode}} {{tableSkuData.tableSku.tableSkuName}}
+                                   		</span>
+                        			<br> Qty:
+                                		<span style="font-size: 14px;color: #30373B;font-weight: bold ">
+                                        {{tableSkuData.tablePurchaseOrderSkusSkuQuantity}}
+                                    	</span>
+                        			<br> Cost Per Product:
+                                	<span style="font-size: 14px;color: #30373B;font-weight: bold ">
+                                        Rs {{ getTotal(tableSkuData) }}
+                                    </span>
+                        			<br> Total Cost:
+                                	<span style="font-size: 14px;color: #30373B;font-weight: bold ">
+                                        Rs {{ totalCostPerProduct(tableSkuData) }}
+                                    </span>
+
+                    				</div>
+									
+                                </tbody>
+                            </table>
+						</div>
+				</div>
+            </md-dialog-content>
+            <!-- {{vendorsData}} 
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row" >
+                    <span flex></span>
+                    <button type="button" class="cancel-btn" ng-click="cancelmastersDialog()">Cancel
+                    </button>
+            </md-dialog-actions>-->
+        </form>
+    </md-dialog>
+</script>

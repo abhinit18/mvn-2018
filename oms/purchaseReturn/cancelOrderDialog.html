@@ -1,0 +1,53 @@
+<script type="text/ng-template" id="cancelPurchaseReturn.tmpl.html" >
+    <md-dialog aria-label="Cancel purchase return" style="width: 800px; position: relative;" ng-cloak>
+        <form novalidate>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Cancel purchase return</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="hideCancelDialog()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="row row-margin-top-small">
+                        <div class="col-md-3">
+                            <span class="font">Order No.</span>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" style="color: #F0592B;font-size: 16px; font-weight: 700; padding-top: 0px;" ng-model="orderNo" ng-readonly="true"></input>
+                        </div>
+                    </div>
+                    <div class="row row-margin-top-medium">
+                        <div class="col-md-3">
+                            <span class="font">Cancel Reason</span>
+                        </div>
+                        <div class="col-md-5">
+                            <select required
+                                    name="cancelReason" ng-model="genericData.selectedCancelReason"
+                                    class="form-control add-single-order-select"
+                                    ng-options="option as option.tablePurchaseReturnCancelReasonString for option in cancelReasonArray">
+                                <option value="" disabled selected style="display: none;">Select cancel reason</option>
+                            </select>
+
+                            <div class="full-width" ng-if = "genericData.selectedCancelReason.tablePurchaseReturnCancelReasonString == 'Other'">
+                                <textarea caps class="form-control" style="margin-top: 15px;" ng-model="genericData.selectedCancelReason.tablePurchaseReturnCancelReasonString" ></textarea>
+                                <md-checkbox role="checkbox" ng-model="genericData.addCancelReasonToList" style="margin-top:10px;font-size: 13px;">Add this reason to the cancel reason list</md-checkbox>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button class="action-btn" ng-click="cancelPurchaseReturn();">
+                    Confirm
+                </button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

@@ -1,0 +1,138 @@
+
+        <div class="full-width">
+
+            <div class="main-list no-left-right-padding">
+
+                <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                    <thead class="main-list-header-bulkupload">
+                        <tr>
+                            <td>Upload ID</td>
+                            <td>Date</td>
+                            <td>Download Link</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="clickable-row-bulkupload" ng-repeat="data in duplicatedata" ng-if="duplicatedata.length != 0">
+                          <td>
+                              {{data.idtableBulkUploadReportsId}}
+                          </td>
+                        <td>
+                            {{data.tableBulkUploadReportsDatetime | utcToLocalTimeOrHyphen}}
+                        </td>
+                        <td>
+                        <a style="color:#F0592B;" 
+                          href="{{filePathUrl}}{{data.tableBulkUploadReportsPath}}"
+                          download><span class=" glyphicon glyphicon-download-alt"></span> Download Report </a>
+                        </td>
+                      </tr>
+                    <tr ng-if="duplicatedata.length == 0">
+                        <td colspan="2">
+                            <h3 class="text-center">
+                                No Reports Available
+                            </h3>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row" style="margin-top: 0px;">
+                <div class="col-md-6" ng-show="defaultTab == 'all'">
+                    <p class="showingOrderLabel" ng-show="orderSize<allCount">Showing Orders {{start + 1}} to {{orderSize}} of {{allCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="orderSize>=allCount && allCount!=0">Showing Orders {{start + 1}} to {{allCount}} of {{allCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="allCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'new'">
+                    <p class="showingOrderLabel" ng-show="orderSize<newCount">Showing Orders {{start + 1}} to {{orderSize}} of {{newCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="orderSize>=newCount && newCount!=0">Showing Orders {{start + 1}} to {{newCount}} of {{newCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="newCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'process'">
+                    <p class="showingOrderLabel" ng-show="orderSize<processCount">Showing Orders {{start + 1}} to {{orderSize}} of {{processCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="orderSize>=processCount && processCount!=0">Showing Orders {{start + 1}} to {{processCount}} of {{processCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="processCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'shipping'">
+                    <p class="showingOrderLabel" ng-show="orderSize<shippingCount">Showing Orders {{start + 1}} to {{orderSize}} of {{shippingCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="orderSize>=shippingCount && shippingCount!=0">Showing Orders {{start + 1}} to {{shippingCount}} of {{shippingCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="shippingCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'return'">
+                    <p class="showingOrderLabel" ng-show="orderSize<returnCount">Showing Orders {{start + 1}} to {{orderSize}} of {{returnCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="orderSize>=returnCount && returnCount!=0">Showing Orders {{start + 1}} to {{returnCount}} of {{returnCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="returnCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'hold'">
+                    <p class="showingOrderLabel" ng-show="orderSize<holdCount">Showing Orders {{start + 1}} to {{orderSize}} of {{holdCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="orderSize>=holdCount && holdCount!=0">Showing Orders {{start + 1}} to {{holdCount}} of {{holdCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="holdCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'cancelled'">
+                    <p class="showingOrderLabel" ng-show="orderSize<cancelledCount">Showing Orders {{start + 1}} to {{orderSize}} of {{cancelledCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="orderSize>=cancelledCount && cancelledCount!=0">Showing Orders {{start + 1}} to {{cancelledCount}} of {{cancelledCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="cancelledCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'delivered'">
+                    <p class="showingOrderLabel" ng-show="orderSize<deliveredCount">Showing Orders {{start + 1}} to {{orderSize}} of {{deliveredCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="orderSize>=deliveredCount && deliveredCount!=0">Showing Orders {{start + 1}} to {{deliveredCount}} of {{deliveredCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="deliveredCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <span class="pull-right">
+                      <!-- pager -->
+                      <ul ng-if="vmPager.pages.length" class="pagination">
+                          <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                              <a>&lt;&lt; First</a>
+                          </li>
+                          <li ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                              <a ng-click="listOfStatesCount(defaultTab,1)">&lt;&lt; First</a>
+                          </li>
+                          <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                              <a>&lt; Previous</a>
+                          </li>
+                          <li ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                              <a ng-click="listOfStatesCount(defaultTab,vmPager.currentPage - 1)">&lt; Previous</a>
+                          </li>
+                          <li ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                              <a ng-click="listOfStatesCount(defaultTab,page)">{{page}}</a>
+                          </li>
+                          <li ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                          <a ng-click="listOfStatesCount(defaultTab,vmPager.currentPage + 1)">Next &gt;</a>
+                          </li>
+                          <li ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                              <a>Next &gt;</a>
+                          </li>
+                          <li ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                              <a ng-click="listOfStatesCount(defaultTab,vmPager.totalPages)">Last &gt;&gt;</a>
+                          </li>
+                          <li ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                              <a>Last &gt;&gt;</a>
+                          </li>
+                      </ul>
+                  </span>
+                </div>
+            </div>
+        </div>

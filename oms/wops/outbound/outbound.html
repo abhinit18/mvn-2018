@@ -1,0 +1,151 @@
+<link href="wops/outbound/outbound.css" rel="stylesheet">
+<style>
+    .tabsdemoDynamicHeight md-content .md-fab.visible {
+        transform: scale(1);
+        transition: transform 0.3s linear;
+    }
+
+    .tabsdemoDynamicHeight md-content .md-fab {
+        transform: scale(0);
+        transition: transform 0.3s linear;
+    }
+
+    .tabsdemoDynamicHeight md-content {
+        background-color: transparent !important;
+    }
+
+    .tabsdemoDynamicHeight md-content md-tabs {
+        background: #f6f6f6;
+        border: 1px solid #e1e1e1;
+    }
+
+    .tabsdemoDynamicHeight md-content md-tabs md-tabs-canvas {
+        background: white;
+    }
+
+    .tabsdemoDynamicHeight md-content h1:first-child {
+        margin-top: 0;
+    }
+
+    .md-button.md-fab.md-fab-bottom-right {
+        top: -4px;
+        right: 20px;
+        /* bottom: 20px; */
+        left: auto;
+        position: absolute;
+    }
+
+    .md-button.md-fab {
+        z-index: 10;
+        line-height: 56px;
+        min-width: 0;
+        width: 185px;
+        height: 45px;
+        vertical-align: middle;
+        text-align: center;
+        border-radius: 1%;
+        background-clip: padding-box;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+        transition-property: background-color, box-shadow, -webkit-transform;
+        transition-property: background-color, box-shadow, transform;
+        color: #F4511E; background-color: #F4511E;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- <div class="row-margin-top-medium col-md-12" style="padding-left: 25px;padding-right: 15px;">
+        <h4 class="screen-heading text-left col-md-10">Outbound Operations</h4>
+        <span class=" col-md-2 fa fa-external-link-square newTabIcon text-right" ng-click="newTab()" title="New Tab"></span>
+    </div> -->
+    <div class="row">
+        <div class="col-lg-10 col-md-10 col-xs-12">
+            <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;"><h4 class="screen-heading">Outbound Operations</h4></div>
+        </div>
+        <div class="col-lg-2 text-right">
+            <span class="fa fa-external-link-square newTabIcon" ng-click="newTab()" title="New Tab"></span>
+        </div>
+    </div>
+    <div class="row" style="padding-left: 30px;padding-right: 15px;">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
+            <div class="full-width">
+                <ul class="nav nav-tabs" id="ordertabs">
+                    <li ng-class="{'active':activeTab == 'tab1'}">
+                        <a ng-click="setActiveTab('tab1')" data-target="#table1" data-toggle="tab" class="btn sharp">Sale Orders</a>
+                    </li>
+                    <li ng-class="{'active':activeTab == 'tab2'}">
+                        <a ng-click="setActiveTab('tab2')" data-target="#table2" data-toggle="tab" class="btn sharp">Stock Transfer Out</a>
+                    </li>
+                    <li ng-class="{'active':activeTab == 'tab3'}">
+                        <a ng-click="setActiveTab('tab3')" data-target="#table3" data-toggle="tab" class="btn sharp">Purchase Return</a>
+                    </li>
+                    <li ng-class="{'active':activeTab == 'tab4'}">
+                        <a ng-click="setActiveTab('tab4')" data-target="#table4" data-toggle="tab" class="btn sharp">Returnable Goods Order</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row " style="margin-left: auto; margin-right: auto;">
+        <div class="tab-content">
+            <div ng-class="{'active':activeTab == 'tab1'}" class="tab-pane container-fluid" id="table1">
+                <div ng-if="activeTab == 'tab1'" ng-controller="orderController">
+                    <div ng-include src="'wops/outbound/saleorderoutbound.html?version=1.0.0'" ></div>
+                    <div ng-include src="'wops/OperationDialogBox/printLabels.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/splitorderbyskudialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/splitorderbyskuquantitydialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'order/infoBoxDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/SOquickShipOperation.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/shippingNumberDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterCustomerDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+                </div>
+            </div>
+            <div ng-class="{'active':activeTab == 'tab2'}" class="tab-pane  container-fluid" id="table2">
+                <div ng-if="activeTab == 'tab2'" ng-controller="stockTransfer">
+                    <div ng-include src="'wops/outbound/stockxferoutbound.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/splitorderbyskudialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/splitorderbyskuquantitydialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/SToutQuickShipDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'stockTransfer/infoBoxDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'sku/barcodeprinting.html?version=1.0.0'"></div>
+                </div>
+            </div>
+            <div ng-class="{'active':activeTab == 'tab3'}" class="tab-pane  container-fluid" id="table3">
+                <div ng-if="activeTab == 'tab3'" ng-controller="purchaseReturnController">
+                    <div ng-include src="'wops/outbound/purchaseOrderReturnOutbound.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/purchaseReturnQuickShip.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterVendorDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+                </div>
+            </div>
+            <div ng-class="{'active':activeTab == 'tab4'}" class="tab-pane  container-fluid" id="table4">
+                <div ng-if="activeTab == 'tab4'" ng-controller="returnableGoodsOrderController">
+                    <div ng-include src="'wops/outbound/returnableGoodsOrderOutbound.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/returnableGoodsOrderQuickShip.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterVendorDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+
+
+</div>
+<!-- Add New Inventory Dialog -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+

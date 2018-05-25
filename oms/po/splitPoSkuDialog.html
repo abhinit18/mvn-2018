@@ -1,0 +1,121 @@
+<!--
+<script type="text/ng-template" id="splitPOSku.tmpl.html" ng-controller="poController">
+    <md-dialog aria-label="Cancel Order Item" style="width: 800px; position: relative;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Split Order</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelSplitOrderBySkuDialog()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+
+                    <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                        <thead class="main-list-header-order">
+
+                        <tr>
+                            <td>
+                                Select
+                            </td>
+                            <td>
+                                Seller SKU ID
+                            </td>
+                            <td>
+                                SKU Name
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody data-ng-repeat="skusforsplit in skusListForOrderSplit" data-ng-switch on="dayDataCollapse[$index]">
+                        <tr class="clickable-row-order">
+                            <td><md-checkbox ng-if="(skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 1
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 2
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 3
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 4
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 5
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 6
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 7
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 8
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 15)" ng-click="updateSkuArray(skusforsplit.idtablePurchaseOrderSkusId)"></md-checkbox></td>
+                            <td><span class="font">{{skusforsplit.tableSku.tableSkuClientSkuCode}}</span></td>
+                            <td title="{{skusforsplit.tableSku.tableSkuDescription}}"><span class="font">{{skusforsplit.tableSku.tableSkuName}}</span></td>
+
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </md-dialog-content>
+            &lt;!&ndash; {{customersData}} &ndash;&gt;
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button class="action-btn" ng-click="splitOrderBySkus();">
+                    Confirm Split
+                </button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>-->
+<div class="modal fade" id="splitPOSku" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="STSCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelSplitOrderBySkuDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Split Order</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="md-dialog-content">
+
+                    <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                        <thead class="main-list-header-order">
+
+                        <tr>
+                            <td>
+                                Select
+                            </td>
+                            <td>
+                                Seller SKU ID
+                            </td>
+                            <td>
+                                SKU Name
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody data-ng-repeat="skusforsplit in skusListForOrderSplit" data-ng-switch on="dayDataCollapse[$index]">
+                        <tr class="clickable-row-order">
+                            <td><md-checkbox ng-if="(skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 1
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 2
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 3
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 4
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 5
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 6
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 7
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 8
+                                        || skusforsplit.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 15)" ng-click="updateSkuArray(skusforsplit.idtablePurchaseOrderSkusId)"></md-checkbox></td>
+                            <td><span class="font">{{skusforsplit.tableSku.tableSkuClientSkuCode}}</span></td>
+                            <td title="{{skusforsplit.tableSku.tableSkuDescription}}"><span class="font">{{skusforsplit.tableSku.tableSkuName}}</span></td>
+
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="STSCS" class="action-btn" ng-click="splitOrderBySkus();">
+                    Confirm Split
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

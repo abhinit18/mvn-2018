@@ -1,0 +1,91 @@
+<!--
+<script type="text/ng-template" id="splitPOSkubyquantity.tmpl.html" ng-controller="poController">
+    <md-dialog aria-label="Cancel Order Item" style="width: 800px; position: relative;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Split Order</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelPOSplitQuantityDialog()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="row row-margin-top">
+                        <div class="col-md-2" style="margin-top: 20px; left:20px;">
+                            <span class="semi-bold-text">Quantity</span>
+                        </div>
+                        <div class="col-md-8">
+
+                            <input
+                                    only-integer
+                                    prevent-typing-greater
+                                    max="999999999"
+                                    type="text"
+                                    style="width: 100%;padding: 12px 20px;margin: 8px 0; border: 2px solid grey; box-sizing: border-box;"
+                                    tabindex="3" ng-model="genericData.quantity" name="qunatity"
+                                    class="form-control darkgrey-bottom-border-number" placeholder="Enter SKU quantity"
+                                    required></div>
+                    </div>
+
+                </div>
+            </md-dialog-content>
+            &lt;!&ndash; {{customersData}} &ndash;&gt;
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button class="action-btn" ng-click="splitPOBySkusByQuantity();">
+                    Confirm Split
+                </button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>-->
+
+<div class="modal fade" id="splitPobySkuQty" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="STSCancel1" type="button" class="close" data-dismiss="modal"  ng-click="cancelPOSplitQuantityDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Split Order</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="full-width" style="margin-top: 10px;">
+                    <div class="md-dialog-content">
+                        <div class="row row-margin-top">
+                            <div class="col-md-2" style="margin-top: 20px; left:20px;">
+                                <span class="semi-bold-text">Quantity</span>
+                            </div>
+                            <div class="col-md-8">
+
+                                <input
+                                        only-integer
+                                        prevent-typing-greater
+                                        max="999999999"
+                                        type="text"
+                                        style="width: 100%;padding: 12px 20px;margin: 8px 0; border: 2px solid grey; box-sizing: border-box;"
+                                        tabindex="3" ng-model="genericData.quantity" name="qunatity"
+                                        class="form-control darkgrey-bottom-border-number" placeholder="Enter SKU quantity"
+                                        required></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button class="action-btn" ng-click="splitPOBySkusByQuantity();">
+                    Confirm Split
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

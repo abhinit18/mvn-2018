@@ -1,0 +1,152 @@
+<!--<script type="text/ng-template" id="dialog4.tmpl.html">-->
+    <!--<md-dialog aria-label="Add Address" style="width: 800px;" ng-cloak>-->
+        <!--<form name="vendForm">-->
+            <!--<md-toolbar style="background-color: #F2F7F8;">-->
+                <!--<div class="md-toolbar-tools">-->
+                    <!--<p class="dialog-heading-p" ng-if="addressEntity == 'Country'">Add New Country</p>-->
+					<!--<p class="dialog-heading-p" ng-if="addressEntity == 'State'">Add New State</p> -->
+					<!--<p class="dialog-heading-p" ng-if="addressEntity == 'District'">Add New District</p>-->
+					<!--<p class="dialog-heading-p" ng-if="addressEntity == 'City'">Add New City</p>-->
+                <!--<span flex></span>-->
+				<!--<md-button class="md-icon-button" ng-click="cancelvendorData()">-->
+                        <!--<md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>-->
+                <!--</md-button>-->
+                <!--</div>-->
+				<!---->
+            <!--</md-toolbar>-->
+          <!---->
+            <!--<md-dialog-content>-->
+                <!--<div class="md-dialog-content">-->
+                    <!--<div class="tab-content">-->
+                        <!--<div class="tab-pane active container-fluid vendorTabHeight" id="tab1">-->
+							<!--<form name="addVendorForm" >-->
+								<!---->
+								<!---->
+								<!--<div layout="row" ng-if="addressEntity == 'Country'">-->
+									<!--<b class="vendorfieldskey">Enter Country</b>-->
+									<!--<input ng-class="{submitted: isAddressEntityCountryEntered}" name="leadTimeField" type="text" class="darkgrey-bottom-border" placeholder="Enter Country" ng-model="addressData.entity">-->
+								<!--</div> -->
+								<!--<div layout="row" ng-if="addressEntity == 'State'">-->
+									<!--<b class="vendorfieldskey">Enter State</b>-->
+									<!--<input ng-class="{submitted: isAddressEntityStateEntered}" name="leadTimeField" type="text" class="darkgrey-bottom-border" placeholder="Enter State" ng-model="addressData.entity">-->
+								<!--</div>-->
+								<!--<div layout="row" ng-if="addressEntity == 'District'">-->
+									<!--<b class="vendorfieldskey">Enter District</b>-->
+									<!--<input ng-class="{submitted: isAddressEntityDistrictEntered}" name="leadTimeField" type="text" class="darkgrey-bottom-border" placeholder="Enter District" ng-model="addressData.entity">-->
+								<!--</div> -->
+								<!--<div layout="row" ng-if="addressEntity == 'City'">-->
+									<!--<b class="vendorfieldskey">Enter City</b>-->
+									<!--<input ng-class="{submitted: isAddressEntityCityEntered}" name="leadTimeField" type="text" class="darkgrey-bottom-border" placeholder="Enter City" ng-model="addressData.entity">-->
+								<!--</div> -->
+								<!---->
+								<!---->
+							<!--</form>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+            <!--</md-dialog-content>-->
+            <!--&lt;!&ndash; {{vendorsData}} &ndash;&gt;-->
+            <!--<md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row" >-->
+                    <!--<span flex></span>-->
+                <!--<button type="button" class="cancel-btn" ng-click="cancelAddressData()">Cancel-->
+                <!--</button>-->
+                    <!--<button class="action-btn" ng-click="saveAddressEntity(addressData, addressEntity)">-->
+                        <!--Add-->
+                    <!--</button>-->
+
+            <!--</md-dialog-actions>-->
+        <!--</form>-->
+    <!--</md-dialog>-->
+<!--</script>-->
+
+<div class="modal fade" id="addAddressModal" role="dialog" aria-labelledby="vendorAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" >
+        <form name="addAddressForm" accessible-form novalidate ng-submit="addAddressForm.$valid && saveAddressEntity(addressData, addAddressForm)">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                    <button id="vendorAddAddressModalCancel1" type="button" class="close" ng-click="cancelAddressData(addAddressForm);">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" ng-if="addressEntity == 'Country'">Add New Country</p>
+                    <p class="dialog-heading-p" ng-if="addressEntity == 'State'">Add New State</p>
+                    <p class="dialog-heading-p" ng-if="addressEntity == 'District'">Add New District</p>
+                    <p class="dialog-heading-p" ng-if="addressEntity == 'City'">Add New City</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12" ng-if="addressEntity == 'Country'">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Enter Country <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input name="addressField"
+                                           required
+                                           id="vendorAddAddressModalCountry"
+                                           type="text"
+                                           class="darkgrey-bottom-border"
+                                           placeholder="Enter Country"
+                                           ng-model="addressData.entity">
+                                </div>
+                            </div>
+                            <div class="col-md-12" ng-if="addressEntity == 'State'">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Enter State <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input name="addressField" required
+                                           id="vendorAddAddressModalState" type="text"
+                                           class="darkgrey-bottom-border"
+                                           placeholder="Enter State"
+                                           ng-model="addressData.entity">
+                                </div>
+                            </div>
+                            <div class="col-md-12" ng-if="addressEntity == 'District'">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Enter District <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input name="addressField" required
+                                           id="vendorAddAddressModalDistrict"
+                                           type="text"
+                                           class="darkgrey-bottom-border"
+                                           placeholder="Enter District"
+                                           ng-model="addressData.entity">
+                                </div>
+                            </div>
+                            <div class="col-md-12" ng-if="addressEntity == 'City'">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Enter City <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input name="addressField" required
+                                           id="vendorAddAddressModalCity"
+                                           type="text"
+                                           class="darkgrey-bottom-border"
+                                           placeholder="Enter City"
+                                           ng-model="addressData.entity">
+                                </div>
+                            </div>
+                            <div ng-if="addAddressForm.$submitted && addAddressForm.addressField.$error.required" class="col-md-12">
+                                <div class="col-md-offset-3 col-md-6">
+                                    <span class="error-message">
+                                        Please enter the {{addressEntity}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modal-dialog-footer">
+                    <button id="vendorAddAddressModalCancel2" type="button" class="cancel-btn" ng-click="cancelAddressData(addAddressForm)">Cancel
+                    </button>
+                    <button id="vendorAddAddressModalSubmit" type="submit" class="action-btn" >
+                        Add
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

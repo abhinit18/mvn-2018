@@ -1,0 +1,107 @@
+<div class="modal fade" id="selectskuforcancel" role="dialog" data-backdrop="static" aria-labelledby="myModalLabelled" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="selectskuforcancel" accessible-form novalidate ng-submit="selectskuforcancel.$valid && cancelPo(remarks,LoadNewRason.NewReason,cancelPOForm)">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="POSSCancel1" type="button" class="close" ng-click="cancelSelectAllModal('cancel')">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="myModalLabelled">Select SKUs</p>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+
+                <div class="col-md-12 margin-top-5">
+                    <div class="col-md-3">
+                        <span class="font">PO No.</span>
+                    </div>
+                    <div class="col-md-5">
+                        <input id="POCnclNo" type="text" style="color: #F0592B;font-size: 16px; font-weight: 700; padding-top: 0px;" ng-model="cancelData.systemOrderNo" ng-readonly="true"></input>
+                    </div>
+                </div>
+                <div class="col-md-12 margin-top-5" ng-if="skusForCancel.length > 0">
+                    <table id="table table-striped-custom table-condensed table-responsive table-hover"
+                           class="table boldtable table-responsive table-bordered table-hover">
+                        <thead class="main-list-header-order">
+                        <tr>
+                            <th id="POSSCheckH" style="background-color: #FFFFFF; ">
+                                <md-checkbox ng-model="intransit.selectall" ng-change="selectAllSkus('cancel')">
+                                    <span style="color : #000000">Select All</span>
+                                </md-checkbox></th>
+                            <th id="POSSNameH">SKU Name</th>
+                            <th id="POSSSCodeH">System Code
+                            </th>
+                            <th id="POSSCCodeH">Client Code
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="data-grid-data">
+                        <tr class="clickable-row-order" ng-repeat="skuForCancel in skusForCancel">
+                            <td id="POSSCheck{{$index}}">
+                                <md-checkbox ng-model="skuForCancel.selected">
+
+                                </md-checkbox>
+                            </td>
+                            <td id="POSSName{{$index}}">{{skuForCancel.posskuname}}</td>
+                            <td id="POSSSCode{{$index}}">
+                                {{skuForCancel.poskusystemcode}}
+                            </td>
+                            <td id="POSSCCode{{$index}}">
+                                {{skuForCancel.posskuclientcode}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="col-md-12 margin-top-5">
+                    <div class="col-md-3">
+                        <span class="font">Cancel Reason</span>
+                    </div>
+                    <div class="col-md-5">
+                        <select id="POCnclReason" required name="cancelReason" ng-model="remarks" class="form-control">
+                            <option value="" disabled selected style="display: none;">Select cancel reason</option>
+                            <option ng-repeat="option in cancelReasonArray"
+                                    value={{option.tablePurchaseOrderCancelReasonString}}>
+                                {{option.tablePurchaseOrderCancelReasonString}}
+                            </option>
+                            <option value="other">Other Reason </option>
+                        </select>
+                        <div ng-if="selectskuforcancel.$submitted && selectskuforcancel.cancelReason.$error.required" class="full-width">
+                                <span class="error-msg">
+                                    Please select a valid reason
+                                </span>
+                        </div>
+                        <div class="full-width" ng-if="remarks == 'other'">
+                            <textarea id="POCnclRText" name="cancelreasonString" required="true" ng-maxlength="128" caps class="form-control" style="margin-top: 15px;" ng-model="LoadNewRason.NewReason" placeholder="Enter your reason"></textarea>
+                            <div ng-if="selectskuforcancel.$submitted && selectskuforcancel.cancelreasonString.$error.required" class="full-width">
+                                    <span class="error-msg">
+                                        Please enter the reason
+                                    </span>
+                            </div>
+                            <div ng-if="selectskuforcancel.$submitted && selectskuforcancel.cancelreasonString.$error.maxlength" class="full-width">
+                                    <span class="error-msg">
+                                        Maximum characters should be less than 128
+                                    </span>
+                            </div>
+                            <md-checkbox role="checkbox" ng-model="LoadNewRason.ReasonCheckBox" style="margin-top:10px;font-size: 13px;">Add this reason to the cancel reason list</md-checkbox>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="POSSCancel2" type="button" class="cancel-btn" ng-click="cancelSelectAllModal('cancel')">Cancel
+                </button>
+                <button id="POSSSubmit" type="submit" ng-disabled="disableCancel" class="action-btn" ng-click="">Cancel</button>
+            </div>
+        </div>
+        </form>
+
+    </div>
+</div>

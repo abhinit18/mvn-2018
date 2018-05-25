@@ -1,0 +1,9 @@
+
+    <link href="settings/templates/templates.css" rel="stylesheet">
+    <div ng-init="onLoad()"></div>
+    <div ng-if="currentTab=='invoice'" ng-include src="'settings/templates/templateLists/invoiceTemplateList.html?version=1.0.0'"></div>
+    <div ng-if="currentTab=='packing'" ng-include src="'settings/templates/templateLists/packingTemplateList.html?version=1.0.0'"></div>
+    <div ng-if="currentTab=='email'" ng-include src="'settings/templates/templateLists/emailTemplateList.html?version=1.0.0'"></div>
+    <div ng-if="currentTab=='shipping'" ng-include src="'settings/templates/templateLists/shippingTemplateList.html?version=1.0.0'"></div>
+    <div ng-if="currentTab=='sticker'" ng-include src="'settings/templates/templateLists/stickerTemplateList.html?version=1.0.0'"></div>
+    <div ng-if="currentTab=='manifest'" ng-include src="'settings/templates/templateLists/manifestTemplateList.html?version=1.0.0'"></div>

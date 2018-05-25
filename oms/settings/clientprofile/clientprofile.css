@@ -1,0 +1,88 @@
+.client-label{
+    font-size: 16px;
+    font-weight: 600;
+}
+.client-value{
+    font-size: 15px;
+}
+.editIcon{
+    height: 15px;
+    width: 15px;
+    min-height: 15px;
+    min-width: 15px;
+}
+.padding-top-20{
+    padding-top: 20px;
+}
+.data-grid-header {
+    background-color: #30373B;
+    color: #fff;
+}
+
+md-checkbox[disabled].inputCheckedGrey .md-icon {
+    background-color: rgba(0, 0, 0, 0.41) !important;
+}
+.calculator-hide{
+    z-index: 999999;
+}
+
+.char-table{
+    margin-left:-11px;
+}
+
+.char-table md-checkbox .md-container{
+    left:11px!important;
+}
+
+.char-table th{
+    width:50px;
+}
+
+.mdCheck{
+    min-height:20px;
+    padding-left:5px;
+    padding-right:5px;
+}
+
+/*.char-index{
+    position: absolute;
+    left: 6px;
+    top: -22px;
+}*/
+
+md-checkbox{
+    min-height:1px;
+}
+
+.char-update-btn{
+    background: #F0592B;
+    color: white;
+    border: none;
+    padding: 3px 10px;
+}
+
+.main-list-header-inv {
+    background: #30373B;
+    color: #f5fafd !important;
+}
+.main-list-header-inv a, .main-list-header-inv a:hover, .main-list-header-inv a:focus {
+    color: #f5fafd !important;
+    text-decoration: none;
+}
+.main-list-header-inv>tr {
+    border: 1px solid #C0C0C0;
+    height: 45px;
+}
+.conf-rule-content{
+    margin:0px 40px;
+}
+.round-checkbox md-checkbox .md-icon{
+    border-radius:50%;
+}
+.wh-allocation md-checkbox{
+    margin-bottom:0px;
+    min-height:20px;
+}
+.wh-allocation tbody{
+    border: 1px solid #c2c1c1;
+}

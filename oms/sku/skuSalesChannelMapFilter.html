@@ -1,0 +1,200 @@
+<div class="modal fade" id="skuSaleChannelMapFilter" role="dialog" aria-labelledby="skuSalesChannelMapFilter"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="skuSaleChannelMapFilterForm" accessible-form
+              ng-submit="downloadSKUSalesChannelMaptemplate(skuSalesChannelMapFilterObject);">
+            <div class="modal-content">
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+
+                    <button id="skuSaleChannelMapFilterCancel1" type="button" class="close" data-dismiss="modal"
+                            ng-click="cancelSkuSaleChannelMapFilterDialog(skuSaleChannelMapFilterForm);">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">SKU Sales Channel Map</p>
+                </div>
+
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+
+
+                    <div class="full-width">
+                        <div class="full-width">
+                            <div class="row row-margin-top">
+                                <div class="col-md-12 form-row-height">
+									<span class="form-label-height semi-bold-text"> <md-checkbox
+                                            id="allSalesChannelSelected"
+                                            ng-model="skuSalesChannelMapFilterObject.allSalesChannelSelected"
+                                            aria-label="Enable"> </md-checkbox> &nbsp;Select all sales
+										channel
+									</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="full-width" ng-if="!skuSalesChannelMapFilterObject.allSalesChannelSelected">
+                            <div class="row row-margin-top" style="margin-bottom: 10px;">
+                                <div class="col-md-3 form-row-height">
+									<span class="form-label-height semi-bold-text">Sales Channel <span
+                                            style="color: red">*</span>
+									</span>
+                                </div>
+                                <div class="col-md-6 margin-top-5 text-right">
+                                    <select ng-required="skuSalesChannelMapFilterObject.tableSalesChannelExclusions.length == 0"
+                                            name="channelObject"
+                                            ng-model="genericData.selectedSalesChannel"
+                                            id="salesChannel"
+                                            ng-change="setSelectedChannel(genericData.selectedSalesChannel)"
+                                            class="form-control add-single-order-select"
+                                            ng-options="option as option.tableSalesChannelValueInfoName for option in salesChannels">
+                                        <option value="" disabled selected style="display: none;">Choose
+                                            Channel
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 form-row-height">
+                                    <!--<button type="button" class="btn addsharpbutton font"-->
+                                    <!--style="margin-top: 4px; height: auto;"-->
+                                    <!--ng-click="addSalesChannelToList()">Add to List</button>-->
+                                    <span title="Add to List" class="form-label-height add-to-list-icon"
+                                          style="color: #f0592b;"
+                                          ng-click="addSalesChannelToList()"></span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="full-width" style="background: #f5f5f5; padding: 15px;"
+                             ng-if="!skuSalesChannelMapFilterObject.allSalesChannelSelected && skuSalesChannelMapFilterObject.tableSalesChannelExclusions.length > 0">
+                            <table id="salesChannelTable"
+                                   class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="data-grid-header">
+                                <tr>
+                                    <th style="width: 80%;">Channel Name</th>
+
+                                    <th style="width: 20%;">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody class="data-grid-data">
+                                <tr
+                                        ng-repeat="tableDiscountSalesChannelExclusion in skuSalesChannelMapFilterObject.tableSalesChannelExclusions track by $index">
+                                    <td>
+                                        {{tableDiscountSalesChannelExclusion.tableSalesChannelValueInfoName}}
+                                    </td>
+                                    <td class="text-center"><a class="table-btn"
+                                                               ng-click="removeSalesChannelFromList($index)"><span
+                                            class="fa fa-trash fa-lg" s/></a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="full-width">
+
+                        <div class="row ">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="full-width">
+                                    <div class="full-width">
+                                        <div class="row row-margin-top">
+                                            <div class="col-md-12 semi-bold-text">
+                                                <md-checkbox id="discountRuleAddAllSku"
+                                                             ng-model="skuSalesChannelMapFilterObject.allSkuSelected"
+                                                             ng-change="allSkuSelectionChanged()"
+                                                             aria-label="Enable">
+                                                </md-checkbox>
+                                                Select All SKU
+                                            </div>
+
+
+                                        </div>
+                                        <div class="row row-margin-top"
+                                             ng-if="!skuSalesChannelMapFilterObject.allSkuSelected">
+                                            <div class="col-md-3 form-row-height">
+												<span class="form-label-height semi-bold-text">Select SKU <span
+                                                        style="color: red">*</span>
+												</span>
+                                            </div>
+                                            <div class="col-md-6 form-row-height">
+                                                <angucomplete-alt-long id="skuForMapFilter"
+                                                                       placeholder="Search SKU"
+                                                                       pause="400"
+                                                                       selected-object="searchedEntitySelected"
+                                                                       remote-url="{{baseSkuUrl}}"
+                                                                       title-field="tableSkuName"
+                                                                       input-name="tableSkuName"
+                                                                       field-required="skuSalesChannelMapFilterObject.tableSkuExclusions.length == 0"
+                                                                       input-class="main-bottom-border font input-less-padding">
+                                                </angucomplete-alt-long>
+
+                                            </div>
+                                            <div class="col-md-2 form-row-height">
+                                                <button type="button" title="Click here to see all SKUs."
+                                                        style="position: absolute; top:8px;"
+                                                        id="discountRuleAddMoreSku"
+                                                        class="btn btn-sm truncate-text"
+                                                        ng-click="masterSkuDialogForMapFilter($event, 'map');">. . .
+                                                </button>
+                                            </div>
+                                            <div class="col-md-1 form-row-height">
+												<span title="Add to List" class="form-label-height add-to-list-icon"
+                                                      style="color: #f0592b;"
+                                                      id="discountRuleAddEntity"
+                                                      ng-click="addSkusToList()"></span>
+                                            </div>
+                                        </div>
+
+                                        <table id="skuTable"
+                                               ng-if="skuSalesChannelMapFilterObject.tableSkuExclusions.length > 0"
+                                               class="table boldtable table-responsive table-bordered table-hover">
+                                            <thead class="data-grid-header">
+                                            <tr>
+                                                <th style="width: 80%;">
+                                                    SKU
+                                                </th>
+
+                                                <th style="width: 20%;">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="data-grid-data">
+                                            <tr
+                                                    ng-repeat="tableDiscountSkuExclusion in skuSalesChannelMapFilterObject.tableSkuExclusions track by $index">
+                                                <td>{{tableDiscountSkuExclusion.tableSkuName}}</td>
+                                                <td class="text-center"><a class="table-btn"
+                                                                           ng-click="removeSkuFromList($index)"><span
+                                                        class="fa fa-trash fa-lg"/></a></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="skuSaleChannelMapFilterCancel1" type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelSkuSaleChannelMapFilterDialog(skuSaleChannelMapFilterForm)">
+                        Cancel
+                    </button>
+                    <!--<button ng-if="genericData.dialogMode == 'add'" type="button"-->
+                    <!--class="action-btn" ng-click="AddDiscountRule(discountData)">-->
+                    <!--Add-->
+                    <!--</button>-->
+                    <!--<button ng-if="genericData.dialogMode == 'edit'" type="button"-->
+                    <!--class="action-btn" ng-click="updateDiscountRule(discountData)">-->
+                    <!--Update-->
+                    <!--</button>-->
+                    <input id="skuSaleChannelMapFilterForm" type="submit"
+                           class="action-btn" value="Download" ng-click="setFormButtonValue('add')">
+
+
+                </div>
+            </div>
+        </form>
+    </div>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Background_2_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">
+<g id="Grid_2_" display="none" enable-background="new    ">
+	<defs>
+		<path id="SVGID_1_" enable-background="new    " d="M-1281,834.5h85V-665.3h-85V834.5z M-1176,834.5h85V-665.3h-85V834.5z
+			 M-1071,834.5h85V-665.3h-85V834.5z M-966,834.5h85V-665.3h-85V834.5z M-861,834.5h85V-665.3h-85V834.5z M-756,834.5h85V-665.3
+			h-85V834.5z M-651,834.5h85V-665.3h-85V834.5z M-546,834.5h85V-665.3h-85V834.5z M-441,834.5h85V-665.3h-85V834.5z M-336,834.5h85
+			V-665.3h-85V834.5z M-231,834.5h85V-665.3h-85V834.5z M-126-665.3V834.5h85V-665.3H-126z"/>
+	</defs>
+	<clipPath id="SVGID_2_" display="inline">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+</g>
+<g>
+	<defs>
+		<rect id="SVGID_3_" x="171" y="-665.3" width="1280" height="768"/>
+	</defs>
+	<clipPath id="SVGID_4_">
+		<use xlink:href="#SVGID_3_"  overflow="visible"/>
+	</clipPath>
+</g>
+<rect x="0" y="0" fill="none" width="20" height="20"/>
+<g>
+	<path fill="none" stroke="#EA212B" stroke-linecap="round" stroke-miterlimit="10" d="M16.5,4v12.5c0,1.1-0.9,2-2,2h-9
+		c-1.1,0-2-0.9-2-2V4"/>
+	<line fill="none" stroke="#EA212B" stroke-linecap="round" stroke-miterlimit="10" x1="1" y1="4" x2="19" y2="4"/>
+	<path fill="none" stroke="#EA212B" stroke-linecap="round" stroke-miterlimit="10" d="M13,4H7V3.5c0-1.1,0.9-2,2-2h2
+		c1.1,0,2,0.9,2,2V4z"/>
+</g>
+</svg>

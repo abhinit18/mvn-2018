@@ -1,0 +1,41 @@
+<div class="modal fade" id="splitOrderSkubyquantity" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="SOSQCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelWarehouseSelection()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Split Order</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="row row-margin-top">
+                    <div class="col-md-2 margin-top-5">
+                        <span class="semi-bold-text">Quantity</span>
+                    </div><div class="col-md-8">
+
+                    <input id="SOSQQty"
+                            only-integer
+                            prevent-typing-greater
+                            max = "999999999"
+                            type="text"
+                            style="width: 100%;padding: 12px 20px;margin: 8px 0; border: 2px solid grey; box-sizing: border-box;"
+                            tabindex="3" ng-model="genericData.quantity" name="qunatity"
+                            class="form-control darkgrey-bottom-border-number" placeholder="Enter SKU quantity" required></div>
+
+                </div>
+                <span class="" style="font-size: 14px; margin-left: 40px">
+											<md-checkbox ng-model="genericData.splitCost" aria-label="Enable"> </md-checkbox> Split cost</span>
+
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="SOSQCS" class="action-btn" ng-click="splitOrderBySkusByQuantity();">
+                    Confirm Split
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,270 @@
+
+        <div class="row search-row-heading">
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-qw">
+        <div class="row search-row search-row-content search-row-top-border">
+            <div class="row row-margin-top-x-medium-sku">
+                <div class="row col-xs-3">
+                    <div class="col-xs-6" style="padding-top: 5px;">
+                        <span class="total-count-heading">Normal SKUs</span>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="circle-oval circle-orange">
+                            <span>{{normalskuMainCount}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vertical_line"></div>
+                <div class="col-md-2 margin-top-5">
+                    <span class="total-count-heading">Search Normal SKU</span>
+                </div>
+                <div class="col-md-4" style="left: -40px;">
+                    <input id="normalSkuId" type="text"  name="sellerSkuId" ng-model="skuNormalString" class="form-control darkgrey-bottom-border font input-less-padding" ng-change="callDisabledSku(skuNormalString)" />
+                </div>
+                <div class="col-md-1" style="left: -50px; top: -2px;">
+                    <button id="normalSkuSearch" type="button"  class="btn btn-default mybut" ng-click="submitNormalMainSkuAction(skuNormalString)">Search</button>
+                </div>
+                <div class="col-md-1" style="margin-top: 4px;">
+                    <button id="normalSkuClear" title="Clear Applied Filters"  style="margin-left: 0px;" class="btn clearFilter" ng-click="clearNormalSkuAction();skuNormalString=null;">
+                    </button>
+                </div>
+                
+            </div>
+            
+		</div>
+        </div>
+        
+
+        <div class="row">
+            <div class="col-xs-12">
+                <button id="normalSkuAddNew" type="button" ng-if="access.createAccess" class="btn addsharpbutton font pull-right" style="min-width: 160px;margin-top:10px;" ng-click="showskuAddBox($event,'add')"><img src="images/svg/add.svg" style="height:20px;">&nbsp;Add New SKU</button>
+            </div>
+        </div>
+        <div class="row main-list">
+            <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                <thead class="main-list-header-sku">
+                    <!-- table header -->
+                    <tr>
+                        <th id="normalSkuIdH" class="text-left">
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingNormal('tableSkuClientSkuCode',sortReverseNormal)">
+                                Seller SKU ID&nbsp;
+                                <span ng-if="sortTypeNormal == 'tableSkuClientSkuCode' && !sortReverseNormal"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeNormal == 'tableSkuClientSkuCode' && sortReverseNormal"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                Seller SKU ID&nbsp;
+                            </a>
+                        </th>
+                        <th id="normalSkuNameH" class="text-left">
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingNormal('tableSkuName',sortReverseNormal)">
+                                SKU Name&nbsp;
+                                <span ng-if="sortTypeNormal == 'tableSkuName' && !sortReverseNormal"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeNormal == 'tableSkuName' && sortReverseNormal"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                SKU Name&nbsp;
+                            </a>
+                        </th>
+                        <th id="normalSkuIsbnH" class="text-left">
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingNormal('tableSkuPrimaryUpcEan',sortReverseNormal)">
+                                ISBN/UPC/EAN&nbsp;
+                                <span ng-if="sortTypeNormal == 'tableSkuPrimaryUpcEan' && !sortReverseNormal"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeNormal == 'tableSkuPrimaryUpcEan' && sortReverseNormal"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                ISBN/UPC/EAN&nbsp;
+                            </a>
+                        </th>
+                        <th id="normalSkuCategoryH" class="text-left">
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingNormal('tableSkuNode.skuNodeName',sortReverseNormal)">
+                                Category&nbsp;
+                                <span ng-if="sortTypeNormal == 'tableSkuNode.skuNodeName' && !sortReverseNormal"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeNormal == 'tableSkuNode.skuNodeName' && sortReverseNormal"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                Category
+                            </a>
+                        </th>
+                        <th id="normalSkuBrandH" class="text-left">
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingNormal('tableSkuBrandCode.tableSkuBrandCodeString',sortReverseNormal)">
+                                Brand&nbsp;
+                                <span ng-if="sortTypeNormal == 'tableSkuBrandCode.tableSkuBrandCodeString' && !sortReverseNormal"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeNormal == 'tableSkuBrandCode.tableSkuBrandCodeString' && sortReverseNormal"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                Brand
+                            </a>
+                        </th>
+                        <th id="normalSkuHsnH" class="text-left">HSN</th>
+                        <th id="normalSkuDimH" class="text-left">Dimensions (LxBxH/W)</th>
+                        <th id="normalSkuStatusH" class="text-left">
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingNormal('tableSkuStatusType.tableSkuStatusTypeString',sortReverseNormal)">
+                                Status&nbsp;
+                                <span ng-if="sortTypeNormal == 'tableSkuStatusType.tableSkuStatusTypeString' && !sortReverseNormal"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeNormal == 'tableSkuStatusType.tableSkuStatusTypeString' && sortReverseNormal"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                Status
+                            </a>
+                        </th>
+                        <!--Dont' remove this commented code-->
+                        <th id="normalSkuMapH" style="min-width: 75px;">SKU Map</th>
+
+                        <th id="normalSkuActionH" class="text-left action-col">Action</th>
+                    </tr>
+                </thead>
+                <tbody ng-if="showLoader">
+                <tr>
+                    <td colspan="10" class="text-center">
+                        <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody data-ng-repeat="normalskuData in normalSkuLists" data-ng-switch on="dayDataCollapse[$index]">
+                    <tr class="clickable-row-sku">
+                        <td id="normalSkuId{{$index}}" class="short-sku-name " title="{{normalskuData.tableSkuClientSkuCode}}" align="left"><a ng-click="showInventory(normalskuData.idtableSkuId)" style="color:#f0592b;cursor:pointer;">{{normalskuData.tableSkuClientSkuCode}}</a></td>
+                        <td id="normalSkuName{{$index}}" align="left" class="short-sku-name" title="{{normalskuData.tableSkuName}}">{{normalskuData.tableSkuName}}</td>
+                        <td id="normalSkuIsbn{{$index}}" class="short-sku-name" align="left">{{normalskuData.tableSkuPrimaryUpcEan}}</td>
+                        <td id="normalSkuCategory{{$index}}" class="short-sku-name" align="left">{{normalskuData.tableSkuNode.skuNodeName}}</td>
+                        <td id="normalSkuBrand{{$index}}" class="short-sku-other" align="left">{{normalskuData.tableSkuBrandCode.tableSkuBrandCodeString}}</td>
+                        <td id="normalSkuHsn{{$index}}" align="left">{{normalskuData.tableHsn.tableHsnCode}}</td>
+                        <td id="normalSkuDim{{$index}}" class="short-sku-dimen" align="left">
+                            <span ng-if="normalskuData.tableSkuUodmType.tableSkuUodmTypeString">{{normalskuData.tableSkuLength}}</span>
+                            <strong ng-if="normalskuData.tableSkuUodmType.tableSkuUodmTypeString">x</strong>
+                            <span ng-if="normalskuData.tableSkuUodmType.tableSkuUodmTypeString">{{normalskuData.tableSkuWidth}}</span>
+                            <strong ng-if="normalskuData.tableSkuUodmType.tableSkuUodmTypeString">x</strong>
+                            <span ng-if="normalskuData.tableSkuUodmType.tableSkuUodmTypeString">{{normalskuData.tableSkuHeight}}</span>
+                            <span ng-if="normalskuData.tableSkuUodmType.tableSkuUodmTypeString">{{normalskuData.tableSkuUodmType.tableSkuUodmTypeString.toLowerCase()}}</span>
+                            <strong ng-if="normalskuData.tableSkuUodmType.tableSkuUodmTypeString && normalskuData.tableSkuUowmType.tableSkuUowmTypeString">/</strong>
+                            <span ng-if="normalskuData.tableSkuUowmType.tableSkuUowmTypeString">{{normalskuData.tableSkuWeight}}</span>
+                            <span ng-if="normalskuData.tableSkuUowmType.tableSkuUowmTypeString">{{normalskuData.tableSkuUowmType.tableSkuUowmTypeString}}</span>
+
+                        </td>
+                        <td id="normalSkuStatus{{$index}}" align="left">
+                            <a class="active-status" ng-if="normalskuData.tableSkuStatusType.idtableSkuStatusTypeId == 1" href="" data-ng-click="access.editAccess && deactivateSku(normalskuData.idtableSkuId, normalskuData,normalskuData.tableSkuType.tableSkuTypeString,$event)">{{normalskuData.tableSkuStatusType.tableSkuStatusTypeString}}&nbsp;<img src="images/svg/SKU_Deactivate-70.svg" title="Click to deactivate SKU" class="status-img" alt=""></a>
+                            <a class="deactive-status" ng-if="normalskuData.tableSkuStatusType.idtableSkuStatusTypeId == 2" href="" data-ng-click="access.editAccess && activateSku(normalskuData.idtableSkuId, normalskuData,normalskuData.tableSkuType.tableSkuTypeString,$event)">{{normalskuData.tableSkuStatusType.tableSkuStatusTypeString}}&nbsp;<img src="images/svg/SKU_Activate.svg" title="Click to activate SKU" class="status-img" alt=""></a>
+                        </td>
+                        <!--Dont' remove this commented code-->
+                        <td id="normalSkuMap{{$index}}">
+                            <a href="javascript:void(0);" class="link-color" ng-click="SkuMapping(normalskuData);">View Map</a>
+                        </td>
+                        <td id="normalSkuAction{{$index}}">
+                            <img ng-attr-title="{{!access.editAccess || normalskuData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}" ng-src="{{imgsrc1}}" width="20px" height="20px" data-ng-click="access.editAccess && editSku($index, normalskuData.idtableSkuId,normalskuData.tableSkuType.tableSkuTypeString)" ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                                 ng-class="{disableAccess: !access.editAccess || normalskuData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                                 ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                            <span> | </span>
+                            <img ng-src="{{imgsrc2}}" ng-attr-title="{{!access.editAccess || normalskuData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Print Barcode Label'}}" width="20px" height="20px" data-ng-click="access.editAccess && printbarcodeLabel(normalskuData.idtableSkuId)" ng-init="imgsrc2='images/svg/print.svg'" ng-mouseover="access.editAccess && (imgsrc2='images/svg/print_hover.svg')"
+                                 ng-class="{disableAccess: !access.editAccess || normalskuData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                                 ng-mouseout="imgsrc2='images/svg/print.svg'">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- END TABLE -->
+            <div class="row" style="margin-top: 0px;">
+                <div class="col-md-6">
+                    <p class="showingOrderLabel" ng-show="normalSkuSize<normalskuMainCount">Showing Normal SKUS {{normalSkuStart + 1}} to {{normalSkuEnd}} of {{normalskuMainCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="normalSkuSize>=normalskuMainCount && normalskuMainCount!=0">Showing Normal SKUS {{normalSkuStart + 1}} to {{normalskuMainCount}} of {{normalskuMainCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="normalskuMainCount==0">No Normal SKUS Available
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPagerNormal.pages.length && modeNormalSku=='normal'" class="pagination">
+                            <li>
+                                <a><span style="padding-right: 5px;">Showing</span>
+                                    <select ng-change="onRecordsPerPageChangeForNormalSku(normalSkuSize)"  ng-model="normalSkuSize" name="recordsPerPage"
+                                            ng-options="option for option in recordsPerPage"
+                                            required>
+                                    </select>
+                                    <span style="padding-left: 5px;">records per page</span>
+                                </a>
+                            </li>
+                            <li id="first1" ng-show="vmPagerNormal.currentPage == 1" ng-class="{disabled:vmPagerNormal.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li id="first2" ng-show="vmPagerNormal.currentPage > 1" ng-class="{disabled:vmPagerNormal.currentPage == 1}">
+                                <a ng-click="listOfNormalSkusCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li id="previous1" ng-show="vmPagerNormal.currentPage == 1" ng-class="{disabled:vmPagerNormal.currentPage == 1}">
+                                <a> &lt; Previous</a>
+                            </li>
+                            <li id="previous2" ng-show="vmPagerNormal.currentPage > 1" ng-class="{enabled:vmPagerNormal.currentPage > 1}">
+                                <a ng-click="listOfNormalSkusCount(vmPagerNormal.currentPage - 1)"> &lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPagerNormal.pages" ng-class="{active:vmPagerNormal.currentPage == page}">
+                                <a ng-click="listOfNormalSkusCount(page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPagerNormal.currentPage < vmPagerNormal.totalPages" ng-class="{enabled:vmPagerNormal.currentPage > vmPagerNormal.totalPages}">
+                            <a ng-click="listOfNormalSkusCount(vmPagerNormal.currentPage + 1)">Next &gt; </a>
+                            </li>
+                            <li id="next2" ng-show="vmPagerNormal.currentPage == vmPagerNormal.totalPages" ng-class="{disabled:vmPagerNormal.currentPage == vmPagerNormal.totalPages}">
+                                <a>Next &gt; </a>
+                            </li>
+                            <li id="last1" ng-show="vmPagerNormal.currentPage < vmPagerNormal.totalPages" ng-class="{disabled:vmPagerNormal.currentPage == vmPagerNormal.totalPages}">
+                                <a ng-click="listOfNormalSkusCount(vmPagerNormal.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPagerNormal.currentPage == vmPagerNormal.totalPages" ng-class="{disabled:vmPagerNormal.currentPage == vmPagerNormal.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                        <ul ng-if="vmPagerNormal.pages.length && modeNormalSku=='mutual'" class="pagination">
+                            <li>
+                                <a><span style="padding-right: 5px;">Showing</span>
+                                    <select ng-change="onRecordsPerPageChangeForNormalSku(normalSkuSize)"  ng-model="normalSkuSize" name="recordsPerPage"
+                                            ng-options="option for option in recordsPerPage"
+                                            required>
+                                    </select>
+                                    <span style="padding-left: 5px;">records per page</span>
+                                </a>
+                            </li>
+                            <li id="first1" ng-show="vmPagerNormal.currentPage == 1" ng-class="{disabled:vmPagerNormal.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li id="first2" ng-show="vmPagerNormal.currentPage > 1" ng-class="{disabled:vmPagerNormal.currentPage == 1}">
+                                <a ng-click="listOfNormalMutualSkusCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li id="previous1" ng-show="vmPagerNormal.currentPage == 1" ng-class="{disabled:vmPagerNormal.currentPage == 1}">
+                                <a> &lt; Previous</a>
+                            </li>
+                            <li id="previous2" ng-show="vmPagerNormal.currentPage > 1" ng-class="{enabled:vmPagerNormal.currentPage > 1}">
+                                <a ng-click="listOfNormalMutualSkusCount(vmPagerNormal.currentPage - 1)"> &lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPagerNormal.pages" ng-class="{active:vmPagerNormal.currentPage == page}">
+                                <a ng-click="listOfNormalMutualSkusCount(page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPagerNormal.currentPage < vmPagerNormal.totalPages" ng-class="{enabled:vmPagerNormal.currentPage > vmPagerNormal.totalPages}">
+                                <a ng-click="listOfNormalMutualSkusCount(vmPagerNormal.currentPage + 1)">Next &gt; </a>
+                            </li>
+                            <li id="next2" ng-show="vmPagerNormal.currentPage == vmPagerNormal.totalPages" ng-class="{disabled:vmPagerNormal.currentPage == vmPagerNormal.totalPages}">
+                                <a>Next &gt; </a>
+                            </li>
+                            <li id="last1" ng-show="vmPagerNormal.currentPage < vmPagerNormal.totalPages" ng-class="{disabled:vmPagerNormal.currentPage == vmPagerNormal.totalPages}">
+                                <a ng-click="listOfNormalMutualSkusCount(vmPagerNormal.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPagerNormal.currentPage == vmPagerNormal.totalPages" ng-class="{disabled:vmPagerNormal.currentPage == vmPagerNormal.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+<div ng-include src="'sku/deactivateSku.html?version=1.0.0'"></div>
+<div ng-include src="'sku/activateSku.html?version=1.0.0'"></div>

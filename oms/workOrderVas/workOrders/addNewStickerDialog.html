@@ -1,0 +1,125 @@
+    <link href="settings/templates/templates.css" rel="stylesheet">
+
+<script type="text/ng-template" id="dialog8.tmpl.html" ng-controller="workOrderVasController">
+    <md-dialog aria-label="Add New Sticker" style="width: 800px;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p ng-show="dialogBoxSticker=='add'" class="dialog-heading-p">Add New Sticker</p>
+                    <p ng-show="dialogBoxSticker=='edit'" class="dialog-heading-p">Update Sticker</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelInventory()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Select WareHouse</span>
+                        </div>
+                        <div class="col-md-6">
+                            <select ng-model="stickerData.tableWarehouseDetails" class="form-control" ng-options="option as option.tableWarehouseDetailsShortname for option in wareHousesData" ng-change="allWHouse(stickerData.tableWarehouseDetails);">
+                            <option value=""></option>
+                        </select>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Select Sticker Template</span>
+                        </div>
+                        <div class="col-md-6">
+                            <select ng-model="stickerData.tableStickerTemplate" class="form-control" ng-options="option as option.tableStickerTemplateName for option in stickertemplatesArray"><option value=""></option>
+                          </select>
+                        </div>
+                        <div class="col-md-1">
+                            <span class="fa fa-plus fa-lg fa-lg" style="color: #00ACE4;margin-top: 10px;" ng-click="openStickeMode();showStickerAddTemplate($event);"/>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Search Product</span>
+                        </div>
+                        <div class="col-md-6">
+                            <angucomplete-alt id="products" placeholder="Search product" pause="400" selected-object="stickerProductObj" remote-url="{{baseSkuUrl}}"
+                                              title-field="tableSkuClientSkuCode"
+                                              description-field="tableSkuName"
+                                              image-field="tableSkuImageUrl"
+                                              input-class="form-control darkgrey-bottom-border"
+                                initial-value="initialSelected"></angucomplete-alt>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-10">
+                            <span class="semi-bold-text">Please Select the Inventory</span>
+                        </div>
+                    </div>
+
+
+                    <div class="row main-list" style="padding-left: 0px !important; padding-right: 0px !important;">
+                        <div class="col-md-12">
+                            <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                                <thead class="main-list-header-sticker">
+                                    <tr>
+                                        <td>Select</td>
+                                        <td>Creation Date</td>
+                                        <td>Quantity</td>
+                                        <td>MRP</td>
+                                        <td>Remaining Shelf Life</td>
+                                        <td>Vendor</td>
+                                        <td>Batch No</td>
+                                    </tr>
+                                </thead>
+                                <tbody data-ng-repeat="option in invStickerLists">
+                                    <tr class="clickable-row-sticker">
+                                        <td><input type="radio" name="choice" ng-model="radio" value="{{option}}" ng-change="onvalue(radio)"></input>
+                                        </td>
+                                        <td>{{option.tableSkuInventoryCreationDate}}</td>
+                                        <td>{{option.tableSkuInventoryAvailableCount}}</td>
+                                        <td>{{option.tableSkuInventoryMaxRetailPrice | priceOrHyphen}} Rs</td>
+                                        <td>{{option.tableSkuInventoryShelfLifeInDays}}</td>
+                                        <td>{{option.tableVendor.tableVendorName}}</td>
+                                        <td>{{option.tableSkuInventoryBatchNo}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Start Date</span>
+                        </div>
+                        <div class="col-md-4">
+                            <md-datepicker timezoned-date ng-model="stickerData.tableWorkOrderScheduledDatetime" md-min-date="startminDate" md-max-date="startmaxDate" ng-change="sendStartDate(stickerData.tableWorkOrderScheduledDatetime)" md-placeholder="Enter date"></md-datepicker>
+                        </div>
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">End Date</span>
+                        </div>
+                        <div class="col-md-4">
+                            <md-datepicker timezoned-date ng-model="stickerData.tableWorkOrderScheduledEndDatetime" md-min-date="endminDate" ng-change="sendEndDate(stickerData.tableWorkOrderScheduledEndDatetime)" md-placeholder="Enter date"></md-datepicker>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <md-button class="cancel-btn" ng-click="cancelInventory()">
+                    Cancel
+                </md-button>
+                <md-button ng-show="dialogBoxSticker=='add'" class="action-btn" ng-click="addStickerData(stickerData,radio)">Add
+                </md-button>
+
+                <md-button ng-show="dialogBoxSticker=='edit'" class="action-btn" ng-click="updateSingleKit(stickerData,stickerData.idtableWorkOrderId,'sticker',radio)">Update
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<div ng-include src="'settings/templates/templatesDialog/stickerTemplateAddDialog.html?version=1.0.0'"></div>

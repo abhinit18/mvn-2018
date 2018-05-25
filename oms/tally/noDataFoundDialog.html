@@ -1,0 +1,30 @@
+<div class="modal fade" id="noDataFoundDialog" role="dialog" aria-labelledby="noDataFoundDialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="TALLYnodatacancel1" type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="myModalLabelled">No Data Found In Tally</p>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="full-width">
+                    <md-checkbox id="SOCnclCheckbox" role="checkbox" ng-model="genericData.markFetched" style="margin-top:10px;font-size: 13px;">Mark as fetched anyway</md-checkbox>
+                </div>
+                <div class="full-width" ng-if="genericData.markFetched == true">
+                    Once marked as fetched - the data can't be fetched from Tally to Maven anymore. Only sync from Maven to Tally is possible.
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="TALLYnodatacancel2" type="button" class="cancel-btn" data-dismiss="modal">Cancel
+                </button>
+                <button id="TALLYnodatasubmit" type="submit" ng-disabled="disableInTransit" class="action-btn" ng-click="markEntityAsFetched()">OK</button>
+            </div>
+        </div>
+
+    </div>
+</div>

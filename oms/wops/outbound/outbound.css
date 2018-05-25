@@ -1,0 +1,359 @@
+/* Customer Add Dialog Header CSS */
+
+.order-wareSelectionDialogheading {
+    font-size: 20px;
+    font-weight: bolder;
+    color: #30373B;
+}
+
+.md-dialog-content .orderNo {
+    width: 25%;
+}
+
+.md-dialog-content .orderNoVal {
+    border: none;
+    border-bottom: 1px solid #B5B5B6;
+    background-color: inherit;
+    font-size: 14px;
+    width: 40%;
+    padding-top: 0px;
+}
+
+.warehouse-selection-header {
+    background: #8CABB1;
+}
+
+.warehouse-selection-header tr {
+    height: 45px;
+}
+
+.warehouse-selection-header tr td {
+    padding-top: 10px !important;
+    font-size: 14px;
+    text-align: center;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.warehouse-selection-row {
+    height: 60px;
+    background: #E9EEEF;
+}
+
+.warehouse-selection-row td {
+    padding-top: 15px;
+    font-size: 14px;
+    text-align: center;
+    color: #30373B;
+    font-weight: 600;
+}
+
+.warehouse-selection-row td:first-child {
+    color: #F0592B !important;
+}
+
+.bulkOrderMapFields-search {
+    margin-left: 3%;
+    margin-right: 3%;
+    padding: 16px;
+    background-color: #F2F7F8;
+    border: 1px solid darkgrey;
+}
+
+.bulkOrderMapFields-searchData {
+    margin-left: 3%;
+    margin-right: 3%;
+    background-color: #F2F7F8;
+    padding-bottom: 10px;
+    border-left: 1px solid darkgrey;
+    border-right: 1px solid darkgrey;
+    border-bottom: 1px solid darkgrey;
+}
+
+.bulkOrderMapFields-subheading {
+    font-size: 16px;
+    font-weight: bolder;
+    color: #30373B;
+}
+
+
+/* Bulk Upload File Dialog */
+
+.modalDialogProp {
+    width: 60%;
+    overflow-y: none;
+}
+
+.bulkFile-heading-col {
+    margin-top: 5px;
+}
+
+.bulkFile-select {
+    color: #30373B;
+    width: 76%;
+    border-radius: 0px;
+}
+
+#drop_zone {
+    width: 50%;
+    background-color: white;
+    border-width: 2px;
+    border-style: dashed;
+    border-color: #D0DEE0;
+    color: black;
+    padding: 40px 50px;
+    text-align: center;
+    margin-top: -30px;
+    margin-left: 26%;
+}
+
+#dropzone1 {
+    width: 50%;
+    background-color: white;
+    border-width: 2px;
+    border-style: dashed;
+    border-color: #D0DEE0;
+    color: black;
+    padding: 40px 50px;
+    text-align: center;
+    margin-top: -30px;
+    margin-left: 26%;
+}
+
+.fileFormat {
+    margin-top: 5px;
+}
+
+.main-list-header-order {
+    background: #30373B;
+    color: #f5fafd !important;
+}
+
+.main-list-header-order a, .main-list-header-order a:hover, .main-list-header-order a:focus {
+    color: #f5fafd !important;
+    text-decoration: none;
+    line-height: 40px;
+}
+
+.main-list-header-order>tr {
+    border: 1px solid #C0C0C0;
+    height: 45px;
+}
+
+.main-list-header-order>tr>td {
+    padding-top: 10px !important;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.main-list-header-order>tr>td:first-child {
+    width: 17%;
+    padding-left: 30px !important;
+}
+
+.main-list-header-order>tr>td:nth-child(2) {
+    padding-left: 25px;
+    width: 15%;
+}
+
+.main-list-header-order>tr>td:nth-child(3) {
+    padding-left: 25px;
+    width: 14%;
+}
+
+.main-list-header-order>tr>td:nth-child(4) {
+    width: 8%;
+}
+
+.main-list-header-order>tr>td:nth-child(5) {
+    width: 13%;
+    text-align: center;
+}
+
+.main-list-header-order>tr>td:nth-child(6) {
+    width: 8%;
+    text-align: center;
+}
+
+.main-list-header-order>tr>td:nth-child(7) {
+    width: 10%;
+    text-align: right;
+}
+
+.main-list-header-order>tr>td:nth-child(8) {
+    width: 7%;
+    text-align: center;
+    padding-left: 20px;
+}
+
+.main-list-header-order>tr>td:nth-child(9) {
+    width: 5%;
+    /*border-right: 1px solid #C0C0C0;*/
+}
+
+.clickable-row-order {
+    cursor: pointer;
+    /*height: 40px;*/
+    border-bottom: 1px solid #C0C0C0;
+}
+
+.clickable-row-order:hover {
+    background: #D3DDDF;
+}
+
+.clickable-row-order>td {
+    padding-top: 14px !important;
+    font-size: 14px;
+    color: #30373B;
+}
+
+.clickable-row-order>td:first-child {
+    font-size: 14px;
+    color: #f0592b !important;
+    font-weight: 700;
+}
+/*.clickable-row-order>td:nth-child(7) {*/
+    /*color: #00ACE4 ;*/
+    /*font-weight: 600;*/
+/*}*/
+.clickable-row-order>td:nth-child(8)>img.disabled {
+    cursor: not-allowed;
+}
+.clickable-row-order>td:nth-child(10) {
+    /*border-right: 1px solid #C0C0C0;*/
+}
+
+/* Demo for vertical bars */
+
+.progress-indicator.stepped.stacked {
+    display: inline-block;
+}
+
+.progress-indicator.stepped.stacked>li {
+    height: 50px;
+}
+
+.progress-indicator.stepped.stacked>li .bubble {
+    padding: 0.1em;
+}
+
+.progress-indicator.stepped.stacked>li:first-of-type .bubble {
+    padding: 0.5em;
+}
+
+.progress-indicator.stepped.stacked>li:last-of-type .bubble {
+    padding: 0em;
+}
+
+
+/* Nocenter */
+
+.progress-indicator.nocenter.stacked>li {
+    min-height: 40px;
+}
+
+.progress-indicator.nocenter.stacked>li span {
+    display: block;
+}
+
+.md-datepicker-input {
+    min-width: 100px;
+    max-width: 100px;
+    padding: 4px;
+}
+
+.map-setting-dialog-row, .upload-file-dialog-row {
+    margin-left: 3%;
+    margin-right: 3%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.sharped {
+    width: auto;
+}
+
+.btn-download {
+    font-size: 18px;
+    font-weight: bold;
+    background: orangered;
+}
+
+.data-grid-header {
+    background-color: #30373B;
+    color: #fff;
+}
+
+.data-grid-header>tr>th:first-child {
+    width: 50%;
+}
+
+.data-grid-header>tr>th:nth-child(2) {
+    width: 18%;
+}
+
+.data-grid-header>tr>th:nth-child(3) {
+    width: 18%;
+}
+
+.data-grid-header>tr>th:nth-child(4) {
+    width: 14%;
+}
+
+.PackageContainer {
+    border: 1px solid lightgray;
+    float: left;
+    width: 100%;
+}
+
+.quickShipInput input {
+    color: #fff;
+}
+
+.tool-tip-text {
+    top: 15px !important;
+}
+#ordertabs li a.sharp{
+    width:auto !important;min-width: 119px;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+    background-color: #E9EEEF;
+}
+.table-no-margin{
+    margin-bottom: 0!important;
+}
+button.activeTab{
+    background-color: #E9EEEF;
+    outline: none;
+}
+.box-table{
+    display: table;
+    margin: 0 auto;
+    width: 100%;
+}
+.boxes {
+    display: table-row;
+    width: 100%;
+    height: 100%;
+}
+.box {
+    display: table-cell;
+    vertical-align: middle;
+}
+.box1 {
+    text-align: right;
+    width: 45%;
+    font-size: 13px;
+    font-weight: bold;
+}
+.box2 {
+    text-align: right;
+    width: 55%;
+    font-size: 13px;
+}
+.margin-top-7 {
+    margin-top: 7px;
+}
+.col-width{
+    width:12%;
+}

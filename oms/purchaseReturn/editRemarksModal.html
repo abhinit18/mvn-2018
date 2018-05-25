@@ -1,0 +1,80 @@
+<div class="modal fade" id="editRemarkModal" role="dialog" aria-labelledby="editRemarkModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 900px;">
+        <form name="editRemarksForm" novalidate ng-submit="editRemarksForm.$valid && access.editAccess && updateRemarks(editRemarksForm)">
+            <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="PRRmksCancel1" type="button" class="close" ng-click="cancelEditRemarksModal(editRemarksForm)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only" >Close</span>
+                </button>
+                <p class="dialog-heading-p" id="editremarks" ng-if="!access.editAccess">Remarks</p>
+                <p class="dialog-heading-p" id="editremarks2" ng-if="access.editAccess">Add Remarks</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="col-md-3 margin-top-5" ng-if="genericData.selectedOrderForEditRemarks.tablePurchaseReturnRemarkses.length > 0">
+                            <span class="semi-bold-text" ng-if="!access.editAccess">Remarks</span>
+                            <span class="semi-bold-text" ng-if="access.editAccess">Old Remarks</span>
+                        </div>
+                        <div class="col-md-8 margin-top-5" ng-if="genericData.selectedOrderForEditRemarks.tablePurchaseReturnRemarkses.length > 0">
+                            <table id="remarkstable2"
+                                   class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="data-grid-header">
+                                <tr>
+                                    <th id="PRRmksDateH" style="width:20%;">Date-Time</th>
+                                    <th id="PRRmksUserH" style="text-align: right;">User
+                                    </th>
+                                    <th id="PRRmksRemarksH" style="text-align: right;">Remarks
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="data-grid-data">
+                                <tr ng-repeat="remarks in modalRemarks">
+                                    <td id="PRRmksDate{{$index}}">{{remarks.tablePurchaseReturnRemarksDateTime | utcToLocalTimeOrHyphen}}</td>
+                                    <td id="PRRmksUser{{$index}}" style="text-align: right;">
+                                        {{remarks.tablePurchaseReturnRemarksUser}}
+                                    </td>
+                                    <td id="PRRmksRemarks{{$index}}" style="text-align: right;">
+                                        {{remarks.tablePurchaseReturnRemarksString}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid" ng-if="access.editAccess">
+                    <div class="row row-margin-top">
+                        <div class="col-md-3 margin-top-5">
+                            <span class="semi-bold-text">New Remarks</span>
+                        </div>
+                        <div class="col-md-8">
+
+                                    <textarea id="PRRmksNew" required name="remarks" class="form-control" ng-model="genericData.newRemarks"
+                                              placeholder="Enter Your Remarks" ng-maxlength="2000"></textarea>
+                            <h6 style="color:gray;">Maximum character limit:2000, Limit Left: {{2000-genericData.newRemarks.length}}</h6>
+
+                        </div>
+                        <div ng-if="editRemarksForm.$submitted && editRemarksForm.remarks.$error.required" class="col-md-offset-3 col-md-8">
+                            <span class="error-message">
+                                Please enter your remarks
+                            </span>
+                        </div>
+                        <div ng-if="editRemarksForm.$submitted && editRemarksForm.remarks.$error.maxlength" class="col-md-offset-3 col-md-8">
+                            <span class="error-message">
+                                Maximum character limit reached
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="PRRmksCancel2" type="button" class="cancel-btn" ng-click="cancelEditRemarksModal(editRemarksForm)">Cancel</button>
+                <button id="PRRmksSubmit" type="submit" class="action-btn" >Add</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>

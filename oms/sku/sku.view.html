@@ -1,0 +1,321 @@
+<link href="sku/sku.css" rel="stylesheet">
+<style>
+    .tabsdemoDynamicHeight md-content .md-fab.visible {
+        transform: scale(1);
+        transition: transform 0.3s linear;
+    }
+
+    .tabsdemoDynamicHeight md-content .md-fab {
+        transform: scale(0);
+        transition: transform 0.3s linear;
+    }
+
+    .tabsdemoDynamicHeight md-content {
+        background-color: transparent !important;
+    }
+
+    .tabsdemoDynamicHeight md-content md-tabs {
+        background: #f6f6f6;
+        border: 1px solid #e1e1e1;
+    }
+
+    .tabsdemoDynamicHeight md-content md-tabs md-tabs-canvas {
+        background: white;
+    }
+
+    .tabsdemoDynamicHeight md-content h1:first-child {
+        margin-top: 0;
+    }
+
+    .md-button.md-fab.md-fab-bottom-right {
+        top: -4px;
+        right: 20px;
+        /* bottom: 20px; */
+        left: auto;
+        position: absolute;
+    }
+
+    .md-button.md-fab {
+        z-index: 10;
+        line-height: 56px;
+        min-width: 0;
+        width: 185px;
+        height: 45px;
+        vertical-align: middle;
+        text-align: center;
+        border-radius: 1%;
+        background-clip: padding-box;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+        transition-property: background-color, box-shadow, -webkit-transform;
+        transition-property: background-color, box-shadow, transform;
+        color: #F4511E; background-color: #F4511E;
+    }
+</style>
+
+<div class="container-fluid">
+        <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;">
+        <h4 class="screen-heading" style="padding: 0px;">SKU Master</h4></div>
+
+        <div class="row" style="margin-left: auto; margin-right: auto;">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
+                <div class="full-width">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 0px;">
+                        <ul class="nav nav-tabs" id="ordertabs">
+                            <li class="active" ng-click="clearAllSkuAction();skuString='';">
+                                <a data-target="#table1" data-toggle="tab"
+                                   class="btn sharp">All</a>
+                            </li>
+                            <li ng-click="clearNormalSkuAction();skuNormalString='';">
+                                <a data-target="#table2" data-toggle="tab" class="btn sharp">Normal SKU</a>
+                            </li>
+                            <li ng-click="clearKitSkuAction();skuKitString='';">
+                                <a data-target="#table3" data-toggle="tab" class="btn sharp">Kit</a>
+                            </li>
+                            <li ng-click="clearVkitSkuAction();skuVKitString=''">
+                                <a data-target="#table4" data-toggle="tab" class="btn sharp">Virtual Kit</a>
+                            </li>
+                            <li >
+                                <a data-target="#table5" data-toggle="tab" class="btn sharp">Master SKUs</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 0px;" ng-if="access.createAccess">
+                            <button class="btn addsharpbutton"
+                                    style="margin-top:10px;float: right;"
+                                    ng-click="showSkuSalesChannelMapModal($event);">
+                                Map SKU Sales Channel
+                            </button>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" >
+                            <button id="SkuExport" type="button" class="btn btn-default addsharpbutton " style="margin-top:10px;"
+                                    ng-click="exportSkuDataFile()"><span class="fa fa-download"></span><span
+                                    style="color: #fff !important; font-weight: 400 !important;">&nbsp;Export</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="full-width">
+                <div class="tab-content">
+                    <div class="tab-pane  active container-fluid" id="table1">
+                        <div ng-include src="'sku/allSkuTabs.html?version=1.0.0'"></div>
+                    </div>
+                    <div class="tab-pane  container-fluid" id="table2">
+                        <div ng-include src="'sku/normalSkuTabs.html?version=1.0.0'"></div>
+                    </div>
+                    <div class="tab-pane  container-fluid" id="table3">
+                        <div ng-include src="'sku/kitSkuTabs.html?version=1.0.0'"></div>
+                    </div>
+                    <div class="tab-pane  container-fluid" id="table4">
+                        <div ng-include src="'sku/virtualKitTabs.html?version=1.0.0'"></div>
+                    </div>
+                    <div class="tab-pane  container-fluid" id="table5">
+                        <div ng-include src="'sku/abstractSkuTabs.html?version=1.0.0'"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+        <!-- Add New SKU Type Dialog -->
+        <div class="modal fade" data-backdrop="static" id="addSkuModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                        <button type="button" class="close" ng-click="cancelGeneric()" data-dismiss="modal">
+                          <span aria-hidden="true">&times;</span>
+                          <span class="sr-only">Close</span>
+                        </button>
+                        <p class="dialog-heading-p" id="myModalLabel">Add New SKU</p>
+
+                        <ul class="nav nav-tabs">
+                            <li id="single_sku" class="active"><a data-target="#tab1" data-toggle="tab" class="btn sharp">Single SKU</a></li>
+                            <li id="bulk_sku"><a data-target="#tab2" data-toggle="tab" class="btn sharp">Bulk SKU</a></li>
+                        </ul>
+                    </div>
+                    <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+
+                        <div class="tab-content">
+                            <div class="tab-pane active container-fluid" id="tab1">
+                                <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                                    <div class="col-md-4 light-grey-right-border">
+                                        <div class="normalSku" ng-click="showskuAddBox($event,'add')" data-dismiss="modal"></div>
+                                        <br>
+                                        <span class="normalSkuLabel" ng-click="showskuAddBox($event,'add')" data-dismiss="modal">Add New Normal SKU</span>
+                                    </div>
+                                    <div class="col-md-4 light-grey-right-border">
+                                        <div class="normalKit" ng-click="showkitAddBox($event,'add')" data-dismiss="modal"></div>
+                                        <br>
+                                        <span class="normalKitLabel" ng-click="showkitAddBox($event,'add')" data-dismiss="modal">Add New Kit</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="normalVirtualKit" ng-click="showvirtualKitAddBox($event,'add')" data-dismiss="modal"></div>
+                                        <br>
+                                        <span class="normalVirtualKitLabel" ng-click="showvirtualKitAddBox($event,'add')" data-dismiss="modal">Add New Virtual Kit</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane container-fluid" id="tab2">
+                                <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                                    <div class="col-md-6 light-grey-right-border">
+                                        <div id="bulk_upload_sku" class="bulk-upload-sku-img" data-toggle="modal" data-target="#skuBulkUpload" data-dismiss="modal"></div>
+                                        <br>
+                                        <span class="bulk-upload-sku-text" data-toggle="modal" data-target="#skuBulkUpload" data-dismiss="modal">Upload File</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="javascript:void(0);" ng-click="generateSkuTemplate()">
+                                            <div id="download_template_sku" class="download-template-sku-img"></div>
+                                        </a>
+                                        <br>
+                                        <span class="bulk-upload-sku-text">
+                                          <a href="javascript:void(0);" ng-click="generateSkuTemplate()">
+                                              Download File Template
+                                          </a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row upload-file-dialog-row">
+                                <div style="text-align: center;">
+                                        <a ng-click="closeBulkUploadDialog()" style="color: #00ACE4; font-weight: 600;cursor: pointer;">Go to "Bulk upload reports" for more details.</a>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                        <button type="button" class="cancel-btn" data-dismiss="modal" ng-click="cancelGeneric()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulk Upload SKU File Dialog -->
+        <div class="modal fade" data-backdrop="static" data-backdrop="static" data-keyboard="false" id="skuBulkUpload" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+            <div class="modal-dialog modalDialogProp modal-lg">
+                <form name="skuBulkUploadForm" novalidate ng-submit="skuBulkUploadForm.$valid && uploadBulkOrderFile(skuBulkUploadForm);">
+                <div class="modal-content">
+                    <div class="modal-header modal-dialog-header">
+                        <button type="button" class="close" ng-click="cancelSkuData(skuBulkUploadForm);" data-dismiss="modal">
+                          <span aria-hidden="true">&times;</span>
+                          <span class="sr-only">Close</span>
+                        </button>
+                        <p class="dialog-heading-p">Upload File</p>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row upload-file-dialog-row">
+                                <div class="col-md-3 bulkFile-heading-col font">Select a File</div>
+                                <div class="col-md-8">
+                                    <div id="choose_file" ng-required="true" name="files" ngf-drop ngf-select class="drop-box cursorPointer" ng-model="bulkOrderUploadfile" ngf-drag-over-class="'dragover'" accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                                        <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;" /> &nbsp;&nbsp;Drag file to upload or click to select
+                                    </div>
+                                    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+
+                                </div>
+                            </div>
+                            <div class="row upload-file-dialog-row">
+                                <div class="col-md-3 bulkFile-heading-col"></div>
+                                <div class="col-md-8 font">File:&nbsp;&nbsp;{{bulkOrderUploadfile.name}}</div>
+                            </div>
+                            <div class="row upload-file-dialog-row">
+                                <div class="col-md-3 bulkFile-heading-col"></div>
+                                <div class="col-md-8">
+                                    <b class="fileFormat">* File Format should be .xls,.xlsx</b>
+                                    <br>
+                                    <span ng-if="skuBulkUploadForm.$submitted && skuBulkUploadForm.files.$error.required" class="error-msg">Please upload file</span><br>
+                                    <span ng-if="skuBulkUploadForm.$submitted && skuBulkUploadForm.files.$error.pattern" class="error-msg">Please upload a valid file</span>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-dialog-footer">
+                        <button id="upload_file_cancel" type="button" class="cancel-btn" ng-click="cancelSkuData(skuBulkUploadForm);" data-dismiss="modal">Cancel</button>
+                        <button id="upload_file_done" ng-disabled="disableBulkUpload" type="submit" class="action-btn" >Upload</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<div ng-include src="'sku/skuInventoryDialog.html?version=1.0.0'"></div>
+<div ng-include src="'sku/skuSalesChannelMapUploadDialog.html?version=1.0.0'"></div>
+<div ng-include src="'sku/addNewVirtualKitDialog.html?version=1.0.0'"></div>
+<div ng-include src="'sku/addNewKitDialog.html?version=1.0.0'"></div>
+<div ng-include src="'sku/addNewSkuDialog.html?version=1.0.0'"></div>
+<div ng-include src="'sku/ViewSkuDataDetails.html?version=1.0.0'"></div>
+
+<div ng-show="showSkuImageContainer" class="view-sku-container">
+    <a class="skuGalleryClose" ng-click="closeSkuImageContainer()">x</a>
+    <a ng-class="{'disabled':viewedSkuImage && disableBackSku()}" class="skuGalleryNavs back" ng-click="backSkuImage()">
+        <img src="images/svg/back.svg">
+    </a>
+    <a ng-class="{'disabled':viewedSkuImage && disableNextSku()}" class="skuGalleryNavs next" ng-click="nextSkuImage()">
+        <img src="images/svg/next.svg">
+    </a>
+    <div class="imagePane">
+        <img ng-src="{{viewedSkuImage}}" alt="">
+    </div>
+    <div class="imageGallery">
+        <div ng-click="changeSkuImage(skuImgUrl1)" ng-class="{'selected': viewedSkuImage == skuImgUrl1}" ng-if="isImg1Present()" class="imageGalleryItem">
+            <img ng-src="{{skuImgUrl1}}" alt="">
+        </div>
+        <div ng-click="changeSkuImage(skuImgUrl2)" ng-class="{'selected': viewedSkuImage == skuImgUrl2}" ng-if="isImg2Present()" class="imageGalleryItem">
+            <img  ng-src="{{skuImgUrl2}}" alt="">
+        </div>
+        <div ng-click="changeSkuImage(skuImgUrl3)" ng-class="{'selected': viewedSkuImage == skuImgUrl3}" ng-if="isImg3Present()"class="imageGalleryItem">
+            <img  ng-src="{{skuImgUrl3}}" alt="">
+        </div>
+        <div ng-click="changeSkuImage(skuImgUrl4)" ng-class="{'selected': viewedSkuImage == skuImgUrl4}" ng-if="isImg4Present()" class="imageGalleryItem">
+            <img  ng-src="{{skuImgUrl4}}" alt="">
+        </div>
+    </div>
+</div>
+<div ng-include src="'services/CommonDeleteConfirmationDialog.html?version=1.0.0'"></div>
+<div class="modal fade"  id="addNewBrand" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <form name="addNewBrandForm" novalidate>
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="newBrand=null; closeBrandBox(addNewBrandForm);">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Add New Brand</p>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="col-md-4">
+                            <span class="font">Brand Name</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input name="brandName" ng-maxlength="45" onkeypress="if (event.keyCode == 13) {return false;}" type="text" placeholder="Enter Brand Name" ng-class="{submitted: isNewBrandNameEntered}" ng-change="newBrandNameChanged(newBrand.brandName)" ng-model="newBrand.brandName" class="form-control darkgrey-bottom-border font input-less-padding">
+                        </div>
+                        <div class="col-md-offset-4 col-md-6">
+                            <span ng-if="addNewBrandForm.brandName.$dirty && addNewBrandForm.brandName.$error.maxlength" class="error-msg">
+                                Brand Name should not exceed 45 characters.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button type="button" class="cancel-btn" ng-click="newBrand=null; closeBrandBox(addNewBrandForm);">Close</button>
+                <button type="button" class="action-btn" ng-dblclick="false" ng-disabled = "buttonBrandSaveDisable" ng-click="addNewBrandForm.$valid && addBrand(newBrand.brandName,addNewBrandForm);">Add</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<div ng-include src="'generateCategoryTemplate/generateTemplateDialog.html?version=1.0.0'"></div>
+<div ng-include src="'sku/barcodeprinting.html?version=1.0.0'"></div>
+<div ng-include src="'sku/skuSalesChannelMapFilter.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>

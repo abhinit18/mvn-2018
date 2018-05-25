@@ -1,0 +1,374 @@
+<div class="modal fade" data-keyboard="false" data-backdrop="static" id="addNewTaxClass" role="dialog" aria-labelledby="addTaxClassDialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="addNewTaxClassForm" accessible-form novalidate ng-submit="addNewTaxClassForm.$valid && submitAddOrderForm(taxData,addNewTaxClassForm)" >
+            <div class="modal-content">
+            <!-- Modal Header -->
+
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+
+                <button id="taxClassAddCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelTaxClassModal(addNewTaxClassForm)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+
+                <p class="dialog-heading-p">Tax Class</p>
+            </div>
+
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Tax Class Name <span style="color:red">*</span> </span>
+                            </div>
+                            <div class="col-md-6 form-row-height">
+                                <input capitalize-first type="text"
+                                       required ng-maxlength="45"
+                                       id="taxClassAddName"
+                                       name="taxClassName"
+                                       placeholder="Enter Tax Class Name"
+                                       class="form-control darkgrey-bottom-border"
+                                       ng-model="taxData.tableTaxClassName">
+                            </div>
+                            <div class="col-md-offset-3 col-md-6">
+                                        <span ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.taxClassName.$error.required"  class="error-message">
+                                            Please enter the Tax Class Name
+                                        </span>
+                                        <span ng-if="addNewTaxClassForm.taxClassName.$dirty && addNewTaxClassForm.taxClassName.$error.maxlength"  class="error-message">
+                                            Tax Class Name should not exceed 45 characters.
+                                        </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid">
+                        <div class="row row-margin-top">
+                            <div class="col-md-3 form-row-height">
+                                <span class="form-label-height semi-bold-text">Tax Type <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-6 form-row-height semi-bold-text">
+                               <!-- <select class="form-control"
+                                        name="taxType"
+                                        required
+                                        id="taxClassAddType"
+                                        ng-model="taxData.tableTaxClassTaxType"
+                                        ng-options="option for option in taxTypes track by option">
+                                    <option value="" disabled selected style="display: none;">Select
+                                        Tax Type
+                                    </option>
+                                </select>--><span class="form-control" style="border: none; box-shadow: none;">GST</span>
+                            </div>
+                            <div ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.taxType.$error.required" class="col-md-offset-3 col-md-6">
+                                 <span class="error-message">
+                                     Please select the Tax Type
+                                 </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div><!--ng-if="taxData.tableTaxClassTaxType=='GST'"-->
+                        <div class="container-fluid">
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Tax %  <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select class="form-control"
+                                            name="taxPerc"
+                                            required
+                                            id="taxClassAddPerc"
+                                            ng-model="taxData.tableTaxClassTaxValue"
+                                            ng-options="option.tableGstSlab as option.tableGstSlab for option in gstTaxRates">
+                                            <option value="" disabled selected style="display: none;">Select
+                                                Tax Rate
+                                            </option>
+                                    </select>
+                                </div>
+                                <div ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.taxPerc.$error.required" class="col-md-offset-3 col-md-6">
+                                 <span class="error-message">
+                                     Please select the Tax %
+                                 </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Cess %</span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text"
+                                           percentage
+                                           id="taxClassAddCess"
+                                           placeholder="Enter Surcharge %"
+                                           class="form-control darkgrey-bottom-border"
+                                           ng-model="taxData.tableTaxClassSurcharge">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="taxData.tableTaxClassTaxType=='VAT' || taxData.tableTaxClassTaxType=='Others'">
+                        <div class="container-fluid" ng-if="taxData.tableTaxClassTaxType=='Others'">
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Tax Name <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text" capitalize-first
+                                           name="taxName"
+                                           required
+                                           id="taxClassAddTName"
+                                           placeholder="Enter Tax Name"
+                                           class="form-control darkgrey-bottom-border"
+                                           ng-model="taxData.tableTaxClassTaxTypeOther">
+                                </div>
+                                <div ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.taxName.$error.required" class="col-md-offset-3 col-md-6">
+                                     <span class="error-message">
+                                         Please select the Tax Name
+                                     </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Scope <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select class="form-control add-single-order-select"
+                                            name="scope"
+                                            required
+                                            id="taxClassAddScope"
+                                            ng-model="taxData.tableTaxClassScope"
+                                            ng-options="option for option in taxScopes track by option">
+                                        <option value="" disabled selected style="display: none;">Select
+                                            Scope
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.scope.$error.required" class="col-md-offset-3 col-md-6">
+                                     <span class="error-message">
+                                         Please select the Scope
+                                     </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-fluid" ng-if="taxData.tableTaxClassScope == 'State'">
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Select State <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select class="form-control"
+                                            name="state"
+                                            required
+                                            id="taxClassAddState"
+                                            ng-model="taxData.tableState"
+                                            ng-options="option.tableStateLongName for option in regionsStatesArray track by option.idtableStateId">
+                                        <option value="" disabled selected style="display: none;">Select
+                                            State
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.state.$error.required" class="col-md-offset-3 col-md-6">
+                                     <span class="error-message">
+                                         Please select the State
+                                     </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container-fluid">
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Tax Calculated On  <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text" percentage
+                                           name="taxCalculated"
+                                           required
+                                           id="taxClassAddCalcOn"
+                                           placeholder="Enter Tax Calculated On"
+                                           class="form-control darkgrey-bottom-border"
+                                           ng-model="taxData.tableTaxClassCalculatedOn">
+                                </div>
+                                <div ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.taxCalculated.$error.required" class="col-md-offset-3 col-md-6">
+                                     <span class="error-message">
+                                         Please enter the Tax Calculated On
+                                     </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container-fluid">
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class=" form-label-height semi-bold-text">
+                                        <span ng-if="taxData.tableTaxClassScope == 'State'">Intrastate</span>TIN  <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text" alphanum
+                                           name="tin" ng-maxlength="45"
+                                           required
+                                           id="taxClassAddIntra"
+                                           placeholder="Enter Tax Identification Number"
+                                           class="form-control darkgrey-bottom-border"
+                                           ng-model="taxData.tableTaxClassTin">
+                                </div>
+                                <div class="col-md-offset-3 col-md-6">
+                                     <span ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.tin.$error.required"  class="error-message">
+                                         Please enter the Tin
+                                     </span>
+                                     <span ng-if="addNewTaxClassForm.tin.$dirty && addNewTaxClassForm.tin.$error.maxlength"  class="error-message">
+                                         Tin should not exceed 45 characters.
+                                     </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container-fluid">
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height  semi-bold-text">
+                                        <span ng-if="taxData.tableTaxClassScope == 'State'">Intrastate</span>Tax %  <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text" percentage
+                                           placeholder="Enter Tax % Value"
+                                           name="taxPerc2"
+                                           required
+                                           id="taxClassAddTIntra"
+                                           class="form-control darkgrey-bottom-border"
+                                           ng-model="taxData.tableTaxClassTaxValue">
+                                </div>
+                                <div ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.taxPerc2.$error.required" class="col-md-offset-3 col-md-6">
+                                     <span class="error-message">
+                                         Please enter Tax %
+                                     </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">
+                                        <span ng-if="taxData.tableTaxClassScope == 'State'">Intrastate</span>
+                                        Surcharge %
+                                    </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <input type="text"
+                                           percentage
+                                           id="taxClassAddSIntra"
+                                           placeholder="Enter Surcharge %"
+                                           class="form-control darkgrey-bottom-border"
+                                           ng-model="taxData.tableTaxClassSurcharge">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="full-width" ng-if="taxData.tableTaxClassScope == 'State'">
+
+                            <div class="container-fluid" ng-if="taxData.tableTaxClassTaxType=='Others'">
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Interstate Tax Type <span style="color:red">*</span> </span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input type="text"
+                                               capitalize-first
+                                               name="interstateTaxType"
+                                               id="taxClassAddTTIntra"
+                                               required
+                                               maxlength="15"
+                                               placeholder="Enter Tax Name"
+                                               class="form-control darkgrey-bottom-border"
+                                               ng-model="taxData.tableTaxClassInterstateTaxTypeOther">
+                                    </div>
+                                    <div ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.interstateTaxType.$error.required" class="col-md-offset-3 col-md-6">
+                                     <span class="error-message">
+                                         Please enter Interstate Tax Type
+                                     </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid">
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Interstate TIN<span style="color:red">*</span> </span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input type="text"
+                                               alphanum
+                                               name="interstateTin"
+                                               required ng-maxlength="45"
+                                               id="taxClassAddTinIntra"
+                                               placeholder="Enter Interstate Tax Identification Number"
+                                               class="form-control darkgrey-bottom-border"
+                                               ng-model="taxData.tableTaxClassInterstateTin">
+                                    </div>
+                                    <div  class="col-md-offset-3 col-md-6">
+                                         <span ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.interstateTin.$error.required" class="error-message">
+                                             Please enter Interstate TIN
+                                         </span>
+                                         <span ng-if="addNewTaxClassForm.interstateTin.$dirty && addNewTaxClassForm.interstateTin.$error.maxlength" class="error-message">
+                                             Interstate TIN should not exceed 45 characters.
+                                         </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid">
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Interstate tax % <span style="color:red">*</span> </span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input type="text"
+                                               percentage
+                                               name="interstateTaxPerc"
+                                               id="taxClassAddIntraPerc"
+                                               placeholder="Enter Interstate tax %"
+                                               class="form-control darkgrey-bottom-border"
+                                               ng-model="taxData.tableTaxClassInterstateTaxValue">
+                                    </div>
+                                    <div ng-if="addNewTaxClassForm.$submitted && addNewTaxClassForm.interstateTaxPerc.$error.required" class="col-md-offset-3 col-md-6">
+                                     <span class="error-message">
+                                         Please enter Interstate tax %
+                                     </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid">
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Interstate Surcharge %</span>
+                                    </div>
+                                    <div class="col-md-6 form-row-height">
+                                        <input type="text"
+                                               percentage
+                                               id="taxClassAddIntraSur"
+                                               placeholder="Enter Interstate Surcharge %"
+                                               class="form-control darkgrey-bottom-border"
+                                               ng-model="taxData.tableTaxClassInterstateSurcharge">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="taxClassAddCancel2" type="button" class="cancel-btn" ng-click="cancelTaxClassModal(addNewTaxClassForm)">Cancel
+                    </button>
+                    <!--<button ng-disabled="genericData.disableButton" type="button" class="action-btn" ng-if = "addModalMode == 'add'"-->
+                            <!--ng-click="AddTaxClass(taxData)">Add Class-->
+                    <!--</button>-->
+                    <!--<button ng-disabled="genericData.disableButton" type="button" class="action-btn" ng-if = "addModalMode == 'edit'"-->
+                            <!--ng-click="updateTaxClass(taxData)">Update Class-->
+                    <!--</button>-->
+                    <input id="taxClassAddSubmit" type="submit" ng-disabled="genericData.disableButton" class="action-btn" ng-if = "addModalMode == 'add'"
+                            ng-click="setFormButtonValue('add')" value="Add Class">
+                    <input id="taxClassAddUpdate" type="submit" ng-disabled="genericData.disableButton" class="action-btn" ng-if = "addModalMode == 'edit'"
+                            ng-click="setFormButtonValue('edit')" value="Update Class">
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

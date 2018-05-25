@@ -1,0 +1,280 @@
+<script type="text/ng-template" id="exportDiscountDialog.tmpl.html" >
+<md-dialog aria-label="Export Discount Dialog"
+           style="width: 900px;position: relative;" ng-cloak>
+    <form name="PoModal" class="nobottomMargin" novalidate>
+        <md-toolbar style="background-color: #F2F7F8; ">
+            <div class="md-toolbar-tools">
+                <p class="dialog-heading-p"> Export Discount Rules</p>
+                <span flex></span>
+                <md-button class="md-icon-button"
+                           ng-click="cancelDiscountExportDialog();">
+                    <md-icon
+                            md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+
+                <div class="full-width">
+                    <div class="full-width margin-top-15">
+                        <button  title="Clear Applied Filters" style="margin-top:7px;" class="btn clearFilter"
+                                 ng-click="clearActionForExportFilter()">
+                        </button>
+                        <div class="col-md-2 text-center margin-top-5">
+                            <span class="semi-bold-text">Select Date</span>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <md-datepicker timezoned-date ng-model="exportFilterData.tableDiscountRuleStartDate"
+                                           md-min-date="minDateShipping" md-max-date="maxDateShipping"
+                                           md-placeholder="Start date"
+                                           name="startDate"
+                                           ng-change="onShippingDateChangeForExport(exportFilterData.tableDiscountRuleStartDate)"></md-datepicker>
+                        </div>
+                        <div class="col-md-3 no-padding">
+                            <md-datepicker timezoned-date ng-model="exportFilterData.tableDiscountRuleEndDate"
+                                           md-min-date="minDateDelivery" md-max-date="maxDateDelivery"
+                                           md-placeholder="End date"
+                                           name="endDate"
+                                           ng-change="onDeliveryDateChangeForExport(exportFilterData.tableDiscountRuleEndDate)"></md-datepicker>
+                        </div>
+                    </div>
+                </div>
+                <div class="full-width">
+                    <div class="full-width margin-top-15">
+                        <div class="col-md-6 margin-top-5 col-md-offset-2 text-left">
+							<span class="col-lg-12 col-md-6 col-sm-12 col-xs-12 leftPadding"> <md-checkbox
+                                    ng-model="exportFilterData.tableDiscountRuleAllScSelected"
+                                    aria-label="Enable"> </md-checkbox> &nbsp;Select all sales
+								channel
+							</span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="full-width"
+                     ng-if="!exportFilterData.tableDiscountRuleAllScSelected">
+                    <div class="full-width margin-top-15" style="margin-bottom: 10px;">
+                        <div class="col-md-2 margin-top-5 text-left">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                                <span class="semi-bold-text full-width" style="width:115px;margin-left:16px;">Sales
+								Channel <span style="color: red">*</span>
+							    </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 margin-top-5 text-right">
+                            <select required name="channelObject"
+                                    ng-model="exportFilterData.selectedSalesChannel"
+                                    ng-change="setSelectedChannelForFilter(exportFilterData.selectedSalesChannel)"
+                                    class="form-control add-single-order-select"
+                                    ng-options="option as option.tableSalesChannelValueInfoName for option in salesChannels">
+                                <option value="" disabled selected style="display: none;">Choose
+                                    Channel
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 form-row-height">
+                            <span title="Add to List" class="form-label-height add-to-list-icon"
+                                  style="color: #f0592b;"
+                                  ng-click="addSalesChannelToListForFilter()"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="full-width" style="background: #f5f5f5; padding: 15px;"
+                     ng-if="!exportFilterData.tableDiscountRuleAllScSelected && exportFilterData.tableDiscountSalesChannelInclusions.length > 0">
+                    <table id="salesChannelTable"
+                           class="table boldtable table-responsive table-bordered table-hover">
+                        <thead class="data-grid-header">
+                        <tr>
+                            <th style="width: 80%;">Channel Name</th>
+
+                            <th style="width: 20%;">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody class="data-grid-data">
+                        <tr
+                                ng-repeat="tableDiscountSalesChannelInclusions in exportFilterData.tableDiscountSalesChannelInclusions track by $index">
+                            <td>
+                                {{tableDiscountSalesChannelInclusions.tableSalesChannelValueInfo.tableSalesChannelValueInfoName}}
+                            </td>
+                            <td class="text-center"><a class="table-btn"
+                                                       ng-click="removeSalesChannelFromListForFilter($index)"><span
+                                    class="fa fa-trash fa-lg"/></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="full-width">
+                <div class="full-width margin-top-15">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="full-width">
+                            <div class="full-width">
+                                <div class="col-md-2 text-left col-sm-12 col-xs-12">
+									<span class="semi-bold-text full-width" style="margin-left: 24px;">Select
+										criteria <span style="color: red">*</span>
+									</span>
+                                </div>
+                                <div class="col-md-8 ">
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12" style="padding-left:8px;">
+                                        <md-radio-group
+                                                ng-model="exportFilterData.tableDiscountRuleSelectedEntity"
+                                                ng-change="clickChangeValueForFilter(exportFilterData.tableDiscountRuleSelectedEntity)">
+                                            <md-radio-button value="Category" class="md-primary md-radio-height"
+                                                             ng-style="{'display':'inline'}">
+                                                Category&nbsp;&nbsp;&nbsp;
+                                            </md-radio-button>
+                                            <md-radio-button value="SKU"
+                                                             class="md-primary md-radio-height" ng-style="{'display':'inline'}">
+                                                SKU
+                                            </md-radio-button>
+                                        </md-radio-group>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-md-offset-2 col-sm-6 col-xs-12"
+                                     style="margin-top: 10px; margin-bottom: 10px;">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"
+                                         style="margin-top: 20px; padding: 0px;">
+										<span class="" style="font-size: 14px; margin-left: 8px;"
+                                              ng-if="exportFilterData.tableDiscountRuleSelectedEntity == 'Category'">
+											<md-checkbox
+                                                    ng-model="exportFilterData.tableDiscountRuleAllCategorySelected"
+
+                                                    aria-label="Enable"> </md-checkbox> Select All Category
+										</span> <span class="" style="font-size: 14px; margin-left: 8px;"
+                                                      ng-if="exportFilterData.tableDiscountRuleSelectedEntity == 'SKU'">
+											<md-checkbox
+                                                    ng-model="exportFilterData.tableDiscountRuleAllSkuSelected"
+                                                     aria-label="Enable">
+											</md-checkbox> Select All SKU
+										</span>
+                                    </div>
+                                </div>
+                                <div class="full-width"
+                                     style="margin-top: 10px; margin-bottom: 10px;"
+                                     ng-if="(exportFilterData.tableDiscountRuleSelectedEntity == 'Category' && !exportFilterData.tableDiscountRuleAllCategorySelected)
+                                                            || (exportFilterData.tableDiscountRuleSelectedEntity == 'SKU' && !exportFilterData.tableDiscountRuleAllSkuSelected)">
+                                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+										<span class="semi-bold-text" style="margin-left: 30px;">Select
+											{{exportFilterData.tableDiscountRuleSelectedEntity}} <span
+                                                    style="color: red">*</span>
+										</span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-left:-63px;">
+                                        <angucomplete-alt-long id="category"
+                                                               ng-if="exportFilterData.tableDiscountRuleSelectedEntity == 'SKU'"
+                                                               placeholder="Search {{exportFilterData.tableDiscountRuleSelectedEntity}}"
+                                                               pause="400"
+                                                               selected-object="searchedEntitySelectedForFilter"
+                                                               remote-url="{{entitySearchUrl}}"
+                                                               title-field="{{angucompleteTitleField}}"
+                                                               input-class="main-bottom-border font input-less-padding">
+                                        </angucomplete-alt-long>
+
+
+                                        <select
+                                                ng-options="option as option.skuNodeName for option in categoryTypeLists"
+                                                required
+                                                ng-if="exportFilterData.tableDiscountRuleSelectedEntity == 'Category'"
+                                                ng-model="exportFilterData.searchedCategory"
+                                                class="form-control add-single-order-select">
+                                            <option value="" disabled selected style="display: none;">Choose
+                                                Category
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <button type="button" title="Click here to see all SKUs."
+                                                ng-if="exportFilterData.tableDiscountRuleSelectedEntity == 'SKU'"
+                                                style="position: absolute; top:8px;"
+                                                class="btn btn-sm truncate-text"
+                                                ng-click="masterSkuDialogForFilter($event, true);">. . .
+                                        </button>
+                                    </div>
+
+
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                        <button type="button" class="btn addsharpbutton font"
+                                                ng-click="addEntityToDiscountRuleForFilter()" style="height: auto;">
+                                            Add to List
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+
+                                    <table id="categoryTable"
+                                           ng-if="exportFilterData.tableDiscountRuleSelectedEntity == 'Category' && exportFilterData.tableDiscountSkuCategoryInclusions.length > 0"
+                                           class="table boldtable table-responsive table-bordered table-hover">
+                                        <thead class="data-grid-header">
+                                        <tr>
+                                            <th style="width: 80%;">
+                                                {{exportFilterData.tableDiscountRuleSelectedEntity}}
+                                            </th>
+
+                                            <th style="width: 20%;">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="data-grid-data">
+                                        <tr
+                                                ng-repeat="tableDiscountSkuCategoryInclusion in exportFilterData.tableDiscountSkuCategoryInclusions track by $index">
+                                            <td>
+                                                {{tableDiscountSkuCategoryInclusion.tableSkuNode.skuNodeName}}
+                                            </td>
+                                            <td class="text-center"><a class="table-btn"
+                                                                       ng-click="removeEntityFromDiscountRuleForFilter($index)"><span
+                                                    class="fa fa-trash fa-lg"/></a></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table id="skuTable"
+                                           ng-if="exportFilterData.tableDiscountRuleSelectedEntity == 'SKU' && exportFilterData.tableDiscountSkuInclusions.length > 0"
+                                           class="table boldtable table-responsive table-bordered table-hover">
+                                        <thead class="data-grid-header">
+                                        <tr>
+                                            <th style="width: 80%;">
+                                                {{exportFilterData.tableDiscountRuleSelectedEntity}}
+                                            </th>
+
+                                            <th style="width: 20%;">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="data-grid-data">
+                                        <tr
+                                                ng-repeat="tableDiscountSkuInclusion in exportFilterData.tableDiscountSkuInclusions track by $index">
+                                            <td>{{tableDiscountSkuInclusion.tableSku.tableSkuName}}</td>
+                                            <td class="text-center"><a class="table-btn"
+                                                                       ng-click="removeEntityFromDiscountRuleForFilter($index)"><span
+                                                    class="fa fa-trash fa-lg"/></a></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <br/><br/>
+            </div>
+
+        </md-dialog-content>
+
+        <md-dialog-actions style="background-color: #30373B; min-height: 60px;"
+                           layout="row"><span flex></span>
+            <button type="button" class="cancel-btn"
+                    ng-click="cancelDiscountExportDialog()">Cancel
+            </button>
+            <button type="button" class="action-btn" ng-click="downloadDiscountRules()">Export</button>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+</script>

@@ -1,0 +1,94 @@
+<div class="modal fade" data-backdrop="static" id="showskuinventory" role="dialog" aria-labelledby="showskuinventory" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="skuInvCancel1" type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="myModalLabel">Inventory Details</p>
+
+            </div>
+
+
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;margin-top:15px;">
+                <table id="productTable"
+                       class="table boldtable table-responsive table-bordered table-hover">
+                    <thead class="data-grid-header">
+                    <tr>
+                        <th id="skuInvIdH" style="text-align: center; width:11.5% !important;">
+                            Seller SKU ID
+                        </th>
+                        <th id="skuInvNameH" style="text-align: center; width:11.5% !important;">
+                            SKU Name
+                        </th>
+                        <th id="skuInvAvailH" style="text-align: center; width:9% !important;">
+                            Available
+                        </th>
+                        <th id="skuInvAllocH" style="text-align: center; width:9% !important;">
+                            Allocated
+                        </th>
+                        <th id="skuInvBadH" style="text-align: center; width:9% !important;">
+                            Bad
+                        </th>
+                        <th id="skuInvBlockH" style="text-align: center; width:9% !important;">
+                            Blocked
+                        </th>
+
+                        <th id="skuInvSITH" style="text-align: center; width:9% !important;">
+                            Stock In Transit
+                        </th>
+                        <th id="skuInvTotalH" style="text-align: center; width:9% !important;">
+                            Total
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody class="data-grid-data">
+                    <tr>
+                        <td id="skuInvId{{$index}}" style="text-align: center; width:11.5% !important;">
+                            {{skuInventories.skuCode}}
+                        </td>
+                        <td id="skuInvName{{$index}}" style="text-align: center; width:11.5% !important;">
+                            {{skuInventories.skuName}}
+                        </td>
+                        <td id="skuInvAvail{{$index}}" style="text-align: center; width:9% !important;">
+                            {{skuInventories.available}}
+                        </td>
+                        <td id="skuInvAlloc{{$index}}" style="text-align: center; width:9% !important;">
+                            {{skuInventories.allocated}}
+                        </td>
+                        <td id="skuInvBadH" style="text-align: center; width:9% !important;">
+                            {{skuInventories.bad}}
+                        </td>
+                        <td id="skuInvBlock{{$index}}" style="text-align: center; width:9% !important;">
+                            {{skuInventories.blocked}}
+                        </td>
+
+                        <td id="skuInvSIT{{$index}}" style="text-align: center; width:9% !important;">
+                            {{skuInventories.intransit}}
+                        </td>
+                        <td id="skuInvTotal{{$index}}" style="text-align: center; width:9% !important;">
+                            {{skuInventories.total}}
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="skuInvCancel2" type="button" class="cancel-btn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .data-grid-header {
+        background-color: #30373B;
+        color: #fff;
+    }
+</style>

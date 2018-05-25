@@ -1,0 +1,56 @@
+<div class="modal fade" id="dialog2" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="SOSACancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelWarehouseSelection()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Shipping Allocation</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div layout="row">
+                    <b style="width: 15%;font-weight:600">Order No.</b>
+                    <input id="SOSANo" type="text" style="color: #F0592B;font-size: 14px;width: 40%;padding-top: 0px;" ng-model="orderNo" ng-readonly="true"></input>
+                </div>
+                <!-- {{wareHousesArray}} -->
+                <br>
+                <div layout="row">
+                    <b style="width: 35%;font-weight:600">Please Select the Shipping Carrier</b>
+                </div>
+                <div class="row main-list">
+                    <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                        <thead class="warehouse-selection-header">
+                        <tr height="45">
+                            <td id="SOSASelectH">Select</td>
+                            <td id="SOSASCNH">Shipping Carrier Name</td>
+                            <td id="SOSACostH">Cost</td>
+                            <td id="SOSADFCH">Distance From Customers</td>
+                        </tr>
+                        </thead>
+                        <tbody data-ng-repeat="option in shippingCarrierArray">
+                        <tr class="warehouse-selection-row">
+                            <td id="SOSASelect{{$index}}">
+                                <input type="radio" name="choice" ng-model="radio1" value="{{option}}" ng-change="onvalue1(radio1)" />
+                            </td>
+                            <td id="SOSASCN{{$index}}">{{option.tableShippingCarrierServices.tableShippingCarrierServicesName}}</td>
+                            <td id="SOSACost{{$index}}"> Rs. {{option.cost}}</td>
+                            <td id="SOSADFC{{$index}}">{{option.distanceFromCustomer}} Kms</td>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="SOSACancel2" class="cancel-btn" ng-click="cancelWarehouseSelection()">
+                    Cancel
+                </button>
+                <button id="SOSASubmit" type="button" class="action-btn" ng-click="selectShippingCarrierAction(orderId,tableSaleOrderId,shippingObject);">Select</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,136 @@
+<div class="modal fade" id="updatePriceDialog" role="dialog" aria-labelledby="updatePriceDialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="updatePriceForm" accessible-form novalidate
+              ng-submit="submitUpdatePriceModal(updatepricemodal,updatePriceForm);">
+            <div class="modal-content">
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="invAddCancel1" type="button" class="close" data-dismiss="modal"
+                            ng-click="cancelupdatePriceDialog()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">Update Price</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+
+                    <div class="md-dialog-content">
+                        <div class="tab-content">
+                            <div class="tab-pane active container-fluid">
+                                <!-- Product Search -->
+                                <div class="row">
+                                    <div class="col-md-2 form-row-height">
+
+                                        <span class="form-label-height semi-bold-text">Product</span>
+                                    </div>
+                                    <div class="col-md-4 form-row-height">
+
+                                        <span class="form-label-height ">{{updatepricemodal.skucode}}</span>
+                                    </div>
+                                    <div class="col-md-2 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Warehouse </span>
+                                    </div>
+                                    <div class="col-md-4 form-row-height">
+                                        <span class="form-label-height ">{{updatepricemodal.warehouseShortName}}</span>
+                                    </div>
+                                </div>
+
+                                <!-- SKU ID -->
+
+
+                                <hr/>
+
+
+                                <!-- MRP and MSP -->
+                                <div class="row row-margin-top">
+
+                                    <div class="col-md-2 form-row-height">
+                                        <span class="form-label-height semi-bold-text">MRP <span
+                                                class="label-red">*</span></span>
+                                    </div>
+                                    <div class="col-md-4 form-row-height">
+                                        <input class="darkgrey-bottom-border" placeholder="Enter MRP"
+                                               tabindex="5"
+                                               type="text"
+                                               price ng-maxlength="14"
+                                               id="invAddMRP" name="mrp"
+                                               required
+                                               ng-model="updatepricemodal.updatedMrp"
+                                               ng-change="checkMspGrtMrp(updatepricemodal.updatedMrp,updatepricemodal.updatedMsp)">
+                                        <span style="font-size: 11px; color: #c2c3c4;">
+                                            <span>Current MRP ( Max: {{updatepricemodal.maximumMrp}} |</span>
+                                            <span>Avg: {{updatepricemodal.weightedAvgMrp}} |</span>
+                                            <span>Min: {{updatepricemodal.minimumMrp}} )</span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-2 form-row-height">
+                                        <span class="form-label-height semi-bold-text">Min Sale Price</span>
+                                    </div>
+                                    <div class="col-md-4 form-row-height">
+                                        <input class="darkgrey-bottom-border" placeholder="Enter MSP" value="0.00"
+                                               tabindex="6"
+                                               type="text"
+                                               price ng-maxlength="14"
+                                               id="invAddMSP" name="msp"
+                                               ng-model="updatepricemodal.updatedMsp"
+                                               ng-change="checkMspGrtMrp(updatepricemodal.updatedMrp,updatepricemodal.updatedMsp)">
+                                        <span style="font-size: 11px; color: #c2c3c4;">
+                                            <span>Current MSP ( Max: {{updatepricemodal.maximumMsp}} |</span>
+                                            <span>Avg: {{updatepricemodal.weightedAvgMsp}} |</span>
+                                            <span>Min: {{updatepricemodal.minimumMsp}} )</span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-offset-3 col-md-3">
+                                        <span ng-if="addInventoryOrderForm.$submitted && addInventoryOrderForm.mrp.$error.required"
+                                              class="error-message">
+                                            Please enter the MRP
+                                        </span>
+                                        <span ng-if="addInventoryOrderForm.mrp.$dirty && addInventoryOrderForm.mrp.$error.maxlength"
+                                              class="error-message">
+                                             MRP cannot exceed 999999999.99
+                                        </span>
+                                    </div>
+                                    <div class="col-md-offset-3 col-md-3">
+                                        <span ng-if="addInventoryOrderForm.msp.$dirty && addInventoryOrderForm.msp.$error.maxlength"
+                                              class="error-message">
+                                             MSP cannot exceed 999999999.99
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- {{inventoryData}} -->
+                    {{$parent.invData=inventoryData;""}}
+                </div>
+            </div>
+
+
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                 ng-if="singleOrderTab==true && bulkOrderTab==false">
+                <button id="invAddCancel2" class="cancel-btn" type="button"
+                        ng-click="cancelupdatePriceDialog()">
+                    Cancel
+                </button>
+                <button id="invAddSubmit" type="submit" ng-if="mode=='add'" class="action-btn">
+                    Update
+                </button>
+            </div>
+    </form>
+</div>
+</div>
+<style>
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+        background-color: #E9EEEF;
+    }
+
+    .md-datepicker-calendar-pane {
+        z-index: 1200;
+    }
+</style>

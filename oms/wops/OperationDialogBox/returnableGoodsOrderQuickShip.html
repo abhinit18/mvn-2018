@@ -1,0 +1,381 @@
+<div class="modal fade" id="returnableGoodsOrderQuickShipOperation" role="dialog"
+     data-backdrop="static"
+     aria-labelledby="returnableGoodsOrderQuickShipOperation" aria-hidden="true">
+    <div class="modal-dialog modal-lg" >
+        <form name="RGquickshipForm" accessible-form novalidate ng-submit="RGquickshipForm.$valid && AddPacckingDetails(RGquickshipForm)" >
+            <div class="modal-content">
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+
+                    <button type="button" class="close" data-dismiss="modal" ng-click="cancelQuickShipModal(RGquickshipForm)">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+
+                    <p class="dialog-heading-p">Returnable Goods Order</p>
+
+                </div>
+
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="ShipProduct" style="min-height: 300px;">
+                        <div class="col-lg-3 col-md-5 col-sm-12 col-xs-12"
+                             style="border-left:1px solid lightgray;margin-top:20px;">
+                            <h4>Shipping Details</h4>
+
+                            <div class="full-width" style="margin-top: 15px;margin-bottom:15px;position: relative;">
+                                <div class="full-width"></div>
+                                <select name="skuType" required class="form-control selectpicker" ng-init="shippingDetails.SkuType = 'Parcel'"
+                                        ng-model="shippingDetails.SkuType" ng-change="resetAllQuickShipFields()">
+                                    <option value="" disabled selected style="display: none;">Select Load Type</option>
+                                    <option value="Heavy">LTL-FTL</option>
+                                    <option value="Parcel">Parcel</option>
+                                </select>
+                                <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.skuType.$error.required" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                    <span class="error-msg">Please select the Load Type</span>
+                                </div>
+
+                                <div class="full-width" ng-if="shippingDetails.SkuType == 'Heavy'">
+
+                                    <h4 style="margin-bottom: 25px;font-size:17px;">Enter Truck Details:</h4>
+
+                                    <div class="full-width" style="margin-bottom: 15px;">
+                                        <select class="selectpicker form-control"
+                                                required
+                                                name="vehicleType"
+                                                ng-options="option.tableClientShippingCarrierVehicleTypeString for option in SKUvehicleType track by option.idtableClientShippingCarrierVehicleTypeId"
+                                                ng-model="shippingDetails.VehicleType">
+                                            <option value="" disabled selected style="display: none;">Select Vehicle Type</option>
+
+                                        </select>
+                                        <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.vehicleType.$error.required" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                            <span class="error-msg">Please select a Vehicle Type</span>
+                                        </div>
+                                    </div>
+                                    <div class="full-width" style="margin-bottom: 15px;">
+                                        <input type="text" class="form-control darkgrey-bottom-border"
+                                               capitalize-first
+                                               name="driverName"
+                                               required
+                                               alpha-withspace
+                                               ng-model="shippingDetails.DriverName" placeholder="Driver Name">
+                                        <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.driverName.$error.required" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                            <span class="error-msg">Please enter the drivers name</span>
+                                        </div>
+                                    </div>
+                                    <div class="full-width" style="margin-bottom: 15px;">
+                                        <input type="text" class="form-control darkgrey-bottom-border"
+                                               only-integer
+                                               ng-model="shippingDetails.DriverNumber" placeholder="Driver Contact Number">
+                                    </div>
+                                    <div class="full-width" style="margin-bottom: 15px;">
+                                        <input type="text" class="form-control darkgrey-bottom-border"
+                                               alphanum
+                                               trim-space
+                                               required
+                                               name="vehicleNumber"
+                                               ng-model="shippingDetails.VehicleNumber" placeholder="Vehicle Number">
+                                        <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.vehicleNumber.$error.required" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                            <span class="error-msg">Please enter the vehicle number</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="full-width" ng-if="shippingDetails.SkuType == 'Parcel'">
+                                    <div class="full-width" style="margin-bottom: 15px;">
+                                        <input type="text"
+                                               class="form-control darkgrey-bottom-border"
+                                               alphanum
+                                               required
+                                               name="masterAwb"
+                                               ng-model="shippingDetails.tableReturnableGoodsOrderShippingDetailsMasterAwb"
+                                               placeholder="Master AWB no.">
+                                    </div>
+                                    <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.masterAwb.$error.required" class="full-width" style="margin-bottom: 15px;">
+                                        <span class="error-msg">Please enter the Master AWB no.</span>
+                                    </div>
+                                </div>
+                                <div class="full-width">
+                                    <button ng-if="shippingDetails.SkuType == 'Parcel'" type="button" class="btn btn-danger btn-sm full-width"
+                                            ng-disabled="!(RGquickshipForm.skuType.$valid && RGquickshipForm.masterAwb.$valid)"
+                                            ng-click="skuPackingDisable(shippingDetails)"
+                                            style="background-color:#F0592B;">
+                                        OK
+                                    </button>
+                                    <button ng-if="shippingDetails.SkuType != 'Parcel'" type="button" class="btn btn-danger btn-sm full-width"
+                                            ng-disabled="!(RGquickshipForm.skuType.$valid && RGquickshipForm.vehicleType.$valid && RGquickshipForm.vehicleNumber.$valid && RGquickshipForm.driverName.$valid)"
+                                            ng-click="skuPackingDisable(shippingDetails)"
+                                            style="background-color:#F0592B;">
+                                        OK
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-7 col-sm-12 col-xs-12"
+                             style="border-left:1px solid lightgray;border-right:1px solid lightgray;margin-top: 22px;">
+                            <div class="full-width">
+                                <h4>Enter Packing Details</h4>
+                            </div>
+                            <div class="full-width full-blur" ng-if="blurred"></div>
+                            <div class="PackageContainer" style="padding-top:5px">
+                                <div class="full-width" style="margin-bottom: 15px;">
+                                    <div class="col-lg-6 col-md-6 col-xs-12">
+                                        <div class="full-width" style="padding-top: 5px">
+                                            <select class="form-control selectpicker" name="LengthUnit" required
+                                                    ng-model="Packing.LengthUnit"
+                                                    ng-options="option as option.tableSkuUodmTypeString for option in lengthUnitDropdown">
+                                                <option value="">Dimensional Unit</option>
+                                            </select>
+
+                                            <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.LengthUnit.$error.required" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                                <span class="error-msg">Please select the Dimensional Unit</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-xs-12">
+                                        <div class="full-width">
+                                            <input type="text" floating precision="2" ng-model="Packing.Length"
+                                                   min = "1"
+                                                   class="form-control darkgrey-bottom-border-number" required
+                                                   name="length" placeholder="Enter Container Length">
+
+                                            <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.length.$error.required" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                                <span class="error-msg">Please enter the container length</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="full-width"
+                                             style="padding-bottom: 20px;">
+                                        <div class="col-lg-6 col-md-6 col-xs-12">
+                                            <div class="full-width">
+                                                <input type="text" floating precision="2" ng-model="Packing.Breadth"
+                                                       min = "1"
+                                                       class="form-control darkgrey-bottom-border-number" required
+                                                       name="breadth" placeholder="Enter Container Width">
+
+                                                <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.breadth.$error.required" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                                    <span class="error-msg">Please enter the container breadth</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-xs-12">
+                                            <div class="full-width">
+                                                <input type="text" floating precision="2" ng-model="Packing.Height"
+                                                       min = "1"
+                                                       class="form-control darkgrey-bottom-border-number" required
+                                                       name="height" placeholder="Enter Container Height">
+
+                                                <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.height.$error.required" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                                    <span class="error-msg">Please enter the container height</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="full-width"
+                                     style="border-bottom: 1px solid lightgray;padding-bottom: 20px;">
+                                    <div class="col-lg-6 col-md-6 col-xs-12">
+                                        <div class="full-width" style="padding-top: 5px">
+                                            <select class="form-control selectpicker" name="WeightUnit" required
+                                                    ng-model="Packing.WeightUnit"
+                                                    ng-options="option as option.tableSkuUowmTypeString for option in weightUnitDropdown">
+                                                <option value="">Weighing Unit</option>
+                                            </select>
+
+                                            <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.WeightUnit.$error.required" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                                <span class="error-msg">Please select the Weighing Unit</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-xs-12">
+                                        <div class="full-width">
+                                            <input type="text" floating precision="3" ng-model="Packing.Weight"
+                                                   class="form-control darkgrey-bottom-border-number" name="weight"
+                                                   min = "1"
+                                                   required placeholder="Enter Container Weight">
+
+                                            <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.weight.$error.required" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                                <span class="error-msg">Please enter the container weight</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-md-4 col-lg-4 col-xs-12" style="margin-top: 8px">
+                                    <span class="add-new-sp-row">
+                                    <md-checkbox id="fbaenabled"
+                                                 ng-model="shipping.shipallchecked" ng-change="shipAll()"
+                                                 aria-label="Enable">
+                                    </md-checkbox><b> Ship All </b>
+                                </span>
+                                </div>
+                                <br>
+                                <div style="float: left;width:100%;">
+                                    <table class="table table-no-margin">
+                                        <thead>
+                                        <tr style="background: #333;color:#fff;">
+                                            <td class="col-md-5">
+                                                SKU Name
+                                            </td>
+                                            <td ng-if="shippingDetails.SkuType == 'Parcel'" class="col-md-2">
+                                                Ordered Quantity
+                                            </td>
+                                            <td class="col-md-2">
+                                                Shipped Quantity
+                                            </td>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                    <div ng-if="shippingDetails.SkuType == 'Parcel'" style="height:52px;padding-top: 10px;">
+                                        <div class="col-md-2">
+                                            AWB Number:
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control darkgrey-bottom-border"
+                                                   ng-required="boxDetails.length == 0" name="AWB"
+                                                   trim-space
+                                                   alphanum
+                                                   ng-model="shipping.awbnumber"
+                                                   placeholder="AWB Number">
+
+                                            <div ng-if="RGquickshipForm.$submitted && RGquickshipForm.AWB.$error.required" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                                <span class="error-msg">Please enter the AWB no.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-repeat="skuModel in quickShipDataTable" style="float: left;width:100%;">
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td class="col-md-5">
+                                                    <h5 style="color:orangered;">{{skuModel.tableSku.tableSkuName}}
+                                                        <span style="color:#333">( {{skuModel.tableSku.tableSkuClientSkuCode}} )</span></h5>
+                                                </td>
+                                                <td class="col-md-2" style="text-align:center">{{skuModel.tableReturnableGoodsOrderSkuQuantity}}</td>
+                                                <td class="col-md-2">
+                                                    <input type="text" name="inputQuantity"
+                                                           ng-required="boxDetails.length == 0"
+                                                           class="form-control darkgrey-bottom-border-number" id="hide"
+                                                           only-integer
+                                                           prevent-typing-greater
+                                                           ng-maxlength="10"
+                                                           restrict-to="{{skuModel.tableReturnableGoodsOrderSkuQuantity}}"
+                                                           placeholder="Quantity"
+                                                           ng-model="skuModel.tableSkusSkuQuantity">
+
+                                                    <div ng-if="RGquickshipForm.$submitted && (RGquickshipForm.inputQuantity.$error.required || RGquickshipForm.inputQuantity.$error.maxlength || RGquickshipForm.inputQuantity.$error.maximumQuantity)" class="full-width" style="margin-top: 10px;margin-bottom: 10px;">
+                                                        <span class="error-msg" ng-if="RGquickshipForm.inputQuantity.$error.required">Please enter the Quantity</span>
+                                                        <span class="error-msg" ng-if="RGquickshipForm.inputQuantity.$error.maxlength">Quantity cannot be greater than 9999999999</span>
+                                                        <span class="error-msg" ng-if="RGquickshipForm.inputQuantity.$error.maximumQuantity">Quantity cannot be greater than ordered quantity</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <br>
+                                <button type="button" ng-click = "PackingContainerNumber(quickShipDataTable,Packing,shippingDetails)" class="btn btn-danger action-btn full-width btn-sm"
+                                        style="border-radius:0px;">
+                                    + Add
+                                    Package To
+                                    List
+                                </button>
+
+                            </div>
+                            <div>
+                                <div class="full-width" style="text-overflow: ellipsis; overflow: hidden;">
+                                    <span title="{{shippingDetails.tableReturnableGoodsOrderShippingDetailsMasterAwb}}" ng-if="shippingDetails.SkuType == 'Parcel'"><b>Master Awb: {{shippingDetails.tableReturnableGoodsOrderShippingDetailsMasterAwb}}</b></span>
+
+                                </div>
+                            </div>
+                            <hr style="float:left;width:100%;">
+                            <div class="full-width" ng-if="boxDetails.length > 0"
+                                 style="background: gray;color: #fff;float:left;width:100%;padding: 5px;">
+                                <div class="col-lg-3 col-md-3 col-xs-12">
+                                    <div class="full-width">
+                                        <span><b>Sku Details</b></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-xs-12">
+                                    <div class="full-width">
+                                        <span><b>Dimensions(LxBxH/W)</b></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-xs-12">
+                                    <div class="full-width">
+                                        <span><b>Quantity</b></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-xs-12">
+                                    <div class="full-width">
+                                        <span ng-if="shippingDetails.SkuType == 'Parcel'"><b>Awb</b></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="PackageContainer"
+                                 ng-repeat="package in boxDetails track by $index" ng-init="outerIndex=$index">
+                                <div class="full-width"
+                                     style="background: lightgray;color: #fff;float:left;width:100%;padding: 5px; margin-bottom: 5px;">
+                                    <div class="col-lg-3 col-md-3 col-xs-12">
+                                        <div class="full-width">
+                                            <span><b>Box No. {{$index + 1}}</b></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-xs-12">
+                                        <div class="full-width">
+                                            <span style="color:#000;"><b>{{package.Length}} x {{package.Breadth}} x {{package.Height}} {{package.LengthUnit.tableSkuUodmTypeString}} / {{package.Weight}} {{package.WeightUnit.tableSkuUowmTypeString}}</b></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 text-right" ng-if="package.SKUcarrierDetails.SkuType == 'Parcel'">
+                                        <div class="full-width" style="text-overflow: ellipsis; overflow: hidden;">
+                                            <span title="{{package.tablePurchaseReturnSkus[0].tableReturnableGoodsOrderShippingDetailsAwb}}" style="color:#000;"><b>{{package.tablePurchaseReturnSkus[0].tableReturnableGoodsOrderShippingDetailsAwb}}</b></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-xs-12 pull-right text-right">
+                                        <button type="button" ng-click="editContainerPackage($index);" ng-hide="editQuickShipBoxHideAndShow[$index]"
+                                                style="color:#000;font-size:18px;padding:0px;" class="btn btn-link btn-sm"><span
+                                                class="fa fa-edit"></span>
+                                        </button>
+                                        <button type="button" ng-click="disableContainerPackage($index);" ng-show="editQuickShipBoxHideAndShow[$index]"
+                                                style="color:#000;font-size:18px;padding:0px;" class="btn btn-link btn-sm"><span
+                                                class="fa fa-check-square-o"></span>
+                                        </button>
+                                        <button type="button" ng-click="RemoveContainerPackage($index)"
+                                                style="color:#fff;font-size:18px;padding:0px;margin-top:-6px" class="btn btn-link btn-sm"><span
+                                                class="fa fa-trash-o"></span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!--{{package}}-->
+                                <div ng-repeat="PackedSku in package.tableReturnableGoodsOrderSkus" ng-init="innerIndex=$index">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" title="{{PackedSku.tableSku.tableSkuName}}">
+                                            <span ng-if="PackedSku.tableSku.tableSkuName.length>15">{{PackedSku.tableSku.tableSkuName | limitTo:15}}...</span>
+                                            <span ng-if="PackedSku.tableSku.tableSkuName.length<=15">{{PackedSku.tableSku.tableSkuName}}</span>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 col-lg-offset-3 col-md-offset-3 col-sm-offset-3 col-xs-offset-3">
+                                            <input type="tel" maxlength="9" style="width:50px" class="form-control darkgrey-bottom-border" ng-disabled="!disableQuickShipBox[outerIndex]" ng-model="PackedSku.tableSkusSkuQuantity">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button type="button" class="cancel-btn" data-dismiss="modal" ng-click="cancelQuickShipModal(RGquickshipForm)">Cancel</button>
+                    <button type="submit" class="action-btn" ng-disabled="disableQuickShip">Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

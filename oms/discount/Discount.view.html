@@ -1,0 +1,413 @@
+<link href="discount/Discount.css" rel="stylesheet">
+<div class="container-fluid" ng-if="isPriceModel()">
+    <div class="container-fluid">
+        <div class="col-md-12 row-margin-top-medium" style="padding: 0px;">
+            <p class="screen-heading">Fixed Pricing</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p class="screen-heading"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button id="priceRuleExport" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px; margin-left: 10px;"
+                    ng-click="showExportDiscountDialog($event);"><span class="fa fa-download"/>
+                &nbsp;&nbsp;Export
+            </button>
+
+            <span ng-if="rateList.length > 0">
+                <button id="priceAddRuleenabled" type="button" class="btn addsharpbutton font pull-right"
+                    style="min-width: 160px; margin-left: 10px;" ng-if="access.createAccess"
+                    ng-click="showAddDiscountRuleModal($event);"><img src="images/svg/add.svg" style="height:20px;">
+                &nbsp;&nbsp;Add Fixed Price Rule
+                </button>
+            </span>
+            <span ng-if="rateList.length == 0">
+                <button id="priceAddRuleDisabled" disabled title="Please upload rates before adding Price Rule" type="button" class="btn addsharpbutton font pull-right"
+                        style="min-width: 160px; margin-left: 10px;" ng-if="access.createAccess"
+                        ng-click="showAddDiscountRuleModal($event);"><img src="images/svg/add.svg" style="height:20px;">
+                &nbsp;&nbsp;Add Fixed Price Rule
+                </button>
+            </span>
+            <button id="ratesExport" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px; margin-left: 10px;"
+                    ng-click="showExportRatesDialog($event);"><span class="fa fa-download"/>
+                &nbsp;&nbsp;Export Rates
+            </button>
+
+            <button id="ratesUpload" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px; margin-left: 10px;"
+                    ng-click="showUploadRatesDialog($event);"><span class="fa fa-upload"/>
+                &nbsp;&nbsp;Upload Rates
+            </button>
+
+        </div>
+    </div>
+    <div class="row main-list">
+        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+            <thead class="main-list-header-inv">
+            <!-- table header -->
+            <tr>
+                <th id="discountRuleNameH" class="text-left">
+                    <a href="">
+                        Price Rule Name &nbsp;
+                    </a>
+                </th>
+                <th id="discountCDateH" class="text-left">
+
+                    <a href="">
+                        Creation Date &nbsp;
+                    </a>
+                </th>
+                <th id="discountSDateH" class="text-left">
+
+                    <a href="">
+                        Start Date &nbsp;
+                    </a>
+                </th>
+                <th id="discountEDateH" class="text-left">
+
+                    <a href="">
+                        End Date &nbsp;
+                    </a>
+                </th>
+                <!-- <th id="discountPercentH" class="text-left">
+
+                    <a href="">
+                        Discount % &nbsp;
+                    </a>
+                </th> -->
+                <th id="discountStatusH" class="text-left">
+                    <a href="">
+                        Status &nbsp;
+                    </a>
+                </th>
+                <th id="discountActionH" class="text-left action-col">
+                    <a href="">
+                        Action
+                    </a>
+                </th>
+            </tr>
+            </thead>
+            <!--data-ng-repeat="Data in inventoryLists"-->
+            <tbody ng-if="showLoader">
+            <tr>
+                <td colspan="8" class="text-center">
+                    <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                </td>
+            </tr>
+            </tbody>
+            <tbody data-ng-repeat="discountRule in discountRules" data-ng-switch on="dayDataCollapse[$index]">
+            <tr class="clickable-row-inv">
+                <td id="discountRuleName{{$index}}" align="left">
+                    {{discountRule.tableDiscountRuleName}}
+                </td>
+                <td id="discountCDate{{$index}}" align="left">
+                    {{discountRule.tableDiscountRuleCreatedOn | utcToLocalOrHyphen}}
+                </td>
+                <td id="discountSDate{{$index}}" align="left">
+                    {{discountRule.tableDiscountRuleStartDate | utcToLocalOrHyphen}}
+                </td>
+                <td id="discountEDate{{$index}}" align="left">
+                    {{discountRule.tableDiscountRuleEndDate | utcToLocalOrHyphen}}
+                </td>
+                <!-- <td id="discountPercent{{$index}}" align="left">
+                    {{discountRule.tableDiscountRuleDiscount}}
+                </td> -->
+                <td id="discountStatus{{$index}}" align="left">
+                    <div class="tool-tip">
+                        <a title = "Click to deactivate" class="active-status" ng-if="discountRule.tableDiscountRuleIsActivated == true" href=""
+                           data-ng-click="access.editAccess && deactivateRule(discountRule,$event)">Active&nbsp;<img
+                                src="images/svg/rule_deactivate.svg" title="Click to deactivate Rule" class="status-img"
+                                alt="" width="25px"></a>
+                        <a title = "Click to activate" class="deactive-status" ng-if="discountRule.tableDiscountRuleIsActivated == false" href=""
+                           data-ng-click="access.editAccess && activateRule(discountRule)">Inactive&nbsp;<img
+                                src="images/svg/rule_activate.svg" title="Click to activate Rule" class="status-img"
+                                alt="" width="25px"></a>
+                    </div>
+                </td>
+                <td id="discountAction{{$index}}" align="left">
+                    <div class="tool-tip">
+                        <img ng-src="{{imgsrc1}}" title="Edit" width="20px" height="20px"
+                             ng-click="access.editAccess && editDiscountRule(discountRule)"
+                             ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                             ng-attr-title="{{!access.editAccess || discountRule.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}"
+                             ng-class="{disableAccess: !access.editAccess || discountRule.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                             ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="row" style="margin-top: 0px;">
+            <div class="col-md-6">
+                <p class="showingOrderLabel" ng-show="discountRulesSize < discountRulesCount">Showing discount rules
+                    {{start + 1}} to
+                    {{allDiscountRulesSizeEnd}} of {{discountRulesCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="discountRulesSize >= discountRulesCount && discountRulesCount!=0">
+                    Showing discount rules
+                    {{start + 1}} to {{discountRulesCount}} of {{discountRulesCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="discountRulesCount==0">No discount rules available
+                </p>
+            </div>
+            <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPager.pages.length" class="pagination">
+                            <li>
+                            <a><span style="padding-right: 5px;">Showing</span>
+                                <select id="pagesize" ng-change="onRecordsPerPageChange(allDiscountRulesPageSize)"  ng-model="allDiscountRulesPageSize" name="recordsPerPage"
+                                        ng-options="option for option in recordsPerPage"
+                                        required>
+                                </select>
+                                <span style="padding-left: 5px;">records per page</span>
+                            </a>
+                        </li>
+                            <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a ng-click="getDiscountRulesCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li id="previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="getDiscountRulesCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="getDiscountRulesCount(page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="getDiscountRulesCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="getDiscountRulesCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="container-fluid" ng-if="!isPriceModel()">
+    <div class="container-fluid">
+        <div class="col-md-12 row-margin-top-medium" style="padding: 0px;">
+            <p class="screen-heading">Discount</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p class="screen-heading"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button id="discountExport" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px; margin-left: 10px;"
+                    ng-click="showExportDiscountDialog($event);"><span class="fa fa-download"/>
+                &nbsp;&nbsp;Export
+            </button>
+
+
+
+            <button id="discountAddRule" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px; " ng-if="access.createAccess"
+                    ng-click="showAddDiscountRuleModal($event);"><img src="images/svg/add.svg" style="height:20px;">
+                &nbsp;&nbsp;Add Discount Rule
+            </button>
+        </div>
+    </div>
+    <div class="row main-list">
+        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+            <thead class="main-list-header-inv">
+            <!-- table header -->
+            <tr>
+                <th id="discountRuleNameH" class="text-left">
+                    <a href="">
+                        Discount Rule Name &nbsp;
+                    </a>
+                </th>
+                <th id="discountCDateH" class="text-left">
+
+                    <a href="">
+                        Creation Date &nbsp;
+                    </a>
+                </th>
+                <th id="discountSDateH" class="text-left">
+
+                    <a href="">
+                        Start Date &nbsp;
+                    </a>
+                </th>
+                <th id="discountEDateH" class="text-left">
+
+                    <a href="">
+                        End Date &nbsp;
+                    </a>
+                </th>
+                <th id="discountPercentH" class="text-left">
+
+                    <a href="">
+                        Discount % &nbsp;
+                    </a>
+                </th>
+                <th id="discountStatusH" class="text-left">
+                    <a href="">
+                        Status &nbsp;
+                    </a>
+                </th>
+                <th id="discountActionH" class="text-left action-col">
+                    <a href="">
+                        Action
+                    </a>
+                </th>
+            </tr>
+            </thead>
+            <!--data-ng-repeat="Data in inventoryLists"-->
+            <tbody ng-if="showLoader">
+            <tr>
+                <td colspan="8" class="text-center">
+                    <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                </td>
+            </tr>
+            </tbody>
+            <tbody data-ng-repeat="discountRule in discountRules" data-ng-switch on="dayDataCollapse[$index]">
+            <tr class="clickable-row-inv">
+                <td id="discountRuleName{{$index}}" align="left">
+                    {{discountRule.tableDiscountRuleName}}
+                </td>
+                <td id="discountCDate{{$index}}" align="left">
+                    {{discountRule.tableDiscountRuleCreatedOn | utcToLocalOrHyphen}}
+                </td>
+                <td id="discountSDate{{$index}}" align="left">
+                    {{discountRule.tableDiscountRuleStartDate | utcToLocalOrHyphen}}
+                </td>
+                <td id="discountEDate{{$index}}" align="left">
+                    {{discountRule.tableDiscountRuleEndDate | utcToLocalOrHyphen}}
+                </td>
+                <td id="discountPercent{{$index}}" align="left">
+                    {{discountRule.tableDiscountRuleDiscount}}
+                </td>
+                <td id="discountStatus{{$index}}" align="left">
+                    <div class="tool-tip">
+                        <a title = "Click to deactivate" class="active-status" ng-if="discountRule.tableDiscountRuleIsActivated == true" href=""
+                           data-ng-click="access.editAccess && deactivateRule(discountRule,$event)">Active&nbsp;<img
+                                src="images/svg/rule_deactivate.svg" title="Click to deactivate Rule" class="status-img"
+                                alt="" width="25px"></a>
+                        <a title = "Click to activate" class="deactive-status" ng-if="discountRule.tableDiscountRuleIsActivated == false" href=""
+                           data-ng-click="access.editAccess && activateRule(discountRule,$event)">Inactive&nbsp;<img
+                                src="images/svg/rule_activate.svg" title="Click to activate Rule" class="status-img"
+                                alt="" width="25px"></a>
+                    </div>
+                </td>
+                <td id="discountAction{{$index}}" align="left">
+                    <div class="tool-tip">
+                        <img ng-src="{{imgsrc1}}" title="Edit" width="20px" height="20px"
+                             ng-click="access.editAccess && editDiscountRule(discountRule, $event)"
+                             ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                             ng-attr-title="{{!access.editAccess || discountRule.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}"
+                             ng-class="{disableAccess: !access.editAccess || discountRule.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                             ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="row" style="margin-top: 0px;">
+            <div class="col-md-6">
+                <p class="showingOrderLabel" ng-show="discountRulesSize < discountRulesCount">Showing discount rules
+                    {{start + 1}} to
+                    {{allDiscountRulesSizeEnd}} of {{discountRulesCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="discountRulesSize >= discountRulesCount && discountRulesCount!=0">
+                    Showing discount rules
+                    {{start + 1}} to {{discountRulesCount}} of {{discountRulesCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="discountRulesCount==0">No discount rules available
+                </p>
+            </div>
+            <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPager.pages.length" class="pagination">
+                            <li>
+                            <a><span style="padding-right: 5px;">Showing</span>
+                                <select id="pagesize" ng-change="onRecordsPerPageChange(allDiscountRulesPageSize)"  ng-model="allDiscountRulesPageSize" name="recordsPerPage"
+                                        ng-options="option for option in recordsPerPage"
+                                        required>
+                                </select>
+                                <span style="padding-left: 5px;">records per page</span>
+                            </a>
+                        </li>
+                            <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a ng-click="getDiscountRulesCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li id="previous1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="getDiscountRulesCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="getDiscountRulesCount(page)">{{page}}</a>
+                            </li>
+                            <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="getDiscountRulesCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="getDiscountRulesCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div ng-include src="'discount/activateRule.html?version=1.0.0'"></div>
+<div ng-include src="'discount/addDiscountDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterCustomerDialog.html?version=1.0.0'"></div>
+<div ng-include src="'discount/exportDiscountDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+<div ng-include src="'discount/uploadRatesDialog.html?version=1.0.0'"></div>
+<div ng-include src="'discount/exportRatesDialog.html?version=1.0.0'"></div>
+<div ng-include src="'discount/selectRateListForRuleDialog.html?version=1.0.0'"></div>
+<div ng-include src="'discount/conflictingRules.html?version=1.0.0'"></div>
+<div ng-include src="'discount/deactivateRule.html?version=1.0.0'"></div>
+

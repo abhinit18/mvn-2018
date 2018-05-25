@@ -1,0 +1,124 @@
+.main-list-header-bulkupload {
+    background: #30373B;
+    color: #f5fafd !important;
+}
+
+.main-list-header-bulkupload>tr {
+    border: 1px solid #C0C0C0;
+    height: 45px;
+}
+
+.main-list-header-bulkupload>tr>td {
+    padding-top: 10px !important;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.main-list-header-bulkupload>tr>td:first-child {
+    /*width: 35%;*/
+    padding-left: 40px !important;
+}
+
+.main-list-header-bulkupload>tr>td:nth-child(2) {
+    width: 40%;
+}
+
+.clickable-row-bulkupload {
+    cursor: pointer;
+    height: 60px;
+    border-bottom: 1px solid #C0C0C0;
+}
+
+.clickable-row-bulkupload:hover {
+    background: #D3DDDF;
+}
+
+.clickable-row-bulkupload>td {
+    padding-top: 15px !important;
+    font-size: 14px;
+    color: #30373B;
+}
+
+.clickable-row-bulkupload>td:first-child {
+    padding-left: 40px !important;
+    color: #F0592B !important;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.clickable-row-bulkupload>td:nth-child(2) {
+    font-size: 16px;
+    color: #F0592B !important;
+    font-weight: 700;
+}
+
+.btn.active {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    background-color: #E9EEEF !important;
+    outline: none !important;
+}
+
+.sharp {
+    width: 140px !important;
+}
+
+.bulk-upload-img {
+    background: url(../../images/svg/upload_active.svg);
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.bulk-upload-img:hover {
+    background: url(../../images/svg/upload_hover.svg);
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}
+
+.download-template-img {
+    background: url(../../images/svg/download_active.svg);
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.download-template-img:hover {
+    background: url(../../images/svg/download_hover.svg);
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}
+
+.bulk-upload-text, .bulk-upload-text a {
+    color: #30373B !important;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.bulk-upload-text:hover, .bulk-upload-text a:hover {
+    color: #F0592B !important;
+    font-size: 18px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.upload-file-dialog-row {
+    margin-left: 3%;
+    margin-right: 3%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.bulkFile-heading-col {
+    margin-top: 5px;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+    background-color: #E9EEEF;
+}
+.tab-pane{padding: 0px;}

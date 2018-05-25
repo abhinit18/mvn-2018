@@ -1,0 +1,22 @@
+{
+  "name": "ngFloatingLabels",
+  "private": false,
+  "main": "src/ngFloatingLabels.js",
+  "description": "Floating Labels and Floating Validation for AngularJS",
+  "repository": "https://github.com/alexnoise79/ngFloatingLabels",
+  "license": "MIT",
+  "dependencies": {
+    "angular": "1.3.x",
+    "angular-animate": "~1.3.14"
+  },
+  "homepage": "https://github.com/alexnoise79/ngFloatingLabels",
+  "_release": "79e61f6bbc",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "79e61f6bbc3b9412ba0a965d6d24f8516c6d0b13"
+  },
+  "_source": "https://github.com/alexnoise79/ngFloatingLabels.git",
+  "_target": "*",
+  "_originalSource": "angular-floating-labels"
+}

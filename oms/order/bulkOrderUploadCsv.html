@@ -1,0 +1,81 @@
+<div class="modal fade" id="bulkOrder" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="bulkOrderForm" accessible-form novalidate ng-submit="bulkOrderForm.$valid  && uploadBulkOrderFile(uploadedFile.bulkOrderUploadfile,bulkOrderSettingData,bulkOrderForm);">
+            <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="SOBOCCancel1" type="button" class="close" data-dismiss="modal" ng-click="closebulkOrderUploadCsv(bulkOrderForm)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Upload File</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row upload-file-dialog-row">
+                        <div class="col-md-3 bulkFile-heading-col font">Select the Channel</div>
+                        <div class="col-md-8">
+                            <select class="form-control "
+                                    name="bulkOrderChannelId"
+                                    required id="SOBOCChannel"
+                                    ng-model="bulkOrderSettingData.channelId"
+                                    ng-options="option.idtableSalesChannelValueInfoId as option.tableSalesChannelValueInfoName for option in channelNamesData "
+                                    ng-change="checkbulkMappingSettingsAvailable(bulkOrderSettingData.channelId)">
+                                <option value="" disabled selected style="display: none;">Select the Channel</option>
+
+                            </select>
+                        </div>
+                        <div ng-if="bulkOrderForm.$submitted && bulkOrderForm.bulkOrderChannelId.$error.required" class="col-md-offset-3 col-md-8">
+                            <span class="error-msg">Please choose channel from available channels!</span>
+                        </div>
+                    </div>
+                    <div class="row upload-file-dialog-row">
+                        <div class="col-md-3 bulkFile-heading-col font">Select a File</div>
+                        <div class="col-md-8" ng-if="!csvTrue">
+                            <div ng-required="true" name="files" ngf-drop ngf-select class="drop-box cursorPointer" ng-model="uploadedFile.bulkOrderUploadfile" ngf-drag-over-class="'dragover'" accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                                <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;" /> &nbsp;&nbsp;Drag file to upload or click to select
+                            </div>
+                            <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                        </div>
+                        <div class="col-md-8" ng-if="csvTrue">
+                            <div ng-required="true" name="files" ngf-drop ngf-select class="drop-box cursorPointer" ng-model="uploadedFile.bulkOrderUploadfile" ngf-drag-over-class="'dragover'" accept=".xls,.xlsx,.csv" ngf-pattern="'.xls,.xlsx,.csv'">
+                                <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;" /> &nbsp;&nbsp;Drag file to upload or click to select
+                            </div>
+                            <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                        </div>
+                    </div>
+                    <div class="row upload-file-dialog-row">
+                        <div class="col-md-3 bulkFile-heading-col"></div>
+                        <div class="col-md-8 font">File:&nbsp;&nbsp;{{uploadedFile.bulkOrderUploadfile.name}}</div>
+                    </div>
+                    <div class="row upload-file-dialog-row">
+                        <div class="col-md-3 bulkFile-heading-col"></div>
+                        <div class="col-md-8">
+                            <b ng-show="csvTrue==true" class="fileFormat">* File Format should be .csv</b>
+                            <b ng-show="csvTrue==false" class="fileFormat">* File Format should be .xls,.xlsx</b><br>
+                            <span ng-if="bulkOrderForm.$submitted && bulkOrderForm.files.$error.required" class="error-msg">Please upload file</span><br>
+                            <span ng-if="bulkOrderForm.$submitted && bulkOrderForm.files.$error.pattern" class="error-msg">Please upload a valid file</span>
+                            <div class="col-md-12">
+                                {{uploadProgress}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="SOBOCCancel2" type="button" class="cancel-btn" ng-click="closebulkOrderUploadCsv(bulkOrderForm);" data-dismiss="modal">Cancel</button>
+                <button ng-disabled="disableBulkUpload" id="SOBOCSubmit" type="submit" class="action-btn">Upload</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+
+<!--================================== bulk po order =======================================-->
+
+
+

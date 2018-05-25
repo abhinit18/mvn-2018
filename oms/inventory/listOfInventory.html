@@ -1,0 +1,78 @@
+   <md-content class="md-padding" style="padding: 0px;overflow: hidden;background-color: white;">
+       <md-toolbar class="md-small" style="height:30px;background:silver;">
+      <div class="md-toolbar-tools">
+
+          <span>Toolbar with Disabled/Enabled Icon Buttons</span>
+        <span flex=""></span>
+        <md-button class="md-icon-button" aria-label="Favorite">
+          <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+   <div ng-if="searchInventoryClicked==false" style="padding-left:1px;font-size: 14px" data-ng-click="selectinvRow()">Accordian</div>
+   <div ng-if="searchInventoryClicked==true" style="padding-left:1px;font-size: 14px" data-ng-click="selectotherRow()">Accordian</div>
+   <div ng-if="searchInventoryClicked==true" class="row orderscreen-channel" style="padding-left:35px;padding-right:35px;padding-top: 10px">
+      <div class="col-sm-4">
+         <span class="font">Choose Channel</span>
+         <select class="orderscreen-dropdown">
+            <option>All Channels</option>
+            <option>All Channels1</option>
+         </select>
+      </div>
+      <div class="col-sm-4">
+         <div class="col-md-4" style="margin-top:3px;">
+            <span class="font">Search SKU</span>
+         </div>
+         <div class="col-md-8" style="padding-left:0px;">
+            <input type="text" style="padding: 1px; border-bottom: 1px solid darkgrey;">
+         </div>
+      </div>
+      <div class="col-sm-4">
+         <span class="font">Select Date</span>
+         <input type="date" class="orderscreen-date">
+         <button type="button">Submit</button>                
+      </div>
+   </div>
+
+      <div class="col-md-12">
+         <p class="screen-heading list">List of Inventories</p>
+         <button id="invListAddOrder" type="button" class="btn addsharpbutton add-button font" data-toggle="modal" data-target="#myModalHorizontal">+ Add Order</button>
+      </div>
+      <div class="row" style="padding-left:30px;padding-right:30px;padding-top: 10px">
+         <table class="table table-striped table-condensed table-responsive table-hover">
+            <thead class="main-list-header">
+               <!-- table header -->
+               <tr height="45">
+                  <td id="invListSkuH" colspan="2" style="padding-left:20px;padding-top:15px;font-size: 14px;">Seller SKU ID</td>
+                  <td id="invListNameH" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">Name</td>
+                  <td id="invListWhH" colspan="2" style="padding-left:20px;padding-top:15px;font-size: 14px;">WareHouse</td>
+                  <td id="invListVendorH" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">Vendor</td>
+                  <td id="invListDateH" colspan="2" style="padding-left:20px;padding-top:15px;font-size: 14px;">Date</td>
+                  <td id="invListBatchH" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">Batch No</td>
+                  <td id="invListMRPH" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">MRP</td>
+                  <td id="invListQtyH" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">Quantity</td>
+                  <td id="invListRSLH" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">Remaining Shelf Life</td>
+                  <td id="invListActionH" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">Action</td>
+               </tr>
+            </thead>
+            <tbody ng-repeat="inventoryData in inventoryLists">
+               <tr height="60" style="background: #E9EEEF;outline: thin solid #C0C0C0">
+                  <td id="invListSku{{$index}}" colspan="2" style="padding-left:20px;padding-top:15px;font-size: 14px;">{{inventoryData.tableSku.tableSkuClientSkuCode}}</td>
+                  <td id="invListName{{$index}}" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">{{inventoryData.tableSku.tableSkuName}}</td>
+                  <td id="invListWh{{$index}}" colspan="2" style="padding-left:20px;padding-top:15px;font-size: 14px;">{{inventoryData.tableWarehouseDetails.tableWarehouseDetailsShortname}}</td>
+                  <td id="invListVendor{{$index}}" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">{{(inventoryData.tableVendor && inventoryData.tableVendor.tableVendorName) ? inventoryData.tableVendor.tableVendorName : 'NA'}}</td>
+                  <td id="invListDate{{$index}}" colspan="2" style="padding-left:20px;padding-top:15px;font-size: 14px;">{{inventoryData.tableSkuInventoryMfgDate}}</td>
+                  <td id="invListBatch{{$index}}" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">{{inventoryData.tableSkuInventoryBatchNo}}
+                  </td>
+                  <td id="invListMRP{{$index}}" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">{{inventoryData.tableSkuInventoryMaxRetailPrice | priceOrHyphen}}</td>
+                  <td id="invListQty{{$index}}" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">
+                     {{inventoryData.tableSkuInventoryAvailableCount}}
+                  </td>
+                  <td id="invListRSL{{$index}}" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;">{{inventoryData.tableSkuInventoryShelfLifeInDays}}</td>
+                  <td id="invListAction{{$index}}" colspan="1" style="padding-left:20px;padding-top:15px;font-size: 14px;" data-ng-click="selectTableRow($index, orderData.tableSaleOrderClientOrderNo)">Accordian</td>
+               </tr>
+            </tbody>
+         </table>
+         <!-- END TABLE -->
+      </div>
+   </md-content>

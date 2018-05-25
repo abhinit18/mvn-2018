@@ -1,0 +1,355 @@
+<div class="modal fade" id="vendorAddressModal" role="dialog" aria-labelledby="vendorAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <form name="addNewVendorAddressForm" accessible-form novalidate ng-submit="addNewVendorAddressForm.$valid && submitAddVendorAddressForm(addNewVendorAddressForm)">
+            <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="vendorAddressCancel1" type="button" class="close" ng-click="cancelAddress(addNewVendorAddressForm);">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p ng-if="vendorAddressMode=='add'" class="dialog-heading-p" id="vendorAddressModalLabel">Add New Address</p>
+                <p ng-if="vendorAddressMode=='edit'" class="dialog-heading-p" id="vendorAddressModalLabel1">Edit Address</p>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Information Area -->
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Contact Person Name <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text"
+                                           name="contactPersonName"
+                                           required ng-maxlength="45" ng-minlength="2"
+                                           id="vendorAddressPerson"
+                                           class="form-control darkgrey-bottom-border"
+                                           placeholder="First Name"
+                                           ng-model="vendorAddress.contactPersonName">
+                                </div>
+                                <div class="col-md-offset-5 col-md-7">
+                                        <span ng-if="addNewVendorAddressForm.$submitted && addNewVendorAddressForm.contactPersonName.$error.required" class="error-message">
+                                            Please enter the Contact Person Name
+                                        </span>
+                                        <span ng-if="addNewVendorAddressForm.contactPersonName.$dirty && addNewVendorAddressForm.contactPersonName.$error.maxlength" class="error-message">
+                                            Contact Person Name should not exceed 45 characters.
+                                        </span>
+                                        <span ng-if="addNewVendorAddressForm.contactPersonName.$dirty && addNewVendorAddressForm.contactPersonName.$error.minlength" class="error-message">
+                                            Contact Person Name should have at least 2 characters.
+                                        </span>
+
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Email Id <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="email" name="custEmail"
+                                           id="vendorAddressEmail"
+                                           required
+                                           class="form-control text-lowercase emailInput darkgrey-bottom-border"
+                                           placeholder="Email ID" ng-model="vendorAddress.contactEmail"
+                                           ng-blur="validateEmail(myForm.custEmail.$valid);">
+                                </div>
+                                <div ng-if="addNewVendorAddressForm.$submitted && addNewVendorAddressForm.custEmail.$error.required" class="col-md-offset-5 col-md-7">
+                                        <span class="error-message">
+                                            Please enter the Email Id
+                                        </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Phone Number <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text" numbers-only
+                                           name="phoneNumber"
+                                           required
+                                           id="vendorAddressPhone"
+                                           class="form-control darkgrey-bottom-border "
+                                           placeholder="Phone no."
+                                           ng-model="vendorAddress.contactPhone">
+                                </div>
+                                <div ng-if="addNewVendorAddressForm.$submitted && addNewVendorAddressForm.phoneNumber.$error.required" class="col-md-offset-5 col-md-7">
+                                        <span class="error-message">
+                                            Please enter the Phone Number
+                                        </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 1 <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text"
+                                           name="address" required ng-maxlength="256" ng-minlength="2"
+                                           id="vendorAddressAddress1"
+                                           class="form-control darkgrey-bottom-border "
+                                           placeholder="Address Line 1" ng-model="vendorAddress.adLine1"
+                                           ng-blur="callGetLatLong(showResult)">
+                                </div>
+                                <div class="col-md-offset-5 col-md-7">
+                                        <span ng-if="addNewVendorAddressForm.$submitted && addNewVendorAddressForm.address.$error.required"  class="error-message">
+                                            Please enter the Address
+                                        </span>
+                                        <span ng-if="addNewVendorAddressForm.address.$dirty && addNewVendorAddressForm.address.$error.maxlength"  class="error-message">
+                                            Address Line 1 should not exceed 256 characters.
+                                        </span>
+                                        <span ng-if="addNewVendorAddressForm.address.$dirty && addNewVendorAddressForm.address.$error.maxlength"  class="error-message">
+                                            Address Line 1 should have at least 2 characters.
+                                        </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 2</span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text"
+                                           id="vendorAddressAddress2" name="address2" ng-maxlength="256"
+                                           class="form-control darkgrey-bottom-border "
+                                           placeholder="Address Line 2"
+                                           ng-model="vendorAddress.adLine2"
+                                           ng-blur="callGetLatLong(showResult)">
+                                </div>
+                                <div class="col-md-offset-5 col-md-7">
+                                    <span ng-if="addNewVendorAddressForm.address2.$dirty && addNewVendorAddressForm.address2.$error.maxlength"  class="error-message">
+                                            Address Line 2 should not exceed 256 characters.
+                                        </span>
+
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Address Line 3</span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text"
+                                           id="vendorAddressAddress3" name="address3" ng-maxlength="256"
+                                           class="form-control darkgrey-bottom-border "
+                                           placeholder="Address Line 3"
+                                           ng-model="vendorAddress.adLine3"
+                                           ng-blur="callGetLatLong(showResult)">
+                                </div>
+                                <div class="col-md-offset-5 col-md-7">
+                                    <span ng-if="addNewVendorAddressForm.address3.$dirty && addNewVendorAddressForm.address3.$error.maxlength"  class="error-message">
+                                            Address Line 3 should not exceed 256 characters.
+                                        </span>
+
+                                </div>
+                            </div>
+							
+							 <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Country <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select required
+                                            id="vendorAddressCountry"
+                                            name="country"
+                                            ng-model="vendorAddress.countryData"
+                                            class="form-control selectClass"
+                                            ng-options="option as option.tableCountryLongName for option in countriesArray"
+                                            ng-change="countriesStatesData(vendorAddress.countryData)">
+									<option value="">Select Country</option>
+									</select>
+                                </div>
+								<div class="col-md-1 form-row-height">
+                                    <button type="button" class="addButton" ng-click="showVendorAddressEntityDialog($event, 'Country');">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div ng-if="addNewVendorAddressForm.$submitted && addNewVendorAddressForm.country.$error.required" class="col-md-offset-5 col-md-7">
+                                    <span class="error-message">
+                                        Please select the Country
+                                    </span>
+                                </div>
+                            </div>
+							
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">State <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select name="state" required ng-model="vendorAddress.stateData"
+                                            class="form-control selectClass"
+                                            id="vendorAddressState"
+                                            ng-options="option as option.tableStateLongName for option in regionsStatesArray"
+                                            ng-change="regionsStatesDistrictData(vendorAddress.stateData,vendorId)">
+                                            <option value="">Select State</option>
+                                    </select>
+                                </div>
+								<div class="col-md-1 form-row-height">
+                                    <button type="button" class="addButton" ng-click="showVendorAddressEntityDialog($event, 'State');">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div ng-if="addNewVendorAddressForm.$submitted && addNewVendorAddressForm.state.$error.required" class="col-md-offset-5 col-md-7">
+                                    <span class="error-message">
+                                        Please select the State
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">District <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select name="district" required ng-model="vendorAddress.districtData"
+                                            class="form-control selectClass"
+                                            id="vendorAddressDistrict"
+                                            ng-options="option as option.tableDistrictLongName for option in regionsStatesDistrictArray"
+                                            ng-change="regionsStatesDistrictsCityData(vendorAddress.stateData,vendorAddress.districtData);">
+                                            <option value="">Select District</option>
+                                    </select>
+                                </div>
+								<div class="col-md-1 form-row-height">
+                                    <button type="button" class="addButton" ng-click="showVendorAddressEntityDialog($event, 'District');">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div ng-if="addNewVendorAddressForm.$submitted && addNewVendorAddressForm.district.$error.required" class="col-md-offset-5 col-md-7">
+                                    <span class="error-message">
+                                        Please select the District
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">City <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+                                    <select name="city" required ng-model="vendorAddress.city"
+                                            class="form-control selectClass"
+                                            id="vendorAddressCity"
+                                            ng-options="option as option.tableCityLongName for option in regionsStatesDistrictsCityArray"
+                                            ng-change="changeCity(vendorAddress.city);">
+                                            <option value="">Select City</option>
+                                    </select>
+                                </div>
+								<div class="col-md-1 form-row-height">
+                                    <button type="button" class="addButton" ng-click="showVendorAddressEntityDialog($event, 'City');">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div ng-if="addNewVendorAddressForm.$submitted && addNewVendorAddressForm.city.$error.required" class="col-md-offset-5 col-md-7">
+                                    <span class="error-message">
+                                        Please select the city
+                                    </span>
+                                </div>
+                            </div>
+
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">PIN Code <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input id="vendorAddressPIN" type="text"
+                                           name="pincode1"
+                                           required
+                                           ng-pattern-restrict="^[0-9]*$"
+                                           pattern="[0-9A-Za-z\\-]+"
+                                           maxlength="15"
+                                           minlength="6" 
+                                           class="form-control darkgrey-bottom-border "
+                                           ng-blur="callGetLatLong(showResult)" placeholder="Postal code"
+                                           ng-model="vendorAddress.pincode">
+                                </div>
+                                <div ng-if="addNewVendorAddressForm.$submitted && addNewVendorAddressForm.pincode1.$error.required" class="col-md-offset-5 col-md-7">
+                                    <span class="error-message">
+                                        Please enter the PIN Code
+                                    </span>
+                                </div>
+                                <div ng-if="addNewVendorAddressForm.pincode1.$error.pattern" class="col-md-offset-5 col-md-7">
+                                    <span class="error-message">
+                                        Please enter a valid Pin Code
+                                    </span>
+                                </div>
+                                <div ng-if="addNewVendorAddressForm.pincode1.$error.minlength" class="col-md-offset-5 col-md-7">
+                                    <span class="error-message">
+                                        Please enter atleast 6 digit Pin Code
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row padding-top-15" >
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">GSTIN
+                                    </span>
+                                </div>
+                                <div class="col-md-7 form-row-height">
+                                    <input type="text"
+                                           name="GSTIN"
+                                           placeholder="{{vendorAddress.tinNoPlaceholder}}"
+                                           id="vendorAddressGSTIN"
+                                           ng-pattern-restrict="^[a-z A-Z 0-9]*$"
+                                           gstinvalidator="{{vendorAddress.stateData}}"
+                                           ng-pattern="/^[0-3][0-9][A-Z]{5}[0-9]{4}[A-Z][0-9]Z[A-Z0-9]/" name="tin" id="tinArray1"
+                                           class="form-control darkgrey-bottom-border font input-less-padding"
+                                           ng-model="vendorAddress.tinNo">
+                                </div>
+                                <div  class="col-md-offset-5 col-md-7">
+                                    <span ng-if="addNewVendorAddressForm.$submitted && addNewVendorAddressForm.GSTIN.$error.pattern" class="error-message">
+                                        Please enter a valid GSTIN
+                                    </span>
+                                    <span ng-if="addNewVendorAddressForm.$submitted && addNewVendorAddressForm.GSTIN.$error.gstin" class="error-message">
+                                        State code provided in GSTIN does not match the state code of selected state.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row padding-top-15" ng-if="vendorAddress.tinNo != null && vendorAddress.tinNo.length > 0">
+                                <div class="col-md-5 form-row-height">
+                                    <span class="form-label-height semi-bold-text">GST Status Of Vendor
+                                    </span>
+                                </div>
+                                <div class="col-md-7 ">
+                                    <md-radio-group name="vendorNature" ng-required="false" ng-model="genericData.tableGstType.tableGstTypeName">
+                                        <md-radio-button
+                                                id="gsttype{{$index}}"
+                                                ng-value="gst.tableGstTypeName"
+                                                ng-repeat="gst in gstTypes track by $index"  class="md-primary">{{gst.tableGstTypeName}}&nbsp;&nbsp;</md-radio-button>
+                                    </md-radio-group>
+                                </div>
+                                <div ng-if="addNewVendorForm.$submitted && addNewVendorForm.vendorNature.$error.required" class="col-md-offset-5 col-md-7">
+                                                        <span class="error-message">
+                                                            Please choose GST Status Of Vendor
+                                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 padding-top-15">
+                            <!-- Map Area -->
+                            <demo-map ng-if="searchLocation!=null" ng-model="searchLocation" class="demo-map">
+                            </demo-map>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button id="vendorAddressCancel2" type="button" class="cancel-btn" ng-click="cancelAddress(addNewVendorAddressForm);">Cancel</button>
+                <input id="vendorAddressSubmit" ng-if="vendorAddressMode=='add'"
+                       type="submit" class="action-btn"
+                       ng-click="setFormButtonValue('add');"
+                       value="Add">
+
+                <input id="vendorAddressUpdate" ng-if="vendorAddressMode=='edit'"
+                       type="submit" class="action-btn"
+                       ng-click="setFormButtonValue('edit');"
+                       value="Update">
+            </div>
+        </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+<script type="text/ng-template" id="addClassToTaxRule.tmpl.html">
+    <md-dialog aria-label="Add Tax Class to Rule" style="width: 800px; position: relative;" ng-cloak>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Add Tax Class to Rule</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelAddClassToExistingTaxRule()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content style="overflow: auto;">
+                <div class="full-width" style="margin-bottom: 30px;">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text" style="float: left;width:120px;">Tax Class Name</span>
+                        </div>
+                        <div class="col-md-7 margin-top-5">
+                            <select class="form-control add-single-order-select" ng-model="selectedTaxClass" ng-options="option.tableTaxClassName for option in taxClasses track by option.idtableTaxClassId">
+                                <option value="" disabled selected style="display: none;">Select
+                                    tax class
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="selectedTaxClass !=null && selectedTaxClass.tableTaxClassTaxType=='GST'">
+                    <div class="col-md-2 margin-top-5">
+                        <span class="semi-bold-text">Min Value <span style="color:red">*</span> </span>
+                    </div>
+                    <div class="col-md-7 margin-top-5">
+                        <input
+                                floating2
+                                type="text"
+                                ng-value=0.0
+                                placeholder="Enter Min Value"
+                                class="form-control darkgrey-bottom-border-number"
+                                ng-model="genericData.tableTaxRuleClassMapMinValue">
+                    </div>
+                </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                    <button type="button" class="cancel-btn" ng-click="cancelTaxRuleModal()">Cancel
+                    <button type="button" class="action-btn"
+                            ng-click="addTaxClassToExistingTaxRule(selectedTaxClass)">Add class
+                    </button>
+                </button>
+
+            </md-dialog-actions>
+    </md-dialog>
+</script>

@@ -1,0 +1,318 @@
+
+<div class="modal fade" id="viewPurchaseInvoice" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="POVPICancel1" type="button" class="close" ng-click="onCancelViewInvoiceClicked()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">View Purchase Invoice</p>
+            </div>
+
+            <div class="modal-body">
+                <div class="full-width">
+                    <div class="col-md-12">
+                        <div class="col-lg-12 text-right no-padding bg-faded">
+                            <div class="full-width">
+                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding-left: 0px;">
+                                    <div class="full-width">
+                                        <div class="col-md-3 ">
+                                            <span class="semi-bold-text">Vendor</span>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <span>{{singleorderData.tableVendor.tableVendorName}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding-left: 0px;">
+                                    <div class="full-width">
+                                        <div class="col-md-5 no-padding">
+                                            <span class="semi-bold-text">Vendor Address </span>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <span>{{singleorderData.tableAddress.tableAddressFull}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding-left: 0px;">
+                                    <div class="full-width">
+                                        <div class="col-md-5 no-padding">
+                                            <span class="semi-bold-text">Shipping Address</span>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <span>{{singleorderData.tableWarehouseDetails.tableAddress.tableAddressFull}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding-left: 0px;">
+                                    <div class="full-width">
+                                        <div class="col-md-5 no-padding">
+                                            <span class="semi-bold-text">Billing Address </span>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <span>{{singleorderData.tableWarehouseDetails.tableAddress.tableAddressFull}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="full-width">
+                            <div class="full-width">
+                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding-left: 0px;">
+                                    <div class="full-width">
+                                        <div class="col-md-5 no-padding margin-top-7 text-center">
+                                            <span class="semi-bold-text">Invoice Number : </span>
+                                        </div>
+                                        <div class="col-md-7 margin-top-7">
+                                            <span>{{tablePurchaseInvoice.tablePurchaseInvoiceNumber}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding-left: 0px;">
+                                    <div class="full-width">
+                                        <div class="col-md-5 text-center no-padding margin-top-7">
+                                            <span class="semi-bold-text">Invoice Date : </span>
+                                        </div>
+                                         <div class="col-md-7 no-padding-left">
+                                        <span>{{tablePurchaseInvoice.tablePurchaseInvoiceDateTime | utcToLocalTimeOrHyphen}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding-left: 0px;">
+                                    <div class="full-width">
+                                        <div class="col-md-12 text-left margin-top-7 ">
+                                        <span class="semi-bold-text">
+                                            <md-checkbox ng-disabled="true"
+                                                    ng-model="tablePurchaseInvoice.tablePurchaseInvoiceIsTaxInclusive" aria-label="Enable">
+                                            </md-checkbox> Tax Inclusive
+                                        </span>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table id="productTable"
+                               class="table boldtable table-responsive table-bordered table-hover invoiceTable">
+                            <thead class="data-grid-header">
+                            <tr>
+                                <th id="POVPI1QtyH" class="text-center">&nbsp;&nbsp;Qty</th>
+                                <th id="POVPI1SkuH" class="text-center">&nbsp;&nbsp;SKU</th>
+                                <th id="POVPI1DescH" class="text-center">&nbsp;&nbsp;Description</th>
+                                <th id="POVPI1GrossH" class="text-center">&nbsp;&nbsp;Gross</th>
+                                <th id="POVPI1DscntH" class="text-center">&nbsp;&nbsp;Discount</th>
+                                <th id="POVPI1NAH" class="text-center">&nbsp;&nbsp;Net Amount</th>
+                                <th id="POVPI1TTH" class="text-center">&nbsp;&nbsp;Tax Type</th>
+                                <th id="POVPI1TRH" class="text-center">&nbsp;&nbsp;Tax Rate</th>
+                                <th id="POVPI1TAH" class="text-center">&nbsp;&nbsp;Tax Amount</th>
+                            </tr>
+                            </thead>
+                            <tbody class="data-grid-data invoiceDataTableBody">
+                            <tr ng-repeat-start="item in tableInvoiceLineItems track by $index" ng-init="invoielineitemindex=$index">
+                                <td id="POVPI1Qty{{$index}}">
+                                    <span>{{item.tableInvoiceLineItemSkuQuantity}}</span>
+                                </td>
+                                <td id="POVPI1Sku{{$index}}">
+                                    <span>{{item.tableSku.tableSkuName}}</span>
+                                </td>
+                                <td id="POVPI1Desc{{$index}}">
+                                    <span>{{item.tableSku.tableSkuDescription}}</span>
+                                </td>
+                                <td id="POVPI1Gross{{$index}}" style="padding-left: 25px;">
+                                    <span ng-repeat="tableGross in item.tableGrosses track by $index" ng-if="$index == 0" ng-init="lineitemgrossindex=$index">
+                                        <span>{{tableGross.tableGrossAmount}}</span>
+                                    </span>
+                                </td>
+                                <td id="POVPI1Dscnt{{$index}}">
+                                    <span ng-repeat="tableGross in item.tableGrosses track by $index" ng-if="$index == 0" ng-init="lineitemgrossindex=$index">
+                                                <span style="position: relative;display: inline-block;padding-left: 15px;padding-right: 15px;"
+                                                      ng-repeat="tableDiscount in tableGross.tableDiscounts track by $index"
+                                                      ng-init="discountindex=$index">
+                                                    <span>{{tableDiscount.tableDiscountAmount}}</span>
+                                                </span>
+                                    </span>
+                                </td>
+                                <td id="POVPI1NA{{$index}}">
+                                    <span ng-repeat="tableGross in item.tableGrosses track by $index" ng-if="$index == 0" ng-init="lineitemgrossindex=$index">
+                                        <span>{{tableInvoiceLineItemNets[invoielineitemindex][lineitemgrossindex] | priceOrHyphen}}</span>
+                                    </span>
+                                </td>
+                                <td id="POVPI1TT{{$index}}">
+                                    <span ng-repeat="tableGross in item.tableGrosses track by $index" ng-if="$index == 0" ng-init="lineitemgrossindex=$index">
+                                        <span style="position: relative; display: inline-block; padding-left: 15px;" ng-repeat="tableTax in tableGross.tableTaxes track by $index" >
+                                            <span>{{tableTax.tableTaxType}}</span>
+                                        </span>
+                                    </span>
+                                </td>
+                                <td id="POVPI1TR{{$index}}">
+                                    <span ng-repeat="tableGross in item.tableGrosses track by $index" ng-if="$index == 0" ng-init="lineitemgrossindex=$index">
+                                        <span style="position: relative; display: inline-block; padding-left: 15px;" ng-repeat="tableTax in tableGross.tableTaxes track by $index" >
+                                            <span>{{tableTax.tableTaxRatePercentage}}</span>
+                                        </span>
+                                    </span>
+
+                                </td>
+                                <td id="POVPI1TA{{$index}}">
+                                    <span ng-repeat="tableGross in item.tableGrosses track by $index" ng-if="$index == 0" ng-init="lineitemgrossindex=$index">
+                                        <span style="position: relative; display: inline-block;padding-right: 25px;" ng-repeat="tableTax in tableGross.tableTaxes track by $index" ng-init="taxindex=$index">
+                                            <span>{{tableTax.tableTaxAmount}}</span>
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="tableGross in item.tableGrosses track by $index" ng-if="$index>0" ng-init="lineitemgrossindex=$index">
+                                <td id="POVPI2Qty{{$index}}" ></td>
+                                <td id="POVPI2Sku{{$index}}"></td>
+                                <td id="POVPI2Desc{{$index}}">
+                                    <span>{{tableGross.tableGrossType.tableGrossTypeString}}</span>
+                                </td>
+                                <td id="POVPI2Gross{{$index}}" style="padding-left: 25px;">
+                                    <!--<span ng-repeat="tableGross in item.tableGrosses track by $index" ng-init="lineitemgrossindex=$index" ng-if="$index > 0">-->
+                                    <span>{{tableGross.tableGrossAmount}}</span>
+                                    <!--</span>-->
+                                </td>
+                                <td id="POVPI2Dscnt{{$index}}">
+                                    <!--<span ng-repeat="tableGross in item.tableGrosses track by $index" ng-if="$index>0" ng-init="lineitemgrossindex=$index">-->
+                                                <span ng-repeat="tableDiscount in tableGross.tableDiscounts track by $index"
+                                                      ng-init="discountindex=$index"
+                                                      style="position: relative; display: inline-block; padding-left: 15px;padding-right: 15px;">
+                                                    <span>{{tableDiscount.tableDiscountAmount}}</span>
+                                                </span>
+                                    <!--</span>-->
+                                </td>
+                                <td id="POVPI2NA{{$index}}">
+                                    <span>{{(tableInvoiceLineItemNets[invoielineitemindex][lineitemgrossindex] || 0) | priceOrHyphen}}</span>
+                                </td>
+                                <td id="POVPI2TT{{$index}}">
+                                    <span style="position: relative; display: inline-block; padding-left: 15px;" ng-repeat="tableTax in tableGross.tableTaxes track by $index" >
+                                        <span>{{tableTax.tableTaxType}}</span>
+                                    </span>
+                                </td>
+                                <td id="POVPI2TR{{$index}}">
+                                    <span style="position: relative; display: inline-block; padding-left: 15px;" ng-repeat="tableTax in tableGross.tableTaxes track by $index" >
+                                        <span>{{tableTax.tableTaxRatePercentage}}</span>
+                                    </span>
+                                </td>
+                                <td id="POVPI2TA{{$index}}">
+                                    <span style="position: relative;display: inline-block;padding-right: 25px;" ng-repeat="tableTax in tableGross.tableTaxes track by $index" ng-init="taxindex=$index" >
+                                        <span>{{tableTax.tableTaxAmount}}</span>
+                                    </span>
+
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr ng-repeat-end=""></tr>
+                        </tbody>
+                        </table>
+
+                        <table class="table boldtable table-responsive table-bordered table-hover additionalInvoiceLevelCharges">
+                            <thead class="data-grid-header">
+                            <tr>
+                                <th class="text-center">&nbsp;&nbsp;</th>
+                                <th class="text-center">&nbsp;&nbsp;</th>
+                                <th class="text-center">&nbsp;&nbsp;</th>
+                                <th class="text-center">&nbsp;&nbsp;</th>
+                                <th class="text-center">&nbsp;&nbsp;</th>
+                                <th class="text-center">&nbsp;&nbsp;</th>
+                                <th class="text-center">&nbsp;&nbsp;</th>
+                                <th class="text-center">&nbsp;&nbsp;</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="tableGross in tableGrosses track by $index"
+                                    ng-init="invoicegrossindex=$index" style="border-bottom: 2px solid gray;">
+                                    <td id="POVPI3Qty{{$index}}">
+
+                                    </td>
+                                    <td id="POVPI3Sku{{$index}}">
+                                        <span>{{tableGross.tableGrossType.tableGrossTypeString}}</span>
+                                    </td>
+                                    <td id="POVPI3Desc{{$index}}">
+                                        <span>{{tableGross.tableGrossAmount}}</span>
+                                    </td>
+                                    <td id="POVPI3Gross{{$index}}">
+                                        <span ng-repeat="tableDiscount in tableGross.tableDiscounts track by $index"
+                                              ng-init="invoicediscountindex=$index"
+                                              style="position: relative; display: inline-block; padding-left: 15px;padding-right: 15px;">
+                                            <span>{{tableDiscount.tableDiscountAmount}}</span>
+                                        </span>
+                                    </td>
+                                    <td id="POVPI3Dscnt{{$index}}">
+                                        <span>{{netInvoiceLevelAmounts[invoicegrossindex] | priceOrHyphen}}</span>
+                                    </td>
+                                    <td id="POVPI3NA{{$index}}">
+                                        <span style="position: relative; display: inline-block; padding-left: 15px;" ng-repeat="tableTax in tableGross.tableTaxes track by $index"
+                                              ng-init="invoicetaxindex=$index">
+                                            <span>{{tableTax.tableTaxType}}</span>
+                                        </span>
+
+                                    </td>
+                                    <td id="POVPI3TT{{$index}}">
+                                        <span style="position: relative; display: inline-block; padding-left: 15px;" ng-repeat="tableTax in tableGross.tableTaxes track by $index"
+                                              ng-init="invoicetaxindex=$index">
+                                            <span>{{tableTax.tableTaxRatePercentage}}</span>
+                                        </span>
+                                    </td>
+                                    <td id="POVPI3TR{{$index}}">
+                                        <span style="position: relative; display: inline-block; padding-right: 25px;" ng-repeat="tableTax in tableGross.tableTaxes track by $index"
+                                              ng-init="invoicetaxindex=$index">
+                                            <span>{{tableTax.tableTaxAmount}}</span>
+                                        </span>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                        <table id="totalTable"
+                               class="table boldtable table-responsive table-bordered table-hover invoiceTable">
+                            <thead class="data-grid-header">
+                            <tr>
+                                <th class="text-center">&nbsp;&nbsp;</th>
+                                <th class="text-center">&nbsp;&nbsp;</th>
+                                <th class="text-center">&nbsp;&nbsp;</th>
+                                <th class="text-center">Total Gross</th>
+                                <th class="text-center">Total&nbsp;Discount</th>
+                                <th class="text-center">Total Net</th>
+                                <th class="text-center"></th>
+                                <th class="text-center"></th>
+                                <th class="text-center">Total Tax</th>
+                            </tr>
+                            </thead>
+
+                            <tbody class="data-grid-data invoiceDataTableBody">
+                            <tr>
+                                <td id="POVPI4Qty{{$index}}"></td>
+                                <td id="POVPI4Sku{{$index}}"></td>
+                                <td id="POVPI4Desc{{$index}}"></td>
+                                <td id="POVPI4Gross{{$index}}" class="text-right">{{totalGross|priceOrHyphen}}</td>
+                                <td id="POVPI4Dscnt{{$index}}" class="text-right">{{totalDiscount|priceOrHyphen}}</td>
+                                <td id="POVPI4NA{{$index}}" class="text-right">{{totalNet|priceOrHyphen}}</td>
+                                <td id="POVPI4TT{{$index}}"></td>
+                                <td></td>
+                                <td id="POVPI4TR{{$index}}" class="text-right">{{totalTax|priceOrHyphen}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+
+                        <div class="full-width">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding-top:15px;">
+                                    <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 no-padding">
+                                        <a style="cursor:pointer;" ng-click="onViewInvoiceImageClicked()">Click to view invoice image</a></td>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="POVPICancel2" type="button" class="cancel-btn" data-dismiss="modal" ng-click="onCancelViewInvoiceClicked()">
+                    Close
+                </button>
+            </div>
+        </div>
+</div>

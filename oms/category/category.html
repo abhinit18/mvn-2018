@@ -1,0 +1,520 @@
+<link href="category/category.css" rel="stylesheet">
+<link rel="stylesheet" href="css/multiple-select.css">
+
+<div class="container-fluid vendors-listheading" style="padding-top: 10px;">
+    <div class="row-margin-top-medium col-md-2" style="padding-left: 25px;padding-right: 15px;"><h4
+            class="screen-heading">
+        Categories</h4>
+
+    </div>
+    <div class="row-margin-top-medium col-md-9" ng-if="askcategorymaster == true"
+         style="padding-left: 25px;padding-right: 15px; padding-top: 10px; margin-bottom: 10px; border: 1px solid #d3d3d3; border-radius: 5px;">
+        <div class="col-md-1" style="">
+            <img src="images/svg/settings_icons.svg" style="margin: 5px" alt="" height="30" ; width="30">
+        </div>
+        <div class="col-md-11">
+            <p class="breadcrumb" style="padding: 0px 15px;margin-bottom: 5px;list-style: none;">Categories shown below are based on GS1
+                standard. If you want to pull your product catalogue and categories from Amazon please configure Amazon sales channel first.
+                Go to Settings -> Sales Channel -> Add Amazon Sales channel with Product Pull option enabled.</p>
+            <div class="clearfix"></div>
+
+            <div class="breadcrumb" style="padding: 0px 15px;margin-bottom: 5px;list-style: none;">
+                <span class="add-new-sp-row ng-scope">
+                                <md-checkbox ng-model="categoryMaster.categoryType"
+                                             ng-change="updateCategoryToStandard()"
+                                             aria-label="Enable" tabindex="0" type="checkbox" role="checkbox"
+                                             class="ng-pristine ng-untouched ng-valid ng-empty" aria-checked="false"
+                                             aria-invalid="false"></md-checkbox> Do not ask me again
+                            </span>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row orderscreen-channel row-margin-top-x-medium" style="padding-top: 20px !important;">
+            <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12" style="margin-left: 39px;">
+                <span class="font">Search category</span>
+            </div>
+            <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12" style="padding-left:0px; margin-left: -60px;">
+                <angucomplete-alt-long id="category" placeholder="Search category" pause="400" selected-object="searchedCategorySelected"
+                                       remote-url="{{categorySearchUrl}}" title-field="skuNodePathNameFormatted"
+                                       input-class="main-bottom-border font input-less-padding"></angucomplete-alt-long>
+            </div>
+            <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12" style="margin-left: 39px;">
+                <button  id="addtolist" type="button" class="btn btn-default mybut" ng-if="access.editAccess"
+                         ng-click="askHSNNumber(searchedCategory.originalObject, 'select')"
+                         style="margin-left: 0px !important;">Add to list
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="full-width">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h5 class="breadcrumb">{{selectedcategory[selectedcategory.length-1].selected.skuNodePathNameFormatted}}</h5>
+        </div>
+    </div>
+    <div class="full-width">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="item" ng-repeat="categoryarray in category.slice(genericData.startIndex,genericData.startIndex + 4) track by $index" ng-init="level=$index">
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 category-item-element" id="level{{$index}}">
+                    <ul class="list-inline product-category-list">
+                        <li ng-class="{activeList : selectedcategory[genericData.startIndex+level].selected.idskuNodeId === skunode.idskuNodeId}" ng-repeat="skunode in categoryarray track by skunode.idskuNodeId">
+                            <span ng-click="onCategorySelected(level,skunode)" title="{{skunode.skuNodeName}}">
+                                <span class="col-lg-10 col-md-10 col-sm-12 col-xs-12" ng-if="skunode.skuNodeHasChild == true">
+                                    <h5 class="truncate" >{{skunode.skuNodeName}} </h5>
+                                </span>
+                                <span class="col-lg-6 col-md-6 col-sm-12 col-xs-12" ng-if="skunode.skuNodeHasChild == false">
+                                    <h5 class="truncate-last-node" >{{skunode.skuNodeName}} </h5>
+                                </span>
+                                <span class="col-lg-2 col-md-2 col-sm-12 col-xs-12" ng-if="skunode.skuNodeHasChild == true">
+                                    <span class="fa fa-angle-right pull-right"></span>
+                                </span>
+                                <span class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-right"  ng-if="skunode.skuNodeHasChild == false"
+                                      style="padding: 0px;margin-top: 5px;margin-bottom: 5px;">
+                                <a title = "Manage attributes"  class="btn btn-default btn-sm" ng-if="access.editAccess"
+                                   ng-click="manageAttr(skunode)">
+                                    <span class="fa fa-edit"></span>
+                                </a>
+                                </span>
+                                <span class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-right"  ng-if="skunode.skuNodeHasChild == false"
+                                      style="padding-top: 5px;padding-bottom: 5px;">
+                                    <a title = "Click to add to your category list"  class="btn btn-default btn-sm" ng-if="access.editAccess"
+                                       ng-click="askHSNNumber(skunode,'select')">Select</a>
+                                </span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 item" ng-repeat="categoryarray in category.slice(genericData.startIndex,genericData.startIndex + 4) track by $index" ng-init="level=$index" style="padding: 0px;">
+                <div class="full-width">
+                    <a id="addcategory{{level}}"  class="btn btn-default btn-add-category full-width" ng-if="access.createAccess"
+                       ng-click="onAddCategoryClicked(level)">+ Add Category</a>
+                </div>
+            </div>
+            <!--close the directive wrap-owlcarousel  by prakhar-->
+<!--
+            <wrap-owlcarousel class="owl-carousel owl-theme" data-options="{margin : 25 , mouseDrag : false ,touchDrag: false,pullDrag:false,autoWidth :false, dots : true, loop: false , nav: true , autoPlay: false , responsive:{0:{items:1},600:{items:2},1000:{items:3}} }">
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 item" ng-repeat="categoryarray in category.slice(genericData.startIndex,genericData.startIndex + 4) track by $index" ng-init="level=$index" style="padding: 0px;">
+                    <div class="full-width">
+                        <a id="addcategory{{level}}"  class="btn btn-default btn-add-category full-width" ng-if="access.createAccess"
+                           ng-click="onAddCategoryClicked(level)">+ Add Category</a>
+                    </div>
+                </div>
+        </div>
+-->
+
+    </div>
+    <div class="full-width" style="padding-top: 10px;">
+        <img class="pull-left" src="images/leftArrow.png" ng-click="onLeftArrowClicked()" >
+        <img class="pull-right" src="images/rightArrow.png" ng-click="onRightArrowClicked()" >
+    </div>
+    <div class="full-width" ng-if="FinalList != '' && FinalList != null">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <br>
+
+            <div class="full-width">
+                <table class="table classified-table">
+                    <thead>
+                    <tr>
+                        <td id="hselectedcateogory" style="width:60%;text-align: left;">Selected Categories</td>
+                        <td id="hhsnnumber" style="width:15%;"><span style="color:#333;">HSN Number</span></td>
+                        <td id="barcodeattribute" style="width:10%;"><span style="color:#333;">Barcode Attribute</span></td>
+                        <td id="heditattrib" style="width:10%;"><span style="color:#333;">Edit Attributes</span></td>
+                        <td id="uploadimage" style="width:10%;" title="This image will be shown in our B2B e-commerce platform."><span style="color:#333;">Upload Image</span></td>
+                        <td id="hremove"  style="width:5%;"><span style="color:#333;">Remove</span></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="selected in FinalList" ng-class="{categorySelected: selected.idskuNodeId === genericData.selectedCategory.idskuNodeId}">
+                        <td style="text-align: left;">
+                            <ul class="breadcrumb table-selected-category"
+                                style="margin-bottom: 0px;padding-left: 0px; background: transparent" >
+                                <li id="selected{{$index}}" ng-click="setSelected(selected)"  ng-repeat="pathName in selected.skuNodePathName track by $index">{{pathName}}</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <a ng-if="access.editAccess"
+                               title="Edit HSN"
+                               id="managehsn{{$index}}"
+
+                               ng-click="editHSNNumber(selected)">
+                                <span ng-if="selected.tableHsn && selected.tableHsn.tableHsnCode" style="width:100px;word-wrap: break-word;">{{selected.tableHsn.tableHsnCode}}
+                                </span>
+                                <span ng-if="!selected.tableHsn || (selected.tableHsn && !selected.tableHsn.tableHsnCode)" style="width:100px;word-wrap: break-word;">NA
+                                </span>
+                            </a>
+                            <ul ng-if="!access.editAccess"
+                                style="margin-bottom: 0px;padding-left: 0px; background: transparent" >
+                                    <span ng-if="selected.tableHsn && selected.tableHsn.tableHsnCode" style="width:100px;word-wrap: break-word;">{{selected.tableHsn.tableHsnCode}}
+                                    </span>
+                                <span ng-if="!selected.tableHsn || (selected.tableHsn && !selected.tableHsn.tableHsnCode)" style="width:100px;word-wrap: break-word;">NA
+                                    </span>
+                            </ul>
+                        </td>
+
+                        <td><a
+                                ng-attr-title="{{!access.editAccess ? 'You do not have permission' : 'Edit Attributes'}}"
+                                id="managebarcodeattr{{$index}}"
+
+                                ng-click="access.editAccess && manageBarcodeAttr(selected)">
+                            <span class="fa fa-edit fa-lg"></span></a></td>
+
+                        <td><a
+                                ng-attr-title="{{!access.editAccess ? 'You do not have permission' : 'Edit Attributes'}}"
+                                id="manageattr{{$index}}"
+
+                                ng-click="access.editAccess && manageAttr(selected)">
+                            <span class="fa fa-edit fa-lg"></span></a></td>
+                        <td title="This image will be shown in our B2B e-commerce platform."><a id="uploadImage{{$index}}"
+                               ng-click="openImageUploadModal(selected);">
+                            <span class="fa fa-picture-o" aria-hidden="true"></span></a>
+                            <!--SelectThirdChildNode-->
+                        </td>
+                        <td><a id="delete{{$index}}"
+                               ng-attr-title="{{!access.editAccess ? 'You do not have permission' : 'Delete'}}"
+                               ng-click="access.createAccess && CategoryDeleteConfirmation(selected,$index)"><span
+                                class="fa fa-trash fa-lg"></span></a>
+                            <!--SelectThirdChildNode-->
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="full-width">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                        <a id="generatetemplate"  class="btn addsharpbutton font pull-right"
+                           ng-click="GenerateTemplate(FinalList)" style="height:auto;">Generate Template</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid">
+
+    <div ng-include src="'generateCategoryTemplate/generateTemplateDialog.html?version=1.0.0'"></div>
+
+
+    <!--============================================= Add Attribute =========================================-->
+
+    <div class="modal fade" data-backdrop="static" id="AttributeTemp" role="dialog" aria-labelledby="myModalLabelled" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form name="categoryAttributeManageForm" novalidate>
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                         height="100px">
+                        <button id="manageattrcross" type="button" class="close" data-dismiss="modal" ng-click="cancelManageAttributes()">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <p class="dialog-heading-p" id="myModalLabel">Manage Attribute</p>
+
+                    </div>
+                    <div class="modal-body" style="overflow-x: hidden;padding:0px">
+                        <div class="full-width">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h4 id="managenodeattr">{{selecteNodeToManageAttributes.skuNodeName}}</h4>
+                                <br>
+                            </div>
+                        </div>
+                        <div class="full-width">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <input capitalize-first id="attrname" type="text" class="form-control main-bottom-border padding-top-3"
+                                           ng-model = "newAttributeType.attributeTypeString" name="attributeName"
+                                           placeholder="Attribute Name" ng-maxlength="256" ng-minlength="2"
+                                    >
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12"
+                                         style="margin-bottom: 15px;"
+                                         ng-repeat="attributeValue in attributeValues track by $index">
+                                        <input capitalize-first id="attrvalinput{{$index}}" type="text" ng-model="attributeValues[$index].nodeAttributePossibleValuesValue"
+                                               class="form-control main-bottom-border padding-top-3"
+                                               placeholder="Attribute Value" name="attributeValue" ng-maxlength="45"
+                                        >
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 pull-right" >
+                                        <a id="addnewattr" title = "Add one more value"  style="margin-top: -10px;" class="btn btn-default btn-sm"
+                                           ng-click="addElement()">+</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                <span ng-if="categoryAttributeManageForm.attributeName.$dirty && categoryAttributeManageForm.attributeName.$error.maxlength" class="error-msg">
+                                    Attribute Name should not exceed 256 characters.
+                                </span>
+                                    <span ng-if="categoryAttributeManageForm.attributeName.$dirty && categoryAttributeManageForm.attributeName.$error.minlength" class="error-msg">
+                                    Attribute Name should have at least 2 characters.
+                                </span>
+                                </div>
+                                <div class="col-md-6">
+                                <span ng-if="categoryAttributeManageForm.attributeValue.$dirty && categoryAttributeManageForm.attributeValue.$error.maxlength" class="error-msg">
+                                    Attribute Value should not exceed 45 characters.
+                                </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="full-width" style="margin-top:10px;margin-bottom:10px;">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                                <a id="addattrs" ng-if = "manageAttributeMode == 'add'" title ="Click to save attribute and possible values"  class="btn btn-default action-btn add-attr-btn" ng-click="saveNewAttributeAndValues()">Add
+                                </a>
+                                <a id="updateattrs" ng-if = "manageAttributeMode == 'edit'" title ="Click to save attribute and possible values"  class="btn btn-default action-btn add-attr-btn" ng-click="saveNewAttributeAndValues()">Update
+                                </a>
+                            </div>
+                        </div>
+                        <div class="full-width">
+                            <hr>
+                        </div>
+                        <div class="full-width">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <table class="table classified-table">
+                                    <thead>
+                                    <tr>
+                                    <td id="hattrname" style="width:50%;text-align: left;" class="font">Attribute Name</td>
+                                    <td id="hattrval" style="width: 50%;padding-left: 25px;" class="font text-left">Possible Values</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="attributes in attrDetails track by $index">
+                                        <td id="attrname{{$index}}" style="text-align: left;color: orangered;">{{attributes.attributeTypeString}}</td>
+                                        <td>
+                                        <div class="col-lg-4 ">
+                                                <select ng-if = "attributes.attributeType == 'select'" class="form-control">
+                                                    <option id="attrval{{$index}}{{option.idnodeAttributePossibleValuesId}}"  ng-repeat="option in attributes.tableSkuNodeAttributePossibleValueses track by option.idnodeAttributePossibleValuesId"
+                                                            value="option">
+                                                        {{option.nodeAttributePossibleValuesValue}}
+                                                    </option>
+                                                </select>
+                                                <span id="attrnametxt{{$index}}" ng-if = "attributes.attributeType == 'text'">
+                                                Text value
+                                            </span>
+                                            </div>
+                                        <div class="col-lg-8 ">
+                                            <div class="col-lg-6">
+                                                <a id="editskuattribute{{$index}}"  class="btn btn-default btn-sm" ng-click="editSkuNodeAttribute($index)">
+                                                    <span class="fa fa-edit"></span>
+                                                </a>
+                                                <a id="removeskuattribute{{$index}}"  class="btn btn-default btn-sm" ng-click="removeSkuNodeAttribute($index)">
+                                                    <span class="fa fa-remove"></span>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="col-lg-4">
+                                                    <input type="checkbox" id="makeAttributeVariant{{$index}}"
+                                                           ng-model="attributes.attributeTypeVariant"
+                                                           ng-change="makeAttributeVariant($index, attributes.attributeTypeVariant)">
+                                                    </input>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                   Variant
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="done" type="button" class="action-btn" ng-click="cancelManageAttributes();hideManageAttributeDialog()">Done</button>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--============================================= Add categories ========================================-->
+
+    <div class="modal fade" data-backdrop="static" id="AddCategoryTemp" role="dialog" aria-labelledby="myModalLabelled" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="max-width:500px;">
+            <form name="addCategoryForm" novalidate ng-submit="addCategoryForm.$valid && onSaveCategoryClicked() ">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                         height="100px">
+                        <button id="addcategorycross" type="button" class="close" data-dismiss="modal" ng-click="cancelSingleOrder()">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <p class="dialog-heading-p">Add Category</p>
+
+                    </div>
+                    <div class="modal-body" style="overflow-x: hidden;padding:0px">
+                        <div class="full-width">
+                            <div class="row row-margin-top">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 15px;">
+                                    <div class="col-md-4 margin-top-5">
+                                        <span class="semi-bold-text">Category Name <span style="color:red">*</span> </span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div>
+                                            <input capitalize-first id="categoryname" type="text" autofocus class="form-control darkgrey-bottom-border"
+                                                   name="Categoryname" id="ponumberId" placeholder="Category Name" required ng-maxlength="256" ng-minlength="2"
+                                                   ng-model="categoryName">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-offset-4 col-md-8">
+                                    <span ng-if="addCategoryForm.$submitted && addCategoryForm.Categoryname.$error.required" class="error-msg">
+                                        Please enter the category name.
+                                    </span>
+                                        <span ng-if="addCategoryForm.Categoryname.$dirty && addCategoryForm.Categoryname.$error.maxlength" class="error-msg">
+                                        Category name should not exceed 256 characters.
+                                    </span>
+                                        <span ng-if="addCategoryForm.Categoryname.$dirty && addCategoryForm.Categoryname.$error.minlength" class="error-msg">
+                                        Category name should have at least 2 characters.
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                        <button id="addcatbutton" type="submit" class="action-btn">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--========================================== confirmation for delete category ===============================-->
+
+    <div class="modal fade" data-backdrop="static" id="DeleteCategoryModal" role="dialog" aria-labelledby="myModalLabelled" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="max-width:500px;">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="deletecross" type="button" class="close" data-dismiss="modal" ng-click="cancelDeleteCategoryModal()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" id="myDeleteCategoryModalLabelling">Delete Confirmation</p>
+
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding:0px">
+                    <div class="full-width">
+                        <div class="row row-margin-top" style="margin-top:15px;">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 15px;">
+                                <h4 id="nodenametodelete" style="padding-left:15px;padding-right:15px;color:#F0592B;">{{CategoryDeleteObj.categoryItemData.skuNodeName}}</h4>
+                                <br>
+                                <h4 class="text-center">Are you sure to delete this category ?</h4>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+                    <button id="yesdelete" type="button" class="action-btn"
+                            ng-click="DeleteSelectedItemFromCategoryList()">
+                        Yes
+                    </button>
+                    <button id="nodelete" type="button" class="cancel-btn" ng-click="cancelDeleteCategoryModal()">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--====================== delete category modal ends here only========================-->
+
+    <!--=================== ask HSN Number modal starts here============ --->
+    <div class="modal fade" data-backdrop="static" id="askHSNNumberModal" role="dialog" aria-labelledby="myModalLabelled" aria-hidden="true">
+        <div class="modal-dialog modal-lg" >
+            <form name="HSNNumberForm" novalidate>
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                         height="100px">
+                        <button type="button" class="close" data-dismiss="modal" ng-click="cancelAskHSNNumberModal()">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <p class="dialog-heading-p" id="myAskHSNNumberModalLabelling">HSN Number</p>
+
+                    </div>
+                    <div class="modal-body" style="overflow-x: hidden;">
+                        <div class="full-width">
+                            <div class="row row-margin-top" style="margin-top:15px;">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 15px;">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <h5 style="word-wrap: break-word;margin-top:0px;color:#F0592B;">{{CategoryDeleteObj.categoryItemData.skuNodeName}}</h5>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <input id="hsnNumber" name="hsnNumber" ng-maxlength="9" type="text" only-integer class="form-control main-bottom-border padding-top-3"
+                                               ng-model = "CategoryDeleteObj.categoryItemData.tableHsn.tableHsnCode"
+                                               placeholder="HSN Number"
+                                        >
+                                    </div>
+                                    <div class="col-md-offset-6 col-md-6">
+                                    <span ng-if="HSNNumberForm.hsnNumber.$dirty && HSNNumberForm.hsnNumber.$error.maxlength" class="error-msg">
+                                        HSN number should not exceed 9 characters.
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+                        <button type="button" class="cancel-btn" ng-if="hsn.mode == 'edit'" ng-click="cancelAskHSNNumberModal()">
+                            Cancel
+                        </button>
+                        <button type="button" class="action-btn" ng-if="hsn.mode == 'create'"
+                                ng-click="SelectThirdChildNode(CategoryDeleteObj.categoryItemData,'selectWithoutHSN',CategoryDeleteObj.categoryItemDataIndex)">
+                            Proceed without HSN
+                        </button>
+                        <button type="button" class="action-btn" ng-if="hsn.mode == 'create'"
+                                ng-click="SelectThirdChildNode(CategoryDeleteObj.categoryItemData,'select',CategoryDeleteObj.categoryItemDataIndex)">
+                            Submit
+                        </button>
+                        <!-- <button type="button" class="action-btn" ng-if="hsn.mode == 'edit'"
+                                ng-click="SelectThirdChildNode(CategoryDeleteObj.categoryItemData,'edit',CategoryDeleteObj.categoryItemDataIndex)">
+                            Skip
+                        </button> -->
+                        <button type="button" class="action-btn" ng-if="hsn.mode == 'edit'"
+                                ng-click="SelectThirdChildNode(CategoryDeleteObj.categoryItemData,'edit',CategoryDeleteObj.categoryItemDataIndex)">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!---==================ask HSN Number modals end here==============-->
+    <div ng-include src="'category/askCategoryMaster.html?version=1.0.0'"></div>
+    <div ng-include src="'category/barcodeAttributeModal.html?version=1.0.0'"></div>
+    <div ng-include src="'category/uploadImageDialog.html?version=1.0.0'"></div>
+    <div ng-include src="'category/approvalConfirmation.html?version=1.0.0'"></div>
+
+
+</div>
+</div>
+<style>
+    .table-selected-category li {
+        color: darkgray;
+    }
+
+    .table-selected-category li:nth-child(4) {
+        color: #006cad;
+    }
+</style>

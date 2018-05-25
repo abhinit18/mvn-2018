@@ -1,0 +1,612 @@
+        <!-- <div class="row search-row-heading">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right" style="padding-right:0px;margin-bottom: 15px;">
+                <button type="button" class="btn btn-default addsharpbutton "
+                        ng-click="$parent.activateTab('tab2');newTab();">
+                    <span class="fa fa-external-link-square"></span>
+                    <span style="color: #fff !important; font-weight: 400 !important;">&nbsp;New Tab</span>
+                </button>
+            </div>
+        </div> -->
+        <div ng-init="onPageInitialize();" class="row orderscreen-channel row-margin-top-x-medium" style="padding-top:20px; margin-top: 10px;">
+            <div class="col-md-3">
+                <span class="font">From Warehouse</span>
+                <select id="otbndSTFWh" ng-model="filterObj.fromWarehouse" required
+                        ng-options="option.tableWarehouseDetailsShortname for option in wareHousesData track by option.idtableWarehouseDetailsId"
+                        ng-change="callDisabled()" class="orderscreen-dropdown mainDropDownOrder">
+                    <option value="" >All</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <span class="font">To Warehouse</span>
+                <select id="otbndSTTWh" ng-model="filterObj.toWarehouse" required
+                        ng-options="option.tableWarehouseDetailsShortname for option in toWarehouses track by option.idtableWarehouseDetailsId"
+                        ng-change="callDisabled()" class="orderscreen-dropdown mainDropDownOrder">
+                    <option value="" >All</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <span class="font">ST No.</span>
+                <input id="otbndSTNo" type="text" class=" main-bottom-border" ng-change="callDisabled()" placeholder="ST No." trim-space ng-model="filterObj.systemOrderNo" style="font-size:14px;margin-left:10px;width:170px;">
+            </div>
+
+            <div class="col-md-3">
+                <span class="font">Ref No.</span>
+                <input id="STFRefNo"  type="text" class=" main-bottom-border" placeholder="Ref No." trim-space ng-model="filterObj.stRefNo" style="font-size:14px;margin-left:10px;width:170px;">
+            </div>
+
+
+            <div class="col-md-12 row-margin-top-small">
+
+                <div class="col-md-3">
+                    <div class="col-md-5 margin-top-7"  style="left:-30px;">
+                        <span class="font">Search SKU</span>
+                    </div>
+                    <div class="col-md-6" style="padding-left:0px;">
+                        <angucomplete-alt id="productsfilter" placeholder="Search product" pause="400" selected-object="searchedProductForFilter" remote-url="{{baseSkuUrl}}"
+                                          title-field="tableSkuClientSkuCode"
+                                          description-field="tableSkuName"
+                                          image-field="tableSkuImageUrl"
+                                          initial-value="filterObj.tableSku" input-class="main-bottom-border font form-control"></angucomplete-alt>
+                        <button id="otbndSTSMore" type="button" style="position: absolute;top: 0px; right: -40px;" class="btn btn-sm truncate-text" ng-click="masterSkuDialog($event);">. . .</button>
+                    </div>
+                </div>
+
+                <!-- {{startDate | date : "yyyy-MM-dd" }}{{endDate | date : "yyyy-MM-dd"}} -->
+                <div class="col-md-2 margin-top-7">
+                    <span class="font">Date</span>
+                </div>
+                <div class="col-md-3" style="margin-left: -106px;">
+                    <md-datepicker id="otbndSTSDate" timezoned-date ng-model="filterObj.start1Date" md-min-date="startminDate" md-max-date="startmaxDate"
+                                   onkeydown="return false" ng-change="sendStartDate(filterObj.start1Date);callDisabled();"
+                                   md-placeholder="Start Date"
+                                   style="background-color: inherit;margin-top:3px;"></md-datepicker>
+                    <button id="otbndSTSDateClear" ng-if="filterObj.start1Date != null || filterObj.start1Date != undefined" title="Deselect Start Date"
+                            class="btn dateClear" ng-click="clearStartDate();">
+                    </button>
+
+                </div>
+                <div class="col-md-3">
+                    <md-datepicker id="otbndSTEDate" timezoned-date ng-model="filterObj.end1Date" md-min-date="endminDate" md-max-date="endmaxDate"
+                                   onkeydown="return false" ng-change="sendEndDate(filterObj.end1Date);callDisabled();" md-placeholder="End Date"
+                                   style="background-color: inherit;margin-top:3px;"></md-datepicker>
+                    <button id="otbndSTEdateClear" ng-if="filterObj.end1Date != null || filterObj.end1Date != undefined" title="Deselect End Date"
+                            class="btn dateClear" ng-click="clearEndDate()">
+                    </button>
+                </div>
+                <button id="otbndSTSearch" type="button" class="btn btn-default mybut"   style="margin-left:0px;"
+                        ng-click="submitAction()">Search
+                </button>
+                <button id="otbndSTClear" type="button"  title="Clear Applied Filters"  class="btn clearFilter" ng-click="clearAction();">
+                </button>
+                <!--<md-icon style="margin-top:6px;" ng-click="$parent.activateTab('tab2');newTab()" md-svg-src="images/svg/new_tab.svg"-->
+                <!--&gt;</md-icon>-->
+            </div>
+        </div>
+        <div class="row row-margin-top-small">
+            <div class="col-md-10">
+                <ul class="nav navbar-nav orderscreen-tabs">
+                    <li title="{{'New '+ newCount}}">
+                        <button type="button" class="btn sharp font"
+                                ng-class="{'activeTab' : defaultTab == 'new'}"
+                                ng-click="listOfStatesCount('new',1)">
+                            New ({{newCount}})
+                        </button>
+                    </li>
+                    <li title="{{'In Process '+ processCount}}">
+                        <button type="button" class="btn sharp"
+                                ng-class="{'activeTab' : defaultTab == 'process'}"
+                                ng-click="listOfStatesCount('process',1)">
+                            In Process ({{processCount}})
+                        </button>
+                    </li>
+                    <li title="{{'In Transit '+ intransitCount}}">
+                        <button type="button" class="btn sharp font"
+                                ng-class="{'activeTab' : defaultTab == 'intransit'}"
+                                ng-click="listOfStatesCount('intransit',1)">In Transit ({{intransitCount}})
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row main-list">
+            <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                <thead class="main-list-header-order">
+                <!-- table header -->
+                <tr>
+                    <th id="otbndSTNoH" class="text-left"><a href=""
+                       ng-click="tableSorting('tableStockXferOrderSystemOrderNo',sortReverse,defaultTab)">
+                        ST No.&nbsp;
+                        <span ng-if="sortType == 'tableStockXferOrderSystemOrderNo' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableStockXferOrderSystemOrderNo' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                    <th id="otbndSTRefNoH" class="text-left"><a href=""
+                                                             ng-click="tableSorting('tableStockXferOrderClientOrderNo',sortReverse,defaultTab)">
+                        Ref No.&nbsp;
+                        <span ng-if="sortType == 'tableStockXferOrderClientOrderNo' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableStockXferOrderClientOrderNo' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                <th id="otbndSTFWhH" class="text-left"> <a href=""
+                       ng-click="tableSorting('tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseDetailsShortname',sortReverse,defaultTab)">
+                        From Warehouse&nbsp;
+                        <span ng-if="sortType == 'tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseDetailsShortname' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseDetailsShortname' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                <th id="otbndSTTWhH" class="text-left"><a href=""
+                       ng-click="tableSorting('tableWarehouseDetailsByTableStockXferOrderToLocation.tableWarehouseDetailsShortname',sortReverse,defaultTab)">
+                        To Warehouse&nbsp;
+                        <span ng-if="sortType == 'tableWarehouseDetailsByTableStockXferOrderToLocation.tableWarehouseDetailsShortname' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableWarehouseDetailsByTableStockXferOrderToLocation.tableWarehouseDetailsShortname' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                    <th id="otbndSTQtyTH" class="text-left"><a href=""
+                           ng-click="tableSorting('tableStockXferOrderQuantityType',sortReverse,defaultTab)">
+                        Quantity Type&nbsp;
+                        <span ng-if="sortType == 'tableStockXferOrderQuantityType' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableStockXferOrderQuantityType' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                <th id="otbndSTCDateH" class="text-left"><a href=""
+                       ng-click="tableSorting('tableStockXferOrderDate',sortReverse,defaultTab)">
+                        Creation Date&nbsp;
+                        <span ng-if="sortType == 'tableStockXferOrderDate' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableStockXferOrderDate' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                <th id="otbndSTEDateH" class="text-left"><a href=""
+                       ng-click="tableSorting('tableStockXferOrderDropDatetime',sortReverse,defaultTab)">
+                        Exp. Delivery Date&nbsp;
+                        <span ng-if="sortType == 'tableStockXferOrderDropDatetime' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'tableStockXferOrderDropDatetime' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                <th id="otbndSTQtyH" class="text-left"><a href=""
+                       ng-click="tableSorting('quantity',sortReverse,defaultTab)">
+                        Item Quantity&nbsp;
+                        <span ng-if="sortType == 'quantity' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'quantity' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                <th ng-if="genericData.isAdmin=='true'" id="otbndSTTotalH" class="text-left"><a href=""
+                       ng-click="tableSorting('skuvalue',sortReverse,defaultTab)">
+                        Total Amount&nbsp;
+                        <span ng-if="sortType == 'skuvalue' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                        <span ng-if="sortType == 'skuvalue' && sortReverse"
+                              class="fa fa-caret-up"></span>
+                    </a></th>
+                    <!-- Below is just placeholder to keep design intact -->
+                    <th ng-if="genericData.isAdmin=='false'" id="otbndSTTotalH1" class="text-left">
+                    </th>
+                    <th id="otbndSTRemarksH" class="text-left"><a>Remarks</a></th>
+
+                    <th id="otbndSTDropH" class="text-left"></th>
+                </tr>
+                </thead>
+                <tbody ng-if="showLoader">
+                <tr>
+                    <td align="left" colspan="11" class="text-center">
+                        <md-progress-circular style="margin: 0 auto" class="md-hue-2" md-diameter="40"></md-progress-circular>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody data-ng-repeat="Data in orderLists" data-ng-switch on="dayDataCollapse[$index]">
+                <tr class="clickable-row-order">
+                    <td id="otbndSTNo{{$index}}" align="left">{{Data.tableStockXferOrderSystemOrderNo}}</td>
+                    <td id="otbndSTRefNo{{$index}}" align="left">{{Data.tableStockXferOrderClientOrderNo}}</td>
+                    <td id="otbndSTFWh{{$index}}" align="left">{{Data.tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseDetailsLongname}}
+                    </td>
+                    <td id="otbndSTTWh{{$index}}" align="left">{{Data.tableWarehouseDetailsByTableStockXferOrderToLocation.tableWarehouseDetailsLongname}}</td>
+                    <td id="otbndSTQtyT{{$index}}">{{Data.tableStockXferOrderQuantityType}}</td>
+                    <td id="otbndSTCDate{{$index}}" align="left">
+                        {{Data.tableStockXferOrderDate | utcToLocalOrHyphen}}
+                    </td>
+                    <td id="otbndSTEDate{{$index}}" align="left">
+                        {{Data.tableStockXferOrderDropDatetime | utcToLocalOrHyphen}}
+                    </td>
+                    <td id="otbndSTQty{{$index}}" align="left">{{totalQuantity(Data.tableStockXferOrderSkuses)}}</td>
+                    <td ng-if="genericData.isAdmin=='true'" id="otbndSTTotal{{$index}}" align="left">{{Data.totalOrdercost}}</td>
+                    <td ng-if="genericData.isAdmin=='false'"></td>
+                    <td id="otbndSTRemarks{{$index}}" align="left">
+                        <div class="tool-tip">
+                            <img src="images/svg/remarks.svg" style="height:20px; width: 20px;" ng-click="openEditRemarkModal(Data,$index)"/>
+                            <span class="commonTooltip">
+                                <span class="tool-tip-text">
+                                        <div class="popover fade left custom-pop-left in" role="tooltip" id="popover743808" style="width:200px; display: block;">
+                                            <div class="arrow pop-left" style="left: 50%;"></div>
+                                            <h3 class="popover-title">Remarks</h3>
+                                            <div class="popover-content" style="word-wrap: break-word;float:left;width:100%;height:auto;max-height:100px;overflow-x: hidden;overflow-y:auto;">
+                                                <richtext class="text" body-text="Data.tableStockXferOrderRemarksFormatted">
+                                                </richtext>
+                                            </div>
+                                        </div>
+                                    </span>
+                            </span>
+                        </div>
+                    </td>
+                    <td id="otbndSTDrop1{{$index}}" align="left" ng-show="dayDataCollapse == null || dayDataCollapse == undefined || dayDataCollapse == []">
+                        <img src="images/svg/expand_icon.svg" height="20"
+                             data-ng-click="selectTableRow($index, Data.tableStockXferOrderClientOrderNo);stateTrials(orderLists[$index].tableStockXferOrderSkuses);"/>
+                    </td>
+                    <td id="otbndSTDrop2{{$index}}" align="left" data-ng-switch-when="false"
+                        data-ng-click="selectTableRow($index, Data.tableStockXferOrderClientOrderNo);stateTrials(orderLists[$index].tableStockXferOrderSkuses);">
+                        <img src="images/svg/expand_icon.svg" height="20"/></td>
+                    <td id="otbndSTDrop3{{$index}}" align="left" data-ng-switch-when="true"
+                        data-ng-click="selectTableRow($index, Data.tableStockXferOrderClientOrderNo);stateTrials(orderLists[$index].tableStockXferOrderSkuses);">
+                        <img src="images/svg/collaps_icon.svg" height="20"/></td>
+                </tr>
+                <tr data-ng-switch-when="true" >
+                    <td colspan="11">
+                        <div class="full-width" style="background:#fff;" ng-if="orderLevelActionRow(Data.tableStockXferOrderSkuses, Data)">
+                            <span class=" sidebar-btn full-width" style="margin-right: 20px;" ng-if="defaultTab != 'cancelled'">
+									<button id="otbndSTSO{{$index}}" type="button"
+                                            ng-if="access.editAccess && getSplitLabelButton() == true"
+                                            ng-click="splitOrderBySkuDialog($event, Data.tableStockXferOrderSkuses, Data.idtableStockXferOrderId)"
+                                            class="btn btn-default mybutton1 pull-right">
+                                        Split Order
+                                    </button>
+                                    <button id="otbndQS{{$index}}" type="button"
+                                            ng-if="access.editAccess && ( (Data.tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseType.idtableWarehouseTypeId == 1
+                                                                            && Data.tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseDetailsWmsId == null)
+                                                                        || Data.tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseType.idtableWarehouseTypeId == 2
+                                                                        || Data.tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseType.idtableWarehouseTypeId == 4
+                                                                        || Data.tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseType.idtableWarehouseTypeId == 5)
+                                                 && getStockXferBulkQuickShipLabelButton(Data.tableStockXferOrderSkuses) == false"
+                                            ng-click="quickShipDataDialog($event,Data)"
+                                            class="btn btn-default mybutton1 pull-right">
+                                        Quick ship
+                                    </button>
+                                <button id="otbndSTPrintInv1{{$index}}" type="button"
+                                        ng-if="access.editAccess && enableInvoice == true "
+                                        ng-click="printInvoice(Data)"
+                                        class="btn btn-default mybut1 mybutton1 pull-right">
+                                        Print Invoice
+                                    </button>
+
+                                    <button id="otbndSTPrintChallan1{{$index}}" type="button"
+                                            ng-if="access.editAccess && enableInvoice == false "
+                                            ng-click="printChallan(Data)"
+                                            class="btn btn-default mybut1 mybutton1 pull-right">
+                                        Print Challan
+                                </button>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-ng-switch-when="true" style="border: 1px solid #C0C0C0; background-color: #FEFFFF !important;"
+                    >
+                    <td colspan="11">
+                        <div class="full-width" style="overflow: auto;max-height: 400px;">
+                            <div class="col-md-12" data-ng-repeat="tableSkuData in orderLists[$index].tableStockXferOrderSkuses">
+                                <div class="col-md-4 text-center" style="border-right: 1px solid #dedede;">
+                        <span ng-if="Data.tableStockXferOrderSystemOrderNo" style="display: block;padding:15px 0 15px 0;font-size: 14px;color: #F0592B;font-weight: bold ;">
+                              {{Data.tableStockXferOrderSystemOrderNo}} ({{$index + 1}} of {{Data.tableStockXferOrderSkuses.length}})
+                        </span>
+                                    <div class="box-table">
+                                        <div class="boxes">
+                                            <div class="box box1">
+                                                Seller SKU ID :
+                                            </div>
+                                            <div class="box box2 short-sku-name" style="max-width:200px">
+                                                {{tableSkuData.tableSku.tableSkuClientSkuCode}}
+                                            </div>
+                                        </div>
+                                        <div class="boxes">
+                                            <div class="box box1">
+                                                SKU Name :
+                                            </div>
+                                            <div class="box box2 short-sku-name" title="{{tableSkuData.tableSku.tableSkuDescription}}" style="max-width:200px">
+                                                {{tableSkuData.tableSku.tableSkuName}}
+                                            </div>
+                                        </div>
+                                        <div class="boxes">
+                                            <div class="box box1">
+                                                Qty :
+                                            </div>
+                                            <div class="box box2">
+                                                {{tableSkuData.tableStockXferOrderSkusSkuQuantity}}
+                                            </div>
+                                        </div>
+                                        <div ng-if="genericData.isAdmin=='true'" class="boxes">
+                                            <div class="box box1">
+                                                Cost Per Sku :
+                                            </div>
+                                            <div class="box box2">
+                                                Rs. {{tableSkuData.weightedAverage}}
+                                            </div>
+                                        </div>
+                                        <div ng-if="genericData.isAdmin=='true'" class="boxes">
+                                            <div class="box box1">
+                                                Total Cost :
+                                            </div>
+                                            <div class="box box2">
+                                                Rs. {{tableSkuData.finalCharges}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+
+                                    <ul ng-if="trialsLength[$index]>= 4" class="progress-indicator nocenter stacked"
+                                        style="list-style: none;">
+                                        <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                        style="width: 20px;height: 20px;"/>
+
+                            <label class="TrailElementOne"
+                                   style="padding-top: 20px;font-weight: bold;">{{fullTrialsArray[$index][0]}}</label></span>
+                                        </li>
+                                        <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                        style="width: 20px;height: 20px;"/><label
+                                                style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][1]}}</label></span>
+                                        </li>
+                                        <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                        style="width: 20px;height: 20px;"/><label
+                                                style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][2]}}</label></span>
+                                        </li>
+                                        <li class="completed"><span class="bubble1"><img src="images/svg/current_icon.svg"
+                                                                                         style="width: 20px;height: 20px;"/><label
+                                                style="padding-top: 20px;font-weight: bold;padding-left: 10px;color:black">{{fullTrialsArray[$index][3]}}</label></span>
+                                        </li>
+                                    </ul>
+                                    <ul ng-if="trialsLength[$index] == 1" class="progress-indicator nocenter stacked"
+                                        style="list-style: none;">
+                                        <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                                style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][0]}}</label></span>
+                                        </li>
+                                    </ul>
+                                    <ul ng-if="trialsLength[$index] == 2" class="progress-indicator nocenter stacked"
+                                        style="list-style: none;">
+                                        <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                        style="width: 20px;height: 20px;"/><label
+                                                style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][0]}}</label></span>
+                                        </li>
+                                        <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                                style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][1]}}</label></span>
+                                        </li>
+                                    </ul>
+                                    <ul ng-if="trialsLength[$index] == 3" class="progress-indicator nocenter stacked"
+                                        style="list-style: none;">
+                                        <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                        style="width: 20px;height: 20px;"/><label
+                                                style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][0]}}</label></span>
+                                        </li>
+                                        <li class="completed"><span class="bubble"><img src="images/svg/done_icon.svg"
+                                                                                        style="width: 20px;height: 20px;"/><label
+                                                style="padding-top: 20px;font-weight: bold;padding-left: 10px">{{fullTrialsArray[$index][1]}}</label></span>
+                                        </li>
+                                        <li><span><img src="images/svg/current_icon.svg" style="width: 20px;height: 20px;"/><label
+                                                style="padding-top: 20px;font-weight: bold;padding-left: 10px;">{{fullTrialsArray[$index][2]}}</label></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-3" style="text-align: center">
+                                    <button id="otbndSTSO1{{$index}}" type="button"
+                                            ng-if="access.editAccess && getSplitLabelButtonForQuantity(tableSkuData) == true "
+                                            ng-click="splitOrderBySkuByQuantityDialog($event, tableSkuData.idtableStockXferOrderSkusId, Data.idtableStockXferOrderId, tableSkuData.tableStockXferOrderSkusSkuQuantity)"
+                                            class="btn btn-default mybut1 mybutton1">
+                                        Split Order
+                                    </button>
+
+                                    <button id="otbndSTPL{{$index}}" type="button" ng-click="printLabel(tableSkuData,Data.tableWarehouseDetailsByTableStockXferOrderToLocation.tableWarehouseType.idtableWarehouseTypeId)"
+                                            ng-if="(tableSkuData.tableStockXferOrderSkuStateType.idtableStockXferOrderSkuStateTypeId == 1
+                                                || tableSkuData.tableStockXferOrderSkuStateType.idtableStockXferOrderSkuStateTypeId == 6)&& ((Data.tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseType.idtableWarehouseTypeId == 1
+                                                        && Data.tableWarehouseDetailsByTableStockXferOrderToLocation.tableWarehouseDetailsWmsId == null)
+                                                     || Data.tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseType.idtableWarehouseTypeId == 2
+                                                     || Data.tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseType.idtableWarehouseTypeId == 4
+                                                     || Data.tableWarehouseDetailsByTableStockXferOrderFromLocation.tableWarehouseType.idtableWarehouseTypeId == 5)"
+                                            class="btn btn-default mybut1 mybutton1">
+                                        Print Label
+                                    </button>
+                                    <button id="otbndSTPPL{{$index}}" type="button"
+                                            ng-click="printPackageLabel(Data)"
+                                            ng-if="access.editAccess && Data.tableWarehouseDetailsByTableStockXferOrderToLocation.tableWarehouseType.idtableWarehouseTypeId == 3 &&tableSkuData.tableStockXferOrderSkuStateType.idtableStockXferOrderSkuStateTypeId == 6"
+                                            class="btn btn-default mybut1 mybutton1">
+                                        Print Package Label
+                                    </button>
+
+                                    <button id="otbndSTPPalL{{$index}}" type="button"
+                                            ng-click="printPalletLabelModal(Data)"
+                                            ng-if="access.editAccess && Data.tableWarehouseDetailsByTableStockXferOrderToLocation.tableWarehouseType.idtableWarehouseTypeId == 3 &&tableSkuData.tableStockXferOrderSkuStateType.idtableStockXferOrderSkuStateTypeId == 6"
+                                            class="btn btn-default mybut1 mybutton1">
+                                        Print Pallet Label
+                                    </button>
+
+                                    <button id="otbndSTIT{{$index}}" type="button"
+                                            ng-click="intransitStOrderModal(Data)"
+                                            ng-if="access.editAccess && Data.tableWarehouseDetailsByTableStockXferOrderToLocation.tableWarehouseType.idtableWarehouseTypeId == 3 &&tableSkuData.tableStockXferOrderSkuStateType.idtableStockXferOrderSkuStateTypeId == 6"
+                                            class="btn btn-default mybut1 mybutton1">
+                                        In Transit
+                                    </button>
+
+                                    <button id="otbndSTPI{{$index}}" type="button"
+                                            ng-click="FBAprepInstruction(tableSkuData.idtableStockXferOrderSkusId)"
+                                            ng-if="access.editAccess && Data.tableWarehouseDetailsByTableStockXferOrderToLocation.tableWarehouseType.idtableWarehouseTypeId == 3 &&tableSkuData.tableStockXferOrderSkuStateType.idtableStockXferOrderSkuStateTypeId == 6"
+                                            class="btn btn-default mybut1 mybutton1">
+                                        Prep Instruction
+                                    </button>
+                                </div>
+                                <div class="col-md-2">
+                        <span class="pull-right infoimgBox" id="otbndSTInfo{{$index}}"
+                              ng-click="openInfoBox($event,tableSkuData.tableStockXferOrderSkuStateTrails)"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="full-width">
+                <div class="col-md-6" ng-show="defaultTab == 'all'">
+                    <p class="showingOrderLabel" ng-show="orderSize<allCount">Showing Orders {{start + 1}} to
+                        {{end}}
+                        of {{allCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=allCount && allCount!=0">Showing Orders {{start +
+                        1}}
+                        to {{allCount}} of {{allCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="allCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'new'">
+                    <p class="showingOrderLabel" ng-show="orderSize<newCount">Showing Orders {{start + 1}} to
+                        {{end}}
+                        of {{newCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=newCount && newCount!=0">Showing Orders {{start +
+                        1}}
+                        to {{newCount}} of {{newCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="newCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'process'">
+                    <p class="showingOrderLabel" ng-show="orderSize<processCount">Showing Orders {{start + 1}} to
+                        {{end}} of {{processCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=processCount && processCount!=0">Showing Orders
+                        {{start
+                        + 1}} to {{processCount}} of {{processCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="processCount==0">No Orders Available
+                    </p>
+                </div>
+
+                <div class="col-md-6" ng-show="defaultTab == 'grn'">
+                    <p class="showingOrderLabel" ng-show="orderSize<grnCount">Showing Orders {{start + 1}} to
+                        {{end}} of {{grnCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=grnCount && grnCount!=0">Showing Orders
+                        {{start +
+                        1}} to {{grnCount}} of {{grnCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="grnCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'intransit'">
+                    <p class="showingOrderLabel" ng-show="orderSize<intransitCount">Showing Orders {{start + 1}} to
+                        {{end}}
+                        of {{intransitCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=intransitCount && intransitCount!=0">Showing Orders {{start +
+                        1}}
+                        to {{intransitCount}} of {{intransitCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="intransitCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'cancelled'">
+                    <p class="showingOrderLabel" ng-show="orderSize<cancelledCount">Showing Orders {{start + 1}} to
+                        {{end}} of {{cancelledCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=cancelledCount && cancelledCount!=0">Showing Orders
+                        {{start + 1}} to {{cancelledCount}} of {{cancelledCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="cancelledCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-md-6" ng-show="defaultTab == 'draft'">
+                    <p class="showingOrderLabel" ng-show="orderSize<DraftCount">Showing Orders {{start + 1}} to
+                        {{end}} of {{DraftCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="orderSize>=DraftCount && DraftCount!=0">Showing Orders
+                        {{start + 1}} to {{DraftCount}} of {{DraftCount}}
+                    </p>
+
+                    <p class="showingOrderLabel" ng-show="DraftCount==0">No Orders Available
+                    </p>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+                    <ul ng-if="vmPager.pages.length" class="pagination">
+                        <li>
+                            <a><span style="padding-right: 5px;">Showing</span>
+                                <select id="pagesize" ng-change="onRecordsPerPageChange(orderSize)"  ng-model="orderSize" name="recordsPerPage"
+                                        ng-options="option for option in recordsPerPage"
+                                        required>
+                                </select>
+                                <span style="padding-left: 5px;">records per page</span>
+                            </a>
+                        </li>
+                        <li id="first1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                            <a>&lt;&lt; First</a>
+                        </li>
+                        <li id="first2" ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                            <a ng-click="listOfStatesCount(defaultTab,1)">&lt;&lt; First</a>
+                        </li>
+                        <li id="previos1" ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                            <a>&lt; Previous</a>
+                        </li>
+                        <li id="previous2" ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                            <a ng-click="listOfStatesCount(defaultTab,vmPager.currentPage - 1)">&lt; Previous</a>
+                        </li>
+                        <li id="page" ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                            <a ng-click="listOfStatesCount(defaultTab,page)">{{page}}</a>
+                        </li>
+                        <li id="next1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                            ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                            <a ng-click="listOfStatesCount(defaultTab,vmPager.currentPage + 1)">Next &gt;</a>
+                        </li>
+                        <li id="next2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                            ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                            <a>Next &gt;</a>
+                        </li>
+                        <li id="last1" ng-show="vmPager.currentPage < vmPager.totalPages"
+                            ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                            <a ng-click="listOfStatesCount(defaultTab,vmPager.totalPages)">Last &gt;&gt;</a>
+                        </li>
+                        <li id="last2" ng-show="vmPager.currentPage == vmPager.totalPages"
+                            ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                            <a>Last &gt;&gt;</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+
+<div ng-include src="'stockTransfer/editRemarksModal.html?version=1.0.0'"></div>
+<div ng-include src="'wops/OperationDialogBox/stockTransferSplitBySku.html?version=1.0.0'"></div>
+<div ng-include src="'wops/OperationDialogBox/stockTransferSplitByQuantity.html?version=1.0.0'"></div>
+<div ng-include src="'wops/OperationDialogBox/stockTransferIntransitModal.html?version=1.0.0'"></div>
+<div ng-include src="'wops/OperationDialogBox/FBAPalletLabelModal.html?version=1.0.0'"></div>
+<div ng-include src="'wops/OperationDialogBox/FBAPrepInstructionDialog.html?version=1.0.0'"></div>
+<div ng-include src="'wops/OperationDialogBox/printLabels.html?version=1.0.0'"></div>
+
+<style>
+    .mainDropDownOrder {
+        width: 110px;
+    }
+    .sidebar-btn button{
+        margin-bottom:10px;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+    .mybutton1{
+        display: block;
+    }
+</style>

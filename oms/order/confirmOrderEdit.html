@@ -1,0 +1,29 @@
+<div class="modal fade" id="confirmEditOrder" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <p class="dialog-heading-p">Confirm Update Order</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row row-margin-top row-margin-bottom text-center">
+                        <div class="col-md-12">
+                            <span class="font">Inventory will be released for this order and reallocation will be performed. Do you want to continue?</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="SOCnfrmSubmit" type="button" class="action-btn" ng-click="updateSingleOrderConfirmed()">
+                    Yes
+                </button>
+                <button id="SOCnfrmCancel" type="button" class="cancel-btn" data-dismiss="modal" ng-click="enableButtons()">
+                    No
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

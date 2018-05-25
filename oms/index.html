@@ -1,0 +1,351 @@
+<html ng-app="OmsApp" ng-controller="OmsAppCtrl">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="OhuOKCs3r7bQNKWHX8QBoKw0Tirp0OnY0Xh64D6Tc7c" />
+
+    <title>Maven by Glaucus</title>
+   <!-- Calculator
+    <script src="/oms/js/calculate.js"></script>-->
+
+    <script type="text/javascript" src="../assets/js/jquery-1.11.2.min.js" ></script>
+    <script type="text/javascript" src="../assets/js/jquery.main.js" ></script>
+    <script src="libs/jquery-ui/jquery-ui.min.js"></script>
+
+    <script type="text/javascript" src="../assets/js/angular.min.js"></script>
+	<link rel="stylesheet" href="../assets/css/animate.css">
+    <link rel="stylesheet" href="../directives/calculator/calculator.css">
+    <link rel='stylesheet' href='../css/loading-bar.min.css' type='text/css' media='all' />
+
+    <!--owl crousal-->
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.default.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.green.css">-->
+
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.js"></script>-->
+
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+
+
+    <link rel="icon" type="image/png" sizes="any" href="images/glaucus_symbol_small.png">
+    <script type="text/javascript" src="../directives/calculator/calculator.js"></script>
+
+    <script src="libs/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="js/ng-infinite-scroll.min.js"></script>
+
+    <!--Angular Material CSS -->
+    <link rel="stylesheet" href="libs/angular-material/angular-material.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/creative.min.css">
+
+    <!-- <link href="css/customer.css" rel="stylesheet"> -->
+    <link href="../css/anim-checkbox-radio.css" rel="stylesheet">
+
+    <!-- AutoComplete CSS -->
+    <link rel="stylesheet" href="../css/angucomplete-alt.css">
+    <link rel="stylesheet" href="../css/angucomplete-alt-long.css">
+    
+    <!--Mutli Select Dropdown -->
+    <link rel="stylesheet" href="../css/isteven-multi-select.css">
+    <!-- Order Info Box Stepwise Styles -->
+    <link rel="stylesheet" href="../css/stepwise.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css">
+    <!-- Progress Wizard -->
+    <link rel="stylesheet" href="../css/progress-wizard1.css">
+
+    
+    <!-- CSS Loaders -->
+    <link rel="stylesheet" href="libs/loaders.css/loaders.min.css">
+    <!--<link href="https://fonts.googleapis.com/css?family=Poppins:500" rel="stylesheet">-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <link rel='stylesheet' href='css/loading-bar.min.css' type='text/css' media='all' />
+    <!--Angular Slider Css-->
+    <link rel='stylesheet' href='css/rzslider.css' type='text/css' media='all' />
+    <!--DC Css-->
+    <link rel='stylesheet' href='css/dc.css' type='text/css' media='all' />
+    <!--Angular Ui-select Css-->
+    <link rel='stylesheet' href='css/select.min.css' type='text/css' media='all' />
+    <script src="js/ui-bootstrap.js"></script>
+
+
+    <!--Angular Ui-select Selectize Theme Css-- owl>
+ <!--   <link rel="stylesheet" href="css/selectize.default.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <!--<script type="text/javascript" src="http://100widgets.com/js_data.php?id=21"></script>-->
+    <script src="js/underscore-min.js" defer="defer"></script>
+
+    <script src="js/moment.min.js" defer="defer"></script>
+    <script src="js/moment-timezone-with-data.min.js" defer="defer"></script>
+    <script src="js/angucomplete-alt.js"></script>
+    <script src="js/angucomplete-alt-long.js"></script>
+
+
+
+
+
+    <script src="js/multiple-select.js"></script>
+    <script src="js/jspdf.min.js"></script>
+    <script src="libs/ng-stepwise/ng-stepwise.js"></script>
+    <script src="libs/ng-file-upload/ng-file-upload.min.js"></script>
+    <!-- Angular Growl 2 -->
+    <!--<link rel="stylesheet" href="css/angular-growl.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.8.3/angular-material.min.css">-->
+    <script type="text/javascript" src="js/utils.js" defer="defer"></script>
+
+
+
+
+
+    <!-- angular material assets -->
+    <script src="libs/angular-animate/angular-animate.min.js"></script>
+    <script src="libs/angular-aria/angular-aria.min.js"></script>
+    <script src="libs/angular-material/angular-material.min.js"></script>
+    <script src="libs/angular-material-1.0/modules/js/dialog/dialog.js"></script>
+    <link rel="stylesheet" href="libs/angular-material-1.0/modules/js/dialog/dialog.css">
+    <link rel="stylesheet" href="libs/angular-material-1.0/modules/js/dialog/dialog-default-theme.css">
+
+
+
+
+
+    <!-- Angular Material Javascript now available via Google CDN; version 0.8 used here
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.8.3/angular-material.min.js"></script>-->
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="../css/style.css">
+<!--Dashboard-->
+<!-- <link rel="stylesheet" href="Dashboard/dashboard.css">-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_Dj5E7fjpFLNvyJFabVIwly2JhbYCqf0" defer = "defer"></script>
+    <!--Angular Ui-Select Js-->
+    <script type='text/javascript' src='js/select.min.js'></script>
+
+<!--
+    <script type='text/javascript' src='js/owl.carousel.min.js'></script>
+-->
+    <script type='text/javascript' src="js/FileSaver.min.js"></script>
+    <script type='text/javascript' src="js/melt.js"></script>
+
+<script type="text/javascript" src="../assets/js/angular-cookies.min.js" ></script>
+<script type="text/javascript" src="../assets/js/angular-ui-router.js" ></script>
+
+
+<script  type="text/javascript" src="../assets/js/bootstrap.min.js" ></script>
+    <!-- Latest Sortable -->
+    <script src="js/Sortable-2.js"></script>
+    <script src="js/sortable.js"></script>
+
+    <script src="js/jquery.ui.touch-punch.min.js"></script>
+    <!--notification-->
+    <script src="../assets/js/bootstrap-notify.min.js"></script>
+
+    <script src="../assets/js/jquery.sharrre.js"></script>
+
+<script  type="text/javascript" src="../assets/js/ngStorage.js" ></script>
+<!--
+    <script type='text/javascript' src="/assets/js/d3.min.js"></script>
+-->
+    <script src="libs/angular-off-click/dist/angular-off-click.min.js"></script>
+
+    <script type='text/javascript' src='js/loading-bar.min.js'></script>
+
+    <!--ColorBrewer Js-->
+    <script type='text/javascript' src='js/colorbrewer.js'></script>
+    <!--Crossfilter Js-->
+    <script type='text/javascript' src='js/d3.js'></script>
+    <script src="libs/angular-nvd3/dist/angular-nvd3.js"></script>
+
+
+    <script type='text/javascript' src='js/colorbrewer.js'></script>
+
+    <script type='text/javascript' src='js/crossfilter.js'></script>
+    <script type='text/javascript' src='js/dc.js'></script>
+    <script src="libs/angular-csv-import/dist/angular-csv-import.min.js"></script>
+
+
+    <!--
+
+
+        <script src="js/angular-growl.js"></script>
+
+    -->
+    <link rel='stylesheet' href='../css/rzslider.css' type='text/css' media='all' />
+    <script type='text/javascript' src='js/rzslider.min.js'></script>
+    <link rel='stylesheet' href='../css/select.min.css' type='text/css' media='all' />
+    <link rel="stylesheet" href="../css/selectize.default.css">
+    <script src="libs/angular-sanitize/angular-sanitize.min.js"></script>
+
+
+
+    <script type='text/javascript' src='js/select.min.js'></script>
+<!--
+    <script type='text/javascript' src='js/owl.carousel.min.js'></script>
+-->
+    <script type='text/javascript' src="js/FileSaver.min.js"></script>
+    <script type='text/javascript' src="js/melt.js"></script>
+    <!-- Angular Growl 2 -->
+
+<!--app-->
+<script type="text/javascript"  src="app.js"></script>
+    <script type="text/javascript" src="../shared/custom-http-service.js" ></script>
+    <script type="text/javascript" src="../config/config.js" ></script>
+    <script type="text/javascript"  src="../shared/services/pager.service.js"></script>
+
+    <script type="text/javascript"  src="discount/discount.controller.js"></script>
+   <!-- <script src="libs/angular-route/angular-route.min.js"></script>-->
+
+    <script type="text/javascript"  src="dashboard/dashboard.controller.js"></script>
+    <script type="text/javascript"  src="analytics/analytics.controller.js"></script>
+    <script type="text/javascript"  src="services/masterServices.js"></script>
+    <script type="text/javascript"  src="basecontroller/customerbasecontroller.js"></script>
+    <script type="text/javascript"  src="customer/customer.controller.js"></script>
+    <script type="text/javascript"  src="po/po.controller.js"></script>
+    <script type="text/javascript"  src="po/po.directive.js"></script>
+
+    <script type="text/javascript"  src="order/order.controller.js"></script>
+    <script type="text/javascript"  src="order/order.servicee.js"></script>
+    <script type="text/javascript"  src="order/uniqueorder.directive.js"></script>
+    <script type="text/javascript"  src="directinward/directinward.controller.js"></script>
+
+<!--Custom filter shared Maven App-->
+
+    <script type="text/javascript"  src="../shared/filter/filter.js"></script>
+
+
+
+
+    <!--
+        <script type="text/javascript"  src="customer/customer.service.js"></script>
+    -->
+
+
+
+
+        <script type="text/javascript"  src="vendor/vendor.controller.js"></script>
+
+
+
+    <script type="text/javascript"  src="../shared/controllers/header.controller.js"></script>
+
+    <script type="text/javascript"  src="../shared/services/header.service.js"></script>
+    <!--Category Controller and category base controller-->
+    <script type="text/javascript"  src="basecontroller/categorybasecontroller.js"></script>
+
+    <script type="text/javascript"  src="category/category.controller.js"></script>
+
+
+    <!--SKU CONTROLLER AND SERVICE-->
+    <script type="text/javascript"  src="sku/sku.controller.js"></script>
+    <script type="text/javascript"  src="sku/sku.service.js"></script>
+
+    <!--directives-->
+    <script type="text/javascript"  src="../directives/filemodel.directive.js"></script>
+    <script type="text/javascript"  src="../directives/onfilechange.directive.js"></script>
+
+    <!--Sale Return-->
+    <script type="text/javascript"  src="Salereturn/salereturn.controller.js"></script>
+    <script type="text/javascript"  src="Salereturn/salereturnorder.service.js"></script>
+    <script type="text/javascript"  src="Salereturn/uniquesalereturn.directive.js"></script>
+
+    <!--Purchase Return-->
+    <script type="text/javascript"  src="purchaseReturn/purchaseReturn.controller.js"></script>
+        <script type="text/javascript"  src="purchaseReturn/purchasereturn.directive.js"></script>
+    <script type="text/javascript"  src="purchaseReturn/purchasereturn.service.js"></script>
+
+    <!--Returnable goods-->
+    <script type="text/javascript"  src="returnableGoodsOrder/returnableGoodsOrder.controller.js"></script>
+    <script type="text/javascript"  src="returnableGoodsOrder/returnablegoods.services.js"></script>
+    <script type="text/javascript"  src="returnableGoodsOrder/returnablegoods.directive.js"></script>
+
+    <!--Inventory-->
+
+    <script type="text/javascript"  src="inventory/inventory.controller.js"></script>
+    <script type="text/javascript"  src="inventoryPassbook/passbook.controller.js"></script>
+
+    <!--Stock Tranfer-->
+    <script type="text/javascript"  src="stockTransfer/StockTransfer.controller.js"></script>
+    <script type="text/javascript"  src="stockTransfer/stocktransfer.service.js"></script>
+    <script type="text/javascript"  src="stockTransfer/stocktranfer.directive.js"></script>
+
+    <!--WoPS-->
+    <script type="text/javascript"  src="wops/bulkuploads/bulkuploads.controller.js"></script>
+    <script type="text/javascript"  src="wops/export/export.controller.js"></script>
+    <script type="text/javascript"  src="wops/inbound/inbound.controller.js"></script>
+    <script type="text/javascript"  src="wops/outbound/outbound.controller.js"></script>
+    <script type="text/javascript"  src="wops/wopsinventory/wopsinventory.controller.js"></script>
+
+    <!--Tally -->
+    <script type="text/javascript"  src="tally/tally.controller.js"></script>
+    <!--Tax-->
+
+    <script type="text/javascript"  src="taxation/taxation.controller.js"></script>
+
+    <!--Settiing-->
+    <script type="text/javascript"  src="settings/clientprofile/clientprofile.controller.js"></script>
+    <script type="text/javascript"  src="settings/saleschannels/saleschannels.controller.js"></script>
+    <script type="text/javascript"  src="settings/useradmin/useradmin.controller.js"></script>
+    <script type="text/javascript"  src="settings/warehouses/warehouses.controller.js"></script>
+    <script type="text/javascript"  src="settings/shippingpartners/shippingpartners.controller.js"></script>
+    <script type="text/javascript"  src="settings/templates/templates.controller.js"></script>
+
+    <!--VAS-->
+
+    <script type="text/javascript"  src="workOrderVas/workOrderVas.controller.js"></script>
+
+
+
+
+
+
+</head>
+
+<body>
+<div data-ui-view="header"></div>
+<div  data-ui-view="main">
+</div>
+
+<!--calculator-->
+
+<div  class="calculator-hide" ng-class="{'show-calc':show}">
+    <p id="sideCalc" title="Calculator"  ng-click="showHideCalculator()" >
+        <img src="images/svg/calculator.svg" class="calculator-img-bar" ng-class="{'open-calc':show}">
+    </p>
+
+    <div class="col-md-12 calc-pos " align="center" ng-if="show" style="display: block!important;" >
+
+        <calculator ></calculator>
+    </div>
+</div>
+
+<style>
+    #loading-bar .bar {
+        -webkit-transition: width 350ms;
+        -moz-transition: width 350ms;
+        -o-transition: width 350ms;
+        transition: width 350ms;
+        background: #F0592B !important;
+        position: fixed;
+        z-index: 10002;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        border-bottom-right-radius: 1px;
+        border-top-right-radius: 1px
+    }
+
+    #loading-bar-spinner .spinner-icon{
+        border-top-color: #F0592B !important;
+        border-left-color: #F0592B !important;
+    }
+</style>
+
+
+</body>
+</html>

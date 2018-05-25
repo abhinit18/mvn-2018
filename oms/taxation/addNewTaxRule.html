@@ -1,0 +1,248 @@
+<div class="modal fade" data-keyboard="false" data-backdrop="static" id="addNewTaxRule" role="dialog" aria-labelledby="addTaxClassDialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form name="addNewTaxRuleForm" accessible-form novalidate ng-submit="addNewTaxRuleForm.$valid && AddTaxRule(addNewTaxRuleForm)" >
+            <div class="modal-content">
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+
+                    <button id="taxRuleAddCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelTaxRuleModal(addNewTaxRuleForm)">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+
+                    <p class="dialog-heading-p">Tax Rule</p>
+                </div>
+
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="full-width" style="margin-bottom: 30px;">
+                        <div class="container-fluid">
+                            <div class="row row-margin-top" style="margin-top: 20px;">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <md-radio-group
+                                                ng-required="true" name="service"
+                                                ng-model="ScopeTypeRule"
+                                                ng-change="sendSearchUrl(ScopeTypeRule)">
+
+                                            <md-radio-button id="taxRuleAddHSN"  value="HSN" class="md-primary"
+                                                             ng-style="{'display':'inline'}"> HSN&nbsp;&nbsp;&nbsp;</md-radio-button>
+                                            <md-radio-button id="taxRuleAddSKU" value="SKU" class="md-primary"
+                                                             ng-style="{'display':'inline'}">
+                                                SKU
+                                            </md-radio-button>
+                                            <md-radio-button id="taxRuleAddCategory" value="Category" class="md-primary"
+                                                             ng-style="{'display':'inline'}"> Category&nbsp;&nbsp;&nbsp;</md-radio-button>
+                                            <md-radio-button id="taxRuleAddService" value="Service" class="md-primary"
+                                                             ng-style="{'display':'inline'}">
+                                                Service
+                                            </md-radio-button>
+                                        </md-radio-group>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row row-margin-top" style="margin-top: 10px;">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Select {{ScopeTypeRule}} <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-6 form-row-height">
+
+                                    <input
+                                            ng-if="ScopeTypeRule == 'HSN'"
+                                            only-integer
+                                            placeholder="Enter HSN number"
+                                            type="text" ng-maxlength="45"
+                                            name="ScopeTypeRule"
+                                            required
+                                            id="taxRuleAdd1{{ScopeTypeRule}}"
+                                            ng-model="taxRule.tableHsn.tableHsnCode"
+                                            class="darkgrey-bottom-border font"
+                                            id="hsnnumber">
+                                    <select
+                                            ng-options="option as option.skuNodeName for option in categoryTypeLists"
+                                            name="ScopeTypeRule"
+                                            required
+                                            id="taxRuleAdd2{{ScopeTypeRule}}"
+                                            ng-if="ScopeTypeRule == 'Category'"
+                                            ng-model="taxRule.tableSkuNode"
+                                            class="form-control add-single-order-select">
+                                        <option value="" disabled selected style="display: none;">Choose
+                                            Category</option>
+                                    </select>
+                                    <angucomplete-alt id="products" placeholder="Search {{ScopeTypeRule}}" pause="400"
+                                                      ng-if="ScopeTypeRule == 'SKU'"
+                                                      selected-object="searchedEntitySelected"
+                                                      title-field="{{angucompleteTitleField}}"
+                                                      description-field="tableSkuName"
+                                                      image-field="tableSkuImageUrl"
+                                                      remote-url="{{entitySearchUrl}}"
+                                                      field-required="true"
+                                                      input-name="tableSkuName"
+                                                      input-class="darkgrey-bottom-border font"></angucomplete-alt>
+
+                                    <select
+                                            ng-options="option as option.tableGrossTaxTypeString for option in tableGrossTaxTypes"
+                                            name="ScopeTypeRule"
+                                            required
+                                            id="taxRuleAdd{{ScopeTypeRule}}"
+                                            ng-if="ScopeTypeRule == 'Service'"
+                                            ng-model="taxRule.tableGrossTaxType"
+                                            class="form-control add-single-order-select">
+                                        <option value="" disabled selected style="display: none;">Choose Service</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 form-row-height">
+                                    <button type="button" title="Click here to see all SKUs."
+                                            ng-if="ScopeTypeRule == 'SKU'"
+                                            id="taxRuleAddSkuMore"
+                                            class="btn btn-sm truncate-text"
+                                            ng-click="masterSkuDialog($event, true);">. . .</button>
+                                </div>
+                                <div class="col-md-offset-3 col-md-6">
+                                     <span ng-if="ScopeTypeRule == 'HSN' && addNewTaxRuleForm.$submitted && addNewTaxRuleForm.ScopeTypeRule.$error.required" class="error-message">
+                                         Please enter {{ScopeTypeRule}}
+                                     </span>
+                                     <span ng-if="ScopeTypeRule == 'HSN' && addNewTaxRuleForm.ScopeTypeRule.$dirty && addNewTaxRuleForm.ScopeTypeRule.$error.maxlength" class="error-message">
+                                         {{ScopeTypeRule}} should not exceed 45 characters.
+                                     </span>
+                                     <span ng-if="(ScopeTypeRule == 'Category' || ScopeTypeRule == 'Service') && addNewTaxRuleForm.$submitted && addNewTaxRuleForm.ScopeTypeRule.$error.required" class="error-message">
+                                         Please select {{ScopeTypeRule}}
+                                     </span>
+                                     <span ng-if="ScopeTypeRule == 'SKU' && addNewTaxRuleForm.$submitted && addNewTaxRuleForm.tableSkuName.$error['autocomplete-required']" class="error-message">
+                                         Please enter {{ScopeTypeRule}}
+                                     </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row row-margin-top">
+                                <div class="col-md-3 form-row-height">
+                                    <span class="form-label-height semi-bold-text">Tax Class Name <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-3 form-row-height">
+                                    <select class="form-control add-single-order-select"
+                                            name="taxClassName"
+                                            required
+                                            id="taxRuleAddName"
+                                            ng-model="genericData.selectedTaxClass"
+                                            ng-options="option.tableTaxClassName for option in taxClasses track by option.idtableTaxClassId">
+                                        <option value="" disabled selected style="display: none;">Select
+                                            tax class
+                                        </option>
+                                    </select>
+                                </div>
+                                <div ng-if="genericData.selectedTaxClass !=null && genericData.selectedTaxClass.tableTaxClassTaxType=='GST'" class="col-md-3 form-row-height">
+                                    <span class="form-label-height  semi-bold-text">Min Value <span style="color:red">*</span> </span>
+                                </div>
+                                <div ng-if="genericData.selectedTaxClass !=null && genericData.selectedTaxClass.tableTaxClassTaxType=='GST'" class="col-md-2 form-row-height">
+                                    <input
+                                            floating2
+                                            type="text"
+                                            ng-required="taxRule.tableTaxRuleClassMaps.length == 0"
+                                            name="minVal"
+                                            id="taxRuleAddMValue"
+                                            placeholder="Enter Min Value"
+                                            class="form-control darkgrey-bottom-border-number"
+                                            ng-model="genericData.tableTaxRuleClassMapMinValue">
+                                </div>
+                                <div class="col-md-1 form-row-height">
+                                    <!--<button type="button" ng-click="addTaxClassToTaxRule(genericData.selectedTaxClass,genericData.tableTaxRuleClassMapMinValue)"-->
+                                            <!--class="btn addsharpbutton font"-->
+                                            <!--style="height:auto;padding:6px 7px;">-->
+                                        <!--Add to List-->
+                                    <!--</button>-->
+                                    <span title="Add to List" class="form-label-height add-to-list-icon"
+                                          style="color: #f0592b;"
+                                          ng-click="addTaxClassToTaxRule(genericData.selectedTaxClass,genericData.tableTaxRuleClassMapMinValue)"></span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-offset-3 col-md-3">
+                                         <span ng-if="addNewTaxRuleForm.$submitted && addNewTaxRuleForm.taxClassName.$error.required" class="error-message">
+                                             Please select Tax Class Name
+                                         </span>
+                                         <span ng-if="addNewTaxRuleForm.$submitted && addNewTaxRuleForm.taxClassName.$valid && taxRule.tableTaxRuleClassMaps.length == 0" class="error-message">
+                                             Please add Tax Class Name to the list
+                                         </span>
+                                    </div>
+                                    <div ng-if="genericData.selectedTaxClass !=null && genericData.selectedTaxClass.tableTaxClassTaxType=='GST'" class="col-md-offset-3 col-md-2">
+                                         <span ng-if="addNewTaxRuleForm.$submitted && addNewTaxRuleForm.minVal.$error.required" class="error-message">
+                                             Please enter Min Value
+                                         </span>
+                                    </div>
+                                </div>
+
+                                <div class="full-width" ng-if="taxRule.tableTaxRuleClassMaps.length > 0"
+                                     style="margin-top: 15px;">
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">&nbsp;</div>
+                                    <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12" style="padding-left: 15px;">
+                                        <span class="semi-bold-text">Tax classes</span>
+                                    </div>
+                                </div>
+
+                                <div class="full-width" ng-if="taxRule.tableTaxRuleClassMaps.length > 0"
+                                     style="margin-top: 10px;">
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">&nbsp;</div>
+                                    <div class="col-md-8 col-sm-12 col-xs-12" style="padding-right: 0px;padding-left: 15px;">
+                                        <table id="taxClassesTable"
+                                               class="table boldtable table-responsive table-bordered table-hover">
+                                            <thead class="data-grid-header">
+                                            <tr>
+                                                <th>Tax class name
+                                                </th>
+                                                <th>Min Value
+                                                </th>
+                                                <th style="text-align: center;">Action
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="data-grid-data">
+                                            <tr ng-repeat="tableTaxRuleClassMap in taxRule.tableTaxRuleClassMaps track by $index">
+                                                <td>{{tableTaxRuleClassMap.tableTaxClass.tableTaxClassName}}</td>
+                                                <td>{{tableTaxRuleClassMap.tableTaxRuleClassMapMinValue}}</td>
+                                                <td style="text-align: center; padding: 0;">
+                                                    <md-button class="md-icon-button" md-no-ink="true"
+                                                               ng-click="removeTaxClassFromTaxRule($index)" placeholder="Delete"
+                                                               style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                        <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                                 ng-init="imgsrc1='images/svg/delete.svg'"
+                                                                 ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                                 ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                                 style="width: 20px;"></md-icon>
+                                                    </md-button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 form-row-height form-label-height" ng-if="taxRule.tableTaxRuleClassMaps.length > 1"
+                                         style="margin-top: 10px;">
+                                        <md-checkbox id="cascadetaxclasses"
+                                                     ng-model="taxRule.tableTaxRuleCascadeClass"
+                                                     aria-label="Enable">
+                                        </md-checkbox> <span style="color:red">*</span> Cascade Tax Classes
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="taxRuleAddCancel2" type="button" class="cancel-btn" ng-click="cancelTaxRuleModal(addNewTaxRuleForm)">Cancel
+                    </button>
+                    <button id="taxRuleAddSubmit" type="submit" class="action-btn" ng-disabled="genericData.disableButton">
+                        Add Rule
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

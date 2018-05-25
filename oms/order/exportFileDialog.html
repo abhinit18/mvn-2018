@@ -1,0 +1,78 @@
+<div class="modal fade" id="exportFile" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="SOExprtCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelWarehouseSelection()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Export Order Item</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="full-width" style="margin-bottom:20px;">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
+                                <a href="javascript:void(0);"  class="">
+                                    <div id="SOExprtDwnldFile" class="downloadFileBulkOrder" ng-click="DownloadOrderFileExport()"></div>
+                                </a>
+                                <br>
+                                <span class="downloadFileLabel">Orders</span>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
+                                <a id="SOExprtDwnldOIF" href="javascript:void(0);" ng-click="DownloadOrderItemFileExport()" class="">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <br>
+                                <span class="downloadFileLabel">Order Items</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exportOrderReturnFile" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button id="SOERFCancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelWarehouseSelection()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Export Order Return Item</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="full-width" style="margin-bottom:20px;">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
+                                <a href="javascript:void(0);"  class="">
+                                    <div id="SOERFDwnldFile" class="downloadFileBulkOrder" ng-click="DownloadOrderReturnFileExport()"></div>
+                                </a>
+                                <br>
+                                <span class="downloadFileLabel">Order Return</span>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
+                                <a id="SOERFDwnldFBO" href="javascript:void(0);" ng-click="DownloadOrderReturnItemFileExport()" class="">
+                                    <div class="downloadFileBulkOrder"></div>
+                                </a>
+                                <br>
+                                <span class="downloadFileLabel">Order Return Items</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

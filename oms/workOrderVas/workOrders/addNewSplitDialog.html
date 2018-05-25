@@ -1,0 +1,99 @@
+<script type="text/ng-template" id="dialog4.tmpl.html" ng-controller="workOrderVasController">
+    <md-dialog aria-label="Add New Inventory" style="width: 800px;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p ng-show="dialogBoxSplit=='add'" class="dialog-heading-p">Add New Split</p>
+                    <p ng-show="dialogBoxSplit=='edit'" class="dialog-heading-p">Update Split</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelInventory()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+
+                    <div class="row ">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Product</span>
+                        </div>
+                        <div class="col-md-6">
+                            <angucomplete-alt id="products" placeholder="Search product" pause="400" selected-object="fullproductObj"
+                                              remote-url="{{baseSkuUrl}}"
+                                              title-field="tableSkuClientSkuCode"
+                                              description-field="tableSkuName"
+                                              image-field="tableSkuImageUrl"
+                                input-class="form-control darkgrey-bottom-border" initial-value="initialSelected"></angucomplete-alt>
+                            {{skuClientCode=splitData.productObj.originalObject.tableSkuClientSkuCode;""}}
+                        </div>
+
+                        <div class="col-md-4 inventory-avail" ng-show="availableQuantityMode==true">
+                            Available Quantity<br /> <b>{{freeMailertableWorkOrderSkuQuantity}}</b>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">SKU ID</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="skuid" name="skuid" ng-model="skuId" ng-readonly="true" class="darkgrey-bottom-border"></input>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Select WareHouse</span>
+                        </div>
+                        <div class="col-md-4">
+                            <select ng-model="splitData.tableWarehouseDetails" class="form-control" ng-options="option as option.tableWarehouseDetailsShortname for option in wareHousesData" ng-change="loadWareHousesData(splitData.tableWarehouseDetails)">
+                              <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Quantity</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text"
+                                   only-integer
+                                   prevent-typing-greater
+                                   max = "999999999"
+                                   id="quantity"
+                                   name="quantity" ng-model="splitData.tableWorkOrderSkuQuantity" class="darkgrey-bottom-border-number" ng-blur="checkQuantityAvail(splitData.tableWorkOrderSkuQuantity,freeMailertableWorkOrderSkuQuantity)"></input>
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Start Date</span>
+                        </div>
+                        <div class="col-md-4">
+                            <md-datepicker timezoned-date ng-model="splitData.tableWorkOrderScheduledDatetime" md-min-date="startminDate" md-max-date="startmaxDate" ng-change="sendStartDate(splitData.tableWorkOrderScheduledDatetime)" md-placeholder="Enter date"></md-datepicker>
+                        </div>
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">End Date</span>
+                        </div>
+                        <div class="col-md-4">
+                            <md-datepicker timezoned-date ng-model="splitData.tableWorkOrderScheduledEndDatetime" md-min-date="endminDate" ng-change="sendEndDate(splitData.tableWorkOrderScheduledEndDatetime)" md-placeholder="Enter date"></md-datepicker>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <md-button class="cancel-btn" ng-click="cancelInventory()">
+                    Cancel
+                </md-button>
+                <md-button ng-show="dialogBoxSplit=='add'" class="action-btn" ng-disabled="isDisabled" ng-click="addSplitData(splitData)">
+                    Add
+                </md-button>
+                <md-button ng-show="dialogBoxSplit=='edit'" class="action-btn" ng-click="updateSingleKit(splitData,splitData.idtableWorkOrderId,'split')">
+                    Update
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

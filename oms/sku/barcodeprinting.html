@@ -1,0 +1,63 @@
+<div class="modal fade" data-backdrop="static" id="barcodeprinting" role="dialog" aria-labelledby="barcodeprinting" aria-hidden="true">
+
+    <form name="printbarcodeform" accessible-form novalidate ng-submit="!NumberValidMsg && printbarcodeform.$valid && submitPrintBarcodeForm(printbarcodeform)">
+        <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px" width="400px">
+                <button type="button" class="close" ng-click="cancelPrintLabelModal(printbarcodeform)">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="myModalLabel">Print Barcode</p>
+
+            </div>
+
+
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;margin-top:15px;">
+
+                <div class="row">
+                    <div class="col-md-4 col-lg-4">
+                        Barcode Type
+                    </div>
+                    <div class="col-md-6 col-lg-6">
+                        <select required
+                                name="barcodeType"
+                                ng-model="barcode.type"
+                                id="barcodeprintingtype"
+                                class="form-control"
+                                >
+                            <option value="Basic">Basic</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Detailed">Detailed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-lg-4">
+                        Quantity
+                    </div>
+                    <div class="col-md-6 col-lg-6">
+                       <input floating type="text" required ng-model="barcode.quantity" ng-change="validateNum(barcode.quantity)" name="barcodeQuantity" class="form-control darkgrey-bottom-border textRightOnFocus">
+                    </div>
+                    <div ng-if="printbarcodeform.$submitted && printbarcodeform.barcodeQuantity.$error.required" class="col-md-offset-4 col-md-8">
+                                        <span class="error-message">
+                                            Please enter quantity!
+                                        </span>
+                    </div>
+                    <div ng-if="NumberValidMsg" class="col-md-offset-4 col-md-8">
+                        <span class="error-message">
+                            {{NumberValidMsg}}!
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="cancel-btn" ng-click="cancelPrintLabelModal(printbarcodeform)">Cancel</button>
+                <button type="submit" class="action-btn">Print</button>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>

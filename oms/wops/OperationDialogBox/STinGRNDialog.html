@@ -1,0 +1,165 @@
+<div class="modal fade" data-backdrop="static" id="stgrnallitemsid" role="dialog" aria-labelledby="stgrnallitems"
+     aria-hidden="true">
+
+    <form name="stgrnallitems" accessible-form novalidate
+          ng-submit="stgrnallitems.$valid && SubmitGrn(quickGRNSkuDetails.tableSkuInventoryRecords)">
+
+        <div class="modal-dialog modal-lg" style="width:1200px;">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+
+                    <button id="grnallcancel1" type="button" class="close" data-dismiss="modal" ng-click="cancelQuickGRN()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" id="myModalLabellled">Quick GRN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Total GRN Qty : {{totalGRNQuantity}}</p>
+                </div>
+
+                <div class="modal-body" style="padding-top: 0px">
+                    <div class="full-width">
+                        <div class="col-md-12">
+                            <table id="STinGrnProductTable"
+                                   class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="grn-data-grid-header">
+                                <tr>
+                                    <th>
+                                        <md-checkbox class="md-secondary" ng-model="genericData.selectAllSTGrnItems"
+                                        ng-change="onSelectAllSTGrnItemsClicked()"></md-checkbox>
+                                    </th>
+                                    <th class="text-center">&nbsp;&nbsp;Seller SKU ID</th>
+                                    <th class="text-center">&nbsp;&nbsp;SKU Name</th>
+                                    <th style="width:90px;" class="text-center">&nbsp;&nbsp;Batch No.</th>
+                                    <th class="text-center">&nbsp;&nbsp;Vendor</th>
+                                    <th class="text-center">&nbsp;&nbsp;MFG. Date</th>
+                                    <th class="text-center">&nbsp;&nbsp;Expiry Date</th>
+                                    <th class="text-center">&nbsp;&nbsp;MRP</th>
+                                    <th class="text-center">&nbsp;&nbsp;MSP</th>
+                                    <th class="text-center">&nbsp;&nbsp;Expected Quantity</th>
+                                    <th class="text-center">&nbsp;&nbsp; Actual Quantity
+                                    </th>
+                                    <th class="text-center">&nbsp;&nbsp; Good Quantity
+                                    </th>
+                                    <th class="text-center">&nbsp;&nbsp; Bad Quantity
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="product in quickGRNSkuDetails.tableSkuInventoryRecords">
+                                    <td>
+                                        <md-checkbox ng-change="onSelectSTGrnItemClicked()" ng-model="product.selected" class="md-secondary"></md-checkbox>
+                                    </td>
+                                    <td>
+                                        <span style="color: orangered;" ng-if="product.tableSku.tableSkuClientSkuCode">{{product.tableSku.tableSkuClientSkuCode}}</span>
+                                        <span style="color: orangered;" ng-if="!product.tableSku.tableSkuClientSkuCode">-</span>
+                                    </td>
+                                    <td>
+                                        <span title="product.tableSku.tableSkuDescription" style="color: orangered;" ng-if="product.tableSku.tableSkuName">{{product.tableSku.tableSkuName}}</span>
+                                        <span title="product.tableSku.tableSkuDescription" style="color: orangered;" ng-if="!product.tableSku.tableSkuName">-</span>
+                                    </td>
+                                    <td>
+                                        <span style="color: orangered;" ng-if="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryBatchNo">{{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryBatchNo}}</span>
+                                        <span style="color: orangered;" ng-if="!product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryBatchNo"></span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableVendor && product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableVendor.tableVendorName">{{(product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableVendor && product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableVendor.tableVendorName) ? product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableVendor.tableVendorName : 'NA'}}</span>
+                                        <span ng-if="!product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableVendor && !product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableVendor.tableVendorName">NA</span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryMfgDate">
+                                            {{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryMfgDate | date : 'dd/MM/yyyy'}}
+                                        </span>
+                                        <span ng-if="!product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryMfgDate">
+                                           -
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpiryDate">
+                                            {{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpiryDate | date : 'dd/MM/yyyy'}}
+                                        </span>
+                                        <span ng-if="!product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpiryDate">
+                                            -
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                          {{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryMaxRetailPrice | priceOrHyphen}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            {{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryMinSalePrice | priceOrHyphen}}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        {{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpectedInwardCount}}
+                                    </td>
+                                    <td>
+                                        <input name="actualQty" type="text"
+                                               style="text-align: center;"
+                                               ng-change="onActualInwardEntered()"
+                                               only-integer
+                                               ng-init="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryActualInwardCount=product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpectedInwardCount"
+                                               class="main-bottom-border"
+                                               ng-model="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryActualInwardCount"
+                                               ng-blur="isActualQtyGreaterThanSTQty(product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryActualInwardCount,
+                                                                                  product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpectedInwardCount)==false"
+                                        >
+                                    </td>
+                                    <td>
+                                        <input name="goodQuantity"
+                                               type="text"
+                                               only-integer
+                                               style="text-align: center;"
+                                               class="main-bottom-border"
+                                               ng-init="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryAvailableCount=product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpectedInwardCount"
+                                               ng-model="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryAvailableCount"
+                                               ng-change="isQcPassChecksPass(product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryAvailableCount,
+                                                                         product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryActualInwardCount)"
+                                               ng-if="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryActualInwardCount<=
+                                                      product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpectedInwardCount &&
+                                                      product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryActualInwardCount!=null &&
+                                                      product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryActualInwardCount>0"
+                                        >
+
+                                    </td>
+                                    <td>
+                                        <input name="badQuantity" type="text"
+                                               ng-readonly="true"
+                                               style="text-align: center;"
+                                               class="main-bottom-border"
+                                               ng-value="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryInwardQcFailedCount=product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryActualInwardCount-product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryAvailableCount"
+                                               ng-if="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryActualInwardCount<=
+                                                      product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpectedInwardCount &&
+                                                      product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryAvailableCount!=null &&
+                                                      product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryAvailableCount>=0 &&
+                                                      product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryAvailableCount<=
+                                                      product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryActualInwardCount"
+                                        >
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+                    <button id="grnallitemscancel2" type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelQuickGRN()">Cancel
+                    </button>
+                    <input id="GrnallitemsSubmit" ng-disabled="disableSubmitGrnAll" type="submit" class="action-btn" value="Submit"/>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<style>
+    #STinGrnProductTable thead th {
+        text-align: center !important;
+        width: 10% !important;
+    }
+</style>

@@ -1,0 +1,111 @@
+<div class="full-width">
+            <!--<div class="row search-row-heading">
+                <md-toolbar class="md-small search-row-toolbar search-row">
+                    <div class="md-toolbar-tools">
+                        <md-icon md-svg-icon="images/svg/header_search.svg"></md-icon>
+                        <span class="font">&nbsp;&nbsp;Search Uploads</span>
+                        <span flex=""></span>
+                        <md-button class="md-icon-button" aria-label="Favorite" ng-click="toggleSearchSuccessUploads()">
+                            <md-icon ng-if="searchSuccessClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                            <md-icon ng-if="searchSuccessClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+            </div>-->
+            <div ng-if="searchSuccessClicked==true" class="row search-row search-row-content search-row-top-border">
+                <div class="row row-margin-top-x-medium">
+                    <div class="col-md-2 col-md-offset-1 margin-top-5">
+                        <span class="font">Search Uploads</span>
+                    </div>
+                    <div class="col-md-4" style="left: -70px;">
+                        <input placeholder="Search File Name" type="text" ng-model="fileName" id="successFile" name="fileName" class="form-control darkgrey-bottom-border font input-less-padding">
+                    </div>
+                    <div class="col-md-1" style="left: -70px; top: -2px;">
+                        <button id="successSubmit" type="button"  class="btn btn-default mybut" ng-click="submitMainSkuAction(skuString)">Submit</button>
+                    </div>
+                    <div class="col-md-1" style="margin-top: 4px; margin-left: 16px;">
+                        <button id="successClear" title="Clear Applied Filters"  class="btn clearFilter" ng-click="clearAllSkuAction();skuString=null;">
+                      </button>
+                    </div>
+                </div>
+            </div>
+            <div class="main-list no-left-right-padding">
+                <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                    <thead class="main-list-header-bulkupload">
+                        <tr>
+                            <td id="exportId">Export Id</td>
+                            <td id="successRTH">Requested Time</td>
+                            <td id="successDLH">Download Link</td>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="data in successdata" ng-if="successdata.length != 0">
+                      <tr class="clickable-row-bulkupload" >
+                        <td id="exportId{{$index}}">
+                            {{data.idtableExportId}}
+                        </td>
+                        <td id="successRT{{$index}}">
+                            {{data.tableExportRequestDateTime | utcToLocalTimeOrHyphen}}
+                        </td>
+                        <td id="successDL{{$index}}">
+                        <a style="color:#F0592B;"
+                          href="{{filePathUrl}}{{data.tableExportFilePath}}"
+                          download> <span class=" glyphicon glyphicon-download-alt"></span> Download Report </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody ng-if="successdata.length == 0">
+                        <tr>
+                            <td colspan="3">
+                                <h3 class="text-center" style="margin-top: 30px;">
+                                    No Reports available
+                                </h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+<!--             <div class="row" style="margin-top: 0px;">
+                <div class="col-md-6">
+
+                    <p class="showingOrderLabel" ng-show="sizeSuccess<successCount">Showing Orders {{startSuccess + 1}} to {{orderSize}} of {{successCount}} {{vmPagerSuccess}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="sizeSuccess>=successCount && successCount!=0">Showing Orders {{startSuccess + 1}} to {{successCount}} of {{successCount}} {{vmPagerSuccess}}
+                    </p> 
+                    <p class="showingOrderLabel" ng-show="successCount==0">No SUC Available
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <span class="pull-right">
+                      <ul ng-if="vmPagerSuccess.pages.length" class="pagination">
+                          <li ng-show="vmPagerSuccess.currentPage == 1" ng-class="{disabled:vmPagerSuccess.currentPage == 1}">
+                              <a>&lt;&lt; First</a>
+                          </li>
+                          <li ng-show="vmPagerSuccess.currentPage > 1" ng-class="{disabled:vmPagerSuccess.currentPage == 1}">
+                              <a ng-click="listOfStatesCount(defaultTab,1)">&lt;&lt; First</a>
+                          </li>
+                          <li ng-show="vmPagerSuccess.currentPage == 1" ng-class="{disabled:vmPagerSuccess.currentPage == 1}">
+                              <a>&lt; Previous</a>
+                          </li>
+                          <li ng-show="vmPagerSuccess.currentPage > 1" ng-class="{enabled:vmPagerSuccess.currentPage > 1}">
+                              <a ng-click="listOfStatesCount(defaultTab,vmPagerSuccess.currentPage - 1)">&lt; Previous</a>
+                          </li>
+                          <li ng-repeat="page in vmPagerSuccess.pages" ng-class="{active:vmPagerSuccess.currentPage == page}">
+                              <a ng-click="listOfStatesCount(defaultTab,page)">{{page}}</a>
+                          </li>
+                          <li ng-show="vmPagerSuccess.currentPage < vmPagerSuccess.totalPages" ng-class="{enabled:vmPagerSuccess.currentPage > vmPagerSuccess.totalPages}">
+                          <a ng-click="listOfStatesCount(defaultTab,vmPagerSuccess.currentPage + 1)">Next &gt;</a>
+                          </li>
+                          <li ng-show="vmPagerSuccess.currentPage == vmPagerSuccess.totalPages" ng-class="{disabled:vmPagerSuccess.currentPage == vmPagerSuccess.totalPages}">
+                              <a>Next &gt;</a>
+                          </li>
+                          <li ng-show="vmPagerSuccess.currentPage < vmPagerSuccess.totalPages" ng-class="{disabled:vmPagerSuccess.currentPage == vmPagerSuccess.totalPages}">
+                              <a ng-click="listOfStatesCount(defaultTab,vmPagerSuccess.totalPages)">Last &gt;&gt;</a>
+                          </li>
+                          <li ng-show="vmPagerSuccess.currentPage == vmPagerSuccess.totalPages" ng-class="{disabled:vmPagerSuccess.currentPage == vmPagerSuccess.totalPages}">
+                              <a>Last &gt;&gt;</a>
+                          </li>
+                      </ul>
+                  </span>
+                </div>
+            </div> -->
+        </div>

@@ -1,0 +1,23 @@
+.client-label{
+    font-size: 16px;
+    font-weight: 600;
+}
+.client-value{
+    font-size: 15px;
+}
+.editIcon{
+    height: 15px;
+    width: 15px;
+    min-height: 15px;
+    min-width: 15px;
+}
+.padding-top-20{
+    padding-top: 20px;
+}
+.data-grid-header {
+    background-color: #30373B;
+    color: #fff;
+}
+.calculator-hide{
+    z-index: 999999;
+}

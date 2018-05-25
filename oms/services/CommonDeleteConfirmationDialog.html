@@ -1,0 +1,49 @@
+
+<!--=============================================== bootstrap dialog box for master sku list details==================-->
+
+<div class="modal fade" id="masterDeleteDialogue" role="dialog"
+     data-backdrop="static"
+     aria-labelledby="myModalLabelleded" aria-hidden="true">
+    <div class="modal-dialog" style="">
+
+            <div class="modal-content">
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="cancelmasterDeleteDialog()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">Delete Confirmation</p>
+
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="md-dialog-content">
+                        <div class="full-width" style = "padding-top: 20px">
+                            <h4 class="text-center">Do you want to delete ?</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button type="button" class="action-btn" ng-click="deleteSelectedItem()">
+                        Yes
+                    </button>
+                    <button type="button" class="cancel-btn" ng-click="cancelmasterDeleteDialog()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+    </div>
+</div>
+
+<!--========================================= ends here =======================================-->
+<script>
+    /*$('#masterDeleteDialogue').on('show.bs.modal', function () {
+        $('.modal-backdrop').css('z-index', 1050);
+    });
+    $('#masterDeleteDialogue').on('hidden.bs.modal', function () {
+        $('.modal-backdrop').css('z-index', 1040);
+    })*/
+</script>
